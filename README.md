@@ -1,7 +1,4 @@
 # Entity Scraper
-Java Annotation based web scraping
-
-Version 0.0.1 to be released by 15/05/2022.
 
 ## Overview
 Java library for scrpaing web page data into a java class using only annotations. Class fields are annotated with the XPath query that indicates how the value should be extracted from the web page.
