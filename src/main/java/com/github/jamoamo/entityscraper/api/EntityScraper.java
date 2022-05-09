@@ -37,12 +37,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import org.apache.commons.beanutils.BeanUtils;
 import com.github.jamoamo.entityscraper.api.html.IParser;
+import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
+import com.github.jamoamo.entityscraper.api.mapper.StringMapper;
+import com.github.jamoamo.entityscraper.api.mapper.XValueMappingException;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
 
 /**
  * Scrapes an HTML Document and creates an entity object from it based on the annotations on the entity class.
+ *
  * @author James Amoore
  * @param <T> The entity class of entities created by the scraper.
  */
@@ -66,17 +70,21 @@ public final class EntityScraper<T>
 	{
 		this.pathEvaluator = evaluator;
 	}
-	
+
 	/**
 	 * Scrapes an html file to produce an entity
+	 *
 	 * @param file
+	 *
 	 * @return
-	 * @throws XXPathException 
+	 *
+	 * @throws XXPathException
 	 */
 	public T scrape(File file)
-			  throws XXPathException
+			  throws XXPathException, XValueMappingException
 	{
-		return scrape(() -> {
+		return scrape(() -> 
+		{
 			try
 			{
 				return this.scraper.parse(file, Charset.forName("UTF-8"));
@@ -84,13 +92,15 @@ public final class EntityScraper<T>
 			catch(IOException ioe)
 			{
 				throw new RuntimeException(ioe);
-			}});
+			}
+		});
 	}
 
 	public T scrape(URL url)
-			  throws XXPathException
+			  throws XXPathException, XValueMappingException
 	{
-		return scrape(() -> {
+		return scrape(() -> 
+		{
 			try
 			{
 				return this.scraper.parse(url, 10000);
@@ -98,28 +108,29 @@ public final class EntityScraper<T>
 			catch(IOException ioe)
 			{
 				throw new RuntimeException(ioe);
-			}});
+			}
+		});
 	}
-	
+
 	private T scrape(Supplier<AHtmlDocument> documentSupplier)
-			  throws XXPathException
+			  throws XXPathException, XValueMappingException
 	{
 		T entity = createInstance();
-		
+
 		AHtmlDocument document = documentSupplier.get();
-		
+
 		Entity entityAnnotation = entityClass.getAnnotation(Entity.class);
 		if(entityAnnotation == null)
 		{
 			throw new RuntimeException("Class is not annotated with the @Entity annotation.");
 		}
 		String rootXPath = entityAnnotation.rootPath();
-		
+
 		for(Field field : this.entityClass.getDeclaredFields())
 		{
 			processField(entity, rootXPath, document, field);
 		}
-		
+
 		return entity;
 	}
 
@@ -129,21 +140,25 @@ public final class EntityScraper<T>
 		try
 		{
 			entity = this.entityClass
-					  .getConstructor(new Class<?>[]{})
-					  .newInstance(new Object[]{});
+					  .getConstructor(new Class<?>[]
+					  {
+			})
+					  .newInstance(new Object[]
+					  {
+			});
 		}
 		catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex)
 		{
 			throw new RuntimeException(
-					  String.format("Failed to create an instance of type: %s", 
-										 entityClass.getSimpleName())
-					  , ex);
+					  String.format("Failed to create an instance of type: %s",
+										 entityClass.getSimpleName()),
+					   ex);
 		}
 		return entity;
 	}
 
 	private void processField(T entity, String rootXPath, AHtmlDocument document, Field field)
-			  throws XXPathException, RuntimeException
+			  throws XXPathException, XValueMappingException
 	{
 		XPath xPath = field.getAnnotation(XPath.class);
 		if(xPath == null)
@@ -152,17 +167,33 @@ public final class EntityScraper<T>
 		}
 		String xPathExpression = rootXPath + xPath.path();
 		XPathExpression expression = this.pathEvaluator.forPath(xPathExpression);
-		String value = expression.evaluateStringValue(document);
 		
+		String evaluatedValue = expression.evaluateStringValue(document);
+		AValueMapper mapper = createMapper(xPath);
 		try
 		{
-			BeanUtils.setProperty(entity, field.getName(), value);
+			BeanUtils.setProperty(entity, field.getName(), mapper.mapValue(evaluatedValue, field));
 		}
 		catch(IllegalAccessException | InvocationTargetException ex)
 		{
 			throw new RuntimeException(
-					  String.format("Failed to set field %s with value %s", field.getName(), value),
+					  String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
 					  ex);
+		}
+	}
+
+	private AValueMapper createMapper(XPath xPath)
+			  throws RuntimeException
+	{
+		try
+		{
+			return xPath.mapperClass().getConstructor(new Class[]{})
+					  .newInstance(new Object[]{});
+		}
+		catch(IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException |
+				  SecurityException | InvocationTargetException ex)
+		{
+			throw new RuntimeException(ex);
 		}
 	}
 }

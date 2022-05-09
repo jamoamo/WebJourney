@@ -23,6 +23,8 @@
  */
 package com.github.jamoamo.entityscraper.annotation;
 
+import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
+import com.github.jamoamo.entityscraper.api.mapper.DefaultMapper;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -41,4 +43,10 @@ public @interface XPath
 	 * @return the xpath expression.
 	 */
 	public String path();
+
+	/**
+	 * Optional. mapper class to use to map the value read from the document to the value to set on the field.
+	 * @return the mapper class to map the field value. 
+	 */
+	public Class<? extends AValueMapper> mapperClass() default DefaultMapper.class;
 }

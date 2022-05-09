@@ -21,33 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.api;
+package com.github.jamoamo.entityscraper.api.mapper;
 
-import com.github.jamoamo.entityscraper.api.EntityScraper;
-import java.io.File;
-import java.net.URL;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Field;
 
 /**
- *
+ * Abstract class for value mappers that map values from the html document to the target field value.
+ * 
  * @author James Amoore
+ * @param <T> The type of the value created by the mapper
  */
-public class EntityScraperTest
+public abstract class AValueMapper<T>
 {
-	@Test
-	public void testScrape_File()
-			  throws Exception
-	{
-		File file = new File(getClass().getClassLoader().getResource("testpage.html").toURI());
-		EntityScraper instance = new EntityScraper(TestEntity.class);
-		Object result = instance.scrape(file);
-		assertTrue(result instanceof TestEntity);
-		TestEntity entity = (TestEntity) result;
-		assertEquals("Test Page", entity.getTitle());
-		assertEquals("Table", entity.getSubtitle());
-		assertEquals(17, entity.getValue3());
-		assertEquals(2.7, entity.getRate(), 0.1);
-	}
-	
+	/**
+	 * Maps a value read from the HTML document to the target type of the mapper.
+	 * 
+	 * @param value The value read from the HTML document
+	 * @param field The field the value is mapped for
+	 * @return the mapped value.
+	 * @throws XValueMappingException if there was a failure to map the value.
+	 */
+	public abstract T mapValue(String value, Field field)
+			  throws XValueMappingException;
 }

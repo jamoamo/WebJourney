@@ -18,6 +18,9 @@ Java library for scrpaing web page data into a java class using only annotations
 
 ### Supported Value Types
 * String
+* Integer\int
+* Double\double
+* Custom Mapper implementations can be provided for unsupported value types.
 
 ## Example
 
@@ -47,7 +50,7 @@ Java library for scrpaing web page data into a java class using only annotations
 
 ##Versions
 
-### v0.0.1 
+### v0.1 
 Initial release
 Not released yet. To be released by 15 May 2022.
 

@@ -21,33 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.api;
-
-import com.github.jamoamo.entityscraper.api.EntityScraper;
-import java.io.File;
-import java.net.URL;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+package com.github.jamoamo.entityscraper.api.mapper;
 
 /**
- *
+ * An exception that occurs whilst mapping a value from the HTML document to the target field.
+ * 
  * @author James Amoore
  */
-public class EntityScraperTest
+public class XValueMappingException extends Exception
 {
-	@Test
-	public void testScrape_File()
-			  throws Exception
+	/**
+	 * Creates a new instance with the Exception that caused the mapping error.
+	 * 
+	 * @param cause The cause of the exception.
+	 */
+	public XValueMappingException(Exception cause)
 	{
-		File file = new File(getClass().getClassLoader().getResource("testpage.html").toURI());
-		EntityScraper instance = new EntityScraper(TestEntity.class);
-		Object result = instance.scrape(file);
-		assertTrue(result instanceof TestEntity);
-		TestEntity entity = (TestEntity) result;
-		assertEquals("Test Page", entity.getTitle());
-		assertEquals("Table", entity.getSubtitle());
-		assertEquals(17, entity.getValue3());
-		assertEquals(2.7, entity.getRate(), 0.1);
+		this("", cause);
 	}
 	
+	/**
+	 * Creates a new instance with a message and the Exception that caused the mapping error.
+	 * 
+	 * @param message The message for the exception.
+	 * @param ex The cause of the exception.
+	 */
+	public XValueMappingException(String message, Exception ex)
+	{
+		super("Mapping error." + message, ex);
+	}
+	
+	/**
+	 * Creates a new instance with a message.
+	 * 
+	 * @param message The message for the exception.
+	 */
+	public XValueMappingException(String message)
+	{
+		super("Mapping error." + message);
+	}
 }

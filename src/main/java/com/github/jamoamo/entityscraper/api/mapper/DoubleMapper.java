@@ -21,33 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.api;
+package com.github.jamoamo.entityscraper.api.mapper;
 
-import com.github.jamoamo.entityscraper.api.EntityScraper;
-import java.io.File;
-import java.net.URL;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Field;
 
 /**
- *
+ * Value mapper that returns a Double.
+ * 
  * @author James Amoore
  */
-public class EntityScraperTest
+public class DoubleMapper extends AValueMapper<Double>
 {
-	@Test
-	public void testScrape_File()
-			  throws Exception
+	/**
+	 * Maps the value to a double.
+	 * 
+	 * @param value The value read from the file
+	 * @param field The field that the mapped value will be set on.
+	 * @return the mapped value
+	 * @throws XValueMappingException if the value can't be converted to a double.
+	 */
+	@Override
+	public Double mapValue(String value, Field field)
+			  throws XValueMappingException
 	{
-		File file = new File(getClass().getClassLoader().getResource("testpage.html").toURI());
-		EntityScraper instance = new EntityScraper(TestEntity.class);
-		Object result = instance.scrape(file);
-		assertTrue(result instanceof TestEntity);
-		TestEntity entity = (TestEntity) result;
-		assertEquals("Test Page", entity.getTitle());
-		assertEquals("Table", entity.getSubtitle());
-		assertEquals(17, entity.getValue3());
-		assertEquals(2.7, entity.getRate(), 0.1);
+		if(value == null || value.isEmpty() || value.isBlank())
+		{
+			return 0.0;
+		}
+		
+		try
+		{
+			return Double.valueOf(value);
+		}
+		catch(NumberFormatException ex)
+		{
+			throw new XValueMappingException(ex);
+		}
 	}
-	
 }

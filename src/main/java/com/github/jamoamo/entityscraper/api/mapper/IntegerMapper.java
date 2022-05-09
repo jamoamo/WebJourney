@@ -21,33 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.api;
+package com.github.jamoamo.entityscraper.api.mapper;
 
-import com.github.jamoamo.entityscraper.api.EntityScraper;
-import java.io.File;
-import java.net.URL;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Field;
 
 /**
- *
+ * Value Mapper that returns an Integer.
+ * 
  * @author James Amoore
  */
-public class EntityScraperTest
+public class IntegerMapper extends AValueMapper<Integer>
 {
-	@Test
-	public void testScrape_File()
-			  throws Exception
+	/**
+	 * Maps the value to an Integer.
+	 * 
+	 * @param value The value read from the HTML document.
+	 * @param field The field that the value will be set on.
+	 * @return The mapped value.
+	 * @throws XValueMappingException If the value is not an integer.
+	 */
+	@Override
+	public Integer mapValue(String value, Field field)
+			  throws XValueMappingException
 	{
-		File file = new File(getClass().getClassLoader().getResource("testpage.html").toURI());
-		EntityScraper instance = new EntityScraper(TestEntity.class);
-		Object result = instance.scrape(file);
-		assertTrue(result instanceof TestEntity);
-		TestEntity entity = (TestEntity) result;
-		assertEquals("Test Page", entity.getTitle());
-		assertEquals("Table", entity.getSubtitle());
-		assertEquals(17, entity.getValue3());
-		assertEquals(2.7, entity.getRate(), 0.1);
+		if(value == null || value.isEmpty() ||  value.isBlank())
+		{
+			return 0;
+		}
+		
+		try
+		{
+			return Integer.valueOf(value);
+		}
+		catch(NumberFormatException ex)
+		{
+			throw new XValueMappingException(ex);
+		}
 	}
-	
 }

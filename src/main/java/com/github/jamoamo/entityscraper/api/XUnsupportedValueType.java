@@ -23,86 +23,31 @@
  */
 package com.github.jamoamo.entityscraper.api;
 
-import com.github.jamoamo.entityscraper.annotation.Entity;
-import com.github.jamoamo.entityscraper.annotation.XPath;
-
 /**
- *
+ * Thrown if a default mapper cannot be determined because the field type is not supported.
+ * 
  * @author James Amoore
  */
-@Entity
-public class TestEntity
+public class XUnsupportedValueType extends RuntimeException
 {
-	@XPath (path = "/h1")
-	public String title;
-	@XPath (path = "/h2")
-	public String subtitle;
-	@XPath (path = "/table/tbody/tr[2]/td[1]")
-	public String value1;
-	@XPath (path = "/table/tbody/tr[2]/td[2]")
-	public String value2;
-	@XPath (path = "/table/tbody/tr[2]/td[3]")
-	public int value3;
-	@XPath (path = "/table/tbody/tr[2]/td[4]")
-	public Double rate;
-
-	public String getTitle()
+	private final Class<?> type;
+	
+	/**
+	 * Create a new instance with the unsupported type.
+	 * @param type The unsupported type.
+	 */
+	public XUnsupportedValueType(Class<?> type)
 	{
-		return title;
-	}
-
-	public void setTitle(String title)
-	{
-		this.title = title;
-	}
-
-	public String getSubtitle()
-	{
-		return subtitle;
-	}
-
-	public void setSubtitle(String subtitle)
-	{
-		this.subtitle = subtitle;
-	}
-
-	public String getValue1()
-	{
-		return value1;
-	}
-
-	public void setValue1(String value1)
-	{
-		this.value1 = value1;
-	}
-
-	public String getValue2()
-	{
-		return value2;
-	}
-
-	public void setValue2(String value2)
-	{
-		this.value2 = value2;
+		super(String.format("Value type [%s] is not supported.", type.getSimpleName()));
+		this.type = type;
 	}
 	
-	public int getValue3()
+	/**
+	 * @return the type that was unsupported.
+	 */
+	public Class<?> getUnsupportedType()
 	{
-		return this.value3;
+		return this.type;
 	}
 	
-	public void setValue3(int value3)
-	{
-		this.value3 = value3;
-	}
-	
-	public Double getRate()
-	{
-		return this.rate;
-	}
-	
-	public void setRate(Double rate)
-	{
-		this.rate = rate;
-	}
 }

@@ -65,6 +65,19 @@ public class JSoupParserTest
 		assertEquals("h2", h2Element.getElementName());
 		assertEquals("Table", h2Element.getText());
 		
+		List<AHtmlElement> tableElements = bodyElement.getElements("table");
+		assertEquals(1, tableElements.size());
+		AHtmlElement tableElement = tableElements.get(0);
+		assertEquals("table", tableElement.getElementName());
+		
+		List<AHtmlElement> tbodyElements = tableElement.getElements("tbody");
+		assertEquals(1, tbodyElements.size());
+		AHtmlElement tbodyElement = tbodyElements.get(0);
+		assertEquals("tbody", tbodyElement.getElementName());
+		
+		List<AHtmlElement> trElements = tbodyElement.getElements("tr");
+		assertEquals(2, trElements.size());
+		
 		assertEquals("#root", result.getRootElement().getElementName());
 	}
 	
