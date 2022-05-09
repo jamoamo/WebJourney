@@ -21,24 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.annotation;
+package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
+import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
+import java.util.List;
+import org.jaxen.BaseXPath;
+import org.jaxen.Context;
+import org.jaxen.JaxenException;
+import org.jaxen.util.SingletonList;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation. 
+ * XPath for HTMLDocument
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface XPath
+public class HtmlDocumentXPath extends BaseXPath
 {
-	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
-	 * @return the xpath expression.
-	 */
-	public String path();
+	public HtmlDocumentXPath(String xPathExpr)
+			  throws JaxenException
+	{
+		super(xPathExpr, HtmlDocumentNavigator.getInstance());
+	}
+	
+	@Override
+	protected Context getContext(Object node)
+	{
+		if(node instanceof Context)
+		{
+			return (Context)node;
+		}
+		
+		Context fullContext = new Context(getContextSupport());
+		if(node instanceof AHtmlDocument)
+		{
+			AHtmlElement rootElement = (AHtmlElement) getNavigator().getDocumentNode(node);
+			fullContext.setNodeSet(new SingletonList(rootElement));
+		}
+		else if(node instanceof List)
+		{
+			fullContext.setNodeSet((List)node);
+		}
+		else
+		{
+			List list = new SingletonList(node);
+			fullContext.setNodeSet(list);
+		}
+		return fullContext;
+	}
 }

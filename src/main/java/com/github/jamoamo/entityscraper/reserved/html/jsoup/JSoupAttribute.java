@@ -21,24 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.annotation;
+package com.github.jamoamo.entityscraper.reserved.html.jsoup;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
+import org.jsoup.nodes.Attribute;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation. 
+ *
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface XPath
+public class JSoupAttribute extends AHtmlAttribute
 {
-	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
-	 * @return the xpath expression.
-	 */
-	public String path();
+	private final Attribute attribute;
+	
+	public JSoupAttribute(Attribute attribute)
+	{
+		this.attribute = attribute;
+	}
+	
+	@Override
+	public String getAttributeName()
+	{
+		return attribute.getKey();
+	}
+
+	@Override
+	public String getValue()
+	{
+		return attribute.getValue();
+	}
 }

@@ -21,24 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.annotation;
+package com.github.jamoamo.entityscraper.reserved.html.jsoup;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
+import java.io.IOException;
+import java.net.URL;
+import org.jsoup.Jsoup;
+import com.github.jamoamo.entityscraper.api.html.IParser;
+import java.io.File;
+import java.nio.charset.Charset;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation. 
+ * JSoup based HTML parser.
+ * 
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface XPath
+public class JSoupParser implements IParser
 {
-	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
-	 * @return the xpath expression.
-	 */
-	public String path();
+	@Override
+	public AHtmlDocument parse(URL url, int timeout)
+			  throws IOException
+	{
+		return new JSoupHtmlDocument(Jsoup.parse(url, timeout));
+	}
+
+	@Override
+	public AHtmlDocument parse(File file, Charset charset)
+			  throws IOException
+	{
+		return new JSoupHtmlDocument(Jsoup.parse(file, charset.displayName()));
+	}
+
+	@Override
+	public AHtmlDocument parse(String html)
+			  throws IOException
+	{
+		return new JSoupHtmlDocument(Jsoup.parse(html));
+	}
+	
 }

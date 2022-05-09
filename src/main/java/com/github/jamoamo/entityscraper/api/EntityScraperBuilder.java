@@ -21,24 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.annotation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.github.jamoamo.entityscraper.api;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation. 
+ * Builder for building Entity Scrapers for a provided entity class
+ * 
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface XPath
+public class EntityScraperBuilder
 {
+	//Private constructor to prevent instances of this class being created.
+	private EntityScraperBuilder(){}
+	
 	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
-	 * @return the xpath expression.
+	 * Create an {@link EntityScraper} builder for instances of the provided class. The entity class should be annotated with {@code @Entity}.
+	 * 
+	 * @param entityClass The class that the EntityScraper should create instances of.
+	 * @return a builder object for building instances of {@link EntityScraper}
 	 */
-	public String path();
+	public static EntityScraperBuilderBase forEntity(Class<?> entityClass)
+	{
+		return new EntityScraperBuilderBase(entityClass);
+	}
 }

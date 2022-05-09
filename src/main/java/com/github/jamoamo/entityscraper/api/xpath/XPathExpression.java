@@ -21,24 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.annotation;
+package com.github.jamoamo.entityscraper.api.xpath;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation. 
+ * Representation of an xpath expression. Used to evaluate a docuement model based on the xpath expression. 
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface XPath
+public abstract class XPathExpression
 {
 	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
-	 * @return the xpath expression.
+	 * Gets the string value result of the xpath expression for the provided document.
+	 * 
+	 * @param document The document that needs to be queried by this xpath expression.
+	 * @return the evaluated string value.
+	 * @throws XXPathException if an exception occurs evaluating the document using the xpath expression. 
 	 */
-	public String path();
+	public abstract String evaluateStringValue(AHtmlDocument document)
+			  throws XXPathException;
 }

@@ -21,24 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.annotation;
+package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.jamoamo.entityscraper.api.xpath.IPathEvaluator;
+import com.github.jamoamo.entityscraper.api.xpath.XPathExpression;
+import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
+import org.jaxen.JaxenException;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation. 
+ *
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface XPath
+public class JaxenPathEvaluator implements IPathEvaluator
 {
-	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
-	 * @return the xpath expression.
-	 */
-	public String path();
+	@Override
+	public XPathExpression forPath(String path)
+			  throws XXPathException
+	{
+		try
+		{
+			return new JaxenXPathExpression(path);
+		}
+		catch(JaxenException ex)
+		{
+			throw new XXPathException(ex);
+		}
+	}
+	
 }

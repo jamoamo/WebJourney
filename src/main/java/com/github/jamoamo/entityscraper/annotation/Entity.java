@@ -29,7 +29,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Used to designate a class as an entity that can be created by an EntityScraper instance.
+ * 
  * @author James Amoore
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -37,7 +38,8 @@ import java.lang.annotation.Target;
 public @interface Entity
 {
 	/**
-	 * The rootPath to be used for the xpath expressions of fields in the entity. Defaults to "/html/body".
+	 * The root of the xpath evaluation to be used for the xpath expressions of fields in the entity. Defaults to "/html/body".
+	 * 
 	 * @return the entity rootPath.
 	 */
 	public String rootPath() default "/html/body";
