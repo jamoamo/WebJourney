@@ -38,8 +38,9 @@ import java.net.URL;
 import org.apache.commons.beanutils.BeanUtils;
 import com.github.jamoamo.entityscraper.api.html.IParser;
 import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
-import com.github.jamoamo.entityscraper.api.mapper.StringMapper;
 import com.github.jamoamo.entityscraper.api.mapper.XValueMappingException;
+import com.github.jamoamo.entityscraper.reserved.reflection.EntityCreator;
+import com.github.jamoamo.entityscraper.reserved.reflection.MapperCreator;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
@@ -136,24 +137,7 @@ public final class EntityScraper<T>
 
 	private T createInstance()
 	{
-		T entity = null;
-		try
-		{
-			entity = this.entityClass
-					  .getConstructor(new Class<?>[]
-					  {
-			})
-					  .newInstance(new Object[]
-					  {
-			});
-		}
-		catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex)
-		{
-			throw new RuntimeException(
-					  String.format("Failed to create an instance of type: %s",
-										 entityClass.getSimpleName()),
-					   ex);
-		}
+		T entity = EntityCreator.getInstance().createEntity(this.entityClass);
 		return entity;
 	}
 
@@ -185,15 +169,7 @@ public final class EntityScraper<T>
 	private AValueMapper createMapper(XPath xPath)
 			  throws RuntimeException
 	{
-		try
-		{
-			return xPath.mapperClass().getConstructor(new Class[]{})
-					  .newInstance(new Object[]{});
-		}
-		catch(IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException |
-				  SecurityException | InvocationTargetException ex)
-		{
-			throw new RuntimeException(ex);
-		}
+		AValueMapper mapper = MapperCreator.getInstance().createEntity(xPath.mapperClass());
+		return mapper;
 	}
 }
