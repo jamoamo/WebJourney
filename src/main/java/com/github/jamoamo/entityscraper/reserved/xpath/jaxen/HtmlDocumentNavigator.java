@@ -26,41 +26,38 @@ package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
-import com.github.jamoamo.entityscraper.reserved.html.jsoup.JSoupHtmlDocument;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jaxen.DefaultNavigator;
-import org.jaxen.FunctionCallException;
 import org.jaxen.JaxenConstants;
 import org.jaxen.NamedAccessNavigator;
 import org.jaxen.UnsupportedAxisException;
 import org.jaxen.XPath;
 import org.jaxen.saxpath.SAXPathException;
-import org.jsoup.Jsoup;
 
 /**
  *
  * @author James Amoore
  */
-public final class HtmlDocumentNavigator 
-		  extends DefaultNavigator 
-		  implements NamedAccessNavigator
+public final class HtmlDocumentNavigator
+	 extends DefaultNavigator
+	 implements NamedAccessNavigator
 {
 	private static final HtmlDocumentNavigator INSTANCE = new HtmlDocumentNavigator();
-	
+
 	public static HtmlDocumentNavigator getInstance()
 	{
 		return INSTANCE;
 	}
-	
+
 	/**
 	 * Name spaces are not supported in document model.
+	 *
 	 * @param o the object
-	 * @return 
+	 *
+	 * @return
 	 */
 	@Override
 	public String getElementNamespaceUri(Object o)
@@ -98,7 +95,7 @@ public final class HtmlDocumentNavigator
 	{
 		if(o instanceof AHtmlAttribute)
 		{
-			return ((AHtmlAttribute)o).getAttributeName();
+			return ((AHtmlAttribute) o).getAttributeName();
 		}
 		else
 		{
@@ -209,14 +206,14 @@ public final class HtmlDocumentNavigator
 
 	@Override
 	public XPath parseXPath(String string)
-			  throws SAXPathException
+		 throws SAXPathException
 	{
 		return new HtmlDocumentXPath(string);
 	}
 
 	@Override
 	public Iterator getChildAxisIterator(Object o, String localName, String namespacePrefix, String namespaceUri)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		if(o instanceof AHtmlElement)
 		{
@@ -231,7 +228,7 @@ public final class HtmlDocumentNavigator
 
 	@Override
 	public Iterator getAttributeAxisIterator(Object o, String localName, String namespacePrefix, String namespaceUri)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		if(o instanceof AHtmlElement)
 		{
@@ -250,9 +247,10 @@ public final class HtmlDocumentNavigator
 		if(isElement(contextNode))
 		{
 			List<AHtmlElement> elements = ((AHtmlElement) contextNode).getAllElements()
-					  .stream()
-					  .filter(elem -> elem.getAttribute("id").equals(elementId))
-					  .collect(Collectors.toList());
+				 .stream()
+				 .filter(elem -> elem.getAttribute("id")
+					  .equals(elementId))
+				 .collect(Collectors.toList());
 			return elements;
 		}
 		else
@@ -261,19 +259,20 @@ public final class HtmlDocumentNavigator
 		}
 	}
 
-	/*@Override
-	public Object getParentNode(Object contextNode)
-			  throws UnsupportedAxisException
-	{
-		return super.getParentNode(contextNode); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-	}*/
-
+	/*
+	 * @Override
+	 * public Object getParentNode(Object contextNode)
+	 * throws UnsupportedAxisException
+	 * {
+	 * return super.getParentNode(contextNode); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+	 * }
+	 */
 	@Override
 	public Object getDocumentNode(Object contextNode)
 	{
 		if(contextNode instanceof AHtmlDocument)
 		{
-			AHtmlDocument doc = (AHtmlDocument)contextNode;
+			AHtmlDocument doc = (AHtmlDocument) contextNode;
 			return doc.getRootElement();
 		}
 		else
@@ -284,14 +283,14 @@ public final class HtmlDocumentNavigator
 
 	@Override
 	public Iterator getNamespaceAxisIterator(Object contextNode)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		return JaxenConstants.EMPTY_ITERATOR;
 	}
 
 	@Override
 	public Iterator getAttributeAxisIterator(Object contextNode)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		if(isElement(contextNode))
 		{
@@ -302,20 +301,21 @@ public final class HtmlDocumentNavigator
 		return JaxenConstants.EMPTY_ITERATOR;
 	}
 
-	/*@Override
-	public Iterator getParentAxisIterator(Object contextNode)
-			  throws UnsupportedAxisException
-	{
-		return super.getParentAxisIterator(contextNode); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-	}*/
-
+	/*
+	 * @Override
+	 * public Iterator getParentAxisIterator(Object contextNode)
+	 * throws UnsupportedAxisException
+	 * {
+	 * return super.getParentAxisIterator(contextNode); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+	 * }
+	 */
 	@Override
 	public Iterator getChildAxisIterator(Object contextNode)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		if(isElement(contextNode))
 		{
-			AHtmlElement element = (AHtmlElement)contextNode;
+			AHtmlElement element = (AHtmlElement) contextNode;
 			List children = element.getAllElements();
 			children.add(element.getText());
 			return children.iterator();
@@ -325,4 +325,5 @@ public final class HtmlDocumentNavigator
 			return JaxenConstants.EMPTY_ITERATOR;
 		}
 	}
+
 }

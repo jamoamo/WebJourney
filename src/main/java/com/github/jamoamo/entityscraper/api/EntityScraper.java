@@ -82,9 +82,9 @@ public final class EntityScraper<T>
 	 * @throws XXPathException
 	 */
 	public T scrape(File file)
-			  throws XXPathException, XValueMappingException
+		 throws XXPathException, XValueMappingException
 	{
-		return scrape(() -> 
+		return scrape(() ->
 		{
 			try
 			{
@@ -98,9 +98,9 @@ public final class EntityScraper<T>
 	}
 
 	public T scrape(URL url)
-			  throws XXPathException, XValueMappingException
+		 throws XXPathException, XValueMappingException
 	{
-		return scrape(() -> 
+		return scrape(() ->
 		{
 			try
 			{
@@ -114,7 +114,7 @@ public final class EntityScraper<T>
 	}
 
 	private T scrape(Supplier<AHtmlDocument> documentSupplier)
-			  throws XXPathException, XValueMappingException
+		 throws XXPathException, XValueMappingException
 	{
 		T entity = createInstance();
 
@@ -137,12 +137,13 @@ public final class EntityScraper<T>
 
 	private T createInstance()
 	{
-		T entity = EntityCreator.getInstance().createEntity(this.entityClass);
+		T entity = EntityCreator.getInstance()
+			 .createEntity(this.entityClass);
 		return entity;
 	}
 
 	private void processField(T entity, String rootXPath, AHtmlDocument document, Field field)
-			  throws XXPathException, XValueMappingException
+		 throws XXPathException, XValueMappingException
 	{
 		XPath xPath = field.getAnnotation(XPath.class);
 		if(xPath == null)
@@ -151,7 +152,7 @@ public final class EntityScraper<T>
 		}
 		String xPathExpression = rootXPath + xPath.path();
 		XPathExpression expression = this.pathEvaluator.forPath(xPathExpression);
-		
+
 		String evaluatedValue = expression.evaluateStringValue(document);
 		AValueMapper mapper = createMapper(xPath);
 		try
@@ -161,15 +162,17 @@ public final class EntityScraper<T>
 		catch(IllegalAccessException | InvocationTargetException ex)
 		{
 			throw new RuntimeException(
-					  String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
-					  ex);
+				 String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
+				 ex);
 		}
 	}
 
 	private AValueMapper createMapper(XPath xPath)
-			  throws RuntimeException
+		 throws RuntimeException
 	{
-		AValueMapper mapper = MapperCreator.getInstance().createEntity(xPath.mapperClass());
+		AValueMapper mapper = MapperCreator.getInstance()
+			 .createEntity(xPath.mapperClass());
 		return mapper;
 	}
+
 }

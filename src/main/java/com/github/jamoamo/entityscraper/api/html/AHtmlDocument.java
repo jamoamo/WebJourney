@@ -25,18 +25,19 @@ package com.github.jamoamo.entityscraper.api.html;
 
 /**
  * Abstract representation of an HTML document. Custom {@link IParser} implementations are to provide their own implementations of this class.
- * 
+ *
  * @author James Amoore
  */
 public abstract class AHtmlDocument
-{	
+{
 	/**
 	 * @return the root element of the document.
 	 */
 	public abstract AHtmlElement getRootElement();
-	
+
 	/**
-	 * @return the document's &lt;html$gt; element. 
+	 * @return the document's &lt;html$gt; element.
 	 */
 	public abstract AHtmlElement getHtmlElement();
+
 }

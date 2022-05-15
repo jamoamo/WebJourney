@@ -33,10 +33,11 @@ import org.jsoup.nodes.Element;
  *
  * @author James Amoore
  */
-public class JSoupElement extends AHtmlElement
+public class JSoupElement
+	 extends AHtmlElement
 {
 	private final Element element;
-	
+
 	public JSoupElement(Element element)
 	{
 		this.element = element;
@@ -52,41 +53,43 @@ public class JSoupElement extends AHtmlElement
 	public List<AHtmlAttribute> getAttribute(String attribute)
 	{
 		return element.attributes()
-				  .asList()
-				  .stream()
-				  .filter(attr -> attr.getKey().equals(attribute))
-				  .map(attr -> new JSoupAttribute(attr))
-				  .collect(Collectors.toList());
+			 .asList()
+			 .stream()
+			 .filter(attr -> attr.getKey()
+				  .equals(attribute))
+			 .map(attr -> new JSoupAttribute(attr))
+			 .collect(Collectors.toList());
 	}
 
 	@Override
 	public List<AHtmlAttribute> getAttributes()
 	{
 		return element.attributes()
-				  .asList()
-				  .stream()
-				  .map(attr -> new JSoupAttribute(attr))
-				  .collect(Collectors.toList());
+			 .asList()
+			 .stream()
+			 .map(attr -> new JSoupAttribute(attr))
+			 .collect(Collectors.toList());
 	}
 
 	@Override
 	public List<AHtmlElement> getElements(String tag)
 	{
 		return element.children()
-				  .stream()
-				  .filter(elem -> elem.tagName().equals(tag))
-				  .map(elem -> new JSoupElement(elem))
-				  .collect(Collectors.toList());
+			 .stream()
+			 .filter(elem -> elem.tagName()
+				  .equals(tag))
+			 .map(elem -> new JSoupElement(elem))
+			 .collect(Collectors.toList());
 	}
 
 	@Override
 	public List<AHtmlElement> getAllElements()
 	{
 		return element
-				  .children()
-				  .stream()
-				  .map(elem -> new JSoupElement(elem))
-				  .collect(Collectors.toList());
+			 .children()
+			 .stream()
+			 .map(elem -> new JSoupElement(elem))
+			 .collect(Collectors.toList());
 	}
 
 	@Override
@@ -94,4 +97,5 @@ public class JSoupElement extends AHtmlElement
 	{
 		return element.ownText();
 	}
+
 }

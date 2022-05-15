@@ -25,15 +25,17 @@ package com.github.jamoamo.entityscraper.api;
 
 /**
  * Thrown if a default mapper cannot be determined because the field type is not supported.
- * 
+ *
  * @author James Amoore
  */
-public class XUnsupportedValueType extends RuntimeException
+public class XUnsupportedValueType
+	 extends RuntimeException
 {
 	private final Class<?> type;
-	
+
 	/**
 	 * Create a new instance with the unsupported type.
+	 *
 	 * @param type The unsupported type.
 	 */
 	public XUnsupportedValueType(Class<?> type)
@@ -41,7 +43,7 @@ public class XUnsupportedValueType extends RuntimeException
 		super(String.format("Value type [%s] is not supported.", type.getSimpleName()));
 		this.type = type;
 	}
-	
+
 	/**
 	 * @return the type that was unsupported.
 	 */
@@ -49,5 +51,5 @@ public class XUnsupportedValueType extends RuntimeException
 	{
 		return this.type;
 	}
-	
+
 }

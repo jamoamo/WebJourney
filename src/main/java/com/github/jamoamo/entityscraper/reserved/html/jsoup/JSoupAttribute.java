@@ -30,15 +30,16 @@ import org.jsoup.nodes.Attribute;
  *
  * @author James Amoore
  */
-public class JSoupAttribute extends AHtmlAttribute
+public class JSoupAttribute
+	 extends AHtmlAttribute
 {
 	private final Attribute attribute;
-	
+
 	public JSoupAttribute(Attribute attribute)
 	{
 		this.attribute = attribute;
 	}
-	
+
 	@Override
 	public String getAttributeName()
 	{
@@ -50,4 +51,5 @@ public class JSoupAttribute extends AHtmlAttribute
 	{
 		return attribute.getValue();
 	}
+
 }

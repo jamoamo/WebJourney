@@ -27,28 +27,31 @@ import java.lang.reflect.Field;
 
 /**
  * Value mapper that returns a Double.
- * 
+ *
  * @author James Amoore
  */
-public class DoubleMapper extends AValueMapper<Double>
+public class DoubleMapper
+	 extends AValueMapper<Double>
 {
 	/**
 	 * Maps the value to a double.
-	 * 
+	 *
 	 * @param value The value read from the file
 	 * @param field The field that the mapped value will be set on.
+	 *
 	 * @return the mapped value
+	 *
 	 * @throws XValueMappingException if the value can't be converted to a double.
 	 */
 	@Override
 	public Double mapValue(String value, Field field)
-			  throws XValueMappingException
+		 throws XValueMappingException
 	{
 		if(value == null || value.isEmpty() || value.isBlank())
 		{
 			return 0.0;
 		}
-		
+
 		try
 		{
 			return Double.valueOf(value);
@@ -58,4 +61,5 @@ public class DoubleMapper extends AValueMapper<Double>
 			throw new XValueMappingException(ex);
 		}
 	}
+
 }

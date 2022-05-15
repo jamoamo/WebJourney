@@ -32,7 +32,8 @@ import org.jsoup.nodes.Element;
  *
  * @author James Amoore
  */
-public class JSoupHtmlDocument extends AHtmlDocument
+public class JSoupHtmlDocument
+	 extends AHtmlDocument
 {
 	private final Document document;
 
@@ -44,7 +45,8 @@ public class JSoupHtmlDocument extends AHtmlDocument
 	@Override
 	public AHtmlElement getHtmlElement()
 	{
-		return mapElement(document.getElementsByTag("html").first());
+		return mapElement(document.getElementsByTag("html")
+			 .first());
 	}
 
 	private AHtmlElement mapElement(Element element)
@@ -57,4 +59,5 @@ public class JSoupHtmlDocument extends AHtmlDocument
 	{
 		return mapElement(document.root());
 	}
+
 }

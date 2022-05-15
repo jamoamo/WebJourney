@@ -27,22 +27,24 @@ import java.lang.reflect.Field;
 
 /**
  * Value Mapper that returns a String. Returns the value supplied.
- * 
+ *
  * @author James Amoore
  */
-public class StringMapper extends AValueMapper<String>
+public class StringMapper
+	 extends AValueMapper<String>
 {
 	/**
 	 * Maps the value to a string.
-	 * 
+	 *
 	 * @param value The value from the HTML document.
 	 * @param field The field that the value will be set on.
-	 * @return 
+	 *
+	 * @return
 	 */
 	@Override
 	public String mapValue(String value, Field field)
 	{
 		return value;
 	}
-	
+
 }

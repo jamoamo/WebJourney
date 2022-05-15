@@ -27,28 +27,31 @@ import java.lang.reflect.Field;
 
 /**
  * Value Mapper that returns an Integer.
- * 
+ *
  * @author James Amoore
  */
-public class IntegerMapper extends AValueMapper<Integer>
+public class IntegerMapper
+	 extends AValueMapper<Integer>
 {
 	/**
 	 * Maps the value to an Integer.
-	 * 
+	 *
 	 * @param value The value read from the HTML document.
 	 * @param field The field that the value will be set on.
+	 *
 	 * @return The mapped value.
+	 *
 	 * @throws XValueMappingException If the value is not an integer.
 	 */
 	@Override
 	public Integer mapValue(String value, Field field)
-			  throws XValueMappingException
+		 throws XValueMappingException
 	{
-		if(value == null || value.isEmpty() ||  value.isBlank())
+		if(value == null || value.isEmpty() || value.isBlank())
 		{
 			return 0;
 		}
-		
+
 		try
 		{
 			return Integer.valueOf(value);
@@ -58,4 +61,5 @@ public class IntegerMapper extends AValueMapper<Integer>
 			throw new XValueMappingException(ex);
 		}
 	}
+
 }

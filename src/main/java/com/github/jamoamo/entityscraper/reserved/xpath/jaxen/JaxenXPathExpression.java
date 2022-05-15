@@ -26,28 +26,28 @@ package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 import com.github.jamoamo.entityscraper.api.xpath.XPathExpression;
-import org.jaxen.BaseXPath;
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 
 /**
  * XPathExpression implementation that uses Jaxen to query the document model.
- * 
+ *
  * @author James Amoore
  */
-public class JaxenXPathExpression extends XPathExpression
+public class JaxenXPathExpression
+	 extends XPathExpression
 {
 	private final XPath xpath;
-	
+
 	public JaxenXPathExpression(String xpathExpr)
-			  throws JaxenException
+		 throws JaxenException
 	{
 		xpath = new HtmlDocumentXPath(xpathExpr);
 	}
 
 	@Override
-	public String evaluateStringValue(AHtmlDocument document) 
-			  throws XXPathException
+	public String evaluateStringValue(AHtmlDocument document)
+		 throws XXPathException
 	{
 		try
 		{
@@ -58,4 +58,5 @@ public class JaxenXPathExpression extends XPathExpression
 			throw new XXPathException(ex);
 		}
 	}
+
 }

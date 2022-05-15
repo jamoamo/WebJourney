@@ -36,17 +36,20 @@ class InstanceCreator
 	{
 		try
 		{
-			Constructor<T> defaultConstructor = instanceClass.getConstructor(
-					  new Class<?>[]{});
+			Constructor<T> defaultConstructor = instanceClass.getConstructor(new Class<?>[]{});
 			T entity = defaultConstructor.newInstance(new Object[]{});
 			return entity;
 		}
-		catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex)
+		catch(NoSuchMethodException
+			 | InstantiationException
+			 | IllegalAccessException
+			 | InvocationTargetException ex)
 		{
 			throw new RuntimeException(
-					  String.format("Failed to create an instance of type: %s",
-										 instanceClass.getSimpleName()),
-					   ex);
+				 String.format("Failed to create an instance of type: %s",
+					  instanceClass.getSimpleName()),
+				 ex);
 		}
 	}
+
 }

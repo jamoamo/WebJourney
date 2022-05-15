@@ -25,39 +25,41 @@ package com.github.jamoamo.entityscraper.api.mapper;
 
 /**
  * An exception that occurs whilst mapping a value from the HTML document to the target field.
- * 
+ *
  * @author James Amoore
  */
-public class XValueMappingException extends Exception
+public class XValueMappingException
+	 extends Exception
 {
 	/**
 	 * Creates a new instance with the Exception that caused the mapping error.
-	 * 
+	 *
 	 * @param cause The cause of the exception.
 	 */
 	public XValueMappingException(Exception cause)
 	{
 		this("", cause);
 	}
-	
+
 	/**
 	 * Creates a new instance with a message and the Exception that caused the mapping error.
-	 * 
+	 *
 	 * @param message The message for the exception.
-	 * @param ex The cause of the exception.
+	 * @param ex      The cause of the exception.
 	 */
 	public XValueMappingException(String message, Exception ex)
 	{
 		super("Mapping error." + message, ex);
 	}
-	
+
 	/**
 	 * Creates a new instance with a message.
-	 * 
+	 *
 	 * @param message The message for the exception.
 	 */
 	public XValueMappingException(String message)
 	{
 		super("Mapping error." + message);
 	}
+
 }
