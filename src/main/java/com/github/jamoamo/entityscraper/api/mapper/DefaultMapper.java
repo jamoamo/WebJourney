@@ -24,6 +24,7 @@
 package com.github.jamoamo.entityscraper.api.mapper;
 
 import com.github.jamoamo.entityscraper.api.XUnsupportedValueType;
+import com.github.jamoamo.entityscraper.reserved.reflection.MapperCreator;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
@@ -83,22 +84,7 @@ public final class DefaultMapper
 		 Class<? extends AValueMapper> defaultMapperClass)
 		 throws XValueMappingException
 	{
-		AValueMapper mapper = null;
-		try
-		{
-			mapper = defaultMapperClass.getConstructor(new Class[]{})
-				 .newInstance(new Object[]{});
-		}
-		catch(NoSuchMethodException
-			 | SecurityException
-			 | InstantiationException
-			 | IllegalAccessException
-			 | IllegalArgumentException
-			 | InvocationTargetException ex)
-		{
-			throw new XValueMappingException(ex);
-		}
-		return mapper;
+		return MapperCreator.getInstance().createEntity(defaultMapperClass);
 	}
 
 }
