@@ -8,6 +8,7 @@
     
    <name>Entity Scraper</name>
    <description>Web Scraper using Java annotations</description>
+   <url>https://github.com/jamoamo/entityscraper</url>
     
    <licenses>
       <license>
@@ -23,6 +24,12 @@
          <email>amoore.james@gmail.com</email>
       </developer>
    </developers>
+   
+   <scm>
+      <connection>scm:git:git@github.com:jamoamo/entityscraper.git</connection>
+      <developerConnection>scm:git:ssh://github.com:jamoamo/entityscraper.git</developerConnection>
+      <url>https://github.com/jamoamo/entityscraper/tree/main</url>
+   </scm>
     
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
