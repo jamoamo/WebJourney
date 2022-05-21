@@ -70,9 +70,9 @@ public class TestHtmlElement extends AHtmlElement
 	}
 
 	@Override
-	public List<AHtmlAttribute> getAttribute(String attribute)
+	public AHtmlAttribute getAttribute(String attribute)
 	{
-		return this.attributes.stream().filter(attr -> attr.getAttributeName().equals(attribute)).collect(Collectors.toList());
+		return this.attributes.stream().filter(attr -> attr.getAttributeName().equals(attribute)).findFirst().orElse(null);
 	}
 
 	@Override

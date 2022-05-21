@@ -31,7 +31,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates the xpath expression to be used to determine the value of the annotated field. Used in conjunction with the {@link Entity} type level annotation.
+ * Indicates the xpath expression to be used to determine the value of the annotated field.
+ * Used in conjunction with the {@link Entity} type level annotation.
  *
  * @author James Amoore
  */
@@ -40,17 +41,19 @@ import java.lang.annotation.Target;
 public @interface XPath
 {
 	/**
-	 * The xpath expression for determining the value of the annotated field. Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the full xpath expression.
+	 * The xpath expression for determining the value of the annotated field.
+	 * Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the
+	 * full xpath expression.
 	 *
 	 * @return the xpath expression.
 	 */
-	public String path();
+	String path();
 
 	/**
 	 * Optional. mapper class to use to map the value read from the document to the value to set on the field.
 	 *
 	 * @return the mapper class to map the field value.
 	 */
-	public Class<? extends AValueMapper> mapperClass() default DefaultMapper.class;
+	Class<? extends AValueMapper> mapperClass() default DefaultMapper.class;
 
 }

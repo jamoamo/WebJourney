@@ -24,7 +24,8 @@
 package com.github.jamoamo.entityscraper.api.html;
 
 /**
- * Abstract class representing an HTML element attribute. Custom {@link IParser} implementations are to provide their own implementations of this class.
+ * Abstract class representing an HTML element attribute. Custom {@link IParser} implementations are to provide their
+ * own implementations of this class.
  *
  * @author James Amoore
  */

@@ -27,21 +27,34 @@ package com.github.jamoamo.entityscraper.reserved.reflection;
  *
  * @author James Amoore
  */
-public class EntityCreator extends InstanceCreator
+public final class EntityCreator extends InstanceCreator
 {
 	private static final EntityCreator INSTANCE = new EntityCreator();
-	
+
+	/**
+	 * Private constructor.
+	 */
+	private EntityCreator()
+	{
+	}
+
+	/**
+	 * Returns the instance of EntityCreator.
+	 *
+	 * @return The instance.
+	 */
 	public static EntityCreator getInstance()
 	{
 		return INSTANCE;
 	}
-	
+
 	/**
 	 * Creates a new entity of the given entity class type.
-	 * 
-	 * @param <T> The entity type
+	 *
+	 * @param <T>         The entity type
 	 * @param entityClass The class of the entity type
-	 * @return 
+	 *
+	 * @return the created entity.
 	 */
 	public <T> T createEntity(Class<T> entityClass)
 	{

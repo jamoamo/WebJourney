@@ -27,25 +27,41 @@ import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
 import org.jsoup.nodes.Attribute;
 
 /**
+ * An HTML attribute that wraps a JSoup Attribute.
  *
  * @author James Amoore
  */
-public class JSoupAttribute
-	 extends AHtmlAttribute
+public final class JSoupAttribute
+		  extends AHtmlAttribute
 {
 	private final Attribute attribute;
 
+	/**
+	 * Creates an instance of a JSoup Attribute.
+	 *
+	 * @param attribute the JSoup attribute to wrap
+	 */
 	public JSoupAttribute(Attribute attribute)
 	{
 		this.attribute = attribute;
 	}
 
+	/**
+	 * Returns the name of the attribute.
+	 *
+	 * @return the attribute name.
+	 */
 	@Override
 	public String getAttributeName()
 	{
 		return attribute.getKey();
 	}
 
+	/**
+	 * Returns the value of the attribute.
+	 *
+	 * @return the attribute value.
+	 */
 	@Override
 	public String getValue()
 	{

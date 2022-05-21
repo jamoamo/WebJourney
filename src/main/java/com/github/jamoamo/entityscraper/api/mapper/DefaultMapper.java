@@ -26,7 +26,6 @@ package com.github.jamoamo.entityscraper.api.mapper;
 import com.github.jamoamo.entityscraper.api.XUnsupportedValueType;
 import com.github.jamoamo.entityscraper.reserved.reflection.MapperCreator;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Default mapper that determines the target mapper type from the Field type.
@@ -34,7 +33,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author James Amoore
  */
 public final class DefaultMapper
-	 extends AValueMapper<Object>
+		  extends AValueMapper<Object>
 {
 	/**
 	 * Maps the value based on the field value type.
@@ -48,7 +47,7 @@ public final class DefaultMapper
 	 */
 	@Override
 	public Object mapValue(String value, Field field)
-		 throws XValueMappingException
+			  throws XValueMappingException
 	{
 		Class<? extends AValueMapper> defaultMapperClass = getMapperClassForField(field);
 		AValueMapper mapper = getMapper(defaultMapperClass);
@@ -57,7 +56,7 @@ public final class DefaultMapper
 	}
 
 	private Class<? extends AValueMapper> getMapperClassForField(Field field)
-		 throws XUnsupportedValueType
+			  throws XUnsupportedValueType
 	{
 		Class<? extends AValueMapper> defaultMapperClass = null;
 		Class<?> type = field.getType();
@@ -81,10 +80,10 @@ public final class DefaultMapper
 	}
 
 	private AValueMapper getMapper(
-		 Class<? extends AValueMapper> defaultMapperClass)
-		 throws XValueMappingException
+			  Class<? extends AValueMapper> defaultMapperClass)
+			  throws XValueMappingException
 	{
-		return MapperCreator.getInstance().createEntity(defaultMapperClass);
+		return MapperCreator.getInstance().createMapper(defaultMapperClass);
 	}
 
 }

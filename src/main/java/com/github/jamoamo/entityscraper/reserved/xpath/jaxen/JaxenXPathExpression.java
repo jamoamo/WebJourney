@@ -25,7 +25,7 @@ package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 
 import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
-import com.github.jamoamo.entityscraper.api.xpath.XPathExpression;
+import com.github.jamoamo.entityscraper.api.xpath.AXPathExpression;
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 
@@ -34,17 +34,29 @@ import org.jaxen.XPath;
  *
  * @author James Amoore
  */
-public class JaxenXPathExpression
-	 extends XPathExpression
+public final class JaxenXPathExpression
+	 extends AXPathExpression
 {
 	private final XPath xpath;
 
+	/**
+	 * Creates a new instance.
+	 * @param xpathExpr The xpath expression string
+	 * @throws JaxenException if there was an error parsing the xpath expression
+	 */
 	public JaxenXPathExpression(String xpathExpr)
 		 throws JaxenException
 	{
 		xpath = new HtmlDocumentXPath(xpathExpr);
 	}
 
+	/**
+	 * Evaluates the provided document with the xpath expression and returns the evaluated string value.
+	 * 
+	 * @param document The doucment to evaluate
+	 * @return The string value result of the evaluation.
+	 * @throws XXPathException if there is an error.
+	 */
 	@Override
 	public String evaluateStringValue(AHtmlDocument document)
 		 throws XXPathException

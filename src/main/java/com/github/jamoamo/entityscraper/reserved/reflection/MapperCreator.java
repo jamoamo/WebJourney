@@ -29,22 +29,36 @@ import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
  *
  * @author James Amoore
  */
-public class MapperCreator extends InstanceCreator
+public final class MapperCreator extends InstanceCreator
 {
-	private static final EntityCreator INSTANCE = new EntityCreator();
-	
-	public static EntityCreator getInstance()
+	private static final MapperCreator INSTANCE = new MapperCreator();
+
+	/**
+	 * Private constructor.
+	 */
+	private MapperCreator()
+	{
+	}
+
+	/**
+	 * Returns the MapperCreator instance.
+	 *
+	 * @return the instance
+	 */
+	public static MapperCreator getInstance()
 	{
 		return INSTANCE;
 	}
-	
+
 	/**
 	 * Creates a new entity of the given entity class type.
-	 * 
+	 *
+	 * @param <T>         The type of the mapper
 	 * @param entityClass The class of the entity type
-	 * @return 
+	 *
+	 * @return the createdMapper
 	 */
-	public <T extends AValueMapper> T createEntity(Class<T> entityClass)
+	public <T extends AValueMapper> T createMapper(Class<T> entityClass)
 	{
 		return createInstance(entityClass);
 	}

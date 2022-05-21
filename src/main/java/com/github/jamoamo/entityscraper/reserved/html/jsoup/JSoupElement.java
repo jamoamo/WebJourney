@@ -30,27 +30,43 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 
 /**
- *
+ * An HTML Element that wraps a JSoup Element.
  * @author James Amoore
  */
-public class JSoupElement
+public final class JSoupElement
 	 extends AHtmlElement
 {
 	private final Element element;
 
+	/**
+	 * Creates a new instance.
+	 * @param element The JSoup Element to wrap.
+	 */
 	public JSoupElement(Element element)
 	{
 		this.element = element;
 	}
 
+	/**
+	 * Returns the name of the element name. This is the name of the tag of the element.
+	 * 
+	 * @return the element name.
+	 */
 	@Override
 	public String getElementName()
 	{
 		return element.tagName();
 	}
 
+	/**
+	 * Returns the Attribute with the provided name.
+	 *
+	 * @param attribute the name of the attribute to return.
+	 *
+	 * @return the attribute with the provided name.
+	 */
 	@Override
-	public List<AHtmlAttribute> getAttribute(String attribute)
+	public AHtmlAttribute getAttribute(String attribute)
 	{
 		return element.attributes()
 			 .asList()
@@ -58,9 +74,12 @@ public class JSoupElement
 			 .filter(attr -> attr.getKey()
 				  .equals(attribute))
 			 .map(attr -> new JSoupAttribute(attr))
-			 .collect(Collectors.toList());
+			 .findFirst().orElse(null);
 	}
 
+	/**
+	 * @return all the element's attributes as a {@link List}.
+	 */
 	@Override
 	public List<AHtmlAttribute> getAttributes()
 	{
@@ -71,6 +90,11 @@ public class JSoupElement
 			 .collect(Collectors.toList());
 	}
 
+	/**
+	 * @param tag the name of the tag of the elements to return.
+	 *
+	 * @return all of the element's children elements with the provided tag name as a {@link List}.
+	 */
 	@Override
 	public List<AHtmlElement> getElements(String tag)
 	{
@@ -82,6 +106,9 @@ public class JSoupElement
 			 .collect(Collectors.toList());
 	}
 
+	/**
+	 * @return all of the element's children elements as a {@link List}.
+	 */
 	@Override
 	public List<AHtmlElement> getAllElements()
 	{
@@ -92,6 +119,9 @@ public class JSoupElement
 			 .collect(Collectors.toList());
 	}
 
+	/**
+	 * @return The text in the element
+	 */
 	@Override
 	public String getText()
 	{

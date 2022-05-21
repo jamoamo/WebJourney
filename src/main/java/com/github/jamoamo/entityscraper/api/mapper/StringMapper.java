@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
  * @author James Amoore
  */
 public class StringMapper
-	 extends AValueMapper<String>
+		  extends AValueMapper<String>
 {
 	/**
 	 * Maps the value to a string.
@@ -39,7 +39,7 @@ public class StringMapper
 	 * @param value The value from the HTML document.
 	 * @param field The field that the value will be set on.
 	 *
-	 * @return
+	 * @return the mapped value
 	 */
 	@Override
 	public String mapValue(String value, Field field)

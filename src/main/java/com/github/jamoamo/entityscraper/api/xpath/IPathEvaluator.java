@@ -31,7 +31,7 @@ package com.github.jamoamo.entityscraper.api.xpath;
 public interface IPathEvaluator
 {
 	/**
-	 * Creates an {@link XPathExpression} for the provided xpath string.
+	 * Creates an {@link AXPathExpression} for the provided xpath string.
 	 *
 	 * @param path the xpath string.
 	 *
@@ -39,7 +39,7 @@ public interface IPathEvaluator
 	 *
 	 * @throws XXPathException if there is an exception processing the path.
 	 */
-	public abstract XPathExpression forPath(String path)
+	AXPathExpression forPath(String path)
 		 throws XXPathException;
 
 }

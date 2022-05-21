@@ -24,18 +24,24 @@
 package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 
 import com.github.jamoamo.entityscraper.api.xpath.IPathEvaluator;
-import com.github.jamoamo.entityscraper.api.xpath.XPathExpression;
+import com.github.jamoamo.entityscraper.api.xpath.AXPathExpression;
 import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
 import org.jaxen.JaxenException;
 
 /**
- *
+ * Tha xpath evaluator that uses the Jaxen library.
  * @author James Amoore
  */
-public class JaxenPathEvaluator implements IPathEvaluator
+public final class JaxenPathEvaluator implements IPathEvaluator
 {
+	/**
+	 * Creates a xpath expression for the xpath string.
+	 * @param path The xpath expression string.
+	 * @return An XPath expression representation.
+	 * @throws XXPathException if there is an exception
+	 */
 	@Override
-	public XPathExpression forPath(String path)
+	public AXPathExpression forPath(String path)
 			  throws XXPathException
 	{
 		try

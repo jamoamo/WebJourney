@@ -24,19 +24,23 @@
 package com.github.jamoamo.entityscraper.api;
 
 /**
- * Builder for building Entity Scrapers for a provided entity class
- * 
+ * Builder for building Entity Scrapers for a provided entity class.
+ *
  * @author James Amoore
  */
-public class EntityScraperBuilder
+public final class EntityScraperBuilder
 {
 	//Private constructor to prevent instances of this class being created.
-	private EntityScraperBuilder(){}
-	
+	private EntityScraperBuilder()
+	{
+	}
+
 	/**
-	 * Create an {@link EntityScraper} builder for instances of the provided class. The entity class should be annotated with {@code @Entity}.
-	 * 
+	 * Create an {@link EntityScraper} builder for instances of the provided class. The entity class should be annotated
+	 * with {@code @Entity}.
+	 *
 	 * @param entityClass The class that the EntityScraper should create instances of.
+	 *
 	 * @return a builder object for building instances of {@link EntityScraper}
 	 */
 	public static EntityScraperBuilderBase forEntity(Class<?> entityClass)

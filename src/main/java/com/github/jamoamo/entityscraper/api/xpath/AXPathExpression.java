@@ -30,7 +30,7 @@ import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
  *
  * @author James Amoore
  */
-public abstract class XPathExpression
+public abstract class AXPathExpression
 {
 	/**
 	 * Gets the string value result of the xpath expression for the provided document.
@@ -42,6 +42,6 @@ public abstract class XPathExpression
 	 * @throws XXPathException if an exception occurs evaluating the document using the xpath expression.
 	 */
 	public abstract String evaluateStringValue(AHtmlDocument document)
-		 throws XXPathException;
+			  throws XXPathException;
 
 }

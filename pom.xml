@@ -74,6 +74,17 @@
       </dependency>
    </dependencies>
    
+   <distributionManagement>
+      <snapshotRepository>
+         <id>ossrh</id>
+         <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+      </snapshotRepository>
+      <repository>
+         <id>ossrh</id>
+         <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      </repository>
+   </distributionManagement>
+   
    <profiles>
       <profile>
          <id>release</id>
@@ -136,6 +147,51 @@
                </execution>
             </executions>
          </plugin>
+         <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>4.2.3</version>
+            <configuration>
+               <outputDirectory>spotbugs</outputDirectory>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.1.2</version>
+            <configuration>
+               <configLocation>.checkstyle/checkstyle_rules.xml</configLocation>
+               <encoding>UTF-8</encoding>
+               <consoleOutput>true</consoleOutput>
+               <failsOnError>true</failsOnError>
+               <linkXRef>false</linkXRef>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>validate</id>
+                  <phase>validate</phase>
+                  <goals>
+                     <goal>check</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
    </build>
+   
+   <reporting>
+      <plugins>
+         <plugin>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+         </plugin>
+         <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>4.2.3</version>
+            <configuration>
+               <outputDirectory>spotbugs</outputDirectory>
+            </configuration>
+         </plugin>
+      </plugins>
+   </reporting>
 </project>

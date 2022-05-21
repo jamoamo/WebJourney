@@ -29,8 +29,10 @@ package com.github.jamoamo.entityscraper.api.mapper;
  * @author James Amoore
  */
 public class XValueMappingException
-	 extends Exception
+		  extends Exception
 {
+	private static final String MAPPING_ERROR = "Mapping error.";
+
 	/**
 	 * Creates a new instance with the Exception that caused the mapping error.
 	 *
@@ -49,7 +51,7 @@ public class XValueMappingException
 	 */
 	public XValueMappingException(String message, Exception ex)
 	{
-		super("Mapping error." + message, ex);
+		super(MAPPING_ERROR + message, ex);
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class XValueMappingException
 	 */
 	public XValueMappingException(String message)
 	{
-		super("Mapping error." + message);
+		super(MAPPING_ERROR + message);
 	}
 
 }

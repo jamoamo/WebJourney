@@ -36,7 +36,7 @@ import java.nio.charset.Charset;
  *
  * @author James Amoore
  */
-public class JSoupParser
+public final class JSoupParser
 	 implements IParser
 {
 	@Override

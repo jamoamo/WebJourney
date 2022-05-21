@@ -29,7 +29,7 @@ package com.github.jamoamo.entityscraper.api;
  * @author James Amoore
  */
 public class XUnsupportedValueType
-	 extends RuntimeException
+		  extends RuntimeException
 {
 	private final Class<?> type;
 

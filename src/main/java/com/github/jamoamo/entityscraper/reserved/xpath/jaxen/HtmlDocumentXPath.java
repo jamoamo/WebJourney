@@ -32,25 +32,33 @@ import org.jaxen.JaxenException;
 import org.jaxen.util.SingletonList;
 
 /**
- * XPath for HTMLDocument
+ * XPath for HTMLDocument.
+ *
  * @author James Amoore
  */
-public class HtmlDocumentXPath extends BaseXPath
+public final class HtmlDocumentXPath extends BaseXPath
 {
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param xPathExpr The xpath expressionS
+	 *
+	 * @throws JaxenException if there is an error parsing the xpath expression
+	 */
 	public HtmlDocumentXPath(String xPathExpr)
 			  throws JaxenException
 	{
 		super(xPathExpr, HtmlDocumentNavigator.getInstance());
 	}
-	
+
 	@Override
 	protected Context getContext(Object node)
 	{
 		if(node instanceof Context)
 		{
-			return (Context)node;
+			return (Context) node;
 		}
-		
+
 		Context fullContext = new Context(getContextSupport());
 		if(node instanceof AHtmlDocument)
 		{
@@ -59,7 +67,7 @@ public class HtmlDocumentXPath extends BaseXPath
 		}
 		else if(node instanceof List)
 		{
-			fullContext.setNodeSet((List)node);
+			fullContext.setNodeSet((List) node);
 		}
 		else
 		{

@@ -44,6 +44,6 @@ public abstract class AValueMapper<T>
 	 * @throws XValueMappingException if there was a failure to map the value.
 	 */
 	public abstract T mapValue(String value, Field field)
-		 throws XValueMappingException;
+			  throws XValueMappingException;
 
 }

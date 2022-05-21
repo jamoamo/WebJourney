@@ -29,24 +29,36 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /**
+ * An HTML Document that wraps a JSoup HTML Document.
  *
  * @author James Amoore
  */
-public class JSoupHtmlDocument
-	 extends AHtmlDocument
+
+public final class JSoupHtmlDocument
+		  extends AHtmlDocument
 {
 	private final Document document;
 
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param document The JSoup Document to wrap
+	 */
 	public JSoupHtmlDocument(Document document)
 	{
 		this.document = document;
 	}
 
+	/**
+	 * Returns the element for the &lt;html&gt; tag.
+	 *
+	 * @return the html element.
+	 */
 	@Override
 	public AHtmlElement getHtmlElement()
 	{
 		return mapElement(document.getElementsByTag("html")
-			 .first());
+				  .first());
 	}
 
 	private AHtmlElement mapElement(Element element)
@@ -54,6 +66,11 @@ public class JSoupHtmlDocument
 		return new JSoupElement(element);
 	}
 
+	/**
+	 * Returns the element for the root of the document.
+	 *
+	 * @return the root element
+	 */
 	@Override
 	public AHtmlElement getRootElement()
 	{

@@ -32,6 +32,12 @@ import java.lang.reflect.InvocationTargetException;
  */
 class InstanceCreator
 {
+	/**
+	 * Creates a new instance of the provided class.
+	 * @param <T> The instance type
+	 * @param instanceClass The instance type
+ 	 * @return newly created instance.
+	 */
 	protected <T> T createInstance(Class<T> instanceClass)
 	{
 		try

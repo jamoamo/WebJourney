@@ -31,7 +31,7 @@ import java.lang.reflect.Field;
  * @author James Amoore
  */
 public class IntegerMapper
-	 extends AValueMapper<Integer>
+		  extends AValueMapper<Integer>
 {
 	/**
 	 * Maps the value to an Integer.
@@ -45,7 +45,7 @@ public class IntegerMapper
 	 */
 	@Override
 	public Integer mapValue(String value, Field field)
-		 throws XValueMappingException
+			  throws XValueMappingException
 	{
 		if(value == null || value.isEmpty() || value.isBlank())
 		{

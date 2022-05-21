@@ -38,10 +38,11 @@ import java.lang.annotation.Target;
 public @interface Entity
 {
 	/**
-	 * The root of the xpath evaluation to be used for the xpath expressions of fields in the entity. Defaults to "/html/body".
+	 * The root of the xpath evaluation to be used for the xpath expressions of fields in the entity.
+	 * Defaults to "/html/body".
 	 *
 	 * @return the entity rootPath.
 	 */
-	public String rootPath() default "/html/body";
+	String rootPath() default "/html/body";
 
 }

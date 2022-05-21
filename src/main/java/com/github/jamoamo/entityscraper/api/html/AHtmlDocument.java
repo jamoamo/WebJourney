@@ -24,7 +24,8 @@
 package com.github.jamoamo.entityscraper.api.html;
 
 /**
- * Abstract representation of an HTML document. Custom {@link IParser} implementations are to provide their own implementations of this class.
+ * Abstract representation of an HTML document. Custom {@link IParser} implementations are to provide their own
+ * implementations of this class.
  *
  * @author James Amoore
  */

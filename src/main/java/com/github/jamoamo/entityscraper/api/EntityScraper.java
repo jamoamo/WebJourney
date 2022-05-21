@@ -28,7 +28,7 @@ import com.github.jamoamo.entityscraper.annotation.XPath;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 import com.github.jamoamo.entityscraper.reserved.html.jsoup.JSoupParser;
 import com.github.jamoamo.entityscraper.api.xpath.IPathEvaluator;
-import com.github.jamoamo.entityscraper.api.xpath.XPathExpression;
+import com.github.jamoamo.entityscraper.api.xpath.AXPathExpression;
 import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
 import com.github.jamoamo.entityscraper.reserved.xpath.jaxen.JaxenPathEvaluator;
 import java.io.IOException;
@@ -53,6 +53,8 @@ import java.util.function.Supplier;
  */
 public final class EntityScraper<T>
 {
+	private static final int DEFAULT_TIMEOUT = 10000;
+
 	private final Class<T> entityClass;
 	private IParser scraper = new JSoupParser();
 	private IPathEvaluator pathEvaluator = new JaxenPathEvaluator();
@@ -62,27 +64,28 @@ public final class EntityScraper<T>
 		this.entityClass = entityClass;
 	}
 
-	final void setScraper(IParser scraper)
+	void setScraper(IParser scraper)
 	{
 		this.scraper = scraper;
 	}
 
-	final void setPathEvaluator(IPathEvaluator evaluator)
+	void setPathEvaluator(IPathEvaluator evaluator)
 	{
 		this.pathEvaluator = evaluator;
 	}
 
 	/**
-	 * Scrapes an html file to produce an entity
+	 * Scrapes an html file to produce an entity.
 	 *
-	 * @param file
+	 * @param file The file to scrape
 	 *
-	 * @return
+	 * @return the scraped entity
 	 *
-	 * @throws XXPathException
+	 * @throws XXPathException        if there is an xpath exception
+	 * @throws XValueMappingException if there is an error creating the entity and setting its values.
 	 */
 	public T scrape(File file)
-		 throws XXPathException, XValueMappingException
+			  throws XXPathException, XValueMappingException
 	{
 		return scrape(() ->
 		{
@@ -97,14 +100,24 @@ public final class EntityScraper<T>
 		});
 	}
 
+	/**
+	 * Scrapes the file at the provided URL to produce an entity.
+	 *
+	 * @param url The url to scrape
+	 *
+	 * @return the scraped entity
+	 *
+	 * @throws XXPathException        if there is an xpath exception
+	 * @throws XValueMappingException if there is an error creating the entity and setting its values.
+	 */
 	public T scrape(URL url)
-		 throws XXPathException, XValueMappingException
+			  throws XXPathException, XValueMappingException
 	{
 		return scrape(() ->
 		{
 			try
 			{
-				return this.scraper.parse(url, 10000);
+				return this.scraper.parse(url, DEFAULT_TIMEOUT);
 			}
 			catch(IOException ioe)
 			{
@@ -114,7 +127,7 @@ public final class EntityScraper<T>
 	}
 
 	private T scrape(Supplier<AHtmlDocument> documentSupplier)
-		 throws XXPathException, XValueMappingException
+			  throws XXPathException, XValueMappingException
 	{
 		T entity = createInstance();
 
@@ -138,12 +151,12 @@ public final class EntityScraper<T>
 	private T createInstance()
 	{
 		T entity = EntityCreator.getInstance()
-			 .createEntity(this.entityClass);
+				  .createEntity(this.entityClass);
 		return entity;
 	}
 
 	private void processField(T entity, String rootXPath, AHtmlDocument document, Field field)
-		 throws XXPathException, XValueMappingException
+			  throws XXPathException, XValueMappingException
 	{
 		XPath xPath = field.getAnnotation(XPath.class);
 		if(xPath == null)
@@ -151,7 +164,7 @@ public final class EntityScraper<T>
 			return;
 		}
 		String xPathExpression = rootXPath + xPath.path();
-		XPathExpression expression = this.pathEvaluator.forPath(xPathExpression);
+		AXPathExpression expression = this.pathEvaluator.forPath(xPathExpression);
 
 		String evaluatedValue = expression.evaluateStringValue(document);
 		AValueMapper mapper = createMapper(xPath);
@@ -162,17 +175,16 @@ public final class EntityScraper<T>
 		catch(IllegalAccessException | InvocationTargetException ex)
 		{
 			throw new RuntimeException(
-				 String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
-				 ex);
+					  String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
+					  ex);
 		}
 	}
 
 	private AValueMapper createMapper(XPath xPath)
-		 throws RuntimeException
+			  throws RuntimeException
 	{
 		AValueMapper mapper = MapperCreator.getInstance()
-			 .createEntity(xPath.mapperClass());
+				  .createMapper(xPath.mapperClass());
 		return mapper;
 	}
-
 }

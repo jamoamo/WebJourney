@@ -45,8 +45,8 @@ public interface IParser
 	 *
 	 * @throws IOException if there is failure to connect to the URL.
 	 */
-	public AHtmlDocument parse(URL url, int timeout)
-		 throws IOException;
+	AHtmlDocument parse(URL url, int timeout)
+			  throws IOException;
 
 	/**
 	 * Parses the web page at the File provided and returns a representation of its document model.
@@ -58,8 +58,8 @@ public interface IParser
 	 *
 	 * @throws IOException if there is failure to connect to the URL.
 	 */
-	public AHtmlDocument parse(File file, Charset charset)
-		 throws IOException;
+	AHtmlDocument parse(File file, Charset charset)
+			  throws IOException;
 
 	/**
 	 * Parses the web page in the provided HTML string and returns a representation of its document model.
@@ -70,7 +70,7 @@ public interface IParser
 	 *
 	 * @throws IOException if there is a failure to connect to the URL.
 	 */
-	public AHtmlDocument parse(String html)
-		 throws IOException;
+	AHtmlDocument parse(String html)
+			  throws IOException;
 
 }
