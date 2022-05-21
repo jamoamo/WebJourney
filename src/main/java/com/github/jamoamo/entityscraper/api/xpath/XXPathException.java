@@ -25,17 +25,20 @@ package com.github.jamoamo.entityscraper.api.xpath;
 
 /**
  * An exception that occurs during xpath evaluation.
- * 
+ *
  * @author James Amoore
  */
-public class XXPathException extends Exception
+public class XXPathException
+	 extends Exception
 {
 	/**
 	 * Creates a new instance of XXPathException.
+	 *
 	 * @param cause The cause of this exception.
 	 */
 	public XXPathException(Exception cause)
 	{
 		super("XPath Exception", cause);
 	}
+
 }

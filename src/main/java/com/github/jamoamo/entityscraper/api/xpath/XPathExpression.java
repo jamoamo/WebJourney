@@ -26,18 +26,22 @@ package com.github.jamoamo.entityscraper.api.xpath;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 
 /**
- * Representation of an xpath expression. Used to evaluate a docuement model based on the xpath expression. 
+ * Representation of an xpath expression. Used to evaluate a docuement model based on the xpath expression.
+ *
  * @author James Amoore
  */
 public abstract class XPathExpression
 {
 	/**
 	 * Gets the string value result of the xpath expression for the provided document.
-	 * 
+	 *
 	 * @param document The document that needs to be queried by this xpath expression.
+	 *
 	 * @return the evaluated string value.
-	 * @throws XXPathException if an exception occurs evaluating the document using the xpath expression. 
+	 *
+	 * @throws XXPathException if an exception occurs evaluating the document using the xpath expression.
 	 */
 	public abstract String evaluateStringValue(AHtmlDocument document)
-			  throws XXPathException;
+		 throws XXPathException;
+
 }

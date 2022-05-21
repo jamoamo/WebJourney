@@ -33,21 +33,23 @@ import org.jsoup.nodes.Element;
 
 /**
  * Jaxen Navigator implementation for Jsoup Documents.
- * 
+ *
  * @author James Amoore
  */
-public final class JsoupNavigator extends DefaultNavigator implements NamedAccessNavigator
+public final class JsoupNavigator
+	 extends DefaultNavigator
+	 implements NamedAccessNavigator
 {
 	public static JsoupNavigator getInstance()
 	{
 		return new JsoupNavigator();
-	}	
-	
+	}
+
 	private JsoupNavigator()
 	{
-		
+
 	}
-	
+
 	@Override
 	public String getElementNamespaceUri(Object o)
 	{
@@ -59,7 +61,7 @@ public final class JsoupNavigator extends DefaultNavigator implements NamedAcces
 	{
 		if(o instanceof Element)
 		{
-			Element element = (Element)o;
+			Element element = (Element) o;
 			return element.tagName();
 		}
 		else
@@ -172,23 +174,23 @@ public final class JsoupNavigator extends DefaultNavigator implements NamedAcces
 
 	@Override
 	public XPath parseXPath(String string)
-			  throws SAXPathException
+		 throws SAXPathException
 	{
 		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 	}
 
 	@Override
 	public Iterator getChildAxisIterator(Object o, String string, String string1, String string2)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 	}
 
 	@Override
 	public Iterator getAttributeAxisIterator(Object o, String string, String string1, String string2)
-			  throws UnsupportedAxisException
+		 throws UnsupportedAxisException
 	{
 		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 	}
-	
+
 }

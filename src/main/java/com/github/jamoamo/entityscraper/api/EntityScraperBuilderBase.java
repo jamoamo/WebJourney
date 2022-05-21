@@ -27,23 +27,25 @@ import com.github.jamoamo.entityscraper.api.xpath.IPathEvaluator;
 import com.github.jamoamo.entityscraper.api.html.IParser;
 
 /**
- * Base EntityScraper builder. Allows for the Html Parser and XPath Evaluator to be specified. 
+ * Base EntityScraper builder. Allows for the Html Parser and XPath Evaluator to be specified.
  * Instances of this class are created using the methods on {@link EntityScraperBuilder}
- * 
+ *
  * @author James Amoore
  */
 public final class EntityScraperBuilderBase
 {
 	private final EntityScraper entityScraper;
-	
+
 	EntityScraperBuilderBase(Class<?> entityClass)
 	{
 		this.entityScraper = new EntityScraper(entityClass);
 	}
-	
+
 	/**
 	 * Use the provided {@code IParser} in the built {@code EntityScraper}.
+	 *
 	 * @param scraper The scraper to be used by the EntityScraper.
+	 *
 	 * @return the current instance of {@code EntityScraperBuilderBase}
 	 */
 	public EntityScraperBuilderBase usingParser(IParser scraper)
@@ -51,10 +53,12 @@ public final class EntityScraperBuilderBase
 		this.entityScraper.setScraper(scraper);
 		return this;
 	}
-	
+
 	/**
 	 * Use the provided {@link IPathEvaluator} in the built {@link EntityScraper}.
+	 *
 	 * @param evaluator The path evaluator to be used by the EntityScraper.
+	 *
 	 * @return the current instance of {@link EntityScraperBuilderBase}
 	 */
 	public EntityScraperBuilderBase usingPathEvaluator(IPathEvaluator evaluator)
@@ -62,13 +66,15 @@ public final class EntityScraperBuilderBase
 		this.entityScraper.setPathEvaluator(evaluator);
 		return this;
 	}
-	
+
 	/**
 	 * Builds a new instance of {@link EntityScraper}. Repeated calls to this method will return the same instance.
+	 *
 	 * @return the built {@link EntityScraper}
 	 */
 	public EntityScraper build()
 	{
 		return this.entityScraper;
 	}
+
 }

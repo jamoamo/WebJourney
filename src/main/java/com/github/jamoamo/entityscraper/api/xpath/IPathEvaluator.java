@@ -25,17 +25,21 @@ package com.github.jamoamo.entityscraper.api.xpath;
 
 /**
  * An evaluator of XPath expressions. Creates an XPath expression for a provided xpath string.
- * 
+ *
  * @author James Amoore
  */
 public interface IPathEvaluator
 {
 	/**
 	 * Creates an {@link XPathExpression} for the provided xpath string.
+	 *
 	 * @param path the xpath string.
+	 *
 	 * @return the XPath expression representation.
+	 *
 	 * @throws XXPathException if there is an exception processing the path.
 	 */
 	public abstract XPathExpression forPath(String path)
-			  throws XXPathException;
+		 throws XXPathException;
+
 }

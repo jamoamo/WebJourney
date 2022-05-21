@@ -21,43 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.reserved.html.jsoup;
+package com.github.jamoamo.entityscraper.reserved.reflection;
 
-import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
-import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  *
  * @author James Amoore
  */
-public class JSoupHtmlDocument
-	 extends AHtmlDocument
+class InstanceCreator
 {
-	private final Document document;
-
-	public JSoupHtmlDocument(Document document)
+	protected <T> T createInstance(Class<T> instanceClass)
 	{
-		this.document = document;
-	}
-
-	@Override
-	public AHtmlElement getHtmlElement()
-	{
-		return mapElement(document.getElementsByTag("html")
-			 .first());
-	}
-
-	private AHtmlElement mapElement(Element element)
-	{
-		return new JSoupElement(element);
-	}
-
-	@Override
-	public AHtmlElement getRootElement()
-	{
-		return mapElement(document.root());
+		try
+		{
+			Constructor<T> defaultConstructor = instanceClass.getConstructor(new Class<?>[]{});
+			T entity = defaultConstructor.newInstance(new Object[]{});
+			return entity;
+		}
+		catch(NoSuchMethodException
+			 | InstantiationException
+			 | IllegalAccessException
+			 | InvocationTargetException ex)
+		{
+			throw new RuntimeException(
+				 String.format("Failed to create an instance of type: %s",
+					  instanceClass.getSimpleName()),
+				 ex);
+		}
 	}
 
 }

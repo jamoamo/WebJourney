@@ -33,30 +33,31 @@ import java.nio.charset.Charset;
 
 /**
  * JSoup based HTML parser.
- * 
+ *
  * @author James Amoore
  */
-public class JSoupParser implements IParser
+public class JSoupParser
+	 implements IParser
 {
 	@Override
 	public AHtmlDocument parse(URL url, int timeout)
-			  throws IOException
+		 throws IOException
 	{
 		return new JSoupHtmlDocument(Jsoup.parse(url, timeout));
 	}
 
 	@Override
 	public AHtmlDocument parse(File file, Charset charset)
-			  throws IOException
+		 throws IOException
 	{
 		return new JSoupHtmlDocument(Jsoup.parse(file, charset.displayName()));
 	}
 
 	@Override
 	public AHtmlDocument parse(String html)
-			  throws IOException
+		 throws IOException
 	{
 		return new JSoupHtmlDocument(Jsoup.parse(html));
 	}
-	
+
 }

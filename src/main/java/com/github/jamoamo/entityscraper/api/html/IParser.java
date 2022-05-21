@@ -30,39 +30,47 @@ import java.nio.charset.Charset;
 
 /**
  * The interface for HTML parses. The parser is expected to return a representation of the web page it parses.
+ *
  * @author James Amoore
  */
 public interface IParser
 {
 	/**
 	 * Parses the web page at the URL provided and returns a representation of its document model.
-	 * 
-	 * @param url The url to find the web page at.
+	 *
+	 * @param url     The url to find the web page at.
 	 * @param timeout The connection timeout.
+	 *
 	 * @return a representation of the document model
+	 *
 	 * @throws IOException if there is failure to connect to the URL.
 	 */
 	public AHtmlDocument parse(URL url, int timeout)
-			  throws IOException;
-	
+		 throws IOException;
+
 	/**
 	 * Parses the web page at the File provided and returns a representation of its document model.
-	 * 
-	 * @param file The file containing the web page.
+	 *
+	 * @param file    The file containing the web page.
 	 * @param charset The character set of the file being read.
+	 *
 	 * @return a representation of the document model
+	 *
 	 * @throws IOException if there is failure to connect to the URL.
 	 */
-	public AHtmlDocument parse(File file, Charset charset) 
-			  throws IOException;
-	
+	public AHtmlDocument parse(File file, Charset charset)
+		 throws IOException;
+
 	/**
 	 * Parses the web page in the provided HTML string and returns a representation of its document model.
-	 * 
+	 *
 	 * @param html The HTML string to parse.
+	 *
 	 * @return a representation of the document model
+	 *
 	 * @throws IOException if there is a failure to connect to the URL.
 	 */
-	public AHtmlDocument parse(String html) 
-			  throws IOException;
+	public AHtmlDocument parse(String html)
+		 throws IOException;
+
 }

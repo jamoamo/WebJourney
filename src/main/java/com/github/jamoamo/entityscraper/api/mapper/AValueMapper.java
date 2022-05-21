@@ -27,7 +27,7 @@ import java.lang.reflect.Field;
 
 /**
  * Abstract class for value mappers that map values from the html document to the target field value.
- * 
+ *
  * @author James Amoore
  * @param <T> The type of the value created by the mapper
  */
@@ -35,12 +35,15 @@ public abstract class AValueMapper<T>
 {
 	/**
 	 * Maps a value read from the HTML document to the target type of the mapper.
-	 * 
+	 *
 	 * @param value The value read from the HTML document
 	 * @param field The field the value is mapped for
+	 *
 	 * @return the mapped value.
+	 *
 	 * @throws XValueMappingException if there was a failure to map the value.
 	 */
 	public abstract T mapValue(String value, Field field)
-			  throws XValueMappingException;
+		 throws XValueMappingException;
+
 }

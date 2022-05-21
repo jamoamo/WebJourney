@@ -21,43 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.reserved.html.jsoup;
-
-import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
-import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+package com.github.jamoamo.entityscraper.reserved.reflection;
 
 /**
  *
  * @author James Amoore
  */
-public class JSoupHtmlDocument
-	 extends AHtmlDocument
+public class EntityCreator extends InstanceCreator
 {
-	private final Document document;
-
-	public JSoupHtmlDocument(Document document)
+	private static final EntityCreator INSTANCE = new EntityCreator();
+	
+	public static EntityCreator getInstance()
 	{
-		this.document = document;
+		return INSTANCE;
 	}
-
-	@Override
-	public AHtmlElement getHtmlElement()
+	
+	/**
+	 * Creates a new entity of the given entity class type.
+	 * 
+	 * @param <T> The entity type
+	 * @param entityClass The class of the entity type
+	 * @return 
+	 */
+	public <T> T createEntity(Class<T> entityClass)
 	{
-		return mapElement(document.getElementsByTag("html")
-			 .first());
+		return createInstance(entityClass);
 	}
-
-	private AHtmlElement mapElement(Element element)
-	{
-		return new JSoupElement(element);
-	}
-
-	@Override
-	public AHtmlElement getRootElement()
-	{
-		return mapElement(document.root());
-	}
-
 }
