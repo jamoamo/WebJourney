@@ -4,7 +4,7 @@
     
    <groupId>io.github.jamoamo</groupId>
    <artifactId>entityscraper</artifactId>
-   <version>0.1</version>
+   <version>0.1-SNAPSHOT</version>
     
    <name>Entity Scraper</name>
    <description>Web Scraper using Java annotations</description>
@@ -29,8 +29,7 @@
       <connection>scm:git:git@github.com:jamoamo/entityscraper.git</connection>
       <developerConnection>scm:git:ssh://github.com:jamoamo/entityscraper.git</developerConnection>
       <url>https://github.com/jamoamo/entityscraper/tree/main</url>
-     <tag>v0.1</tag>
-  </scm>
+   </scm>
     
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
