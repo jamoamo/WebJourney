@@ -45,6 +45,8 @@ public class XUnsupportedValueType
 	}
 
 	/**
+	 * Returns the unsupported type.
+	 * 
 	 * @return the type that was unsupported.
 	 */
 	public Class<?> getUnsupportedType()

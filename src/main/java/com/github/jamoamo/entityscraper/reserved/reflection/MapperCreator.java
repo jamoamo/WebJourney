@@ -26,7 +26,8 @@ package com.github.jamoamo.entityscraper.reserved.reflection;
 import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
 
 /**
- *
+ * Creates an instance of a Mapper class.
+ * 
  * @author James Amoore
  */
 public final class MapperCreator extends InstanceCreator

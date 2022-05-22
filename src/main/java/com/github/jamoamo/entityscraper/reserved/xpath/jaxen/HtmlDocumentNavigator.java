@@ -38,7 +38,8 @@ import org.jaxen.XPath;
 import org.jaxen.saxpath.SAXPathException;
 
 /**
- *
+ * A navigator of an {@Link AHtmlDocument}.
+ * 
  * @author James Amoore
  */
 public final class HtmlDocumentNavigator
@@ -282,7 +283,7 @@ public final class HtmlDocumentNavigator
 		{
 			List<AHtmlElement> elements = ((AHtmlElement) contextNode).getAllElements()
 				 .stream()
-				 .filter(elem -> elem.getAttribute("id")
+				 .filter(elem -> elem.getAttribute("id").getValue()
 					  .equals(elementId))
 				 .collect(Collectors.toList());
 			return elements;

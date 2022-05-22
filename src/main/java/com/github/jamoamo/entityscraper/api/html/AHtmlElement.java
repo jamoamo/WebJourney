@@ -34,6 +34,8 @@ import java.util.List;
 public abstract class AHtmlElement
 {
 	/**
+	 * Return the name of the element.
+	 * 
 	 * @return the name of the element (the tag name).
 	 */
 	public abstract String getElementName();
@@ -48,11 +50,15 @@ public abstract class AHtmlElement
 	public abstract AHtmlAttribute getAttribute(String attribute);
 
 	/**
+	 * Return all the attributes of the element.
+	 * 
 	 * @return all the element's attributes as a {@link List}.
 	 */
 	public abstract List<AHtmlAttribute> getAttributes();
 
 	/**
+	 * Return the child elements of this element with a specific tag.
+	 * 
 	 * @param tag the name of the tag of the elements to return.
 	 *
 	 * @return all of the element's children elements with the provided tag name as a {@link List}.
@@ -60,11 +66,15 @@ public abstract class AHtmlElement
 	public abstract List<AHtmlElement> getElements(String tag);
 
 	/**
+	 * Return all the child elements of the element.
+	 * 
 	 * @return all of the element's children elements as a {@link List}.
 	 */
 	public abstract List<AHtmlElement> getAllElements();
 
 	/**
+	 * Return the element's text.
+	 * 
 	 * @return The text in the element
 	 */
 	public abstract String getText();
