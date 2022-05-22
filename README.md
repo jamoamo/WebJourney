@@ -1,7 +1,7 @@
 # Entity Scraper
 
 ## Overview
-Java library for scrpaing web page data into a java class using only annotations. Class fields are annotated with the XPath query that indicates how the value should be extracted from the web page.
+Java library for scraping web page data into a java class using only annotations. Class fields are annotated with the XPath query that indicates how the value should be extracted from the web page.
 
 ## Features
 
@@ -44,12 +44,6 @@ Java library for scrpaing web page data into a java class using only annotations
 
     EntityScraper scraper = EntityScraperBuilder.entityClass(WebPage.class).build();
     WebPage webpage = scraper.scrape(new URL("www.google.com"));
-
-##Versions
-
-### v0.1 
-Initial release
-Not released yet. To be released by 15 May 2022.
 
 ##Diclaimer
 
