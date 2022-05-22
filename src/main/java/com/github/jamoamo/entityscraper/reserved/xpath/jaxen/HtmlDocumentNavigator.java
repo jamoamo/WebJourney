@@ -38,7 +38,7 @@ import org.jaxen.XPath;
 import org.jaxen.saxpath.SAXPathException;
 
 /**
- * A navigator of an {@Link AHtmlDocument}.
+ * A navigator of an {@link AHtmlDocument}.
  * 
  * @author James Amoore
  */
