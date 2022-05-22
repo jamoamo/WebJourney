@@ -32,11 +32,15 @@ package com.github.jamoamo.entityscraper.api.html;
 public abstract class AHtmlAttribute
 {
 	/**
+	 * Returns the name of the attribute.
+	 * 
 	 * @return The attributes name.
 	 */
 	public abstract String getAttributeName();
 
 	/**
+	 * Returns the value of the attribute.
+	 * 
 	 * @return The attribute's value.
 	 */
 	public abstract String getValue();

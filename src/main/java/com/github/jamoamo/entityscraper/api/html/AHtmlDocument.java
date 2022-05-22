@@ -32,11 +32,15 @@ package com.github.jamoamo.entityscraper.api.html;
 public abstract class AHtmlDocument
 {
 	/**
+	 * Return the root element of the document.
+	 * 
 	 * @return the root element of the document.
 	 */
 	public abstract AHtmlElement getRootElement();
 
 	/**
+	 * Return the html element in the document.
+	 * 
 	 * @return the document's &lt;html$gt; element.
 	 */
 	public abstract AHtmlElement getHtmlElement();
