@@ -163,21 +163,42 @@ public final class EntityScraper<T>
 		{
 			return;
 		}
-		String xPathExpression = rootXPath + xPath.path();
-		AXPathExpression expression = this.pathEvaluator.forPath(xPathExpression);
+		String evaluatedValue = evaluateValue(rootXPath, xPath, document);
+		mapValue(xPath, evaluatedValue, field, entity);
+	}
 
-		String evaluatedValue = expression.evaluateStringValue(document);
+	private void mapValue(XPath xPath, String evaluatedValue, Field field, T entity)
+		 throws RuntimeException, XValueMappingException
+	{
 		AValueMapper mapper = createMapper(xPath);
 		try
 		{
-			BeanUtils.setProperty(entity, field.getName(), mapper.mapValue(evaluatedValue, field));
+			Object mappedValue = mapper.mapValue(evaluatedValue, field);
+			BeanUtils.setProperty(entity, field.getName(), mappedValue);
 		}
 		catch(IllegalAccessException | InvocationTargetException ex)
 		{
 			throw new RuntimeException(
-					  String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
-					  ex);
+				 String.format("Failed to set field %s with value %s", field.getName(), evaluatedValue),
+				 ex);
 		}
+	}
+
+	private String evaluateValue(String rootXPath, XPath xPath, AHtmlDocument document)
+		 throws RuntimeException, XXPathException
+	{
+		String xPathExpression = rootXPath + xPath.path();
+		AXPathExpression expression = null;
+		try
+		{
+			expression = this.pathEvaluator.forPath(xPathExpression);
+		}
+		catch(XXPathException exception)
+		{
+			throw new RuntimeException("Error evaluating xpath.");
+		}
+		String evaluatedValue = expression.evaluateStringValue(document);
+		return evaluatedValue;
 	}
 
 	private AValueMapper createMapper(XPath xPath)
