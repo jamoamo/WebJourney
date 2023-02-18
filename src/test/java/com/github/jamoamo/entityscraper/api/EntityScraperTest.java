@@ -25,7 +25,6 @@ package com.github.jamoamo.entityscraper.api;
 
 import com.github.jamoamo.entityscraper.api.EntityScraper;
 import java.io.File;
-import java.net.URL;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,6 +47,19 @@ public class EntityScraperTest
 		assertEquals("Table", entity.getSubtitle());
 		assertEquals(17, entity.getValue3());
 		assertEquals(2.7, entity.getRate(), 0.1);
+	}
+	
+	@Test
+	public void testScrape_File_Siblings()
+			  throws Exception
+	{
+		File file = new File(getClass().getClassLoader().getResource("sibling_axis.html").toURI());
+		EntityScraper instance = new EntityScraper(Sibling.class);
+		Object result = instance.scrape(file);
+		assertTrue(result instanceof Sibling);
+		Sibling entity = (Sibling) result;
+		assertEquals("Preceding Heading", entity.getPreceding());
+		assertEquals("Following Heading", entity.getFollowing());
 	}
 	
 }

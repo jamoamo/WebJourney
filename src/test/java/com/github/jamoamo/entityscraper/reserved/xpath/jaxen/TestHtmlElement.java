@@ -26,6 +26,7 @@ package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
 import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class TestHtmlElement extends AHtmlElement
 	private final String text;
 	private List<AHtmlAttribute> attributes;
 	private List<AHtmlElement> elements;
+	private AHtmlElement parent;
 	
 	public TestHtmlElement(String name, String text)
 	{
@@ -84,6 +86,7 @@ public class TestHtmlElement extends AHtmlElement
 	@Override
 	public List<AHtmlElement> getElements(String tag)
 	{
+		elements.forEach(element -> ((TestHtmlElement)element).setParent(this));
 		return this.elements.stream().filter(elem -> elem.getElementName().equals(tag)).collect(Collectors.toList());
 	}
 
@@ -97,5 +100,39 @@ public class TestHtmlElement extends AHtmlElement
 	public String getText()
 	{
 		return text;
+	}
+
+	@Override
+	public Iterator getSiblingsBefore()
+	{
+		return getParent().getAllElements().stream().takeWhile(elem -> !elem.equals(this)).iterator();
+	}
+
+	@Override
+	public Iterator getSiblingsAfter()
+	{
+		return getParent().getAllElements().stream().dropWhile(elem -> !elem.equals(this)).iterator();
+	}
+	
+	public void setParent(AHtmlElement parent)
+	{
+		this.parent = parent;
+	}
+	
+	public AHtmlElement getParent()
+	{
+		return this.parent;
+	}
+
+	@Override
+	public Iterator getSiblingElementsBefore()
+	{
+		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+	}
+
+	@Override
+	public Iterator getSiblingElementsAfter()
+	{
+		throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 	}
 }

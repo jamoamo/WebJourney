@@ -26,6 +26,7 @@ package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
+import com.github.jamoamo.entityscraper.api.html.AHtmlTextNode;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -147,7 +148,7 @@ public final class HtmlDocumentNavigator
 	@Override
 	public boolean isText(Object o)
 	{
-		return o instanceof String;
+		return o instanceof AHtmlTextNode || o instanceof String;
 	}
 
 	@Override
@@ -313,5 +314,37 @@ public final class HtmlDocumentNavigator
 		 throws UnsupportedAxisException
 	{
 		return JaxenConstants.EMPTY_ITERATOR;
+	}
+
+	@Override
+	public Iterator getPrecedingSiblingAxisIterator(Object contextNode)
+		 throws UnsupportedAxisException
+	{
+		Iterator siblingsBefore = ((AHtmlElement)contextNode).getSiblingElementsBefore();
+		return siblingsBefore;
+	}
+
+	@Override
+	public Iterator getFollowingSiblingAxisIterator(Object contextNode)
+		 throws UnsupportedAxisException
+	{
+		Iterator siblingsAfter = ((AHtmlElement)contextNode).getSiblingElementsAfter();
+		return siblingsAfter;
+	}
+
+	@Override
+	public Iterator getPrecedingAxisIterator(Object contextNode)
+		 throws UnsupportedAxisException
+	{
+		Iterator siblingsBefore = ((AHtmlElement)contextNode).getSiblingsBefore();
+		return siblingsBefore;
+	}
+
+	@Override
+	public Iterator getFollowingAxisIterator(Object contextNode)
+		 throws UnsupportedAxisException
+	{
+		Iterator siblingsAfter = ((AHtmlElement)contextNode).getSiblingsAfter();
+		return siblingsAfter;
 	}
 }

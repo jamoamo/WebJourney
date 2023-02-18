@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.entityscraper.api.html;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ import java.util.List;
  *
  * @author James Amoore
  */
-public abstract class AHtmlElement
+public abstract class AHtmlElement extends AHtmlNode
 {
 	/**
 	 * Return the name of the element.
@@ -78,4 +79,32 @@ public abstract class AHtmlElement
 	 * @return The text in the element
 	 */
 	public abstract String getText();
+
+	/**
+	 * Returns the sibling nodes that precede the element.
+	 * 
+	 * @return the siblings that precede.
+	 */
+	public abstract Iterator getSiblingsBefore();
+	
+	/**
+	 * Returns the sibling nodes that follow the element.
+	 * 
+	 * @return the siblings that follow.
+	 */
+	public abstract Iterator getSiblingsAfter();
+	
+	/**
+	 * Returns the sibling elements that precede the element.
+	 * 
+	 * @return the sibling elements that precede.
+	 */
+	public abstract Iterator getSiblingElementsBefore();
+	
+	/**
+	 * Returns the sibling elements that follow the element.
+	 * 
+	 * @return the sibling elements that follow.
+	 */
+	public abstract Iterator getSiblingElementsAfter();
 }

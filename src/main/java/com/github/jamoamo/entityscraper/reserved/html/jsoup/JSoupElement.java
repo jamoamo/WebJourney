@@ -25,9 +25,14 @@ package com.github.jamoamo.entityscraper.reserved.html.jsoup;
 
 import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
 import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
+import com.github.jamoamo.entityscraper.api.html.AHtmlNode;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 
 /**
  * An HTML Element that wraps a JSoup Element.
@@ -128,4 +133,79 @@ public final class JSoupElement
 		return element.ownText();
 	}
 
+	@Override
+	public Iterator getSiblingsBefore()
+	{
+		List<AHtmlNode> nodes = new ArrayList<>();
+		
+		Node previous = this.element.previousSibling();
+		while(previous != null)
+		{
+			if(previous instanceof Element)
+			{
+				nodes.add(new JSoupElement((Element)previous));
+			}
+			else if(previous instanceof TextNode)
+			{
+				nodes.add(new JSoupTextNode((TextNode)previous));
+			}
+			previous = previous.previousSibling();
+		}
+		return nodes.iterator();
+	}
+	
+	@Override
+	public Iterator getSiblingsAfter()
+	{
+		List<AHtmlNode> nodes = new ArrayList<>();
+		
+		Node next = this.element.nextSibling();
+		while(next != null)
+		{
+			if(next instanceof Element)
+			{
+				nodes.add(new JSoupElement((Element)next));
+			}
+			else if(next instanceof TextNode)
+			{
+				nodes.add(new JSoupTextNode((TextNode)next));
+			}
+			next = next.nextSibling();
+		}
+		return nodes.iterator();
+	}
+
+	@Override
+	public Iterator getSiblingElementsBefore()
+	{
+		List<JSoupElement> nodes = new ArrayList<>();
+		
+		Node previous = this.element.previousSibling();
+		while(previous != null)
+		{
+			if(previous instanceof Element)
+			{
+				nodes.add(new JSoupElement((Element)previous));
+			}
+			previous = previous.previousSibling();
+		}
+		return nodes.iterator();
+	}
+
+	@Override
+	public Iterator getSiblingElementsAfter()
+	{
+		List<AHtmlNode> nodes = new ArrayList<>();
+		
+		Node next = this.element.nextSibling();
+		while(next != null)
+		{
+			if(next instanceof Element)
+			{
+				nodes.add(new JSoupElement((Element)next));
+			}
+			next = next.nextSibling();
+		}
+		return nodes.iterator();
+	}
 }

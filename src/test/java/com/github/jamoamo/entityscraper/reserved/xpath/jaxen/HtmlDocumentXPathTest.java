@@ -23,11 +23,12 @@
  */
 package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 
-import com.github.jamoamo.entityscraper.reserved.xpath.jaxen.HtmlDocumentXPath;
 import com.github.jamoamo.entityscraper.api.html.AHtmlAttribute;
 import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 /**
