@@ -195,7 +195,7 @@ public final class EntityScraper<T>
 		}
 		catch(XXPathException exception)
 		{
-			throw new RuntimeException("Error evaluating xpath.");
+			throw new RuntimeException("Invalid xpath.");
 		}
 		String evaluatedValue = expression.evaluateStringValue(document);
 		return evaluatedValue;

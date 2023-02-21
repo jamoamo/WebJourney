@@ -37,6 +37,8 @@ import org.jaxen.NamedAccessNavigator;
 import org.jaxen.UnsupportedAxisException;
 import org.jaxen.XPath;
 import org.jaxen.saxpath.SAXPathException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A navigator of an {@link AHtmlDocument}.
@@ -48,6 +50,8 @@ public final class HtmlDocumentNavigator
 	 implements NamedAccessNavigator
 {
 	private static final HtmlDocumentNavigator INSTANCE = new HtmlDocumentNavigator();
+	
+	private final Logger logger = LoggerFactory.getLogger(HtmlDocumentNavigator.class);
 
 	/**
 	 * Gets the HtmlDocumentNavigator instance.
@@ -169,10 +173,18 @@ public final class HtmlDocumentNavigator
 		if(o instanceof AHtmlElement)
 		{
 			AHtmlElement element = (AHtmlElement) o;
+			this.logger.info("Getting Element text : " + element.getText());
 			return element.getText();
+		}
+		else if (o instanceof AHtmlTextNode)
+		{
+			AHtmlTextNode textNode = (AHtmlTextNode)o;
+			this.logger.info("Getting TextNode text : " + textNode.getText());
+			return textNode.getText();
 		}
 		else if(o instanceof String)
 		{
+			this.logger.info("Getting String text : " + o.toString());
 			return (String) o;
 		}
 		else
@@ -221,6 +233,7 @@ public final class HtmlDocumentNavigator
 	public Iterator getChildAxisIterator(Object o, String localName, String namespacePrefix, String namespaceUri)
 		 throws UnsupportedAxisException
 	{
+		this.logger.info("Getting children with local name: " + localName);
 		if(o instanceof AHtmlElement)
 		{
 			List children = ((AHtmlElement) o).getElements(localName);
@@ -239,6 +252,7 @@ public final class HtmlDocumentNavigator
 		if(isElement(contextNode))
 		{
 			AHtmlElement element = (AHtmlElement) contextNode;
+			this.logger.info("Getting all children for node: " + element.getElementName());
 			List children = element.getAllElements();
 			children.add(element.getText());
 			return children.iterator();
@@ -320,7 +334,9 @@ public final class HtmlDocumentNavigator
 	public Iterator getPrecedingSiblingAxisIterator(Object contextNode)
 		 throws UnsupportedAxisException
 	{
-		Iterator siblingsBefore = ((AHtmlElement)contextNode).getSiblingElementsBefore();
+		AHtmlElement element = (AHtmlElement)contextNode;
+		this.logger.info("Getting Preceding siblings for: " + element.getElementName());
+		Iterator siblingsBefore = element.getSiblingElementsBefore();
 		return siblingsBefore;
 	}
 
@@ -328,7 +344,9 @@ public final class HtmlDocumentNavigator
 	public Iterator getFollowingSiblingAxisIterator(Object contextNode)
 		 throws UnsupportedAxisException
 	{
-		Iterator siblingsAfter = ((AHtmlElement)contextNode).getSiblingElementsAfter();
+		AHtmlElement element = (AHtmlElement)contextNode;
+		this.logger.info("Getting Following siblings for: " + element.getElementName());
+		Iterator siblingsAfter = element.getSiblingElementsAfter();
 		return siblingsAfter;
 	}
 

@@ -130,7 +130,7 @@ public final class JSoupElement
 	@Override
 	public String getText()
 	{
-		return element.ownText();
+		return element.text();
 	}
 
 	@Override
