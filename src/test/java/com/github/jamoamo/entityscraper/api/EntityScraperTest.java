@@ -23,9 +23,9 @@
  */
 package com.github.jamoamo.entityscraper.api;
 
-import com.github.jamoamo.entityscraper.api.EntityScraper;
 import java.io.File;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -74,4 +74,15 @@ public class EntityScraperTest
 		assertEquals("Following Heading", entity.getFollowing());
 	}
 	
+	@Test
+	public void testScrape_File_Transform()
+			  throws Exception
+	{
+		File file = new File(getClass().getClassLoader().getResource("headings.html").toURI());
+		EntityScraper instance = new EntityScraper(TransformationEntity.class);
+		Object result = instance.scrape(file);
+		assertTrue(result instanceof TransformationEntity);
+		TransformationEntity entity = (TransformationEntity) result;
+		assertEquals("to be trimmed", entity.getH3());
+	}
 }
