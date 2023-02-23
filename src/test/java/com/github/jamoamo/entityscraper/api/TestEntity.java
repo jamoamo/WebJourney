@@ -34,17 +34,17 @@ import com.github.jamoamo.entityscraper.annotation.XPath;
 public class TestEntity
 {
 	@XPath (path = "/h1")
-	public String title;
+	private String title;
 	@XPath (path = "/h2")
-	public String subtitle;
+	private String subtitle;
 	@XPath (path = "/table/tbody/tr[2]/td[1]")
-	public String value1;
+	private String value1;
 	@XPath (path = "/table/tbody/tr[2]/td[2]")
-	public String value2;
+	private String value2;
 	@XPath (path = "/table/tbody/tr[2]/td[3]")
-	public int value3;
+	private int value3;
 	@XPath (path = "/table/tbody/tr[2]/td[4]")
-	public Double rate;
+	private Double rate;
 
 	public String getTitle()
 	{

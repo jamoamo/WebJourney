@@ -23,8 +23,6 @@
  */
 package com.github.jamoamo.entityscraper.api.mapper;
 
-import java.lang.reflect.Field;
-
 /**
  * Abstract class for value mappers that map values from the html document to the target field value.
  *
@@ -33,17 +31,18 @@ import java.lang.reflect.Field;
  */
 public abstract class AValueMapper<T>
 {
+	
 	/**
 	 * Maps a value read from the HTML document to the target type of the mapper.
 	 *
 	 * @param value The value read from the HTML document
-	 * @param field The field the value is mapped for
+	 * @param fieldClass The class of the field to be mapped
 	 *
 	 * @return the mapped value.
 	 *
 	 * @throws XValueMappingException if there was a failure to map the value.
 	 */
-	public abstract T mapValue(String value, Field field)
+	public abstract T mapValue(String value, Class<?> fieldClass)
 			  throws XValueMappingException;
 
 }

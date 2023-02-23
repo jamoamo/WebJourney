@@ -25,7 +25,9 @@ package com.github.jamoamo.entityscraper.reserved.xpath.jaxen;
 
 import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
+import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
 import com.github.jamoamo.entityscraper.api.xpath.AXPathExpression;
+import java.util.List;
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 
@@ -64,6 +66,21 @@ public final class JaxenXPathExpression
 		try
 		{
 			return xpath.stringValueOf(document);
+		}
+		catch(JaxenException ex)
+		{
+			throw new XXPathException(ex);
+		}
+	}
+
+	@Override
+	public List<String> evaluateListValue(AHtmlDocument document)
+		 throws XXPathException
+	{
+		try
+		{
+			List<AHtmlElement> elements = xpath.selectNodes(document);
+			return elements.stream().map(element -> element.getText()).toList();
 		}
 		catch(JaxenException ex)
 		{

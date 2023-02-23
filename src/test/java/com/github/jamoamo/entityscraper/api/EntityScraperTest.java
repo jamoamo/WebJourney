@@ -50,6 +50,18 @@ public class EntityScraperTest
 	}
 	
 	@Test
+	public void testScrape_File_Collection()
+		 throws Exception
+	{
+		File file = new File(getClass().getClassLoader().getResource("headings.html").toURI());
+		EntityScraper instance = new EntityScraper(CollectionEntity.class);
+		Object result = instance.scrape(file);
+		CollectionEntity entity = (CollectionEntity) result;
+		assertEquals(3, entity.getHeadings().size());
+		assertEquals(2, entity.getSubHeadings().size());
+	}
+	
+	@Test
 	public void testScrape_File_Siblings()
 			  throws Exception
 	{
