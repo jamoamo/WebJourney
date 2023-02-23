@@ -28,6 +28,7 @@ import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
 import com.github.jamoamo.entityscraper.api.html.AHtmlElement;
 import com.github.jamoamo.entityscraper.api.xpath.AXPathExpression;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 
@@ -80,7 +81,7 @@ public final class JaxenXPathExpression
 		try
 		{
 			List<AHtmlElement> elements = xpath.selectNodes(document);
-			return elements.stream().map(element -> element.getText()).toList();
+			return elements.stream().map(element -> element.getText()).collect(Collectors.toList());
 		}
 		catch(JaxenException ex)
 		{
