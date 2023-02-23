@@ -23,8 +23,6 @@
  */
 package com.github.jamoamo.entityscraper.api.mapper;
 
-import java.lang.reflect.Field;
-
 /**
  * Value Mapper that returns an Integer.
  *
@@ -37,14 +35,14 @@ public class IntegerMapper
 	 * Maps the value to an Integer.
 	 *
 	 * @param value The value read from the HTML document.
-	 * @param field The field that the value will be set on.
+	 * @param fieldClass The class of the field to be mapped
 	 *
 	 * @return The mapped value.
 	 *
 	 * @throws XValueMappingException If the value is not an integer.
 	 */
 	@Override
-	public Integer mapValue(String value, Field field)
+	public Integer mapValue(String value, Class<?> fieldClass)
 			  throws XValueMappingException
 	{
 		if(value == null || value.isEmpty() || value.isBlank())

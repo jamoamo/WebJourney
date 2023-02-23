@@ -24,6 +24,7 @@
 package com.github.jamoamo.entityscraper.api.xpath;
 
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
+import java.util.List;
 
 /**
  * Representation of an xpath expression. Used to evaluate a docuement model based on the xpath expression.
@@ -43,5 +44,14 @@ public abstract class AXPathExpression
 	 */
 	public abstract String evaluateStringValue(AHtmlDocument document)
 			  throws XXPathException;
-
+	
+	/**
+	 * Gets the list of Values of the XPath expression.
+	 * 
+	 * @param document The document that needs to be queried by this xpath expression.
+	 * @return The list of evaluated values
+	 * @throws XXPathException if an exception occurs evaluating the document using the xpath expression.
+	 */
+	public abstract List<String> evaluateListValue(AHtmlDocument document)
+			throws XXPathException;
 }

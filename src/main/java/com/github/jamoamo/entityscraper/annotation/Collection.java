@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 James Amoore.
+ * Copyright 2023 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.api.mapper;
+package com.github.jamoamo.entityscraper.annotation;
+
+import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
+import com.github.jamoamo.entityscraper.api.mapper.DefaultMapper;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Value Mapper that returns a String. Returns the value supplied.
  *
  * @author James Amoore
  */
-public class StringMapper
-		  extends AValueMapper<String>
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Collection
 {
 	/**
-	 * Maps the value to a string.
+	 * The xpath expression for determining the value of the annotated field.
+	 * Path value is used in conjunction with the basePath value of the {@link Entity} annotation to determine the
+	 * full xpath expression.
 	 *
-	 * @param value The value from the HTML document.
-	 * @param fieldClass The class of the field to be mapped
-	 *
-	 * @return the mapped value
+	 * @return the xpath expression.
 	 */
-	@Override
-	public String mapValue(String value, Class<?> fieldClass)
-	{
-		return value;
-	}
-
+	String path();
+	
+	/**
+	 * Optional. mapper class to use to map the value read from the document to the value to set on the field.
+	 *
+	 * @return the mapper class to map the field value.
+	 */
+	Class<? extends AValueMapper> mapperClass() default DefaultMapper.class;
 }

@@ -25,7 +25,6 @@ package com.github.jamoamo.entityscraper.api.mapper;
 
 import com.github.jamoamo.entityscraper.api.XUnsupportedValueType;
 import com.github.jamoamo.entityscraper.reserved.reflection.MapperCreator;
-import java.lang.reflect.Field;
 
 /**
  * Default mapper that determines the target mapper type from the Field type.
@@ -39,27 +38,26 @@ public final class DefaultMapper
 	 * Maps the value based on the field value type.
 	 *
 	 * @param value The value read from the HTML document.
-	 * @param field The field the mapped value will be set on.
+	 * @param fieldClass The class of the field to be mapped
 	 *
 	 * @return The mapped value.
 	 *
 	 * @throws XValueMappingException if an exception occurs mapping the value.
 	 */
 	@Override
-	public Object mapValue(String value, Field field)
+	public Object mapValue(String value, Class<?> fieldClass)
 			  throws XValueMappingException
 	{
-		Class<? extends AValueMapper> defaultMapperClass = getMapperClassForField(field);
+		Class<? extends AValueMapper> defaultMapperClass = getMapperClassForField(fieldClass);
 		AValueMapper mapper = getMapper(defaultMapperClass);
 
-		return mapper.mapValue(value, field);
+		return mapper.mapValue(value, fieldClass);
 	}
 
-	private Class<? extends AValueMapper> getMapperClassForField(Field field)
+	private Class<? extends AValueMapper> getMapperClassForField(Class<?> type)
 			  throws XUnsupportedValueType
 	{
 		Class<? extends AValueMapper> defaultMapperClass = null;
-		Class<?> type = field.getType();
 		if(type.equals(String.class))
 		{
 			defaultMapperClass = StringMapper.class;

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 James Amoore.
+ * Copyright 2023 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.entityscraper.api.mapper;
+package com.github.jamoamo.entityscraper.api;
+
+import com.github.jamoamo.entityscraper.annotation.Collection;
+import com.github.jamoamo.entityscraper.annotation.Entity;
+import java.util.List;
 
 /**
- * Value Mapper that returns a String. Returns the value supplied.
  *
  * @author James Amoore
  */
-public class StringMapper
-		  extends AValueMapper<String>
+@Entity
+public class CollectionEntity
 {
-	/**
-	 * Maps the value to a string.
-	 *
-	 * @param value The value from the HTML document.
-	 * @param fieldClass The class of the field to be mapped
-	 *
-	 * @return the mapped value
-	 */
-	@Override
-	public String mapValue(String value, Class<?> fieldClass)
+	@Collection(path="/h1")
+	private List<String> headings;
+	
+	@Collection(path="/h2")
+	private List<String> subHeadings;
+
+	public List<String> getHeadings()
 	{
-		return value;
+		return headings;
 	}
 
+	public void setHeadings(List<String> headings)
+	{
+		this.headings = headings;
+	}
+
+	public List<String> getSubHeadings()
+	{
+		return subHeadings;
+	}
+
+	public void setSubHeadings(List<String> subHeadings)
+	{
+		this.subHeadings = subHeadings;
+	}
 }

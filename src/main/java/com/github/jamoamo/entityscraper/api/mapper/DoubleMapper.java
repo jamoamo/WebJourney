@@ -23,8 +23,6 @@
  */
 package com.github.jamoamo.entityscraper.api.mapper;
 
-import java.lang.reflect.Field;
-
 /**
  * Value mapper that returns a Double.
  *
@@ -37,14 +35,14 @@ public class DoubleMapper
 	 * Maps the value to a double.
 	 *
 	 * @param value The value read from the file
-	 * @param field The field that the mapped value will be set on.
+	 * @param fieldClass The field that the mapped value will be set on.
 	 *
 	 * @return the mapped value
 	 *
 	 * @throws XValueMappingException if the value can't be converted to a double.
 	 */
 	@Override
-	public Double mapValue(String value, Field field)
+	public Double mapValue(String value, Class<?> fieldClass)
 		 throws XValueMappingException
 	{
 		if(value == null || value.isEmpty() || value.isBlank())
