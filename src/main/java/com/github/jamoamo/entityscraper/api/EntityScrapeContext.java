@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 James Amoore.
+ * Copyright 2023 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,34 +23,48 @@
  */
 package com.github.jamoamo.entityscraper.api;
 
+import com.github.jamoamo.entityscraper.api.html.IParser;
+import com.github.jamoamo.entityscraper.api.xpath.IPathEvaluator;
+import com.github.jamoamo.entityscraper.reserved.html.jsoup.JSoupParser;
+import com.github.jamoamo.entityscraper.reserved.xpath.jaxen.JaxenPathEvaluator;
+
 /**
- * Builder for building Entity Scrapers for a provided entity class.
  *
  * @author James Amoore
  */
-public final class EntityScraperBuilder
+class EntityScrapeContext
 {
-	//Private constructor to prevent instances of this class being created.
-	private EntityScraperBuilder()
+	private IPathEvaluator evaluator = new JaxenPathEvaluator();
+	private IParser parser = new JSoupParser();
+	private final Class entityClass;
+
+	EntityScrapeContext(Class entityClass)
 	{
+		this.entityClass = entityClass;
 	}
 
-	/**
-	 * Create an {@link EntityScraper} builder for instances of the provided class. The entity class should be annotated
-	 * with {@code @Entity}.
-	 *
-	 * @param entityClass The class that the EntityScraper should create instances of.
-	 *
-	 * @return a builder object for building instances of {@link EntityScraper}
-	 */
-	public static EntityScraperBuilderBase forEntity(Class entityClass)
+	public IPathEvaluator getEvaluator()
 	{
-		if(entityClass == null)
-		{
-			throw new IllegalArgumentException("Entity Class may not be null!");
-		}
-		
-		EntityScrapeContext context = new EntityScrapeContext(entityClass);
-		return new EntityScraperBuilderBase(context);
+		return evaluator;
+	}
+
+	public void setEvaluator(IPathEvaluator evaluator)
+	{
+		this.evaluator = evaluator;
+	}
+
+	public Class getEntityClass()
+	{
+		return this.entityClass;
+	}
+
+	void setParser(IParser parser)
+	{
+		this.parser = parser;
+	}
+	
+	public IParser getParser()
+	{
+		return this.parser;
 	}
 }

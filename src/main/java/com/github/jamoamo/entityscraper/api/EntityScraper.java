@@ -23,61 +23,34 @@
  */
 package com.github.jamoamo.entityscraper.api;
 
-import com.github.jamoamo.entityscraper.annotation.Collection;
 import com.github.jamoamo.entityscraper.annotation.Entity;
-import com.github.jamoamo.entityscraper.annotation.Transformation;
-import com.github.jamoamo.entityscraper.annotation.XPath;
-import com.github.jamoamo.entityscraper.api.function.ATransformationFunction;
 import com.github.jamoamo.entityscraper.api.html.AHtmlDocument;
-import com.github.jamoamo.entityscraper.reserved.html.jsoup.JSoupParser;
-import com.github.jamoamo.entityscraper.api.xpath.IPathEvaluator;
-import com.github.jamoamo.entityscraper.api.xpath.AXPathExpression;
 import com.github.jamoamo.entityscraper.api.xpath.XXPathException;
-import com.github.jamoamo.entityscraper.reserved.xpath.jaxen.JaxenPathEvaluator;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import org.apache.commons.beanutils.BeanUtils;
-import com.github.jamoamo.entityscraper.api.html.IParser;
-import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
 import com.github.jamoamo.entityscraper.api.mapper.XValueMappingException;
 import com.github.jamoamo.entityscraper.reserved.reflection.EntityCreator;
-import com.github.jamoamo.entityscraper.reserved.reflection.MapperCreator;
 import java.io.File;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
  * Scrapes an HTML Document and creates an entity object from it based on the annotations on the entity class.
  *
  * @author James Amoore
- * @param <T> The entity class of entities created by the scraper.
  */
-public final class EntityScraper<T>
+public final class EntityScraper
 {
 	private static final int DEFAULT_TIMEOUT = 10000;
+	
+	private final EntityScrapeContext context;
 
-	private final Class<T> entityClass;
-	private IParser scraper = new JSoupParser();
-	private IPathEvaluator pathEvaluator = new JaxenPathEvaluator();
-
-	EntityScraper(Class<T> entityClass)
+	EntityScraper(EntityScrapeContext context)
 	{
-		this.entityClass = entityClass;
-	}
-
-	void setScraper(IParser scraper)
-	{
-		this.scraper = scraper;
-	}
-
-	void setPathEvaluator(IPathEvaluator evaluator)
-	{
-		this.pathEvaluator = evaluator;
+		this.context = context;
 	}
 
 	/**
@@ -90,14 +63,14 @@ public final class EntityScraper<T>
 	 * @throws XXPathException        if there is an xpath exception
 	 * @throws XValueMappingException if there is an error creating the entity and setting its values.
 	 */
-	public T scrape(File file)
+	public Object scrape(File file)
 		 throws XXPathException, XValueMappingException
 	{
 		return scrape(() ->
 		{
 			try
 			{
-				return this.scraper.parse(file, Charset.forName("UTF-8"));
+				return this.context.getParser().parse(file, Charset.forName("UTF-8"));
 			}
 			catch(IOException ioe)
 			{
@@ -116,14 +89,14 @@ public final class EntityScraper<T>
 	 * @throws XXPathException        if there is an xpath exception
 	 * @throws XValueMappingException if there is an error creating the entity and setting its values.
 	 */
-	public T scrape(URL url)
+	public Object scrape(URL url)
 		 throws XXPathException, XValueMappingException
 	{
 		return scrape(() ->
 		{
 			try
 			{
-				return this.scraper.parse(url, DEFAULT_TIMEOUT);
+				return this.context.getParser().parse(url, DEFAULT_TIMEOUT);
 			}
 			catch(IOException ioe)
 			{
@@ -132,172 +105,68 @@ public final class EntityScraper<T>
 		});
 	}
 
-	private T scrape(Supplier<AHtmlDocument> documentSupplier)
+	private Object scrape(Supplier<AHtmlDocument> documentSupplier)
 		 throws XXPathException, XValueMappingException
 	{
-		T entity = createInstance();
+		Object entity = createInstance();
 
 		AHtmlDocument document = documentSupplier.get();
-
-		Entity entityAnnotation = entityClass.getAnnotation(Entity.class);
+		Class<?> clazz = this.context.getEntityClass();
+		Entity entityAnnotation = clazz.getAnnotation(Entity.class);
 		if(entityAnnotation == null)
 		{
 			throw new RuntimeException("Class is not annotated with the @Entity annotation.");
 		}
-		String rootXPath = entityAnnotation.rootPath();
 
-		for(Field field : this.entityClass.getDeclaredFields())
+		for(Field field : this.context.getEntityClass().getDeclaredFields())
 		{
 			EntityFieldDefn defn = new EntityFieldDefn(field);
 			if(defn.valid())
 			{
-				processField(entity, rootXPath, document, defn);
+				processField(entity, this.context, document, defn);
 			}
 		}
 
 		return entity;
 	}
 
-	private T createInstance()
+	private Object createInstance()
 	{
-		T entity = EntityCreator.getInstance()
-			 .createEntity(this.entityClass);
+		Object entity = EntityCreator.getInstance()
+			 .createEntity(this.context.getEntityClass());
 		return entity;
 	}
 
-	private void processField(T entity, String rootXPath, AHtmlDocument document, EntityFieldDefn defn)
+	private void processField(Object entity, EntityScrapeContext context, AHtmlDocument document, EntityFieldDefn defn)
 		 throws XXPathException, XValueMappingException
 	{
-		Field field = defn.getField();
-		if(defn.isSingleValue())
+		AFieldScraper scraper = getScraper(defn);
+		if(scraper == null)
 		{
-			String evaluatedValue = evaluateValue(rootXPath, defn.getXpath(), document);
-			mapStringValue(entity, defn, evaluatedValue);
+			return;
 		}
-		else
-		{
-			List<String> evaluatedValues = evaluateCollectionValue(rootXPath, defn.getCollection(), document);
-			mapListValue(entity, defn, evaluatedValues);
-		}
-	}
-
-	private void mapListValue(T entity, EntityFieldDefn defn, List<String> evaluatedValues)
-		 throws XValueMappingException
-	{
-		AValueMapper mapper = createMapper(defn.getCollection().mapperClass());
+		Object mappedValue = scraper.scrapeValue(document, context, defn);
+		
 		try
 		{
-			List<Object> objects = new ArrayList();
-			for(String evaluatedValue : evaluatedValues)
-			{
-				Class<?> genericType = defn.getMultiType();
-				Object mappedValue =
-					 mapAndTransformValue(mapper, evaluatedValue, genericType, defn.getTransformation());
-				objects.add(mappedValue);
-			}
-			BeanUtils.setProperty(entity, defn.getFieldName(), objects);
-		}
-		catch(IllegalAccessException
-			 | InvocationTargetException ex)
-		{
-			throwFieldSetError(defn.getFieldName(), evaluatedValues, ex);
-		}
-	}
-
-	private void throwFieldSetError(String fieldName, Object evaluatedValues,
-		 Exception ex)
-		 throws RuntimeException
-	{
-		throw new RuntimeException(
-			 String.format("Failed to set field %s with value %s", fieldName, evaluatedValues),
-			 ex);
-	}
-
-	private void mapStringValue(T entity, EntityFieldDefn defn, String evaluatedValue)
-		 throws XValueMappingException
-	{
-		AValueMapper mapper = createMapper(defn.getXpath().mapperClass());
-		try
-		{
-			Object mappedValue = mapAndTransformValue(mapper, evaluatedValue, defn.getType(), defn.getTransformation());
 			BeanUtils.setProperty(entity, defn.getFieldName(), mappedValue);
 		}
-		catch(IllegalAccessException
-			 | InvocationTargetException ex)
+		catch(IllegalAccessException | InvocationTargetException ex)
 		{
-			throwFieldSetError(defn.getFieldName(), evaluatedValue, ex);
+			throw new RuntimeException("Failed to set scraped value on entity.", ex);
 		}
 	}
-
-	private Object mapAndTransformValue(AValueMapper mapper, String evaluatedValue, Class<?> fieldClass,
-		 Transformation transformation)
-		 throws XValueMappingException
+	
+	private AFieldScraper getScraper(EntityFieldDefn defn)
 	{
-		if(transformation != null)
+		if(defn.isSingleValue())
 		{
-			try
-			{
-				Method method = transformation.functionClass()
-					 .getMethod("transform", new Class[]{String.class});
-				ATransformationFunction func = transformation.functionClass()
-					 .getConstructor(new Class[]{})
-					 .newInstance(new Object[]{});
-				evaluatedValue = method.invoke(func, evaluatedValue)
-					 .toString();
-			}
-			catch(NoSuchMethodException
-				 | InstantiationException
-				 | IllegalAccessException
-				 | InvocationTargetException ex)
-			{
-				throw new RuntimeException("Failed to transform value.", ex);
-			}
+			return new StringValueScraper();
 		}
-
-		Object mappedValue = mapper.mapValue(evaluatedValue, fieldClass);
-		return mappedValue;
+		else if (defn.isMultipleValue())
+		{
+			return new CollectionScraper();
+		}
+		return null;
 	}
-
-	private List<String> evaluateCollectionValue(String root, Collection collection, AHtmlDocument document)
-		 throws XXPathException
-	{
-		String xPathExpression = root + collection.path();
-		AXPathExpression expression = null;
-		try
-		{
-			expression = this.pathEvaluator.forPath(xPathExpression);
-		}
-		catch(XXPathException exception)
-		{
-			throw new RuntimeException("Invalid xpath for list.");
-		}
-		List<String> evaluatedValue = expression.evaluateListValue(document);
-		return evaluatedValue;
-	}
-
-	private String evaluateValue(String rootXPath, XPath xPath, AHtmlDocument document)
-		 throws XXPathException
-	{
-		String xPathExpression = rootXPath + xPath.path();
-		AXPathExpression expression = null;
-		try
-		{
-			expression = this.pathEvaluator.forPath(xPathExpression);
-		}
-		catch(XXPathException exception)
-		{
-			throw new RuntimeException("Invalid xpath.");
-		}
-		String evaluatedValue = expression.evaluateStringValue(document);
-		return evaluatedValue;
-	}
-
-	private AValueMapper createMapper(Class xPathClass)
-		 throws RuntimeException
-	{
-		AValueMapper mapper = MapperCreator.getInstance()
-			 .createMapper(xPathClass);
-		return mapper;
-	}
-
 }

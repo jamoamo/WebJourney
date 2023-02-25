@@ -39,7 +39,7 @@ public class EntityScraperTest
 			  throws Exception
 	{
 		File file = new File(getClass().getClassLoader().getResource("testpage.html").toURI());
-		EntityScraper instance = new EntityScraper(TestEntity.class);
+		EntityScraper instance = new EntityScraper(createContext(TestEntity.class));
 		Object result = instance.scrape(file);
 		assertTrue(result instanceof TestEntity);
 		TestEntity entity = (TestEntity) result;
@@ -50,11 +50,21 @@ public class EntityScraperTest
 	}
 	
 	@Test
+	public void testScrape_File_Non_Entity()
+		 throws Exception
+	{
+		File file = new File(getClass().getClassLoader().getResource("headings.html").toURI());
+		EntityScraper instance = new EntityScraper(createContext(NonEntity.class));
+		Exception ex = assertThrows(RuntimeException.class, () -> instance.scrape(file));
+		assertEquals("Class is not annotated with the @Entity annotation.", ex.getMessage());
+	}
+	
+	@Test
 	public void testScrape_File_Collection()
 		 throws Exception
 	{
 		File file = new File(getClass().getClassLoader().getResource("headings.html").toURI());
-		EntityScraper instance = new EntityScraper(CollectionEntity.class);
+		EntityScraper instance = new EntityScraper(createContext(CollectionEntity.class));
 		Object result = instance.scrape(file);
 		CollectionEntity entity = (CollectionEntity) result;
 		assertEquals(3, entity.getHeadings().size());
@@ -66,7 +76,7 @@ public class EntityScraperTest
 			  throws Exception
 	{
 		File file = new File(getClass().getClassLoader().getResource("sibling_axis.html").toURI());
-		EntityScraper instance = new EntityScraper(Sibling.class);
+		EntityScraper instance = new EntityScraper(createContext(Sibling.class));
 		Object result = instance.scrape(file);
 		assertTrue(result instanceof Sibling);
 		Sibling entity = (Sibling) result;
@@ -79,10 +89,15 @@ public class EntityScraperTest
 			  throws Exception
 	{
 		File file = new File(getClass().getClassLoader().getResource("headings.html").toURI());
-		EntityScraper instance = new EntityScraper(TransformationEntity.class);
+		EntityScraper instance = new EntityScraper(createContext(TransformationEntity.class));
 		Object result = instance.scrape(file);
 		assertTrue(result instanceof TransformationEntity);
 		TransformationEntity entity = (TransformationEntity) result;
 		assertEquals("to be trimmed", entity.getH3());
+	}
+
+	private EntityScrapeContext createContext(Class<?> aClass)
+	{
+		return new EntityScrapeContext(aClass);
 	}
 }
