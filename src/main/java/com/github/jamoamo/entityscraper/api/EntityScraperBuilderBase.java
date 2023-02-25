@@ -34,23 +34,28 @@ import com.github.jamoamo.entityscraper.api.html.IParser;
  */
 public final class EntityScraperBuilderBase
 {
-	private final EntityScraper entityScraper;
+	private final EntityScrapeContext context;
 
-	EntityScraperBuilderBase(Class<?> entityClass)
+	EntityScraperBuilderBase(EntityScrapeContext context)
 	{
-		this.entityScraper = new EntityScraper(entityClass);
+		this.context = context;
 	}
 
 	/**
 	 * Use the provided {@code IParser} in the built {@code EntityScraper}.
 	 *
-	 * @param scraper The scraper to be used by the EntityScraper.
+	 * @param parser The parser to be used by the EntityScraper.
 	 *
 	 * @return the current instance of {@code EntityScraperBuilderBase}
 	 */
-	public EntityScraperBuilderBase usingParser(IParser scraper)
+	public EntityScraperBuilderBase usingParser(IParser parser)
 	{
-		this.entityScraper.setScraper(scraper);
+		if(parser == null)
+		{
+			throw new IllegalArgumentException("Parser may not be null!");
+		}
+		
+		this.context.setParser(parser);
 		return this;
 	}
 
@@ -63,7 +68,12 @@ public final class EntityScraperBuilderBase
 	 */
 	public EntityScraperBuilderBase usingPathEvaluator(IPathEvaluator evaluator)
 	{
-		this.entityScraper.setPathEvaluator(evaluator);
+		if(evaluator == null)
+		{
+			throw new IllegalArgumentException("Evaluator may not be null!");
+		}
+		
+		this.context.setEvaluator(evaluator);
 		return this;
 	}
 
@@ -74,7 +84,8 @@ public final class EntityScraperBuilderBase
 	 */
 	public EntityScraper build()
 	{
-		return this.entityScraper;
+		EntityScraper scraper = new EntityScraper(this.context);
+		return scraper;
 	}
 
 }

@@ -26,6 +26,9 @@ package com.github.jamoamo.entityscraper.api;
 import com.github.jamoamo.entityscraper.annotation.Collection;
 import com.github.jamoamo.entityscraper.annotation.Transformation;
 import com.github.jamoamo.entityscraper.annotation.XPath;
+import com.github.jamoamo.entityscraper.api.mapper.AValueMapper;
+import com.github.jamoamo.entityscraper.api.mapper.DefaultMapper;
+import com.github.jamoamo.entityscraper.reserved.reflection.MapperCreator;
 import java.lang.reflect.Field;
 
 /**
@@ -119,6 +122,15 @@ class EntityFieldDefn
 	public String getFieldName()
 	{
 		return field.getName();
+	}
+	
+	public AValueMapper getMapper()
+	{
+		if(xpath != null)
+		{
+			return MapperCreator.getInstance().createMapper(xpath.mapperClass());
+		}
+		return new DefaultMapper();
 	}
 
 }

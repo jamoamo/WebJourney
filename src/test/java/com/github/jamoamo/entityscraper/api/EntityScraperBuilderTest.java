@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 James Amoore.
+ * Copyright 2023 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,34 +23,38 @@
  */
 package com.github.jamoamo.entityscraper.api;
 
+import java.lang.reflect.Field;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- * Builder for building Entity Scrapers for a provided entity class.
  *
  * @author James Amoore
  */
-public final class EntityScraperBuilder
+public class EntityScraperBuilderTest
 {
-	//Private constructor to prevent instances of this class being created.
-	private EntityScraperBuilder()
+	public EntityScraperBuilderTest()
 	{
 	}
 
 	/**
-	 * Create an {@link EntityScraper} builder for instances of the provided class. The entity class should be annotated
-	 * with {@code @Entity}.
-	 *
-	 * @param entityClass The class that the EntityScraper should create instances of.
-	 *
-	 * @return a builder object for building instances of {@link EntityScraper}
+	 * Test of forEntity method, of class EntityScraperBuilder.
 	 */
-	public static EntityScraperBuilderBase forEntity(Class entityClass)
+	@Test
+	public void testForEntity_nullEntity()
 	{
-		if(entityClass == null)
-		{
-			throw new IllegalArgumentException("Entity Class may not be null!");
-		}
-		
-		EntityScrapeContext context = new EntityScrapeContext(entityClass);
-		return new EntityScraperBuilderBase(context);
+		Exception ex = assertThrows(IllegalArgumentException.class, () -> EntityScraperBuilder.forEntity(null));
+		assertEquals("Entity Class may not be null!", ex.getMessage());
+	}
+	
+	@Test
+	public void testForEntity() throws Exception
+	{
+		EntityScraperBuilderBase baseBuilder = EntityScraperBuilder.forEntity(TestEntity.class);
+		Field contextField = baseBuilder.getClass().getDeclaredField("context");
+		contextField.setAccessible(true);
+		EntityScrapeContext context = (EntityScrapeContext)contextField.get(baseBuilder);
+		assertEquals(TestEntity.class, context.getEntityClass());
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 James Amoore.
+ * Copyright 2023 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +24,10 @@
 package com.github.jamoamo.entityscraper.api;
 
 /**
- * Builder for building Entity Scrapers for a provided entity class.
  *
  * @author James Amoore
  */
-public final class EntityScraperBuilder
+public class NonEntity
 {
-	//Private constructor to prevent instances of this class being created.
-	private EntityScraperBuilder()
-	{
-	}
-
-	/**
-	 * Create an {@link EntityScraper} builder for instances of the provided class. The entity class should be annotated
-	 * with {@code @Entity}.
-	 *
-	 * @param entityClass The class that the EntityScraper should create instances of.
-	 *
-	 * @return a builder object for building instances of {@link EntityScraper}
-	 */
-	public static EntityScraperBuilderBase forEntity(Class entityClass)
-	{
-		if(entityClass == null)
-		{
-			throw new IllegalArgumentException("Entity Class may not be null!");
-		}
-		
-		EntityScrapeContext context = new EntityScrapeContext(entityClass);
-		return new EntityScraperBuilderBase(context);
-	}
+	
 }
