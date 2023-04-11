@@ -26,6 +26,7 @@ package com.github.jamoamo.entityscraper.reserved.selenium;
 import com.github.jamoamo.entityscraper.api.web.IBrowserFactory;
 import com.github.jamoamo.entityscraper.api.web.IBrowser;
 import com.github.jamoamo.entityscraper.api.web.IBrowserOptions;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -44,10 +45,10 @@ public class ChromeBrowserFactory implements IBrowserFactory
 	@Override
 	public IBrowser createBrowser(IBrowserOptions browserOptions)
 	{
-		/*
+		
 		WebDriverManager.chromedriver().setup();
-*/
-		System.setProperty("webdriver.chrome.driver", "c:\\temp\\chromedriver.exe");
+
+		//System.setProperty("webdriver.chrome.driver", "c:\\temp\\chromedriver.exe");
 		ChromeOptions options
 				  = new ChromeOptions();
 		

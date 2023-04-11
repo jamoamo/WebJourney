@@ -27,16 +27,15 @@ import com.github.jamoamo.entityscraper.api.web.IPreferredBrowserStrategy;
 import com.github.jamoamo.entityscraper.api.web.PreferredBrowserStrategy;
 import com.github.jamoamo.entityscraper.api.web.StandardBrowser;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 class DefaultJourneyOptions implements IJourneyOptions
 {
-	private static final int DEFAULT_WAIT = 10;
+	private static final int DEFAULT_WAIT = 2;
 	
 	@Override
 	public Duration getDefaultWait()
 	{
-		return Duration.of(DEFAULT_WAIT,ChronoUnit.SECONDS);
+		return Duration.ofSeconds(DEFAULT_WAIT);
 	}
 
 	@Override

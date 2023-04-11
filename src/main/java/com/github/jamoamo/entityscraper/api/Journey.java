@@ -77,6 +77,8 @@ public final class Journey
 		
 		journeyPath.followPath(context);
 		
+		context.getBrowser().exit();
+		
 		context.log(new LogMessage(LogSeverity.INFO, "Journey Ending."));
 	}
 }

@@ -41,10 +41,9 @@ public class LoginTest
 		 JourneyPath path = JourneyPath.start()
 			.navigateTo(Navigate.toUrl("https://my.cricketarchive.com"))
 			 .fillForm(FormFill.fillForm(loginForm))
-			 .waitFor(WaitFor.forDuration(Duration.ofSeconds(10)))
 			 .repeat(
 				  RepeatedPath.forEach(Arrays.stream(new Integer[]{1}).map(i -> new InputForm(i)))
-				  .withDelay(Duration.ofSeconds(10))
+				  .withDelay(Duration.ofSeconds(5))
 				  .navigateTo(Navigate.toUrl("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi"))
 				  .waitFor(WaitFor.forDuration(Duration.ofSeconds(5)))
 				  .click(ButtonClick.clickButtonByXPath("//a[@data-cc-event='click:dismiss']"))
