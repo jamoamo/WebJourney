@@ -23,7 +23,7 @@
  */
 package com.github.jamoamo.entityscraper.annotation;
 
-import com.github.jamoamo.entityscraper.api.function.ATransformationFunction;
+import com.github.jamoamo.entityscraper.api.transform.ATransformationFunction;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -41,5 +41,5 @@ public @interface Transformation
 	 * The function class to transform values.
 	 * @return the function class.
 	 */
-	Class<? extends ATransformationFunction> functionClass();
+	Class<? extends ATransformationFunction> transformFunction();
 }

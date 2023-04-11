@@ -35,14 +35,13 @@ public class DoubleMapper
 	 * Maps the value to a double.
 	 *
 	 * @param value The value read from the file
-	 * @param fieldClass The field that the mapped value will be set on.
 	 *
 	 * @return the mapped value
 	 *
 	 * @throws XValueMappingException if the value can't be converted to a double.
 	 */
 	@Override
-	public Double mapValue(String value, Class<?> fieldClass)
+	public Double mapValue(String value)
 		 throws XValueMappingException
 	{
 		if(value == null || value.isEmpty() || value.isBlank())

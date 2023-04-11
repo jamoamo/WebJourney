@@ -35,12 +35,11 @@ public class StringMapper
 	 * Maps the value to a string.
 	 *
 	 * @param value The value from the HTML document.
-	 * @param fieldClass The class of the field to be mapped
 	 *
 	 * @return the mapped value
 	 */
 	@Override
-	public String mapValue(String value, Class<?> fieldClass)
+	public String mapValue(String value)
 	{
 		return value;
 	}

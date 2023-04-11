@@ -35,14 +35,13 @@ public class IntegerMapper
 	 * Maps the value to an Integer.
 	 *
 	 * @param value The value read from the HTML document.
-	 * @param fieldClass The class of the field to be mapped
 	 *
 	 * @return The mapped value.
 	 *
 	 * @throws XValueMappingException If the value is not an integer.
 	 */
 	@Override
-	public Integer mapValue(String value, Class<?> fieldClass)
+	public Integer mapValue(String value)
 			  throws XValueMappingException
 	{
 		if(value == null || value.isEmpty() || value.isBlank())
