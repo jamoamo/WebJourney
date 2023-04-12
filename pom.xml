@@ -3,12 +3,12 @@
    <modelVersion>4.0.0</modelVersion>
     
    <groupId>io.github.jamoamo</groupId>
-   <artifactId>entityscraper</artifactId>
-   <version>0.2-SNAPSHOT</version>
+   <artifactId>webjourney</artifactId>
+   <version>0.1-SNAPSHOT</version>
     
-   <name>Entity Scraper</name>
-   <description>Web Scraper using Java annotations</description>
-   <url>https://github.com/jamoamo/entityscraper</url>
+   <name>Web Journey</name>
+   <description>Automate web interactions with web journeys</description>
+   <url>https://github.com/jamoamo/webjourney</url>
     
    <licenses>
       <license>
@@ -26,9 +26,9 @@
    </developers>
    
    <scm>
-      <connection>scm:git:https://github.com/jamoamo/entityscraper.git</connection>
-      <developerConnection>scm:git:https://github.com/jamoamo/entityscraper.git</developerConnection>
-      <url>https://github.com/jamoamo/entityscraper</url>
+      <connection>scm:git:https://github.com/jamoamo/webjourney.git</connection>
+      <developerConnection>scm:git:https://github.com/jamoamo/webjourney.git</developerConnection>
+      <url>https://github.com/jamoamo/webjourney</url>
       <tag>HEAD</tag>
    </scm>
     
