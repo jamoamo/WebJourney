@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.LoginForm;
 import com.github.jamoamo.webjourney.Entity;
@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author James Amoore
  */
-public class LoginTest
+public class CricketArchiveIT
 {
 	@Test
 	public void test() throws Exception
