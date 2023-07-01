@@ -28,56 +28,69 @@ import java.util.function.Function;
 
 /**
  * Web extractor interface.
+ *
  * @author James Amoore
  */
 public interface IWebExtractor
 {
 	/**
 	 * extracts an entity.
-	 * @param <T> The type of the entity.
-	 * @param xPath The xpath.
+	 *
+	 * @param <T>             The type of the entity.
+	 * @param xPath           The xpath.
 	 * @param mappingFunction the mapping function to map an entity from an element.
+	 *
 	 * @return the entity instance
 	 */
 	<T> T extractEntity(String xPath, Function<AElement, T> mappingFunction);
-	
+
 	/**
 	 * extracts a list of entities.
-	 * @param <T> The type of the entity.
-	 * @param xPath The xpath.
+	 *
+	 * @param <T>             The type of the entity.
+	 * @param xPath           The xpath.
 	 * @param mappingFunction the mapping function to map an entity from an element.
+	 *
 	 * @return a list of entity instances
 	 */
 	<T> List<T> extractEntities(String xPath, Function<AElement, T> mappingFunction);
-	
+
 	/**
 	 * extracts a String value from an element.
+	 *
 	 * @param xPath The xpath.
+	 *
 	 * @return a string value from the element.
 	 */
 	String extractValue(String xPath);
-	
+
 	/**
 	 * extracts a value from the element text.
-	 * @param <T> The type of the value.
-	 * @param xPath The xpath.
+	 *
+	 * @param <T>             The type of the value.
+	 * @param xPath           The xpath.
 	 * @param mappingFunction the mapping function to map a value from a String.
+	 *
 	 * @return a value of type T
 	 */
 	<T> T extractValue(String xPath, Function<String, T> mappingFunction);
-	
+
 	/**
 	 * extracts a list of Strings.
+	 *
 	 * @param xPath The xpath.
+	 *
 	 * @return a list of Strings
 	 */
 	List<String> extractValues(String xPath);
 
 	/**
 	 * extracts a list of values from the element texts.
-	 * @param <T> The type of the value.
-	 * @param xPath The xpath.
+	 *
+	 * @param <T>             The type of the value.
+	 * @param xPath           The xpath.
 	 * @param mappingFunction the mapping function to map a value from a String.
+	 *
 	 * @return a value of type T
 	 */
 	<T> List<T> extractValues(String xPath, Function<String, T> mappingFunction);

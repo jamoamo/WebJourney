@@ -58,7 +58,7 @@ public final class TypeInfo
 	 */
 	public boolean implementsInterface(Class<?> interfaceClazz)
 	{
-		return getAllExtendedOrImplementedInterfacesRecursively(theClass)
+		return getAllExtendedOrImplementedInterfacesRecursively(this.theClass)
 			 .contains(interfaceClazz);
 	}
 	

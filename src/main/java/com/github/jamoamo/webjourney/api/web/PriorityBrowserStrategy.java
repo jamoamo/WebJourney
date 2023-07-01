@@ -77,7 +77,7 @@ public class PriorityBrowserStrategy implements IPreferredBrowserStrategy
 	public IBrowser getPreferredBrowser()
 	{
 		IBrowserOptions options = new DefaultBrowserOptions();
-		for(IBrowserFactory browserFactory : browserPriority)
+		for(IBrowserFactory browserFactory : this.browserPriority)
 		{
 			try
 			{

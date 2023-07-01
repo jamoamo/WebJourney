@@ -41,11 +41,6 @@
    <packaging>jar</packaging>
    <dependencies>
       <dependency>
-         <groupId>org.jsoup</groupId>
-         <artifactId>jsoup</artifactId>
-         <version>1.15.3</version>
-      </dependency>
-      <dependency>
          <groupId>commons-beanutils</groupId>
          <artifactId>commons-beanutils</artifactId>
          <version>1.9.4</version>
@@ -120,6 +115,30 @@
          <artifactId>webdrivermanager</artifactId>
          <version>5.3.2</version>
          <type>jar</type>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-lang3</artifactId>
+         <version>3.12.0</version>
+      </dependency>
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <version>5.3.1</version>
+         <scope>test</scope>
+         <type>jar</type>
+      </dependency>
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>junit-jupiter</artifactId>
+         <version>2.20.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>net.bytebuddy</groupId>
+         <artifactId>byte-buddy</artifactId>
+         <version>1.14.4</version>
+         <scope>test</scope>
       </dependency>
    </dependencies>
    
@@ -227,14 +246,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.2</version>
-            <configuration>
-               <configLocation>.checkstyle/checkstyle_rules.xml</configLocation>
-               <encoding>UTF-8</encoding>
-               <consoleOutput>true</consoleOutput>
-               <failsOnError>true</failsOnError>
-               <linkXRef>false</linkXRef>
-            </configuration>
+            <version>3.3.0</version>
             <executions>
                <execution>
                   <id>validate</id>
@@ -244,6 +256,20 @@
                   </goals>
                </execution>
             </executions>
+            <dependencies>
+               <dependency>
+                  <groupId>io.github.jamoamo</groupId>
+                  <artifactId>checkstyle-config</artifactId>
+                  <version>3.0</version>
+               </dependency>
+            </dependencies>
+            <configuration>
+               <configLocation>checkstyle-library.xml</configLocation>
+               <encoding>UTF-8</encoding>
+               <consoleOutput>true</consoleOutput>
+               <failsOnError>true</failsOnError>
+               <linkXRef>false</linkXRef>
+            </configuration>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -257,8 +283,13 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.22.0</version>
+            <version>3.1.0</version>
          </plugin>
+         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
          <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
