@@ -21,38 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
+import com.github.jamoamo.webjourney.api.web.IBrowser;
+import java.net.URL;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+public class UrlNavigationTargetTest
 {
-	@Test
-	public void test() throws Exception
+	
+	public UrlNavigationTargetTest()
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
 	}
+
+	/**
+	 * Test of navigate method, of class UrlNavigationTarget.
+	 */
+	@Test
+	public void testNavigate() throws Exception
+	{
+		IBrowser browser = Mockito.mock(IBrowser.class);
+		URL googleURL = new URL("https://www.google.com");
+		UrlNavigationTarget target = new UrlNavigationTarget(googleURL);
+		target.navigate(browser);
+		ArgumentCaptor<URL> urlArg = ArgumentCaptor.forClass(URL.class);
+		Mockito.verify(browser, Mockito.times(1)).navigateToUrl(urlArg.capture());
+		assertEquals(googleURL, urlArg.getValue());
+	}
+	
 }

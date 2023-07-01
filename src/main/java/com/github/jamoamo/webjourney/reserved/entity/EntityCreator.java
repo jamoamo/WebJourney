@@ -70,8 +70,8 @@ public final class EntityCreator<T>
 	 */
 	public T createNewEntity(IBrowser browser)
 	{
-		T instance = defn.getInstance();
-		List<EntityFieldDefn> entityFields = defn.getEntityFields();
+		T instance = this.defn.getInstance();
+		List<EntityFieldDefn> entityFields = this.defn.getEntityFields();
 
 		for(EntityFieldDefn fieldDefn : entityFields)
 		{

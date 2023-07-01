@@ -21,38 +21,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney.reserved.selenium;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+import com.github.jamoamo.webjourney.api.web.ICookie;
+import java.time.LocalDate;
+import org.openqa.selenium.Cookie;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+class SeleniumCookieAdapter implements ICookie
 {
-	@Test
-	public void test() throws Exception
+	private final Cookie cookie;
+
+	SeleniumCookieAdapter(Cookie cookie)
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
+		this.cookie = cookie;
+	}
+
+	@Override
+	public String getDomain()
+	{
+		return this.cookie.getDomain();
+	}
+
+	@Override
+	public LocalDate getExpiry()
+	{
+		return LocalDate.from(this.cookie.getExpiry().toInstant());
+	}
+
+	@Override
+	public String getName()
+	{
+		return this.cookie.getName();
+	}
+
+	@Override
+	public String getPath()
+	{
+		return this.cookie.getPath();
+	}
+
+	@Override
+	public String getValue()
+	{
+		return this.cookie.getValue();
+	}
+
+	@Override
+	public boolean isHttpOnly()
+	{
+		return this.cookie.isHttpOnly();
+	}
+
+	@Override
+	public boolean isSecure()
+	{
+		return this.cookie.isSecure();
 	}
 }

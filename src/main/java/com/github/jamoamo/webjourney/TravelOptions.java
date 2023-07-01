@@ -21,38 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+import com.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
+import com.github.jamoamo.webjourney.api.web.PreferredBrowserStrategy;
+import com.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
 
 /**
- *
+ * A set of options for travelling a web journey.
  * @author James Amoore
  */
-public class LoginTest
+public class TravelOptions
 {
-	@Test
-	public void test() throws Exception
+	private IPreferredBrowserStrategy preferredBrowserStrategy 
+			  = new PreferredBrowserStrategy(new ChromeBrowserFactory());
+	
+	/**
+	 * Sets the preferred browser strategy to use. 
+	 * @param strategy the strategy to use to create the preferred browser.
+	 */
+	public void setPreferredBrowserStrategy(IPreferredBrowserStrategy strategy)
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
+		this.preferredBrowserStrategy = strategy;
 	}
+	
+	/**
+	 * Returns the preferred browser strategy.
+	 * @return the preferred browser strategy.
+	 */
+	protected IPreferredBrowserStrategy getPreferredBrowserStrategy()
+	{
+		return this.preferredBrowserStrategy;
+	}
+	
 }

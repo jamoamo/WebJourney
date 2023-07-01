@@ -21,38 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney.api.web;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+public interface ICookie
 {
-	@Test
-	public void test() throws Exception
-	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
-	}
+	/**
+	 * Retrieve the cookie domain. 
+	 * @return the cookie domain
+	 */
+	String getDomain();
+
+	/**
+	 * Retrieve the cookie expiry. 
+	 * @return the cookie expiry. 
+	 */
+	LocalDate getExpiry();
+
+	/**
+	 * Retrieve the cookie name. 
+	 * @return the cookie name. 
+	 */
+	String getName();
+
+	/**
+	 * Retrieve the cookie path. 
+	 * @return the cookie path
+	 */
+	String getPath();
+
+	/**
+	 * Retrieve the cookie value. 
+	 * @return the cookie value. 
+	 */
+	String getValue();
+
+	/**
+	 * indicates if the cookie is http only.
+	 * @return if the cookie is http only
+	 */
+	boolean isHttpOnly();
+
+	/**
+	 * indicates if the cookie is secure.
+	 * @return if the cookie is secure
+	 */
+	boolean isSecure();
 }

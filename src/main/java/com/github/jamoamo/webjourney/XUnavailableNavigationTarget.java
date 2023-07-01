@@ -21,38 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
-
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+package com.github.jamoamo.webjourney;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+@SuppressWarnings("MissingJavadocMethod")
+public class XUnavailableNavigationTarget extends Exception
 {
-	@Test
-	public void test() throws Exception
+	public XUnavailableNavigationTarget()
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
 	}
 }

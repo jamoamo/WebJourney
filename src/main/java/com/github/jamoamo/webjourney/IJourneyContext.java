@@ -21,38 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.reserved.log.LogMessage;
 
 /**
- *
+ * The context of a specific browser journey.
  * @author James Amoore
  */
-public class LoginTest
+public interface IJourneyContext
 {
-	@Test
-	public void test() throws Exception
-	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
-	}
+	/**
+		Log a message.
+	 * @param message The message that needs to be logged.
+	*/
+	void log(LogMessage message);
+
+	/**
+	 * Wait for the default wait period.
+	 */
+	void waitForDefault();
+	
+	/**
+	 * Wait for the specified number of milliseconds.
+	 * @param millis The number of milliseconds to wait
+	 */
+	void waitFor(long millis);
+	
+	/**
+	 * Get the browser for the current journey.
+	 * @return the browser.
+	 */
+	IBrowser getBrowser();
 }

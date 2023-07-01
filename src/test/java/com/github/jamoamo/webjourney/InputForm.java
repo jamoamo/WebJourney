@@ -21,38 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+import com.github.jamoamo.webjourney.annotation.form.Button;
+import com.github.jamoamo.webjourney.annotation.form.Form;
+import com.github.jamoamo.webjourney.annotation.form.TextField;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+@Form(submit = "//form[@name='scorecard_oracle_form']//table//tbody//input[@type='submit']")
+public class InputForm
 {
-	@Test
-	public void test() throws Exception
+	@TextField(xPath = "//input[@name='match']")
+	private String matchId;
+	
+	@Button(xPath = "//a[@data-cc-event='click:dismiss']")
+	private Object dismissBannerButton;
+	
+	private Object notAnnotatedField;
+	
+	public InputForm(Integer testId)
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
+		this.matchId = "t" + testId;
+	}
+
+	public String getMatchId()
+	{
+		return matchId;
+	}
+
+	public void setMatchId(String matchId)
+	{
+		this.matchId = matchId;
 	}
 }

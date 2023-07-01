@@ -21,38 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
+import com.github.jamoamo.webjourney.api.web.IBrowser;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+public class BackNavigationTargetTest
 {
-	@Test
-	public void test() throws Exception
+	
+	public BackNavigationTargetTest()
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
 	}
+
+	/**
+	 * Test of navigate method, of class BackNavigationTarget.
+	 */
+	@Test
+	public void testNavigate()
+	{
+		IBrowser browser = Mockito.mock(IBrowser.class);
+
+		BackNavigationTarget target = new BackNavigationTarget();
+		target.navigate(browser);
+		Mockito.verify(browser, Mockito.times(1)).navigateBack();
+	}
+	
 }

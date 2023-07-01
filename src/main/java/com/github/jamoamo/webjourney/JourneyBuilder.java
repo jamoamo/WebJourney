@@ -21,38 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
-
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+package com.github.jamoamo.webjourney;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+public final class JourneyBuilder
 {
-	@Test
-	public void test() throws Exception
+	private JourneyBuilder(){}
+	
+	/**
+	 * Returns a journey builder starting from fresh.
+	 * @return a new journey builder.
+	 */
+	public static BaseJourneyBuilder path()
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
+		return new BaseJourneyBuilder();
+	}
+	
+	/**
+	 * Returns a journey builder starting from the provided journey.
+	 * @param journey The journey to start from.
+	 * @return a new journey builder
+	 */
+	public static BaseJourneyBuilder fromJourney(WebJourney journey)
+	{
+		return new BaseJourneyBuilder(journey);
 	}
 }

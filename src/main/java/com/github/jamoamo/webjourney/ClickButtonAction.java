@@ -21,38 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api;
+package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
-import com.github.jamoamo.webjourney.InputForm;
-import com.github.jamoamo.webjourney.JourneyBuilder;
-import com.github.jamoamo.webjourney.TravelOptions;
-import com.github.jamoamo.webjourney.WebJourney;
-import com.github.jamoamo.webjourney.WebTraveller;
-import org.junit.jupiter.api.Test;
+import com.github.jamoamo.webjourney.annotation.form.Button;
+import com.github.jamoamo.webjourney.api.web.IBrowser;
+import java.lang.reflect.Field;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  *
  * @author James Amoore
  */
-public class LoginTest
+class ClickButtonAction extends AWebAction
 {
-	@Test
-	public void test() throws Exception
+	private final Class pageClass;
+	private final String buttonName;
+	
+	ClickButtonAction(Object pageObject, String buttonName)
 	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
-		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
-			.build();
-		
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
+		this.pageClass = pageObject.getClass();
+		this.buttonName = buttonName;
 	}
+	
+	ClickButtonAction(Class pageClass, String buttonName)
+	{
+		this.pageClass = pageClass;
+		this.buttonName = buttonName;
+	}
+	
+	@Override
+	protected ActionResult executeAction(IBrowser browser)
+	{
+		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
+		if(buttonField == null)
+		{
+			return ActionResult.FAILURE;
+		}
+		
+		Button ef = buttonField.getAnnotation(Button.class);
+		if(ef == null)
+		{
+			return ActionResult.FAILURE;
+		}
+		
+		browser.clickElement(ef.xPath());
+		return ActionResult.SUCCESS;
+	}
+	
 }

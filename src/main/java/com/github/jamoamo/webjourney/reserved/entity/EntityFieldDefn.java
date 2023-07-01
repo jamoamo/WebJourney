@@ -56,7 +56,7 @@ class EntityFieldDefn
 	
 	String getFieldName()
 	{
-		return field.getName();
+		return this.field.getName();
 	}
 	
 	FieldInfo getFieldInfo()
@@ -73,7 +73,7 @@ class EntityFieldDefn
 	{
 		if(this.transformation != null)
 		{
-			return InstanceCreator.getInstance().createInstance(transformation.transformFunction());
+			return InstanceCreator.getInstance().createInstance(this.transformation.transformFunction());
 		}
 		return null;
 	}
@@ -96,6 +96,6 @@ class EntityFieldDefn
 	@Override
 	public String toString()
 	{
-		return field.getName() + "[" + field.getGenericType().getTypeName() + "]";
+		return this.field.getName() + "[" + this.field.getGenericType().getTypeName() + "]";
 	}
 }

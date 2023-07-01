@@ -25,13 +25,16 @@ package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.ICookie;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -215,4 +218,31 @@ class SeleniumDrivenBrowser implements IBrowser
 		List<WebElement> elements = this.driver.findElements(By.xpath(xPath));
 		return elements.stream().map(we -> new Element(we)).toList();
 	}
+
+	@Override
+	public void navigateBack()
+	{
+		this.driver.navigate().back();
+	}
+	
+	@Override
+	public void navigateForward()
+	{
+		this.driver.navigate().forward();
+	}
+	
+	@Override
+	public void refreshPage()
+	{
+		this.driver.navigate().refresh();
+	}
+
+	@Override
+	public Collection<ICookie> getCookies()
+	{
+		return this.driver.manage().getCookies()
+				  .stream()
+				  .map(c -> new SeleniumCookieAdapter(c)).collect(Collectors.toSet());
+	}
+	
 }
