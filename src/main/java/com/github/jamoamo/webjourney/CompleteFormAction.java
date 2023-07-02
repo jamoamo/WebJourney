@@ -77,10 +77,15 @@ class CompleteFormAction extends AWebAction
 	{
 		try
 		{
+			Object value = PropertyUtils.getSimpleProperty(this.form, textField.getName());
+			if(value == null)
+			{
+				return;
+			}
 			TextField entityField = textField.getAnnotation(TextField.class);
 			browser.fillElement(
 					  entityField.xPath(),
-					  PropertyUtils.getSimpleProperty(this.form, textField.getName()).toString());
+					  value.toString());
 		}
 		catch(IllegalAccessException | InvocationTargetException | NoSuchMethodException ex)
 		{
