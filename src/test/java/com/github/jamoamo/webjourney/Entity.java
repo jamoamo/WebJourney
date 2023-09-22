@@ -23,7 +23,7 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.EntityField;
+import com.github.jamoamo.webjourney.annotation.ExtractValue;
 
 /**
  *
@@ -31,7 +31,7 @@ import com.github.jamoamo.webjourney.annotation.EntityField;
  */
 public class Entity
 {
-	@EntityField(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
+	@ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
 	private String testName;
 
 	public String getTestName()

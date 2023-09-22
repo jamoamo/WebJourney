@@ -23,50 +23,38 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.form.Button;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import java.lang.reflect.Field;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import java.util.Hashtable;
 
 /**
  *
  * @author James Amoore
  */
-class ClickButtonAction extends AWebAction
+class JourneyContext implements IJourneyContext
 {
-	private final Class pageClass;
-	private final String buttonName;
+	private IBrowser browser;
+	private Hashtable inputs = new Hashtable(2);
 	
-	ClickButtonAction(Object pageObject, String buttonName)
+	void setBrowser(IBrowser browser)
 	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
-	}
-	
-	ClickButtonAction(Class pageClass, String buttonName)
-	{
-		this.pageClass = pageClass;
-		this.buttonName = buttonName;
+		this.browser = browser;
 	}
 	
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	public IBrowser getBrowser()
 	{
-		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		browser.clickElement(ef.xPath());
-		return ActionResult.SUCCESS;
+		return this.browser;
 	}
-	
+
+	@Override
+	public void setJourneyInput(String inputType, Object inputValue)
+	{
+		this.inputs.put(inputValue, inputValue);
+	}
+
+	@Override
+	public Object getJourneyInput(String inputType)
+	{
+		return this.inputs.get(inputType);
+	}
 }

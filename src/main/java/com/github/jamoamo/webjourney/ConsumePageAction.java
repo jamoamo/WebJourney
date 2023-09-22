@@ -58,8 +58,9 @@ class ConsumePageAction<T> extends AWebAction
 	}
 	
 	@Override
-	protected ActionResult executeAction(IBrowser browser)
+	protected ActionResult executeAction(IJourneyContext context)
 	{
+		IBrowser browser = context.getBrowser();
 		EntityDefn entityDefn = new EntityDefn(this.pageClass);
 		EntityCreator<T> creator = new EntityCreator(entityDefn);
 		T instance = creator.createNewEntity(browser);

@@ -173,6 +173,27 @@ public class BaseJourneyBuilder
 	}
 	
 	/**
+	 * Adds an action to click a button on the page.
+	 * @param pageClass The class representation of the page.
+	 * @param elementName The name of element in the pageClass for whose children the sub journey should be repeated.
+	 * @param childElementType The type of child element that should be considered. null if all child elements 
+	 * should be considered.
+	 * @param subJourney  The sub journey to repeat
+	 * @return the current builder
+	 */
+	public BaseJourneyBuilder forEachChildElement(
+			  final Class pageClass, 
+			  final String elementName,
+			  String childElementType,
+			  SubJourney subJourney)
+	{
+		RepeatedAction action = new RepeatedAction(
+				  new RepeatForChildElement(pageClass, elementName, childElementType), subJourney);
+		this.build.addAction(action);
+		return new ActionOptionsJourneyBuilder(this.build);
+	}
+	
+	/**
 	 * Retrieves the state of the journey build in progress.
 	 * @return the in-progress journey build state.
 	 */

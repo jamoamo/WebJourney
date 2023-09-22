@@ -23,50 +23,51 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.form.Button;
+import com.github.jamoamo.webjourney.annotation.form.Element;
+import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import java.lang.reflect.Field;
+import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  *
  * @author James Amoore
  */
-class ClickButtonAction extends AWebAction
+class RepeatForChildElement implements IRepeatable<AElement>
 {
+	private final String childElementType;
+	private final String elementName;
 	private final Class pageClass;
-	private final String buttonName;
-	
-	ClickButtonAction(Object pageObject, String buttonName)
-	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
-	}
-	
-	ClickButtonAction(Class pageClass, String buttonName)
+
+	RepeatForChildElement(Class pageClass, String elementName, String childElementTag)
 	{
 		this.pageClass = pageClass;
-		this.buttonName = buttonName;
+		this.elementName = elementName;
+		this.childElementType = childElementTag;
 	}
-	
+
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	public Iterable<AElement> repeatIterable(IJourneyContext context)
+			  throws JourneyException
 	{
 		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
+		Field elementField = FieldUtils.getField(this.pageClass, this.elementName, true);
+		if(elementField == null)
 		{
-			return ActionResult.FAILURE;
+			throw new JourneyException("Not a field: " + this.elementName);
 		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
+
+		Element element = elementField.getAnnotation(Element.class);
+		if(element == null)
 		{
-			return ActionResult.FAILURE;
+			throw new JourneyException("Not an element: " + this.elementName);
 		}
-		
-		browser.clickElement(ef.xPath());
-		return ActionResult.SUCCESS;
+
+		List<? extends AElement> childElementsByTag = browser.getChildElementsByTag(this.elementName,
+																											 this.childElementType);
+
+		return childElementsByTag.stream().map(elem -> (AElement) elem).toList();
 	}
-	
+
 }

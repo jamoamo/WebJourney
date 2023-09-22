@@ -23,7 +23,6 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.api.web.IBrowser;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,7 +35,7 @@ public abstract class AWebAction
 	private long preActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	private long postActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	
-	protected abstract ActionResult executeAction(IBrowser browser);
+	protected abstract ActionResult executeAction(IJourneyContext context);
 
 	/**
 	 * Sets the wait to be performed prior to the action being performed.

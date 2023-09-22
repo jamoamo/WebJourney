@@ -23,50 +23,48 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.form.Button;
-import com.github.jamoamo.webjourney.api.web.IBrowser;
-import java.lang.reflect.Field;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author James Amoore
  */
-class ClickButtonAction extends AWebAction
+class SubJourney
 {
-	private final Class pageClass;
-	private final String buttonName;
-	
-	ClickButtonAction(Object pageObject, String buttonName)
+	private final static Logger LOGGER = LoggerFactory.getLogger(WebTraveller.class);
+	private final List<AWebAction> actions;
+
+	SubJourney(List<AWebAction> actions)
 	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
+		this.actions = actions;
 	}
-	
-	ClickButtonAction(Class pageClass, String buttonName)
+
+	public void doJourney(IJourneyContext context)
+			  throws JourneyException
 	{
-		this.pageClass = pageClass;
-		this.buttonName = buttonName;
-	}
-	
-	@Override
-	protected ActionResult executeAction(IJourneyContext context)
-	{
-		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
+		this.actions.forEach(action ->
 		{
-			return ActionResult.FAILURE;
-		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		browser.clickElement(ef.xPath());
-		return ActionResult.SUCCESS;
+			waitFor(action.getPreActionWaitTime());
+			ActionResult result = action.executeAction(context);
+			if(result == ActionResult.FAILURE)
+			{
+				throw new JourneyException("Action failed: " + action.getClass());
+			}
+			waitFor(action.getPostActionWaitTime());
+		});
 	}
-	
+
+	private void waitFor(long timeMillis)
+	{
+		try
+		{
+			Thread.sleep(timeMillis);
+		}
+		catch(InterruptedException ex)
+		{
+			LOGGER.info("Wait Interrupted");
+		}
+	}
 }

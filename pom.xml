@@ -140,6 +140,12 @@
          <version>1.14.4</version>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.18.28</version>
+         <type>jar</type>
+      </dependency>
    </dependencies>
    
    <distributionManagement>

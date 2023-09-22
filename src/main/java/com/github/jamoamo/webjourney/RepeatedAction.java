@@ -23,50 +23,52 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.form.Button;
-import com.github.jamoamo.webjourney.api.web.IBrowser;
-import java.lang.reflect.Field;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  *
  * @author James Amoore
+ * @param <T> The type of iteration item
  */
-class ClickButtonAction extends AWebAction
+class RepeatedAction<T> extends AWebAction
 {
-	private final Class pageClass;
-	private final String buttonName;
-	
-	ClickButtonAction(Object pageObject, String buttonName)
+	private final SubJourney subJourney;
+	private final IRepeatable<T> repeater;
+
+	RepeatedAction(IRepeatable<T> repeater,
+								 SubJourney subJourney)
 	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
+		if(repeater == null)
+		{
+			throw new RuntimeException("repeater cannot be null");
+		}
+		
+		if(subJourney == null)
+		{
+			throw new RuntimeException("Sub Journey cannot be null");
+		}
+		
+		this.subJourney = subJourney;
+		this.repeater = repeater;
 	}
-	
-	ClickButtonAction(Class pageClass, String buttonName)
-	{
-		this.pageClass = pageClass;
-		this.buttonName = buttonName;
-	}
-	
+
 	@Override
 	protected ActionResult executeAction(IJourneyContext context)
 	{
-		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
+		try
+		{
+			Iterable<T> iterations = this.repeater.repeatIterable(context);
+
+			for(T iterationItem : iterations)
+			{
+				context.setJourneyInput("repeatItem", iterationItem);
+				this.subJourney.doJourney(context);
+			}
+			return ActionResult.SUCCESS;
+		}
+		catch(JourneyException ex)
 		{
 			return ActionResult.FAILURE;
 		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		browser.clickElement(ef.xPath());
-		return ActionResult.SUCCESS;
 	}
-	
+
 }

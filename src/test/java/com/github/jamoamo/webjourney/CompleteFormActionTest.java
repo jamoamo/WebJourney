@@ -44,9 +44,11 @@ public class CompleteFormActionTest
 	public void testExecuteAction_noSubmit()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		CompleteFormAction action = new CompleteFormAction(new InputForm(1));
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
 		Mockito.verify(browser, Mockito.never()).clickElement(ArgumentCaptor.forClass(String.class).capture());
@@ -63,11 +65,13 @@ public class CompleteFormActionTest
 	public void testExecuteAction_submit()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		CompleteFormAction action = new CompleteFormAction(new InputForm(1));
 		action.setSubmitAfterwards();
 		
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
 		ArgumentCaptor<String> submitXPathArg = ArgumentCaptor.forClass(String.class);

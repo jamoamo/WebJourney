@@ -23,50 +23,14 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.form.Button;
-import com.github.jamoamo.webjourney.api.web.IBrowser;
-import java.lang.reflect.Field;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import lombok.experimental.StandardException;
 
 /**
  *
  * @author James Amoore
  */
-class ClickButtonAction extends AWebAction
+@StandardException
+class JourneyException extends RuntimeException
 {
-	private final Class pageClass;
-	private final String buttonName;
-	
-	ClickButtonAction(Object pageObject, String buttonName)
-	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
-	}
-	
-	ClickButtonAction(Class pageClass, String buttonName)
-	{
-		this.pageClass = pageClass;
-		this.buttonName = buttonName;
-	}
-	
-	@Override
-	protected ActionResult executeAction(IJourneyContext context)
-	{
-		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		browser.clickElement(ef.xPath());
-		return ActionResult.SUCCESS;
-	}
 	
 }
