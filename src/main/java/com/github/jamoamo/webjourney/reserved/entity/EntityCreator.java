@@ -107,23 +107,38 @@ public final class EntityCreator<T>
 		TypeInfo info = TypeInfo.forClass(defnClass);
 		if(info.isStringType())
 		{
-			value = extractor.extractValue(defn1.getEntityField() .path());
+			value = extractor.extractValue(defn1.getExtractValue() .path());
 		}
 		if(info.isStandardType())
 		{
-			value = extractor.extractValue(defn1.getEntityField() .path(), strVal -> transformAndMap(defn1, strVal));
-		}
-		else if(info.isCollectionType() && isCollectionTypeStandard(field))
-		{
-			value = extractCollection(defnClass, extractor, defn1);
+			value = extractor.extractValue(defn1.getExtractValue() .path(), strVal -> transformAndMap(defn1, strVal));
 		}
 		else if(info.isCollectionType())
 		{
-			value = scrapeEntityCollection(extractor, defn1);
+			value = scrapeCollection(defn1, extractor, field, defnClass);
 		}
 		else if(info.hasNoArgsConstructor())
 		{
 			value = scrapeEntity(extractor, defn1);
+		}
+		return value;
+	}
+
+	private Object scrapeCollection(EntityFieldDefn defn1, IWebExtractor extractor, Field field,
+											  Class<?> defnClass)
+	{
+		Object value;
+		if(defn1.isMappedCollection())
+		{
+			value = extractor.extractValue(defn1.getExtractValue().path(), strVal -> transformAndMap(defn1, strVal));
+		}
+		else if(isCollectionTypeStandard(field))
+		{
+			value = extractCollection(defnClass, extractor, defn1);
+		}
+		else
+		{
+			value = scrapeEntityCollection(extractor, defn1);
 		}
 		return value;
 	}
@@ -133,7 +148,7 @@ public final class EntityCreator<T>
 	{
 		Object value;
 		Collection coll = InstanceCreator.getInstance().createCollectionInstance(defnClass);
-		List values = extractor.extractValues(defn1.getEntityField().path(),
+		List values = extractor.extractValues(defn1.getExtractValue().path(),
 			 strVal -> transformAndMap(defn1, strVal));
 		coll.addAll(values);
 		value = coll;
@@ -145,7 +160,7 @@ public final class EntityCreator<T>
 		Object value;
 		Class<?> defnCLass = defn1.getFieldType();
 		value =
-			 extractor.extractEntity(defn1.getEntityField()
+			 extractor.extractEntity(defn1.getExtractValue()
 			 .path(),
 				  we -> extractEntityFromElement(defnCLass, we, extractor));
 		return value;
@@ -156,7 +171,7 @@ public final class EntityCreator<T>
 		Collection coll = InstanceCreator.getInstance().createCollectionInstance(defn1.getFieldType());
 		Class<?> collectionType = FieldInfo.forField(defn1.getField()).getFieldGenericType();
 		List values =
-			 extractor.extractEntities(defn1.getEntityField()
+			 extractor.extractEntities(defn1.getExtractValue()
 			 .path(),
 				  we -> extractEntityFromElement(collectionType, we, extractor));
 		coll.addAll(values);
@@ -274,7 +289,7 @@ public final class EntityCreator<T>
 	private Object extractField(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
 		 throws RuntimeException
 	{
-		AElement fieldElem = elem.findElement(field.getEntityField().path());
+		AElement fieldElem = elem.findElement(field.getExtractValue().path());
 		Object value = null;
 		TypeInfo typeInfo = TypeInfo.forClass(field.getFieldType());
 		if(typeInfo.isStandardType())
@@ -283,12 +298,12 @@ public final class EntityCreator<T>
 		}
 		else if(typeInfo.isCollectionType() && isCollectionTypeStandard(field.getField()))
 		{
-			value = elem.findElements(field.getEntityField().path())
+			value = elem.findElements(field.getExtractValue().path())
 				 .stream().map(e -> transformAndMap(field, e.getElementText())).toList();
 		}
 		else if(typeInfo.isCollectionType())
 		{
-			List<? extends AElement> elems = elem.findElements(field.getEntityField().path());
+			List<? extends AElement> elems = elem.findElements(field.getExtractValue().path());
 			value = elems.stream().map(e -> 
 				 extractEntityFromElement(
 					  FieldInfo.forField(field.getField()).getFieldGenericType(), e, extractor)).toList();
@@ -296,7 +311,7 @@ public final class EntityCreator<T>
 		else if(typeInfo.hasNoArgsConstructor())
 		{
 			value = extractEntityFromElement(field.getFieldType(), 
-				 elem.findElement(field.getEntityField().path()), extractor);
+				 elem.findElement(field.getExtractValue().path()), extractor);
 		}
 		
 		return value;

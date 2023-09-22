@@ -125,6 +125,16 @@ public interface IBrowser
 	 * @return the found Elements.
 	 */
 	List<? extends AElement> getElements(String xPath);
+	
+	/**
+	 * Find a list of elements that match the xpath expression.
+	 *
+	 * @param xPath xPath expression to the elements.
+	 * @param tag the tag of the children to return
+	 *
+	 * @return the found Elements.
+	 */
+	List<? extends AElement> getChildElementsByTag(String xPath, String tag);
 
 	/**
 	 * Navigate to the previous page if available.

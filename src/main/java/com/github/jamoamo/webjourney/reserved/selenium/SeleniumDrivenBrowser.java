@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A browser that uses Selenium to drive the browser interactions.
+ *
  * @author James Amoore
  */
 class SeleniumDrivenBrowser implements IBrowser
@@ -53,7 +54,7 @@ class SeleniumDrivenBrowser implements IBrowser
 	private static class Element extends AElement
 	{
 		private final WebElement webElement;
-		
+
 		Element(WebElement webElement)
 		{
 			this.webElement = webElement;
@@ -77,58 +78,58 @@ class SeleniumDrivenBrowser implements IBrowser
 			return this.webElement.findElements(By.xpath(path)).stream().map(e -> new Element(e)).toList();
 		}
 	}
-	
+
 	private final static int DEFAULT_TIMEOUT_MINUTES = 5;
 	private final static int DEFAULT_POLLING_SECONDS = 10;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(IBrowser.class);
-	
+
 	private final WebDriver driver;
-	
+
 	SeleniumDrivenBrowser(WebDriver driver)
 	{
 		this.driver = driver;
 		this.driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT_MINUTES, TimeUnit.MINUTES);
 	}
-	
+
 	@Override
 	public void navigateToUrl(URL url)
 	{
 		this.logger.info("Navigate to " + url.toExternalForm());
-		
+
 		this.driver.navigate().to(url);
 		waitForPageToLoad(url.toExternalForm());
 	}
-	
+
 	@Override
 	public void fillElement(String xPathExpression, String value)
 	{
 		this.logger.info("Fill Element with path " + xPathExpression);
-		
+
 		WebElement element = this.driver.findElement(By.xpath(xPathExpression));
 		element.clear();
 		element.sendKeys(value);
 	}
-	
+
 	public <T> List<T> getElementEntities(String xPath, Function<WebElement, T> function)
 	{
 		this.logger.info("Getting Element Entities with path: " + xPath);
 		List<WebElement> webElements = this.driver.findElements(By.xpath(xPath));
 		return webElements.stream().map(function).toList();
 	}
-	
+
 	@Override
 	public String getElementText(String xPathExpression)
 	{
 		this.logger.info("Get text from Element with path " + xPathExpression);
 		return this.driver.findElement(By.xpath(xPathExpression)).getText();
 	}
-	
+
 	@Override
 	public List<String> getElementTexts(String xPathExpression)
 	{
 		this.logger.info("Get text from Elements with path " + xPathExpression);
-		
+
 		List<WebElement> findElements = this.driver.findElements(By.xpath(xPathExpression));
 		List<String> value = new ArrayList<>();
 		for(WebElement element : findElements)
@@ -138,13 +139,13 @@ class SeleniumDrivenBrowser implements IBrowser
 		}
 		return value;
 	}
-	
+
 	@Override
 	public void clickElement(String xPathExpression)
 	{
 		this.clickElement(xPathExpression, false);
 	}
-	
+
 	@Override
 	public void clickElement(String xPathExpression, boolean ignoreIfNotPresent)
 	{
@@ -174,35 +175,35 @@ class SeleniumDrivenBrowser implements IBrowser
 		this.logger.info("Exit browser");
 		this.driver.quit();
 	}
-	
+
 	@Override
 	public void waitForAllElements(String... xPathExpressions)
 	{
 		this.logger.info("Wait for elements: " + Arrays.toString(xPathExpressions));
-		
-		List<WebElement> elements = 
-			 Arrays.stream(xPathExpressions).map(xPath -> this.driver.findElement(By.xpath(xPath))).toList();
-		
+
+		List<WebElement> elements =
+				  Arrays.stream(xPathExpressions).map(xPath -> this.driver.findElement(By.xpath(xPath))).toList();
+
 		FluentWait wait = new FluentWait(this.driver);
 		wait.withTimeout(Duration.ofMinutes(DEFAULT_TIMEOUT_MINUTES))
-			 .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
-			 .until(ExpectedConditions.visibilityOfAllElements(elements));
+				  .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
+				  .until(ExpectedConditions.visibilityOfAllElements(elements));
 	}
-	
+
 	private void waitForElementToBeClickable(WebElement element)
 	{
 		FluentWait wait = new FluentWait(this.driver);
 		wait.withTimeout(Duration.ofMinutes(DEFAULT_TIMEOUT_MINUTES))
-			 .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
-			 .until(ExpectedConditions.elementToBeClickable(element));
+				  .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
+				  .until(ExpectedConditions.elementToBeClickable(element));
 	}
-	
+
 	private void waitForPageToLoad(String url)
 	{
 		FluentWait wait = new FluentWait(this.driver);
 		wait.withTimeout(Duration.ofMinutes(DEFAULT_TIMEOUT_MINUTES))
-			 .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
-			 .until(ExpectedConditions.urlContains(url));
+				  .pollingEvery(Duration.ofSeconds(DEFAULT_POLLING_SECONDS))
+				  .until(ExpectedConditions.urlContains(url));
 	}
 
 	@Override
@@ -220,17 +221,24 @@ class SeleniumDrivenBrowser implements IBrowser
 	}
 
 	@Override
+	public List<? extends AElement> getChildElementsByTag(String xPath, String tag)
+	{
+		return this.driver.findElement(By.xpath(xPath)).findElements(By.tagName(tag)).stream().
+				  map(we -> new Element(we)).toList();
+	}
+
+	@Override
 	public void navigateBack()
 	{
 		this.driver.navigate().back();
 	}
-	
+
 	@Override
 	public void navigateForward()
 	{
 		this.driver.navigate().forward();
 	}
-	
+
 	@Override
 	public void refreshPage()
 	{
@@ -244,5 +252,5 @@ class SeleniumDrivenBrowser implements IBrowser
 				  .stream()
 				  .map(c -> new SeleniumCookieAdapter(c)).collect(Collectors.toSet());
 	}
-	
+
 }

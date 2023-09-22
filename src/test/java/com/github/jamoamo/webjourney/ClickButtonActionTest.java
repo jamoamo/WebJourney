@@ -48,9 +48,10 @@ public class ClickButtonActionTest
 	public void testExecuteAction_class_buttonExists()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
-		
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		ClickButtonAction action = new ClickButtonAction(InputForm.class, "dismissBannerButton");
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
 		ArgumentCaptor<String> xPathArgument = ArgumentCaptor.forClass(String.class);
@@ -62,10 +63,12 @@ public class ClickButtonActionTest
 	public void testExecuteAction_object_buttonExists()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		InputForm form = new InputForm(2);
 		ClickButtonAction action = new ClickButtonAction(form, "dismissBannerButton");
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
 		ArgumentCaptor<String> xPathArgument = ArgumentCaptor.forClass(String.class);
@@ -80,9 +83,11 @@ public class ClickButtonActionTest
 	public void testExecuteAction_class_buttonDoesntExist()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		ClickButtonAction action = new ClickButtonAction(InputForm.class, "nonExistentButton");
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.FAILURE, result);
 	}
 	
@@ -93,9 +98,11 @@ public class ClickButtonActionTest
 	public void testExecuteAction_class_buttonNotAnnotated()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		ClickButtonAction action = new ClickButtonAction(InputForm.class, "notAnnotatedField");
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.FAILURE, result);
 	}
 }

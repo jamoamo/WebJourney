@@ -23,6 +23,8 @@
  */
 package com.github.jamoamo.webjourney;
 
+import java.net.URL;
+
 /**
  *
  * @author James Amoore
@@ -48,5 +50,15 @@ public final class JourneyBuilder
 	public static BaseJourneyBuilder fromJourney(WebJourney journey)
 	{
 		return new BaseJourneyBuilder(journey);
+	}
+	
+	/**
+	 * Starts a journey by navigating to a specific page.
+	 * @param url The URL to start the journey at
+	 * @return a new Journey builder.
+	 */
+	public static BaseJourneyBuilder startAtPage(URL url)
+	{
+		return new BaseJourneyBuilder().navigateTo(url);
 	}
 }

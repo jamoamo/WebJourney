@@ -23,50 +23,49 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.annotation.form.Button;
-import com.github.jamoamo.webjourney.api.web.IBrowser;
-import java.lang.reflect.Field;
-import org.apache.commons.lang3.reflect.FieldUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.Mockito;
 
 /**
  *
  * @author James Amoore
  */
-class ClickButtonAction extends AWebAction
+public class RepeatedActionTest
 {
-	private final Class pageClass;
-	private final String buttonName;
 	
-	ClickButtonAction(Object pageObject, String buttonName)
+	public RepeatedActionTest()
 	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
+	}
+
+	/**
+	 * Test of executeAction method, of class RepeatedAction.
+	 */
+	@Test
+	public void testConstructor_nullrepeater()
+	{
+		RuntimeException assertThrows =
+				  assertThrows(RuntimeException.class, () -> new RepeatedAction<>(null, new SubJourney(new ArrayList<>())));
+		assertEquals("repeater cannot be null", assertThrows.getMessage());
 	}
 	
-	ClickButtonAction(Class pageClass, String buttonName)
+	/**
+	 * Test of executeAction method, of class RepeatedAction.
+	 */
+	@Test
+	public void testConstructor_nullsubjourney()
 	{
-		this.pageClass = pageClass;
-		this.buttonName = buttonName;
+		RuntimeException assertThrows =
+				  assertThrows(RuntimeException.class, () -> new RepeatedAction<>(context -> new ArrayList<Integer>(0), null));
+		assertEquals("Sub Journey cannot be null", assertThrows.getMessage());
 	}
 	
-	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	public void testExecuteAction()
 	{
-		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
-		{
-			return ActionResult.FAILURE;
-		}
-		
-		browser.clickElement(ef.xPath());
-		return ActionResult.SUCCESS;
+		RepeatedAction<Integer> action =new RepeatedAction<>(context -> Arrays.asList(new Integer[]{1,2,3,4,5}), null);
+		IJourneyContext context = Mockito.mock(IJourneyContext.class);
+		action.executeAction(context);
 	}
-	
 }

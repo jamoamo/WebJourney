@@ -1,3 +1,10 @@
+package com.github.jamoamo.webjourney.annotation.form;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /*
  * The MIT License
  *
@@ -21,24 +28,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.annotation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
- * A field.
+ *
  * @author James Amoore
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface EntityField
+public @interface Element
 {
 	/**
-	 * XPath to the element containing the value to retrieve.
-	 * @return the XPath to the element.
+	 * XPath to the element.
+	 * @return the xpath.
 	 */
-	String path();
+	String xPath();
 }

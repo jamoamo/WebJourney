@@ -25,7 +25,6 @@ package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
 
 /**
@@ -46,9 +45,11 @@ public class NavigateActionTest
 	public void testExecuteAction()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		NavigateAction action = new NavigateAction(NavigationTarget.back());
-		action.executeAction(browser);
+		action.executeAction(context);
 		Mockito.verify(browser).navigateBack();
 	}
 	

@@ -29,10 +29,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -79,12 +77,14 @@ public class ConsumePageActionTest
 	public void testExecuteAction()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browser);
 		
 		Mockito.when(browser.getElement(any())).thenReturn(new TestElement("t1"));
 		
 		EntityConsumer consumer = new EntityConsumer();
 		ConsumePageAction action = new ConsumePageAction(Entity.class, consumer);
-		ActionResult result = action.executeAction(browser);
+		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
 		assertEquals("t1", consumer.getEntity().getTestName());

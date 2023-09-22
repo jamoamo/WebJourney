@@ -24,7 +24,6 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import com.github.jamoamo.webjourney.reserved.log.LogMessage;
 
 /**
  * The context of a specific browser journey.
@@ -32,26 +31,26 @@ import com.github.jamoamo.webjourney.reserved.log.LogMessage;
  */
 public interface IJourneyContext
 {
-	/**
-		Log a message.
-	 * @param message The message that needs to be logged.
-	*/
-	void log(LogMessage message);
-
-	/**
-	 * Wait for the default wait period.
-	 */
-	void waitForDefault();
-	
-	/**
-	 * Wait for the specified number of milliseconds.
-	 * @param millis The number of milliseconds to wait
-	 */
-	void waitFor(long millis);
 	
 	/**
 	 * Get the browser for the current journey.
 	 * @return the browser.
 	 */
 	IBrowser getBrowser();
+	
+	/**
+	 * Sets an input value for the journey.
+	 * 
+	 * @param inputType The type of Input
+	 * @param inputValue The value for the input
+	 */
+	void setJourneyInput(String inputType, Object inputValue);
+	
+	/**
+	 * Gets an input value for the journey.
+	 * 
+	 * @param inputType The type of Input
+	 * @return the input value.
+	 */
+	Object getJourneyInput(String inputType);
 }

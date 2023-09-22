@@ -23,13 +23,14 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.EntityField;
 import com.github.jamoamo.webjourney.annotation.Mapping;
 import com.github.jamoamo.webjourney.annotation.Transformation;
 import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.lang.reflect.Field;
+import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.MappedCollection;
 
 /**
  * Entity Field definition.
@@ -40,7 +41,7 @@ class EntityFieldDefn
 	private Field field;
 	private Transformation transformation;
 	private Mapping mapping;
-	private EntityField entityField;
+	private ExtractValue extractValue;
 
 	EntityFieldDefn(Field field)
 	{
@@ -51,7 +52,7 @@ class EntityFieldDefn
 		this.field = field;
 		this.transformation = field.getAnnotation(Transformation.class);
 		this.mapping = field.getAnnotation(Mapping.class);
-		this.entityField = field.getAnnotation(EntityField.class);
+		this.extractValue = field.getAnnotation(ExtractValue.class);
 	}
 	
 	String getFieldName()
@@ -64,9 +65,9 @@ class EntityFieldDefn
 		return FieldInfo.forField(this.field);
 	}
 
-	EntityField getEntityField()
+	ExtractValue getExtractValue()
 	{
-		return this.entityField;
+		return this.extractValue;
 	}
 
 	ATransformationFunction getTransformation()
@@ -91,6 +92,11 @@ class EntityFieldDefn
 	Mapping getMapping()
 	{
 		return this.mapping;
+	}
+	
+	boolean isMappedCollection()
+	{
+		return this.field.isAnnotationPresent(MappedCollection.class);
 	}
 	
 	@Override

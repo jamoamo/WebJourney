@@ -51,8 +51,9 @@ class CompleteFormAction extends AWebAction
 	}
 
 	@Override
-	protected ActionResult executeAction(IBrowser browser)
+	protected ActionResult executeAction(IJourneyContext context)
 	{
+		IBrowser browser = context.getBrowser();
 		List<Field> textFields =
 				  FieldUtils.getFieldsListWithAnnotation(this.form.getClass(), TextField.class);
 		for(Field field : textFields)

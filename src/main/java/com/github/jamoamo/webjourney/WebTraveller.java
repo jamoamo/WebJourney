@@ -56,35 +56,20 @@ public class WebTraveller
 		this.logger.info("Starting Journey.");
 		IPreferredBrowserStrategy browserStrategy = this.travelOptions.getPreferredBrowserStrategy();
 		IBrowser browser = browserStrategy.getPreferredBrowser();
+		JourneyContext context = new JourneyContext();
+		context.setBrowser(browserStrategy.getPreferredBrowser());
 		try
 		{
-			for(AWebAction action: journey.getActions())
-			{
-				waitFor(action.getPreActionWaitTime());
-				ActionResult result = action.executeAction(browser);
-				if(result == ActionResult.FAILURE)
-				{
-					throw new RuntimeException("Action failed.");
-				}
-				waitFor(action.getPostActionWaitTime());
-				this.logger.info("Journey completed.");
-			}
+			SubJourney subJourney = new SubJourney(journey.getActions());
+			subJourney.doJourney(context);
+		}
+		catch(JourneyException ex)
+		{
+			this.logger.error("Can't complete journey: ", ex);
 		}
 		finally
 		{
 			browser.exit();
-		}
-	}
-	
-	private void waitFor(long timeMillis)
-	{
-		try
-		{
-			Thread.sleep(timeMillis);
-		}
-		catch(InterruptedException ex)
-		{
-			this.logger.info("Wait Interrupted");
 		}
 	}
 }
