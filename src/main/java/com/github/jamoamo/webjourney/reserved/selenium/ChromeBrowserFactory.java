@@ -48,10 +48,9 @@ public class ChromeBrowserFactory implements IBrowserFactory
 		
 		WebDriverManager.chromedriver().setup();
 
-		//System.setProperty("webdriver.chrome.driver", "c:\\temp\\chromedriver.exe");
 		ChromeOptions options
 				  = new ChromeOptions();
-		
+		options = options.addArguments("--remote-allow-origins=*");
 		options = setHeadless(browserOptions, options);
 		options = setUnexpectedAlertBehaviour(browserOptions, options);
 		
@@ -62,11 +61,11 @@ public class ChromeBrowserFactory implements IBrowserFactory
 	{
 		if(browserOptions.acceptUnexpectedAlerts())
 		{
-			options = options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
+			options = (ChromeOptions)options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
 		}
 		else
 		{
-			options = options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
+			options = (ChromeOptions)options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
 		}
 		return options;
 	}
@@ -75,11 +74,7 @@ public class ChromeBrowserFactory implements IBrowserFactory
 	{
 		if(browserOptions.isHeadless())
 		{
-			options = options.setHeadless(true);
-		}
-		else
-		{
-			options = options.setHeadless(false);
+			options = options.addArguments("--headless=new");
 		}
 		return options;
 	}

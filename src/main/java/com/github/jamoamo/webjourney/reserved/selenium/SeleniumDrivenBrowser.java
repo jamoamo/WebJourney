@@ -173,6 +173,7 @@ class SeleniumDrivenBrowser implements IBrowser
 	public void exit()
 	{
 		this.logger.info("Exit browser");
+		this.driver.close();
 		this.driver.quit();
 	}
 

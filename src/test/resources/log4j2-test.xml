@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="debug" strict="true" name="XMLConfigTest"
-               packages="org.apache.logging.log4j.test">
+<Configuration status="debug" strict="true" name="Logging">
   <Filter type="ThresholdFilter" level="trace"/>
  
   <Appenders>
     <Appender type="Console" name="STDOUT">
-      <Layout type="PatternLayout" pattern="[%c{1}] %m%n"/>
+      <Layout type="PatternLayout" pattern="%p %d{dd MM yyyy HH:mm:ss.SSS} [%C] %m %n"/>
     </Appender>
   </Appenders>
  
   <Loggers>
- 
-    <Root level="trace">
+    <Root level="warn">
       <AppenderRef ref="STDOUT"/>
     </Root>
   </Loggers>
  
 </Configuration>
-

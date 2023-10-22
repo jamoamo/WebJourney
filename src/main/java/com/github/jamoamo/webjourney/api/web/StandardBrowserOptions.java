@@ -24,19 +24,25 @@
 package com.github.jamoamo.webjourney.api.web;
 
 /**
- * Browser options providing default values.
+ * Standard Browser Options.
  * @author James Amoore
  */
-public class DefaultBrowserOptions implements IBrowserOptions
+public class StandardBrowserOptions implements IBrowserOptions
 {
-
+	private final boolean isHeadless;
+	private final boolean acceptUnexpectedAlerts;
+	
 	/**
 	 * Constructor.
+	 * @param isHeadless should the browser be headless
+	 * @param acceptUnexpectedAlerts should the browser accept unexpected alerts
 	 */
-	public DefaultBrowserOptions()
+	public StandardBrowserOptions(boolean isHeadless, boolean acceptUnexpectedAlerts)
 	{
+		this.isHeadless = isHeadless;
+		this.acceptUnexpectedAlerts = acceptUnexpectedAlerts;
 	}
-
+	
 	/**
 	 * Should the browser be headless.
 	 * @return true if the browser should be headless.
@@ -44,7 +50,7 @@ public class DefaultBrowserOptions implements IBrowserOptions
 	@Override
 	public boolean isHeadless()
 	{
-		return true;
+		return this.isHeadless;
 	}
 
 	/**
@@ -54,6 +60,7 @@ public class DefaultBrowserOptions implements IBrowserOptions
 	@Override
 	public boolean acceptUnexpectedAlerts()
 	{
-		return true;
+		return this.acceptUnexpectedAlerts;
 	}
+	
 }

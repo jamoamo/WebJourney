@@ -46,14 +46,20 @@ class SubJourney
 	{
 		this.actions.forEach(action ->
 		{
-			waitFor(action.getPreActionWaitTime());
-			ActionResult result = action.executeAction(context);
-			if(result == ActionResult.FAILURE)
-			{
-				throw new JourneyException("Action failed: " + action.getClass());
-			}
-			waitFor(action.getPostActionWaitTime());
+			processAction(action, context);
 		});
+	}
+
+	private void processAction(AWebAction action, IJourneyContext context)
+			  throws JourneyException
+	{
+		waitFor(action.getPreActionWaitTime());
+		ActionResult result = action.executeAction(context);
+		if(result == ActionResult.FAILURE)
+		{
+			throw new JourneyException("Action failed: " + action.getClass());
+		}
+		waitFor(action.getPostActionWaitTime());
 	}
 
 	private void waitFor(long timeMillis)

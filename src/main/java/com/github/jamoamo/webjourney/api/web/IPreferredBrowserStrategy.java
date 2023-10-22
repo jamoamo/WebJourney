@@ -31,7 +31,8 @@ public interface IPreferredBrowserStrategy
 {
 	/**
 	 * Returns the preferred browser.
+	 * @param options Options for the browser.
 	 * @return the preferred browser.
 	 */
-	IBrowser getPreferredBrowser();
+	IBrowser getPreferredBrowser(IBrowserOptions options);
 }
