@@ -30,6 +30,7 @@ import com.github.jamoamo.webjourney.JourneyBuilder;
 import com.github.jamoamo.webjourney.TravelOptions;
 import com.github.jamoamo.webjourney.WebJourney;
 import com.github.jamoamo.webjourney.WebTraveller;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,9 +48,12 @@ public class CricketArchiveIT
 			.navigateTo("https://my.cricketarchive.com")
 			.completeFormAndSubmit(loginForm)
 			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-		//	.clickButton(InputForm.class, "dismissBannerButton")
 			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> System.out.println(c.getTestName())))
+			.consumePage(Entity.class, (c -> 
+					  Assertions.assertEquals("James Lillywhite's XI in Australia and New Zealand 1876/77 (1st Test)", 
+													  c.getTestName())
+					  )
+			)
 			.build();
 		
 		WebTraveller traveller = new WebTraveller(new TravelOptions());

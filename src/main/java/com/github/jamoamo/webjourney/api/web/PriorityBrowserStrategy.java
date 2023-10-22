@@ -74,9 +74,8 @@ public class PriorityBrowserStrategy implements IPreferredBrowserStrategy
 	 */
 	@Override
 	@SuppressWarnings("IllegalCatch")
-	public IBrowser getPreferredBrowser()
+	public IBrowser getPreferredBrowser(IBrowserOptions options)
 	{
-		IBrowserOptions options = new DefaultBrowserOptions();
 		for(IBrowserFactory browserFactory : this.browserPriority)
 		{
 			try

@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.api.web.DefaultBrowserOptions;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
 import org.slf4j.Logger;
@@ -55,9 +56,9 @@ public class WebTraveller
 	{
 		this.logger.info("Starting Journey.");
 		IPreferredBrowserStrategy browserStrategy = this.travelOptions.getPreferredBrowserStrategy();
-		IBrowser browser = browserStrategy.getPreferredBrowser();
+		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions());
 		JourneyContext context = new JourneyContext();
-		context.setBrowser(browserStrategy.getPreferredBrowser());
+		context.setBrowser(browser);
 		try
 		{
 			SubJourney subJourney = new SubJourney(journey.getActions());

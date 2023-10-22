@@ -54,9 +54,8 @@ public final class PreferredBrowserStrategy implements IPreferredBrowserStrategy
 	 * @return the browser to use.
 	 */
 	@Override
-	public IBrowser getPreferredBrowser()
+	public IBrowser getPreferredBrowser(IBrowserOptions options)
 	{
-		IBrowserOptions options = new DefaultBrowserOptions();
 		return this.browserFactory.createBrowser(options);
 	}
 	
