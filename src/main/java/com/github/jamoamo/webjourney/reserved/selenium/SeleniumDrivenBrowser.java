@@ -77,6 +77,12 @@ class SeleniumDrivenBrowser implements IBrowser
 		{
 			return this.webElement.findElements(By.xpath(path)).stream().map(e -> new Element(e)).toList();
 		}
+
+		@Override
+		public String getAttribute(String attribute)
+		{
+			return this.webElement.getAttribute(attribute);
+		}
 	}
 
 	private final static int DEFAULT_TIMEOUT_MINUTES = 5;

@@ -37,8 +37,14 @@ import java.lang.annotation.Target;
 public @interface ExtractValue
 {
 	/**
-	 * XPath to the element containing the value to retrieve.
+	 * XPath to the element containing the value to retrieve. XPath should not result in an attribute, only elements.
 	 * @return the XPath to the element to be extracted.
 	 */
 	String path();
+	
+	/**
+	 * The name of the attribute whose value should be extracted. 
+	 * @return The attribute name to extract the value of.
+	 */
+	String attribute() default "";
 }
