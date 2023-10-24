@@ -64,6 +64,12 @@ public class ConsumePageActionTest
 		{
 			return null;
 		}
+
+		@Override
+		public String getAttribute(String attribute)
+		{
+			return null;
+		}
 	}
 	
 	public ConsumePageActionTest()

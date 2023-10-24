@@ -32,6 +32,13 @@ import java.util.List;
 public abstract class AElement
 {
 	/**
+	 * Gets an attribute of the element by name.
+	 * @param attribute the attribute name
+	 * @return the value of the attribute
+	 */
+	public abstract String getAttribute(String attribute);
+	
+	/**
 	 * Get the text from the element.
 	 * @return element text.
 	 */

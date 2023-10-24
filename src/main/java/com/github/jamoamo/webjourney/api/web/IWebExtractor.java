@@ -34,6 +34,16 @@ import java.util.function.Function;
 public interface IWebExtractor
 {
 	/**
+	 * Extracts an attribute value from an element.
+	 * @param <T> The type of the value
+	 * @param elementXPath The xpath to the element.
+	 * @param attribute The attribute to get the value of.
+	 * @param mapFunction The mapping function to map an entity from an attribute value
+	 * @return The attribute value.
+	 */
+	<T> T extractAttribute(String elementXPath, String attribute, Function<String, T> mapFunction);
+	
+	/**
 	 * extracts an entity.
 	 *
 	 * @param <T>             The type of the entity.

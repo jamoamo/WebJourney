@@ -83,4 +83,10 @@ public final class WebExtractor implements IWebExtractor
 	{
 		return this.browser.getElementTexts(xPath).stream().map(mappingFunction).toList();
 	}
+
+	@Override
+	public <T> T extractAttribute(String elementXPath, String attribute, Function<String, T> mappingFunction)
+	{
+		return mappingFunction.apply(this.browser.getElement(elementXPath).getAttribute(attribute));
+	}
 }
