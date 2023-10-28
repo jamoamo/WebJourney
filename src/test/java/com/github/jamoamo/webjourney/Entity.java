@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import java.util.List;
 
 /**
  *
@@ -33,7 +34,39 @@ public class Entity
 {
 	@ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
 	private String testName;
+	
+	@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr[1]/td[2]/b[1]/font[1]/center[1]/a")
+	private List<Team> teams;
+	
+	public static class Team
+	{
+		@ExtractValue(path = ".", attribute = "href")
+		private String url;
 
+		@ExtractValue(path = ".")
+		private String name;
+
+		public String getUrl()
+		{
+			return url;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public void setUrl(String url)
+		{
+			this.url = url;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		} 
+	}
+	
 	public String getTestName()
 	{
 		return testName;
@@ -43,4 +76,16 @@ public class Entity
 	{
 		this.testName = testName;
 	}
+
+	public List<Team> getTeams()
+	{
+		return teams;
+	}
+
+	public void setTeams(List<Team> teams)
+	{
+		this.teams = teams;
+	}
+	
+	
 }

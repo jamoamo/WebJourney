@@ -307,7 +307,7 @@ public final class EntityCreator<T>
 		List<EntityFieldDefn> entityFields = typeDefn.getEntityFields();
 		for(EntityFieldDefn field : entityFields)
 		{
-			Object value = extractField(elem, field, extractor);
+			Object value = extractFieldValue(elem, field, extractor);
 			try
 			{
 				BeanUtils.setProperty(instance, field.getFieldName(), value);
@@ -321,9 +321,45 @@ public final class EntityCreator<T>
 		}
 		return instance;
 	}
+	
+	private Object extractFieldValue(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
+	{
+		if(field.getExtractValue().attribute().isBlank())
+		{
+			return extractField(elem, field, extractor);
+		}
+		else
+		{
+			return extractFieldAttribute(elem, field, extractor);
+		}
+	}
 
+	private Object extractFieldAttribute(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
+	{
+		AElement fieldElem = elem.findElement(field.getExtractValue().path());
+		Object value = null;
+		TypeInfo typeInfo = TypeInfo.forClass(field.getFieldType());
+		if(typeInfo.isStandardType())
+		{
+			value = transformAndMap(field, fieldElem.getAttribute(field.getExtractValue().attribute()));
+		}
+		else if(typeInfo.isCollectionType() && isCollectionTypeStandard(field.getField()))
+		{
+			throw new RuntimeException("Attribute not supported for standard collection type");
+		}
+		else if(typeInfo.isCollectionType())
+		{
+			throw new RuntimeException("Attribute not supported for collection type");
+		}
+		else if(typeInfo.hasNoArgsConstructor())
+		{
+			throw new RuntimeException("Attribute not supported for Object type");
+		}
+
+		return value;
+	}
+	
 	private Object extractField(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
-			  throws RuntimeException
 	{
 		AElement fieldElem = elem.findElement(field.getExtractValue().path());
 		Object value = null;
