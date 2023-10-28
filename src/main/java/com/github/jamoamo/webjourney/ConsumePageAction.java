@@ -26,7 +26,7 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.reserved.entity.EntityCreator;
 import com.github.jamoamo.webjourney.reserved.entity.EntityDefn;
-import java.util.function.Consumer;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,9 +39,9 @@ class ConsumePageAction<T> extends AWebAction
 	private final Logger logger = LoggerFactory.getLogger(ConsumePageAction.class);
 	
 	private final Class<T> pageClass;
-	private final Consumer<T> pageConsumer;
+	private final FailableConsumer<T, ? extends PageConsumerException> pageConsumer;
 	
-	ConsumePageAction(Class<T> pageClass, Consumer<T> pageConsumer)
+	ConsumePageAction(Class<T> pageClass, FailableConsumer<T, ? extends PageConsumerException> pageConsumer)
 	{
 		if(pageConsumer == null)
 		{
@@ -59,14 +59,21 @@ class ConsumePageAction<T> extends AWebAction
 	
 	@Override
 	protected ActionResult executeAction(IJourneyContext context)
+			  throws BaseJourneyActionException
 	{
 		IBrowser browser = context.getBrowser();
 		EntityDefn entityDefn = new EntityDefn(this.pageClass);
 		EntityCreator<T> creator = new EntityCreator(entityDefn);
 		T instance = creator.createNewEntity(browser);
 		
-		this.pageConsumer.accept(instance);
-		
+		try
+		{
+			this.pageConsumer.accept(instance);
+		}
+		catch(PageConsumerException ex)
+		{
+			throw new BaseJourneyActionException(ex.getMessage(), this);
+		}
 		return ActionResult.SUCCESS;
 	}
 }

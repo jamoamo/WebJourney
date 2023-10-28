@@ -23,55 +23,30 @@
  */
 package com.github.jamoamo.webjourney;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- *
+ * Base exception for errors that occur during journey actions.
  * @author James Amoore
  */
-class SubJourney
+public class BaseJourneyActionException extends JourneyException
 {
-	private final static Logger LOGGER = LoggerFactory.getLogger(WebTraveller.class);
-	private final List<AWebAction> actions;
-
-	SubJourney(List<AWebAction> actions)
+	private final AWebAction action;
+	
+	/**
+	 * Creates a new exception.
+	 * @param message The exception message.
+	 * @param action The action the exception occurred whilst performing
+	 */
+	public BaseJourneyActionException(String message, AWebAction action)
 	{
-		this.actions = actions;
+		super(message);
+		this.action = action;
 	}
 
-	public void doJourney(IJourneyContext context)
-			  throws JourneyException
+	/**
+	 * @return The action that was being performed when the exception occurred.
+	 */
+	public AWebAction getAction()
 	{
-		this.actions.forEach(action ->
-		{
-			processAction(action, context);
-		});
-	}
-
-	private void processAction(AWebAction action, IJourneyContext context)
-			  throws JourneyException
-	{
-		waitFor(action.getPreActionWaitTime());
-		
-		ActionResult result = action.executeAction(context);
-		if(result == ActionResult.FAILURE)
-		{
-			throw new JourneyException("Action failed: " + action.getClass());
-		}
-		waitFor(action.getPostActionWaitTime());
-	}
-
-	private void waitFor(long timeMillis)
-	{
-		try
-		{
-			Thread.sleep(timeMillis);
-		}
-		catch(InterruptedException ex)
-		{
-			LOGGER.info("Wait Interrupted");
-		}
+		return this.action;
 	}
 }

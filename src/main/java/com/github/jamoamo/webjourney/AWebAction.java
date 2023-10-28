@@ -35,7 +35,8 @@ public abstract class AWebAction
 	private long preActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	private long postActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	
-	protected abstract ActionResult executeAction(IJourneyContext context);
+	protected abstract ActionResult executeAction(IJourneyContext context)
+			  throws BaseJourneyActionException;
 
 	/**
 	 * Sets the wait to be performed prior to the action being performed.

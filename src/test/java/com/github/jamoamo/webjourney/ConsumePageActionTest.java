@@ -26,7 +26,7 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import java.util.List;
-import java.util.function.Consumer;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -80,7 +80,7 @@ public class ConsumePageActionTest
 	 * Test of executeAction method, of class ConsumePageAction.
 	 */
 	@Test
-	public void testExecuteAction()
+	public void testExecuteAction() throws Throwable
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		JourneyContext context = new JourneyContext();
@@ -123,12 +123,12 @@ public class ConsumePageActionTest
 		assertEquals("Page Consumer should not be null.", exception.getMessage());
 	}
 	
-	private class EntityConsumer implements Consumer<Entity>
+	private class EntityConsumer implements FailableConsumer<Entity, Exception>
 	{
 		private Entity entity;
 		
 		@Override
-		public void accept(Entity t)
+		public void accept(Entity t) throws Exception
 		{
 			this.entity = t;
 		}

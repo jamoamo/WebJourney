@@ -25,16 +25,17 @@ package com.github.jamoamo.webjourney;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.function.Consumer;
+import org.apache.commons.lang3.function.FailableConsumer;
 
 /**
  * Base builder for building a journey.
+ *
  * @author James Amoore
  */
 public class BaseJourneyBuilder
 {
 	private final JourneyBuild build;
-	
+
 	BaseJourneyBuilder()
 	{
 		this.build = new JourneyBuild();
@@ -44,15 +45,17 @@ public class BaseJourneyBuilder
 	{
 		this.build = new JourneyBuild(journey);
 	}
-	
+
 	BaseJourneyBuilder(JourneyBuild build)
 	{
 		this.build = build;
 	}
-	
+
 	/**
 	 * Adds an action to the journey that navigates to the provided url.
+	 *
 	 * @param url The url to navigate to.
+	 *
 	 * @return the current builder
 	 */
 	public BaseJourneyBuilder navigateTo(URL url)
@@ -60,11 +63,15 @@ public class BaseJourneyBuilder
 		this.build.addAction(new NavigateAction(NavigationTarget.toUrl(url)));
 		return this;
 	}
-	
+
 	/**
 	 * Adds an action to the journey that navigates to the provided url.
+	 *
 	 * @param url The url to navigate to.
+	 *
 	 * @return the current builder
+	 *
+	 * @throws java.net.MalformedURLException if the url is malformed
 	 */
 	public ActionOptionsJourneyBuilder navigateTo(String url)
 			  throws MalformedURLException
@@ -72,9 +79,10 @@ public class BaseJourneyBuilder
 		this.build.addAction(new NavigateAction(NavigationTarget.toUrl(url)));
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Adds an action to navigate to the previous page in the browsers history.
+	 *
 	 * @return the current builder
 	 */
 	public ActionOptionsJourneyBuilder navigateBack()
@@ -82,9 +90,10 @@ public class BaseJourneyBuilder
 		this.build.addAction(new NavigateAction(NavigationTarget.back()));
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Adds an action to navigate to the next page in the browsers history.
+	 *
 	 * @return the current builder
 	 */
 	public ActionOptionsJourneyBuilder navigateForward()
@@ -92,9 +101,10 @@ public class BaseJourneyBuilder
 		this.build.addAction(new NavigateAction(NavigationTarget.forward()));
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Adds an action to refresh the current page.
+	 *
 	 * @return the current builder
 	 */
 	public ActionOptionsJourneyBuilder refreshPage()
@@ -102,11 +112,13 @@ public class BaseJourneyBuilder
 		this.build.addAction(new NavigateAction(NavigationTarget.refresh()));
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
-	 * Adds an action to complete a form on the page using the provided object. It is expected that the object is 
+	 * Adds an action to complete a form on the page using the provided object. It is expected that the object is
 	 * suitably annotated to describe the elements that should be completed in the form.
+	 *
 	 * @param formObject The object to complete the form using
+	 *
 	 * @return the current builder
 	 */
 	public ActionOptionsJourneyBuilder completeForm(Object formObject)
@@ -114,12 +126,14 @@ public class BaseJourneyBuilder
 		this.build.addAction(new CompleteFormAction(formObject));
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
-	 * Adds an action to complete a form on the page and submit it using the provided object. 
-	 * It is expected that the object is 
+	 * Adds an action to complete a form on the page and submit it using the provided object.
+	 * It is expected that the object is
 	 * suitably annotated to describe the elements that should be completed in the form.
+	 *
 	 * @param pageObject The object to complete the form using
+	 *
 	 * @return the current builder
 	 */
 	public ActionOptionsJourneyBuilder completeFormAndSubmit(Object pageObject)
@@ -129,27 +143,32 @@ public class BaseJourneyBuilder
 		this.build.addAction(action);
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
-	 * Adds an action to consume the page described by the provided page class and consume the resultant object using 
+	 * Adds an action to consume the page described by the provided page class and consume the resultant object using
 	 * the provided page consumer.
-	 * @param <T> The type of the page object to be consumed.
-	 * @param pageClass The class describing the object to be created from the page. It is expected that the class be 
-	 * suitably annotated to consume the page.
+	 *
+	 * @param <T>          The type of the page object to be consumed.
+	 * @param pageClass    The class describing the object to be created from the page. It is expected that the class be
+	 *                     suitably annotated to consume the page.
 	 * @param pageConsumer The consumer that will receive the created page object.
+	 *
 	 * @return the current builder
 	 */
-	public <T> BaseJourneyBuilder consumePage(Class<T> pageClass, Consumer<T> pageConsumer)
+	public <T> BaseJourneyBuilder consumePage(Class<T> pageClass,
+															FailableConsumer<T, ? extends PageConsumerException> pageConsumer)
 	{
 		ConsumePageAction<T> action = new ConsumePageAction<>(pageClass, pageConsumer);
 		this.build.addAction(action);
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Adds an action to click a button on the page.
+	 *
 	 * @param pageObject An object representing the page.
 	 * @param buttonName The name of the button in the page representation that should be clicked.
+	 *
 	 * @return the current builder
 	 */
 	public BaseJourneyBuilder clickButton(Object pageObject, String buttonName)
@@ -158,11 +177,13 @@ public class BaseJourneyBuilder
 		this.build.addAction(action);
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Adds an action to click a button on the page.
-	 * @param pageClass The class representation of the page.
+	 *
+	 * @param pageClass  The class representation of the page.
 	 * @param buttonName The name of the button in the page representation that should be clicked.
+	 *
 	 * @return the current builder
 	 */
 	public BaseJourneyBuilder clickButton(Class pageClass, String buttonName)
@@ -171,18 +192,21 @@ public class BaseJourneyBuilder
 		this.build.addAction(action);
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Adds an action to click a button on the page.
-	 * @param pageClass The class representation of the page.
-	 * @param elementName The name of element in the pageClass for whose children the sub journey should be repeated.
-	 * @param childElementType The type of child element that should be considered. null if all child elements 
-	 * should be considered.
-	 * @param subJourney  The sub journey to repeat
+	 *
+	 * @param pageClass        The class representation of the page.
+	 * @param elementName      The name of element in the pageClass for whose children the sub journey should be
+	 *                         repeated.
+	 * @param childElementType The type of child element that should be considered. null if all child elements
+	 *                         should be considered.
+	 * @param subJourney       The sub journey to repeat
+	 *
 	 * @return the current builder
 	 */
 	public BaseJourneyBuilder forEachChildElement(
-			  final Class pageClass, 
+			  final Class pageClass,
 			  final String elementName,
 			  String childElementType,
 			  SubJourney subJourney)
@@ -192,18 +216,20 @@ public class BaseJourneyBuilder
 		this.build.addAction(action);
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
-	
+
 	/**
 	 * Retrieves the state of the journey build in progress.
+	 *
 	 * @return the in-progress journey build state.
 	 */
 	protected JourneyBuild getBuild()
 	{
 		return this.build;
 	}
-	
+
 	/**
 	 * Builds an instance of WebJourney.
+	 *
 	 * @return a built WebJourney instance.
 	 */
 	public WebJourney build()
