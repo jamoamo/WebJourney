@@ -33,7 +33,8 @@ public abstract class ATransformationFunction
 	 * Transforms the mapped value to a transformed value.
 	 * 
 	 * @param mappedValue The value to transform.
+	 * @param parameters The parameters to the function.
 	 * @return The transformed value.
 	 */
-	public abstract String transform(String mappedValue);
+	public abstract String transform(String mappedValue, String[] parameters);
 }

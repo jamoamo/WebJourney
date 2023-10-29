@@ -26,9 +26,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.Mapping;
 import com.github.jamoamo.webjourney.annotation.Transformation;
-import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
-import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.lang.reflect.Field;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import com.github.jamoamo.webjourney.annotation.MappedCollection;
@@ -89,13 +87,9 @@ class EntityFieldDefn
 		return this.currentUrl;
 	}
 
-	ATransformationFunction getTransformation()
+	Transformation getTransformation()
 	{
-		if(this.transformation != null)
-		{
-			return InstanceCreator.getInstance().createInstance(this.transformation.transformFunction());
-		}
-		return null;
+		return this.transformation;
 	}
 
 	Class<?> getFieldType()

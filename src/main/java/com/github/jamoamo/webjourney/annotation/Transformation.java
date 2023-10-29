@@ -42,4 +42,10 @@ public @interface Transformation
 	 * @return the function class.
 	 */
 	Class<? extends ATransformationFunction> transformFunction();
+	
+	/**
+	 * Parameters to the function.
+	 * @return the function parameters.
+	 */
+	String[] parameters() default {};
 }
