@@ -156,4 +156,10 @@ public interface IBrowser
 	 * @return the browser cookies.
 	 */
 	Collection<ICookie> getCookies();
+	
+	/**
+	 * Retrieve the current url.
+	 * @return the current url.
+	 */
+	String getCurrentUrl();
 }

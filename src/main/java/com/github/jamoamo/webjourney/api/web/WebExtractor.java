@@ -89,4 +89,10 @@ public final class WebExtractor implements IWebExtractor
 	{
 		return mappingFunction.apply(this.browser.getElement(elementXPath).getAttribute(attribute));
 	}
+
+	@Override
+	public String extractCurrentUrl()
+	{
+		return this.browser.getCurrentUrl();
+	}
 }

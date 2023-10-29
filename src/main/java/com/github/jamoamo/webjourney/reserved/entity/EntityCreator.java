@@ -110,7 +110,11 @@ public final class EntityCreator<T>
 
 	private Object scrapeValue(Class<?> defnClass, IWebExtractor extractor, EntityFieldDefn defn1, Field field)
 	{
-		if(defn1.getExtractValue() != null && defn1.getExtractValue().attribute().isBlank() ||
+		if(defn1.getCurrentUrl() != null)
+		{
+			return transformAndMapCurrentUrl(defn1, extractor);
+		}
+		else if(defn1.getExtractValue() != null && defn1.getExtractValue().attribute().isBlank() ||
 				  defn1.getExtractFromUrl() != null && defn1.getExtractFromUrl().attribute().isBlank())
 		{
 			return scrapeElement(defnClass, extractor, defn1, field);
@@ -179,6 +183,10 @@ public final class EntityCreator<T>
 
 	private Object extractValue(IWebExtractor extractor, EntityFieldDefn defn1, Field field)
 	{
+		if (defn1.getCurrentUrl() != null)
+		{
+			return transformAndMapCurrentUrl(defn1, extractor);
+		}
 		if(defn1.getExtractFromUrl() == null)
 		{
 			return scrapeEntity(extractor, defn1);
@@ -392,6 +400,10 @@ public final class EntityCreator<T>
 	
 	private Object extractFieldValue(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
 	{
+		if(field.getExtractFromUrl() != null)
+		{
+			return transformAndMapCurrentUrl(field, extractor);
+		}
 		if(field.getExtractValue().attribute().isBlank())
 		{
 			return extractField(elem, field, extractor);
@@ -455,5 +467,11 @@ public final class EntityCreator<T>
 		}
 
 		return value;
+	}
+
+	private Object transformAndMapCurrentUrl(EntityFieldDefn defn1, IWebExtractor extractor)
+	{
+		String currentUrl = extractor.extractCurrentUrl();
+		return transformAndMap(defn1, currentUrl);
 	}
 }

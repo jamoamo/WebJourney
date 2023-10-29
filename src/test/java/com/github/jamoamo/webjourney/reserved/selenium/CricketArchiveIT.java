@@ -57,6 +57,7 @@ public class CricketArchiveIT
 															 c.getGround().getGroundName());
 							 Assertions.assertEquals("Australia",
 															 c.getGround().getCountry());
+							 Assertions.assertEquals("https://cricketarchive.com/Archive/Grounds/2/121.html", c.getGround().getId());
 							Assertions.assertEquals(2, c.getTeams().size());
 							Assertions.assertEquals("Australia", c.getTeams().get(0).getName());
 							Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/20/20.html", 

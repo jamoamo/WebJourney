@@ -104,4 +104,10 @@ public interface IWebExtractor
 	 * @return a value of type T
 	 */
 	<T> List<T> extractValues(String xPath, Function<String, T> mappingFunction);
+	
+	/**
+	 * Extracts the current URL.
+	 * @return the current url.
+	 */
+	String extractCurrentUrl();
 }

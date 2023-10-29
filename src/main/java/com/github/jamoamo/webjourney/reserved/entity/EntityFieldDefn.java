@@ -32,9 +32,11 @@ import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.lang.reflect.Field;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import com.github.jamoamo.webjourney.annotation.MappedCollection;
+import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 
 /**
  * Entity Field definition.
+ *
  * @author James Amoore
  */
 class EntityFieldDefn
@@ -44,6 +46,7 @@ class EntityFieldDefn
 	private Mapping mapping;
 	private ExtractValue extractValue;
 	private ExtractFromUrl extractFromUrl;
+	private ExtractCurrentUrl currentUrl;
 
 	EntityFieldDefn(Field field)
 	{
@@ -56,13 +59,16 @@ class EntityFieldDefn
 		this.mapping = field.getAnnotation(Mapping.class);
 		this.extractValue = field.getAnnotation(ExtractValue.class);
 		this.extractFromUrl = field.getAnnotation(ExtractFromUrl.class);
+		this.currentUrl = field.getAnnotation(ExtractCurrentUrl.class);
+
+		validateAnnotations(this.extractValue, this.extractFromUrl, this.currentUrl);
 	}
-	
+
 	String getFieldName()
 	{
 		return this.field.getName();
 	}
-	
+
 	FieldInfo getFieldInfo()
 	{
 		return FieldInfo.forField(this.field);
@@ -72,10 +78,15 @@ class EntityFieldDefn
 	{
 		return this.extractValue;
 	}
-	
+
 	ExtractFromUrl getExtractFromUrl()
 	{
 		return this.extractFromUrl;
+	}
+
+	ExtractCurrentUrl getCurrentUrl()
+	{
+		return this.currentUrl;
 	}
 
 	ATransformationFunction getTransformation()
@@ -86,7 +97,7 @@ class EntityFieldDefn
 		}
 		return null;
 	}
-	
+
 	Class<?> getFieldType()
 	{
 		return this.field.getType();
@@ -101,15 +112,37 @@ class EntityFieldDefn
 	{
 		return this.mapping;
 	}
-	
+
 	boolean isMappedCollection()
 	{
 		return this.field.isAnnotationPresent(MappedCollection.class);
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.field.getName() + "[" + this.field.getGenericType().getTypeName() + "]";
+	}
+
+	private void validateAnnotations(ExtractValue extractValue, 
+												ExtractFromUrl extractFromUrl,
+												ExtractCurrentUrl currentUrl)
+	{
+		boolean valid = true;
+		if(extractValue != null && (extractFromUrl != null || currentUrl != null))
+		{
+			valid = false;
+		}
+
+		if(valid && extractFromUrl != null && currentUrl != null)
+		{
+			valid = false;
+		}
+
+		if(!valid)
+		{
+			throw new RuntimeException("Invalid Annotation Combination: Only one of ExractValue, " +
+					  "ExtractFromUrl or ExtractCurrentUrl should be used");
+		}
 	}
 }
