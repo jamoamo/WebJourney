@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import java.util.List;
 
 /**
  *
@@ -37,6 +38,37 @@ public class MatchEntity
 	
 	@ExtractFromUrl(urlXpath = "//div[@id='columnLeft']/table[1]/tbody/tr/td[text()=\"Venue\"]/following-sibling::td[1]/a", attribute = "href")
 	private Ground ground;
+	@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr[1]/td[2]/b[1]/font[1]/center[1]/a")
+	private List<Team> teams;
+	
+	public static class Team
+	{
+		@ExtractValue(path = ".", attribute = "href")
+		private String url;
+
+		@ExtractValue(path = ".")
+		private String name;
+
+		public String getUrl()
+		{
+			return url;
+		}
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public void setUrl(String url)
+		{
+			this.url = url;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		} 
+	}
 	
 	public static class Ground
 	{
@@ -64,8 +96,6 @@ public class MatchEntity
 		{
 			this.country = country;
 		}
-		
-		
 	}
 
 	public String getTestName()
@@ -87,4 +117,16 @@ public class MatchEntity
 	{
 		this.ground = ground;
 	}
+
+	public List<Team> getTeams()
+	{
+		return teams;
+	}
+
+	public void setTeams(List<Team> teams)
+	{
+		this.teams = teams;
+	}
+	
+	
 }
