@@ -21,26 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney;
+package com.github.jamoamo.webjourney.annotation;
 
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author James Amoore
  */
-public class Entity
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface ExtractFromUrl
 {
-	@ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
-	private String testName;
+	/**
+	 * XPath to the element containing the value to retrieve. XPath should not result in an attribute, only elements.
+	 * @return the XPath to the element to be extracted.
+	 */
+	String urlXpath();
 	
-	public String getTestName()
-	{
-		return testName;
-	}
-
-	public void setTestName(String testName)
-	{
-		this.testName = testName;
-	}
+	/**
+	 * The name of the attribute whose value should be extracted. 
+	 * @return The attribute name to extract the value of.
+	 */
+	String attribute() default "";
 }

@@ -21,51 +21,70 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
-import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
-import java.util.Arrays;
-import java.util.List;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 
 /**
- * An entity defn.
+ *
  * @author James Amoore
- * @param <T> The Entity class.
  */
-public final class EntityDefn<T>
+public class MatchEntity
 {
-	private final Class<T> entityClass;
-	private final T entityInstance;
-	private final List<EntityFieldDefn> entityFields;
+	@ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
+	private String testName;
 	
-	/**
-	 * A new EntityDefn for the entity class.
-	 * @param entityClass The entity class.
-	 */
-	public EntityDefn(Class<T> entityClass)
-	{
-		this.entityClass = entityClass;
-		this.entityInstance = InstanceCreator.getInstance().createInstance(this.entityClass);
-		this.entityFields = determineEntityFields();
-	}
+	@ExtractFromUrl(urlXpath = "//div[@id='columnLeft']/table[1]/tbody/tr/td[text()=\"Venue\"]/following-sibling::td[1]/a", attribute = "href")
+	private Ground ground;
 	
-	T getInstance()
+	public static class Ground
 	{
-		return this.entityInstance;
-	}
-	
-	List<EntityFieldDefn> getEntityFields()
-	{
-		return this.entityFields;
+		@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Ground Name:\"]/following-sibling::td[1]")
+		private String groundName;
+		@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Country:\"]/following-sibling::td[1]")
+		private String country;
+
+		public String getGroundName()
+		{
+			return groundName;
+		}
+
+		public void setGroundName(String groundName)
+		{
+			this.groundName = groundName;
+		}
+
+		public String getCountry()
+		{
+			return country;
+		}
+
+		public void setCountry(String country)
+		{
+			this.country = country;
+		}
+		
+		
 	}
 
-	private List<EntityFieldDefn> determineEntityFields()
+	public String getTestName()
 	{
-		return Arrays.stream(this.entityClass.getDeclaredFields())
-			 .filter(field -> field.isAnnotationPresent(ExtractValue.class) || field.isAnnotationPresent(
-							 ExtractFromUrl.class))
-			 .map(field -> new EntityFieldDefn(field)).toList();
+		return testName;
+	}
+
+	public void setTestName(String testName)
+	{
+		this.testName = testName;
+	}
+
+	public Ground getGround()
+	{
+		return ground;
+	}
+
+	public void setGround(Ground ground)
+	{
+		this.ground = ground;
 	}
 }

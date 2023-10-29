@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.openqa.selenium.By;
@@ -85,7 +84,7 @@ class SeleniumDrivenBrowser implements IBrowser
 		}
 	}
 
-	private final static int DEFAULT_TIMEOUT_MINUTES = 5;
+	private final static int DEFAULT_TIMEOUT_MINUTES = 1;
 	private final static int DEFAULT_POLLING_SECONDS = 10;
 
 	private final Logger logger = LoggerFactory.getLogger(IBrowser.class);
@@ -95,7 +94,7 @@ class SeleniumDrivenBrowser implements IBrowser
 	SeleniumDrivenBrowser(WebDriver driver)
 	{
 		this.driver = driver;
-		this.driver.manage().timeouts().implicitlyWait(DEFAULT_TIMEOUT_MINUTES, TimeUnit.MINUTES);
+		this.driver.manage().timeouts().implicitlyWait(Duration.ofMinutes(DEFAULT_TIMEOUT_MINUTES));
 	}
 
 	@Override
@@ -117,6 +116,7 @@ class SeleniumDrivenBrowser implements IBrowser
 		element.sendKeys(value);
 	}
 
+	@Override
 	public <T> List<T> getElementEntities(String xPath, Function<WebElement, T> function)
 	{
 		this.logger.info("Getting Element Entities with path: " + xPath);

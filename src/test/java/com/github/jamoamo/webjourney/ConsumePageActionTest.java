@@ -23,9 +23,12 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.reserved.selenium.MatchEntity;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,7 +80,7 @@ public class ConsumePageActionTest
 	}
 
 	/**
-	 * Test of executeAction method, of class ConsumePageAction.
+	 * MatchEntity of executeAction method, of class ConsumePageAction.
 	 */
 	@Test
 	public void testExecuteAction() throws Throwable
@@ -86,14 +89,14 @@ public class ConsumePageActionTest
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
-		Mockito.when(browser.getElement(any())).thenReturn(new TestElement("t1"));
+		Mockito.when(browser.getElement("//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")).thenReturn(new TestElement("Australia vs England"));
 		
 		EntityConsumer consumer = new EntityConsumer();
 		ConsumePageAction action = new ConsumePageAction(Entity.class, consumer);
 		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
-		assertEquals("t1", consumer.getEntity().getTestName());
+		assertEquals("Australia vs England", consumer.getEntity().getTestName());
 	}
 	
 	@Test
@@ -119,7 +122,7 @@ public class ConsumePageActionTest
 		Mockito.when(browser.getElement(any())).thenReturn(new TestElement("t1"));
 		
 		NullPointerException exception =
-				  assertThrows(NullPointerException.class, () -> new ConsumePageAction(Entity.class, null));
+				  assertThrows(NullPointerException.class, () -> new ConsumePageAction(Test.class, null));
 		assertEquals("Page Consumer should not be null.", exception.getMessage());
 	}
 	

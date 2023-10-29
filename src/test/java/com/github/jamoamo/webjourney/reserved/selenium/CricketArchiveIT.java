@@ -24,7 +24,6 @@
 package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
 import com.github.jamoamo.webjourney.InputForm;
 import com.github.jamoamo.webjourney.JourneyBuilder;
 import com.github.jamoamo.webjourney.TravelOptions;
@@ -40,22 +39,28 @@ import org.junit.jupiter.api.Test;
 public class CricketArchiveIT
 {
 	@Test
-	public void test() throws Exception
+	public void test()
+			  throws Exception
 	{
 		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
-		
+
 		WebJourney journey = JourneyBuilder.path()
-			.navigateTo("https://my.cricketarchive.com")
-			.completeFormAndSubmit(loginForm)
-			.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-			.completeFormAndSubmit(new InputForm(1))
-			.consumePage(Entity.class, (c -> 
-					  Assertions.assertEquals("James Lillywhite's XI in Australia and New Zealand 1876/77 (1st Test)", 
-													  c.getTestName())
-					  )
-			)
-			.build();
-		
+				  .navigateTo("https://my.cricketarchive.com")
+				  .completeFormAndSubmit(loginForm)
+				  .navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
+				  .completeFormAndSubmit(new InputForm(1))
+				  .consumePage(MatchEntity.class, ((c) -> 
+						 {
+							 Assertions.assertEquals("James Lillywhite's XI in Australia and New Zealand 1876/77 (1st Test)",
+															 c.getTestName());
+							 Assertions.assertEquals("Melbourne Cricket Ground, Melbourne",
+															 c.getGround().getGroundName());
+							 Assertions.assertEquals("Australia",
+															 c.getGround().getCountry());
+						 })
+				  )
+				  .build();
+
 		WebTraveller traveller = new WebTraveller(new TravelOptions());
 		traveller.travelJourney(journey);
 	}
