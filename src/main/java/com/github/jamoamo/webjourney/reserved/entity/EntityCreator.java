@@ -28,6 +28,7 @@ import com.github.jamoamo.webjourney.api.mapper.DoubleMapper;
 import com.github.jamoamo.webjourney.api.mapper.IntegerMapper;
 import com.github.jamoamo.webjourney.api.mapper.StringMapper;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
+import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IWebExtractor;
@@ -166,7 +167,7 @@ public final class EntityCreator<T>
 			}
 			else if(defn1.getExtractFromUrl() != null)
 			{
-				value = extractor.extractValue(defn1.getExtractFromUrl().urlXpath(), 
+				value = extractor.extractValue(defn1.getExtractFromUrl().urlXpath(),
 														 strVal -> transformAndMap(defn1, strVal));
 			}
 		}
@@ -183,7 +184,7 @@ public final class EntityCreator<T>
 
 	private Object extractValue(IWebExtractor extractor, EntityFieldDefn defn1, Field field)
 	{
-		if (defn1.getCurrentUrl() != null)
+		if(defn1.getCurrentUrl() != null)
 		{
 			return transformAndMapCurrentUrl(defn1, extractor);
 		}
@@ -296,7 +297,10 @@ public final class EntityCreator<T>
 		{
 			if(fieldDefinition.getTransformation() != null)
 			{
-				value = fieldDefinition.getTransformation().transform(value);
+				ATransformationFunction function =
+						  InstanceCreator.getInstance().
+									 createInstance(fieldDefinition.getTransformation().transformFunction());
+				value = function.transform(value, fieldDefinition.getTransformation().parameters());
 			}
 			Object mappedValue = getMapper(fieldDefinition).mapValue(value);
 			return mappedValue;
@@ -397,7 +401,7 @@ public final class EntityCreator<T>
 		}
 		return instance;
 	}
-	
+
 	private Object extractFieldValue(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
 	{
 		if(field.getExtractFromUrl() != null)
@@ -438,7 +442,7 @@ public final class EntityCreator<T>
 
 		return value;
 	}
-	
+
 	private Object extractField(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
 	{
 		AElement fieldElem = elem.findElement(field.getExtractValue().path());

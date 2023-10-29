@@ -35,7 +35,7 @@ public class TrimFunction extends ATransformationFunction
 	 * @return The trimmed result.
 	 */
 	@Override
-	public String transform(String value)
+	public String transform(String value, String[] parameters)
 	{
 		return value.trim();
 	}
