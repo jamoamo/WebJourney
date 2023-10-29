@@ -260,4 +260,10 @@ class SeleniumDrivenBrowser implements IBrowser
 				  .map(c -> new SeleniumCookieAdapter(c)).collect(Collectors.toSet());
 	}
 
+	@Override
+	public String getCurrentUrl()
+	{
+		return this.driver.getCurrentUrl();
+	}
+
 }

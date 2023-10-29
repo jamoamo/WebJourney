@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.selenium;
 
+import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import java.util.List;
@@ -72,6 +73,8 @@ public class MatchEntity
 	
 	public static class Ground
 	{
+		@ExtractCurrentUrl
+		private String id;
 		@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Ground Name:\"]/following-sibling::td[1]")
 		private String groundName;
 		@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Country:\"]/following-sibling::td[1]")
@@ -95,6 +98,16 @@ public class MatchEntity
 		public void setCountry(String country)
 		{
 			this.country = country;
+		}
+
+		public String getId()
+		{
+			return id;
+		}
+
+		public void setId(String id)
+		{
+			this.id = id;
 		}
 	}
 
