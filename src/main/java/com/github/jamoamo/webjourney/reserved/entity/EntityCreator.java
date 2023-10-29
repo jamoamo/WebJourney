@@ -37,6 +37,8 @@ import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
@@ -54,6 +56,7 @@ public final class EntityCreator<T>
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityCreator.class);
 
 	private final EntityDefn<T> defn;
+	private IBrowser browser;
 
 	/**
 	 * Creates a new instance.
@@ -89,6 +92,7 @@ public final class EntityCreator<T>
 	private void scrapeField(EntityFieldDefn defn, T instance, IBrowser browser)
 			  throws RuntimeException
 	{
+		this.browser = browser;
 		IWebExtractor extractor = new WebExtractor(browser);
 		try
 		{
@@ -106,7 +110,8 @@ public final class EntityCreator<T>
 
 	private Object scrapeValue(Class<?> defnClass, IWebExtractor extractor, EntityFieldDefn defn1, Field field)
 	{
-		if(defn1.getExtractValue().attribute().isBlank())
+		if(defn1.getExtractValue() != null && defn1.getExtractValue().attribute().isBlank() ||
+				  defn1.getExtractFromUrl() != null && defn1.getExtractFromUrl().attribute().isBlank())
 		{
 			return scrapeElement(defnClass, extractor, defn1, field);
 		}
@@ -135,7 +140,11 @@ public final class EntityCreator<T>
 		}
 		else if(info.hasNoArgsConstructor())
 		{
-			throw new RuntimeException("Cannot extract attribute to a non-string type");
+			if(defn1.getExtractFromUrl() == null)
+			{
+				throw new RuntimeException("Cannot extract attribute to an entity");
+			}
+			value = extractValueFromUrl(extractor, defn1, field);
 		}
 		return value;
 	}
@@ -147,7 +156,15 @@ public final class EntityCreator<T>
 		TypeInfo info = TypeInfo.forClass(defnClass);
 		if(info.isStandardType())
 		{
-			value = extractor.extractValue(defn1.getExtractValue().path(), strVal -> transformAndMap(defn1, strVal));
+			if(defn1.getExtractValue() != null)
+			{
+				value = extractor.extractValue(defn1.getExtractValue().path(), strVal -> transformAndMap(defn1, strVal));
+			}
+			else if(defn1.getExtractFromUrl() != null)
+			{
+				value = extractor.extractValue(defn1.getExtractFromUrl().urlXpath(), 
+														 strVal -> transformAndMap(defn1, strVal));
+			}
 		}
 		else if(info.isCollectionType())
 		{
@@ -155,9 +172,60 @@ public final class EntityCreator<T>
 		}
 		else if(info.hasNoArgsConstructor())
 		{
-			value = scrapeEntity(extractor, defn1);
+			value = extractValue(extractor, defn1, field);
 		}
 		return value;
+	}
+
+	private Object extractValue(IWebExtractor extractor, EntityFieldDefn defn1, Field field)
+	{
+		if(defn1.getExtractFromUrl() == null)
+		{
+			return scrapeEntity(extractor, defn1);
+		}
+		else
+		{
+			return extractValueFromUrl(extractor, defn1, field);
+		}
+	}
+
+	private Object extractValueFromUrl(IWebExtractor extractor, EntityFieldDefn defn1, Field field)
+	{
+		String url = getUrl(defn1, extractor);
+
+		try
+		{
+			this.browser.navigateToUrl(new URL(url));
+
+			EntityDefn newDefn = new EntityDefn<>(defn1.getFieldType());
+
+			EntityCreator creator = new EntityCreator(newDefn);
+			Object instance = creator.createNewEntity(this.browser);
+
+			this.browser.navigateBack();
+			return instance;
+		}
+		catch(MalformedURLException ex)
+		{
+			throw new RuntimeException(url + " is not a valid URL");
+		}
+	}
+
+	private String getUrl(EntityFieldDefn defn1, IWebExtractor extractor)
+	{
+		String url;
+		if(!defn1.getExtractFromUrl().attribute().isBlank())
+		{
+			url = extractor.extractAttribute(
+					  defn1.getExtractFromUrl().urlXpath(),
+					  defn1.getExtractFromUrl().attribute(),
+					  val -> val);
+		}
+		else
+		{
+			url = extractor.extractValue(defn1.getExtractFromUrl().urlXpath());
+		}
+		return url;
 	}
 
 	private Object scrapeCollection(EntityFieldDefn defn1, IWebExtractor extractor, Field field,

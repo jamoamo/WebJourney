@@ -24,7 +24,6 @@
 package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.LoginForm;
-import com.github.jamoamo.webjourney.Entity;
 import com.github.jamoamo.webjourney.InputForm;
 import com.github.jamoamo.webjourney.JourneyBuilder;
 import com.github.jamoamo.webjourney.TravelOptions;
@@ -50,21 +49,24 @@ public class CricketArchiveIT
 				  .completeFormAndSubmit(loginForm)
 				  .navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
 				  .completeFormAndSubmit(new InputForm(1))
-				  .consumePage(Entity.class, (c) -> 
+				  .consumePage(MatchEntity.class, ((c) -> 
 						 {
 							 Assertions.assertEquals("James Lillywhite's XI in Australia and New Zealand 1876/77 (1st Test)",
 															 c.getTestName());
-							 Assertions.assertEquals(2, c.getTeams().size());
-							 Assertions.assertEquals("Australia", c.getTeams().get(0).getName());
-							 Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/20/20.html", 
+							 Assertions.assertEquals("Melbourne Cricket Ground, Melbourne",
+															 c.getGround().getGroundName());
+							 Assertions.assertEquals("Australia",
+															 c.getGround().getCountry());
+							Assertions.assertEquals(2, c.getTeams().size());
+							Assertions.assertEquals("Australia", c.getTeams().get(0).getName());
+							Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/20/20.html", 
 															 c.getTeams().get(0).getUrl());
-							 Assertions.assertEquals("England", c.getTeams().get(1).getName());
-							 Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/681/681.html", 
+							Assertions.assertEquals("England", c.getTeams().get(1).getName());
+							Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/681/681.html", 
 															 c.getTeams().get(1).getUrl());
-							 System.out.println(c.getTeams().get(0).getUrl());
-						 }
+						 })
 				  )
-			.build();
+				  .build();
 
 		WebTraveller traveller = new WebTraveller(new TravelOptions());
 		traveller.travelJourney(journey);

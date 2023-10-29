@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.Mapping;
 import com.github.jamoamo.webjourney.annotation.Transformation;
 import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
@@ -42,6 +43,7 @@ class EntityFieldDefn
 	private Transformation transformation;
 	private Mapping mapping;
 	private ExtractValue extractValue;
+	private ExtractFromUrl extractFromUrl;
 
 	EntityFieldDefn(Field field)
 	{
@@ -53,6 +55,7 @@ class EntityFieldDefn
 		this.transformation = field.getAnnotation(Transformation.class);
 		this.mapping = field.getAnnotation(Mapping.class);
 		this.extractValue = field.getAnnotation(ExtractValue.class);
+		this.extractFromUrl = field.getAnnotation(ExtractFromUrl.class);
 	}
 	
 	String getFieldName()
@@ -68,6 +71,11 @@ class EntityFieldDefn
 	ExtractValue getExtractValue()
 	{
 		return this.extractValue;
+	}
+	
+	ExtractFromUrl getExtractFromUrl()
+	{
+		return this.extractFromUrl;
 	}
 
 	ATransformationFunction getTransformation()

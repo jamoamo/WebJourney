@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="debug" strict="true" name="Logging">
+<Configuration strict="true" name="Logging">
   <Filter type="ThresholdFilter" level="trace"/>
  
   <Appenders>
@@ -9,7 +9,7 @@
   </Appenders>
  
   <Loggers>
-    <Root level="warn">
+    <Root level="info">
       <AppenderRef ref="STDOUT"/>
     </Root>
   </Loggers>

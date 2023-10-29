@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.util.Arrays;
 import java.util.List;
@@ -63,7 +64,8 @@ public final class EntityDefn<T>
 	private List<EntityFieldDefn> determineEntityFields()
 	{
 		return Arrays.stream(this.entityClass.getDeclaredFields())
-			 .filter(field -> field.isAnnotationPresent(ExtractValue.class))
+			 .filter(field -> field.isAnnotationPresent(ExtractValue.class) || field.isAnnotationPresent(
+							 ExtractFromUrl.class))
 			 .map(field -> new EntityFieldDefn(field)).toList();
 	}
 }
