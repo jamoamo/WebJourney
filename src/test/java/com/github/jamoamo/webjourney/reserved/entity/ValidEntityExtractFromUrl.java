@@ -21,20 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api.transform;
+package com.github.jamoamo.webjourney.reserved.entity;
+
+import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.Mapping;
+import com.github.jamoamo.webjourney.annotation.Transformation;
+import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
+import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_URL_DATA;
 
 /**
  *
  * @author James Amoore
  */
-public abstract class ATransformationFunction
+public class ValidEntityExtractFromUrl
 {
-	/**
-	 * Transforms the mapped value to a transformed value.
-	 * 
-	 * @param extractedValue The value to transform.
-	 * @param parameters The parameters to the function.
-	 * @return The transformed value.
-	 */
-	public abstract String transform(String extractedValue, String[] parameters);
+	@ExtractFromUrl(urlXpath = XPATH_URL_DATA)
+	private UrlEntity urlEntity;
+	
+	public static class UrlEntity
+	{
+		@ExtractValue(path = XPATH_STRING_DATA)
+		@Mapping(mapper = TestMapper.class)
+		@Transformation(transformFunction = TestTransformer.class)
+		private String stringData;
+
+		public String getStringData()
+		{
+			return stringData;
+		}
+
+		public void setStringData(String stringData)
+		{
+			this.stringData = stringData;
+		}
+	}
+
+	public UrlEntity getUrlEntity()
+	{
+		return urlEntity;
+	}
+
+	public void setUrlEntity(UrlEntity urlEntity)
+	{
+		this.urlEntity = urlEntity;
+	}
 }

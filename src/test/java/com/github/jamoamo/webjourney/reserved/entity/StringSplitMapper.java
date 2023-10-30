@@ -21,20 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api.transform;
+package com.github.jamoamo.webjourney.reserved.entity;
+
+import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
+import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
  * @author James Amoore
  */
-public abstract class ATransformationFunction
+public class StringSplitMapper extends AValueMapper<List<String>>
 {
-	/**
-	 * Transforms the mapped value to a transformed value.
-	 * 
-	 * @param extractedValue The value to transform.
-	 * @param parameters The parameters to the function.
-	 * @return The transformed value.
-	 */
-	public abstract String transform(String extractedValue, String[] parameters);
+	@Override
+	public List<String> mapValue(String value)
+			  throws XValueMappingException
+	{
+		String[] split = value.split(",");
+		return Arrays.asList(split);
+	}
+	
 }
