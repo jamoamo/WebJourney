@@ -21,20 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api.transform;
+package com.github.jamoamo.webjourney.reserved.entity;
+
+import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.Mapping;
+import com.github.jamoamo.webjourney.annotation.Transformation;
+import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
 
 /**
  *
  * @author James Amoore
  */
-public abstract class ATransformationFunction
+public class ValidEntityExtractValueTransformerMapper
 {
-	/**
-	 * Transforms the mapped value to a transformed value.
-	 * 
-	 * @param extractedValue The value to transform.
-	 * @param parameters The parameters to the function.
-	 * @return The transformed value.
-	 */
-	public abstract String transform(String extractedValue, String[] parameters);
+	@ExtractValue(path = XPATH_STRING_DATA)
+	@Transformation(transformFunction = TestTransformer.class)
+	@Mapping(mapper = TestMapper.class)
+	private String stringData;
+
+	public String getStringData()
+	{
+		return stringData;
+	}
+
+	public void setStringData(String stringData)
+	{
+		this.stringData = stringData;
+	}
 }

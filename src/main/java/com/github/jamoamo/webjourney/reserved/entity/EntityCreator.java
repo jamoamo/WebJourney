@@ -281,14 +281,22 @@ public final class EntityCreator<T>
 
 	private Object scrapeEntityCollection(IWebExtractor extractor, EntityFieldDefn defn1)
 	{
-		Collection coll = InstanceCreator.getInstance().createCollectionInstance(defn1.getFieldType());
-		Class<?> collectionType = FieldInfo.forField(defn1.getField()).getFieldGenericType();
-		List values =
-				  extractor.extractEntities(defn1.getExtractValue()
-							 .path(),
-													 we -> extractEntityFromElement(collectionType, we, extractor));
-		coll.addAll(values);
-		return coll;
+		if(defn1.getMapping() != null)
+		{
+			List<String> extractValues = extractor.extractValues(defn1.getExtractValue().path());
+			return extractValues.stream().map(value -> transformAndMap(defn1, value)).toList();
+		}
+		else
+		{
+			Collection coll = InstanceCreator.getInstance().createCollectionInstance(defn1.getFieldType());
+			Class<?> collectionType = FieldInfo.forField(defn1.getField()).getFieldGenericType();
+			List values =
+					  extractor.extractEntities(defn1.getExtractValue()
+								 .path(),
+														 we -> extractEntityFromElement(collectionType, we, extractor));
+			coll.addAll(values);
+			return coll;
+		}
 	}
 
 	private Object transformAndMap(EntityFieldDefn fieldDefinition, String value)
@@ -443,8 +451,13 @@ public final class EntityCreator<T>
 		return value;
 	}
 
+	@SuppressWarnings("MethodLength")
 	private Object extractField(AElement elem, EntityFieldDefn field, IWebExtractor extractor)
 	{
+		if(elem == null)
+		{
+			return null;
+		}
 		AElement fieldElem = elem.findElement(field.getExtractValue().path());
 		Object value = null;
 		TypeInfo typeInfo = TypeInfo.forClass(field.getFieldType());

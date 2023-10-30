@@ -21,20 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api.transform;
+package com.github.jamoamo.webjourney.reserved.entity;
 
 /**
  *
  * @author James Amoore
  */
-public abstract class ATransformationFunction
+public class StringWrapper
 {
-	/**
-	 * Transforms the mapped value to a transformed value.
-	 * 
-	 * @param extractedValue The value to transform.
-	 * @param parameters The parameters to the function.
-	 * @return The transformed value.
-	 */
-	public abstract String transform(String extractedValue, String[] parameters);
+	private final String value;
+	public StringWrapper(String string)
+	{
+		this.value = string;
+	}
+
+	public String getValue()
+	{
+		return value;
+	}
+	
+	
 }
