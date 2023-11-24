@@ -296,6 +296,10 @@ public class EntityCreatorTest
 
 		ValidEntityExtractValueTransformerMapper createNewEntity = (ValidEntityExtractValueTransformerMapper)creator.createNewEntity(browser);
 		assertEquals("<ataD gnirtS>", createNewEntity.getStringData());
+		assertEquals(3, createNewEntity.getStringListData().size());
+		assertEquals("3meti", createNewEntity.getStringListData().get(0));
+		assertEquals("2meti", createNewEntity.getStringListData().get(1));
+		assertEquals("1meti", createNewEntity.getStringListData().get(2));
 	}
 	
 	@Test

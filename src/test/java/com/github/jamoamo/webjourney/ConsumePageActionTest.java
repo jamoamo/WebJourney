@@ -89,7 +89,7 @@ public class ConsumePageActionTest
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
-		Mockito.when(browser.getElement("//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")).thenReturn(new TestElement("Australia vs England"));
+		Mockito.when(browser.getElementText("//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")).thenReturn("Australia vs England");
 		
 		EntityConsumer consumer = new EntityConsumer();
 		ConsumePageAction action = new ConsumePageAction(Entity.class, consumer);

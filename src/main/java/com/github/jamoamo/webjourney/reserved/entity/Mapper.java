@@ -23,51 +23,36 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import com.github.jamoamo.webjourney.annotation.Mapping;
+import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
+import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
-import java.util.Arrays;
-import java.util.List;
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 
 /**
- * An entity defn.
+ *
  * @author James Amoore
- * @param <T> The Entity class.
  */
-public final class EntityDefn<T>
+class Mapper implements IConverter
 {
-	private final Class<T> entityClass;
-	private final T entityInstance;
-	private final List<EntityFieldDefn> entityFields;
+	private final Mapping mapping;
 	
-	/**
-	 * A new EntityDefn for the entity class.
-	 * @param entityClass The entity class.
-	 */
-	public EntityDefn(Class<T> entityClass)
+	Mapper(Mapping mapping)
 	{
-		this.entityClass = entityClass;
-		this.entityInstance = InstanceCreator.getInstance().createInstance(this.entityClass);
-		this.entityFields = determineEntityFields();
-	}
-	
-	T createInstance()
-	{
-		return InstanceCreator.getInstance().createInstance(this.entityClass);
-	}
-	
-	List<EntityFieldDefn> getEntityFields()
-	{
-		return this.entityFields;
+		this.mapping = mapping;
 	}
 
-	private List<EntityFieldDefn> determineEntityFields()
+	@Override
+	public Object mapValue(Object source)
 	{
-		return Arrays.stream(this.entityClass.getDeclaredFields())
-			 .filter(field -> field.isAnnotationPresent(ExtractValue.class) 
-						|| field.isAnnotationPresent(ExtractFromUrl.class)
-						|| field.isAnnotationPresent(ExtractCurrentUrl.class))
-			 .map(field -> new EntityFieldDefn(field)).toList();
+		AValueMapper valueMapper = InstanceCreator.getInstance().createInstance(this.mapping.mapper());
+		try
+		{
+			return valueMapper.mapValue(source.toString());
+		}
+		catch(XValueMappingException ex)
+		{
+			throw new RuntimeException(ex);
+		}
 	}
+	
 }
