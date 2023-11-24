@@ -23,51 +23,28 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import com.github.jamoamo.webjourney.annotation.Transformation;
+import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
-import java.util.Arrays;
-import java.util.List;
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 
 /**
- * An entity defn.
+ *
  * @author James Amoore
- * @param <T> The Entity class.
  */
-public final class EntityDefn<T>
+class Transformer implements ITransformer<String>
 {
-	private final Class<T> entityClass;
-	private final T entityInstance;
-	private final List<EntityFieldDefn> entityFields;
+	private final Transformation transformation;
 	
-	/**
-	 * A new EntityDefn for the entity class.
-	 * @param entityClass The entity class.
-	 */
-	public EntityDefn(Class<T> entityClass)
+	Transformer(Transformation transformation)
 	{
-		this.entityClass = entityClass;
-		this.entityInstance = InstanceCreator.getInstance().createInstance(this.entityClass);
-		this.entityFields = determineEntityFields();
-	}
-	
-	T createInstance()
-	{
-		return InstanceCreator.getInstance().createInstance(this.entityClass);
-	}
-	
-	List<EntityFieldDefn> getEntityFields()
-	{
-		return this.entityFields;
+		this.transformation = transformation;
 	}
 
-	private List<EntityFieldDefn> determineEntityFields()
+	@Override
+	public String transformValue(String value)
 	{
-		return Arrays.stream(this.entityClass.getDeclaredFields())
-			 .filter(field -> field.isAnnotationPresent(ExtractValue.class) 
-						|| field.isAnnotationPresent(ExtractFromUrl.class)
-						|| field.isAnnotationPresent(ExtractCurrentUrl.class))
-			 .map(field -> new EntityFieldDefn(field)).toList();
+		ATransformationFunction function =
+				  InstanceCreator.getInstance().createInstance(this.transformation.transformFunction());
+		return function.transform(value, this.transformation.parameters());
 	}
 }

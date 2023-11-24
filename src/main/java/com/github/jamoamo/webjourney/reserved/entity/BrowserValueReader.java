@@ -23,51 +23,76 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.MappedCollection;
-import com.github.jamoamo.webjourney.annotation.Mapping;
-import com.github.jamoamo.webjourney.annotation.Transformation;
-import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_SEPARATED_STRING_DATA;
-import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
-import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_LIST_DATA;
+import com.github.jamoamo.webjourney.api.web.AElement;
+import com.github.jamoamo.webjourney.api.web.IBrowser;
+import java.net.URL;
 import java.util.List;
 
 /**
  *
  * @author James Amoore
  */
-public class ValidEntityExtractValueTransformerMapper
+class BrowserValueReader implements IValueReader
 {
-	@ExtractValue(path = XPATH_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	@Mapping(mapper = TestMapper.class)
-	private String stringData;
+	private final IBrowser browser;
 	
-	@ExtractValue(path = XPATH_SEPARATED_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	@Mapping(mapper = StringSplitMapper.class)
-	@MappedCollection()
-	private List<String> stringListData;
-
-	public String getStringData()
+	BrowserValueReader(IBrowser browser)
 	{
-		return stringData;
-	}
-
-	public void setStringData(String stringData)
-	{
-		this.stringData = stringData;
-	}
-
-	public List<String> getStringListData()
-	{
-		return stringListData;
-	}
-
-	public void setStringListData(List<String> stringListData)
-	{
-		this.stringListData = stringListData;
+		this.browser = browser;
 	}
 	
+	@Override
+	public String getCurrentUrl()
+	{
+		return this.browser.getCurrentUrl();
+	}
+
+	@Override
+	public String getElementText(String xPath)
+	{
+		return this.browser.getElementText(xPath);
+	}
+
+	@Override
+	public AElement getElement(String xPath)
+	{
+		return this.browser.getElement(xPath);
+	}
+
+	@Override
+	public String getAttribute(String element, String attr)
+	{
+		return this.browser.getElement(element).getAttribute(attr);
+	}
+
+	@Override
+	public void navigateTo(URL url)
+	{
+		this.browser.navigateToUrl(url);
+	}
+
+	@Override
+	public void navigateBack()
+	{
+		this.browser.navigateBack();
+	}
+
+	@Override
+	public List<? extends AElement> getElements(String xPath)
+	{
+		return this.browser.getElements(xPath);
+	}
+
+	@Override
+	public List<String> getElementTexts(String xPath)
+	{
+		return this.browser.getElementTexts(xPath);
+	}
+
+	@Override
+	public IBrowser getBrowser()
+	{
+		return this.browser;
+	}
 	
 }
