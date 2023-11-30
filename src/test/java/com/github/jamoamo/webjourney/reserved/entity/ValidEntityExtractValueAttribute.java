@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 
 /**
  *
@@ -33,6 +34,11 @@ public class ValidEntityExtractValueAttribute
 {
 	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
 	private String attribute;
+	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+							 regexes = {"(?<group>\\w+)\\sValue"},
+							 groupName = "group",
+							 defaultValue = "none")
+	private String regexAttribute;
 
 	public String getAttribute()
 	{
@@ -43,6 +49,14 @@ public class ValidEntityExtractValueAttribute
 	{
 		this.attribute = attribute;
 	}
-	
-	
+
+	public String getRegexAttribute()
+	{
+		return regexAttribute;
+	}
+
+	public void setRegexAttribute(String regexAttribute)
+	{
+		this.regexAttribute = regexAttribute;
+	}
 }

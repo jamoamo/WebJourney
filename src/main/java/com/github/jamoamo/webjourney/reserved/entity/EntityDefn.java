@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
+import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 
 /**
  * An entity defn.
@@ -67,7 +68,8 @@ public final class EntityDefn<T>
 		return Arrays.stream(this.entityClass.getDeclaredFields())
 			 .filter(field -> field.isAnnotationPresent(ExtractValue.class) 
 						|| field.isAnnotationPresent(ExtractFromUrl.class)
-						|| field.isAnnotationPresent(ExtractCurrentUrl.class))
+						|| field.isAnnotationPresent(ExtractCurrentUrl.class)
+						|| field.isAnnotationPresent(RegexExtractValue.class))
 			 .map(field -> new EntityFieldDefn(field)).toList();
 	}
 }

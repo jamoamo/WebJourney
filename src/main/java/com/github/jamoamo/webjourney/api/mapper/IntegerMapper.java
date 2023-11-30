@@ -29,7 +29,7 @@ package com.github.jamoamo.webjourney.api.mapper;
  * @author James Amoore
  */
 public class IntegerMapper
-		  extends AValueMapper<Integer>
+		  extends AConverter<Integer>
 {
 	/**
 	 * Maps the value to an Integer.

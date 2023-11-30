@@ -25,9 +25,9 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import com.github.jamoamo.webjourney.annotation.MappedCollection;
-import com.github.jamoamo.webjourney.annotation.Mapping;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
 import java.util.List;
+import com.github.jamoamo.webjourney.annotation.Conversion;
 
 /**
  *
@@ -36,15 +36,15 @@ import java.util.List;
 public class ValidEntityExtractValueMapper
 {
 	@ExtractValue(path = XPATH_STRING_DATA)
-	@Mapping(mapper = TestMapper.class)
+	@Conversion(mapper = TestMapper.class)
 	private String stringData;
 	
 	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
-	@Mapping(mapper = WrapperMapper.class)
+	@Conversion(mapper = WrapperMapper.class)
 	private List<StringWrapper> wrappers;
 	
 	@ExtractValue(path = EntityCreatorTest.XPATH_SEPARATED_STRING_DATA)
-	@Mapping(mapper = StringSplitMapper.class)
+	@Conversion(mapper = StringSplitMapper.class)
 	@MappedCollection
 	private List<String> splitStrings;
 

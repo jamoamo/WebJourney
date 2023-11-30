@@ -21,38 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.reserved.regex;
 
-import com.github.jamoamo.webjourney.annotation.Mapping;
-import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
-import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
-import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author James Amoore
  */
-class Mapper implements IConverter
+public final class Patterns
 {
-	private final Mapping mapping;
-	
-	Mapper(Mapping mapping)
-	{
-		this.mapping = mapping;
-	}
+	private static final HashMap<String, Pattern> PATTERN_MAP = new HashMap<>();
 
-	@Override
-	public Object mapValue(Object source)
-	{
-		AValueMapper valueMapper = InstanceCreator.getInstance().createInstance(this.mapping.mapper());
-		try
-		{
-			return valueMapper.mapValue(source.toString());
-		}
-		catch(XValueMappingException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-	}
+	private Patterns(){}
 	
+	/**
+	 * Get a cached pattern.
+	 * @param patternString The pattern string to get a Pattern for.
+	 * @return a cached pattern.
+	 */
+	public static Pattern getPattern(String patternString)
+	{
+		if(!PATTERN_MAP.containsKey(patternString))
+		{
+			PATTERN_MAP.put(patternString, Pattern.compile(patternString));
+		}
+		return PATTERN_MAP.get(patternString);
+	}
 }

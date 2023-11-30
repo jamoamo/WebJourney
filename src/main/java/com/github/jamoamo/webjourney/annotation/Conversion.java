@@ -21,15 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.annotation;
+
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *
+ * A Conversion.
  * @author James Amoore
- * @param <S> Source type
- * @param <T> Target type
  */
-interface IConverter<S, T>
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Conversion
 {
-	T convertValue(S source, IValueReader reader);
+	/**
+	 * The mapping class.
+	 * @return the class.
+	 */
+	Class<? extends AConverter> mapper();
 }

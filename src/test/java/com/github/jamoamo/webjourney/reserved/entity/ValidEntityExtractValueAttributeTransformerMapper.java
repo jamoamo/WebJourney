@@ -24,8 +24,8 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.Mapping;
 import com.github.jamoamo.webjourney.annotation.Transformation;
+import com.github.jamoamo.webjourney.annotation.Conversion;
 
 /**
  *
@@ -34,7 +34,7 @@ import com.github.jamoamo.webjourney.annotation.Transformation;
 public class ValidEntityExtractValueAttributeTransformerMapper
 {
 	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
-	@Mapping(mapper = TestMapper.class)
+	@Conversion(mapper = TestMapper.class)
 	@Transformation(transformFunction = TestTransformer.class)
 	private String attribute;
 

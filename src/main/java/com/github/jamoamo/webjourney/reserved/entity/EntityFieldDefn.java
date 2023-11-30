@@ -23,14 +23,9 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
-import com.github.jamoamo.webjourney.annotation.Mapping;
-import com.github.jamoamo.webjourney.annotation.Transformation;
-import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
+import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import java.lang.reflect.Field;
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import com.github.jamoamo.webjourney.annotation.MappedCollection;
-import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 
 /**
  * Entity Field definition.
@@ -40,11 +35,8 @@ import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 class EntityFieldDefn
 {
 	private Field field;
-	private Transformation transformation;
-	private Mapping mapping;
-	private ExtractValue extractValue;
-	private ExtractFromUrl extractFromUrl;
-	private ExtractCurrentUrl currentUrl;
+	private EntityFieldEvaluator evaluator;
+	private EntityAnnotations annotations;
 
 	EntityFieldDefn(Field field)
 	{
@@ -53,43 +45,20 @@ class EntityFieldDefn
 			throw new RuntimeException("Invalid Field");
 		}
 		this.field = field;
-		this.transformation = field.getAnnotation(Transformation.class);
-		this.mapping = field.getAnnotation(Mapping.class);
-		this.extractValue = field.getAnnotation(ExtractValue.class);
-		this.extractFromUrl = field.getAnnotation(ExtractFromUrl.class);
-		this.currentUrl = field.getAnnotation(ExtractCurrentUrl.class);
-
-		validateAnnotations(this.extractValue, this.extractFromUrl, this.currentUrl);
+		
+		this.annotations = new EntityAnnotations(field);
+		this.annotations.validate();
+		
+		IExtractor extractor = Extractors.getExtractorForField(this);
+		ITransformer transformer = Transformers.getTransformerForField(this);
+		IConverter convert = Converters.getMapperForField(this);
+		
+		this.evaluator = new EntityFieldEvaluator(extractor, transformer, convert);
 	}
 
 	String getFieldName()
 	{
 		return this.field.getName();
-	}
-
-	FieldInfo getFieldInfo()
-	{
-		return FieldInfo.forField(this.field);
-	}
-
-	ExtractValue getExtractValue()
-	{
-		return this.extractValue;
-	}
-
-	ExtractFromUrl getExtractFromUrl()
-	{
-		return this.extractFromUrl;
-	}
-
-	ExtractCurrentUrl getCurrentUrl()
-	{
-		return this.currentUrl;
-	}
-
-	Transformation getTransformation()
-	{
-		return this.transformation;
 	}
 
 	Class<?> getFieldType()
@@ -102,41 +71,24 @@ class EntityFieldDefn
 		return this.field;
 	}
 
-	Mapping getMapping()
-	{
-		return this.mapping;
-	}
-
 	boolean isMappedCollection()
 	{
 		return this.field.isAnnotationPresent(MappedCollection.class);
+	}
+
+	public EntityFieldEvaluator getEvaluator()
+	{
+		return this.evaluator;
+	}
+
+	public EntityAnnotations getAnnotations()
+	{
+		return this.annotations;
 	}
 
 	@Override
 	public String toString()
 	{
 		return this.field.getName() + "[" + this.field.getGenericType().getTypeName() + "]";
-	}
-
-	private void validateAnnotations(ExtractValue extractValue, 
-												ExtractFromUrl extractFromUrl,
-												ExtractCurrentUrl currentUrl)
-	{
-		boolean valid = true;
-		if(extractValue != null && (extractFromUrl != null || currentUrl != null))
-		{
-			valid = false;
-		}
-
-		if(valid && extractFromUrl != null && currentUrl != null)
-		{
-			valid = false;
-		}
-
-		if(!valid)
-		{
-			throw new RuntimeException("Invalid Annotation Combination: Only one of ExractValue, " +
-					  "ExtractFromUrl or ExtractCurrentUrl should be used");
-		}
 	}
 }

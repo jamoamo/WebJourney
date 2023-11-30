@@ -29,7 +29,7 @@ package com.github.jamoamo.webjourney.api.mapper;
  * @author James Amoore
  */
 public class StringMapper
-		  extends AValueMapper<String>
+		  extends AConverter<String>
 {
 	/**
 	 * Maps the value to a string.

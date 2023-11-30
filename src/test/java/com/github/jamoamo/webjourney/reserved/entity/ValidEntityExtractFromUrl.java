@@ -25,10 +25,10 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.Mapping;
 import com.github.jamoamo.webjourney.annotation.Transformation;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_URL_DATA;
+import com.github.jamoamo.webjourney.annotation.Conversion;
 
 /**
  *
@@ -42,7 +42,7 @@ public class ValidEntityExtractFromUrl
 	public static class UrlEntity
 	{
 		@ExtractValue(path = XPATH_STRING_DATA)
-		@Mapping(mapper = TestMapper.class)
+		@Conversion(mapper = TestMapper.class)
 		@Transformation(transformFunction = TestTransformer.class)
 		private String stringData;
 

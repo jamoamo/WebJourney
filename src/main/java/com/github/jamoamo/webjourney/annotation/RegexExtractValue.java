@@ -21,15 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *
+ * Use a regex expression to extract specific information.
  * @author James Amoore
- * @param <S> Source type
- * @param <T> Target type
  */
-interface IConverter<S, T>
-{
-	T convertValue(S source, IValueReader reader);
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface RegexExtractValue
+{	
+	/**
+	 * How to Extract value.
+	 * @return the Extract Value
+	 */
+	ExtractValue extractValue();
+	
+	/**
+	 * The regexes to evaluate use to extract the value. The first regex with a matching group will be used.
+	 * @return the regexes to use to extract the value.
+	 */
+	String[] regexes();
+	
+	/**
+	 * 
+	 * @return the name of the regex group to extract
+	 */
+	String groupName();
+	
+	/**
+	 * The default value if the group is not matched. If not specified, empty string will be used as the default.
+	 * @return the default value.
+	 */
+	String defaultValue() default "";
 }

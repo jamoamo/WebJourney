@@ -21,25 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.annotation;
+package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
+import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 
 /**
- * A Mapping.
+ *
  * @author James Amoore
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Mapping
+class RegexTransformation implements ITransformer<String>
 {
-	/**
-	 * The mapping class.
-	 * @return the class.
-	 */
-	Class<? extends AValueMapper> mapper();
+	private final RegexGroup regexGroup;
+	
+	RegexTransformation(RegexExtractValue regexExtract)
+	{
+		this.regexGroup = new RegexGroup(regexExtract.regexes(), regexExtract.groupName(), regexExtract.defaultValue());
+	}
+
+	@Override
+	public String transformValue(String value)
+	{
+		return this.regexGroup.findGroupValue(value);
+	}
+	
 }

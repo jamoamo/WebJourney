@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.annotation.Transformation;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
 
@@ -36,6 +37,11 @@ public class ValidEntityExtractValueTransformer
 	@ExtractValue(path = XPATH_STRING_DATA)
 	@Transformation(transformFunction = TestTransformer.class)
 	private String stringData;
+		
+	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA), 
+							 regexes = {"(?<group>\\w+)\\sData"}, groupName = "group")
+	@Transformation(transformFunction = TestTransformer.class)
+	private String regexStringData;
 
 	public String getStringData()
 	{
@@ -45,5 +51,16 @@ public class ValidEntityExtractValueTransformer
 	public void setStringData(String stringData)
 	{
 		this.stringData = stringData;
+	}
+		
+	public String getRegexStringData()
+	{
+		return regexStringData;
+	}
+
+	public void setRegexStringData(String regexStringData)
+	{
+		this.regexStringData = regexStringData;
+	
 	}
 }

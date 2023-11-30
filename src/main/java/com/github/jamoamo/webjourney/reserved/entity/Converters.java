@@ -23,10 +23,11 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.DoubleMapper;
 import com.github.jamoamo.webjourney.api.mapper.IntegerMapper;
 import com.github.jamoamo.webjourney.api.mapper.StringMapper;
+import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
@@ -35,39 +36,41 @@ import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
  *
  * @author James Amoore
  */
-final class Mappers
+final class Converters
 {
-	private Mappers(){}
+	private Converters(){}
 	
-	public static IConverter getMapperForField(IValueReader reader, EntityFieldDefn defn)
+	public static IConverter getMapperForField(EntityFieldDefn defn)
 	{
 		TypeInfo info = TypeInfo.forClass(defn.getFieldType());
-		if(defn.getMapping() != null)
+		EntityAnnotations annotations = defn.getAnnotations();
+		
+		if(annotations.getConversion() != null)
 		{
-			if(info.isCollectionType() && !defn.isMappedCollection())
+			if(info.isCollectionType() && !annotations.hasMappedCollection())
 			{
-				AValueMapper mapper = InstanceCreator.getInstance().createInstance(defn.getMapping().mapper());
+				AConverter mapper = InstanceCreator.getInstance().createInstance(annotations.getConversion().mapper());
 				return new CollectionMapper(mapper);
 			}
-			return new Mapper(defn.getMapping());
+			return new Converter(annotations.getConversion());
 		}
 		else if(info.isCollectionType())
 		{
-			return getCollectionMapper(defn, reader);
+			return getCollectionMapper(defn);
 		}
 		else if(!info.isStandardType())
 		{
-			if(defn.getExtractFromUrl() != null)
+			if(annotations.hasExtractFromUrl())
 			{
-				return new EntityCreatorConverter(reader, defn);
+				return new EntityCreatorConverter(defn);
 			}
-			return new EntityFromElementConverter(reader, defn);
+			return new EntityFromElementConverter(defn);
 		}
 		
 		return determineDefaultMapper(info);
 	}
 
-	private static IConverter getCollectionMapper(EntityFieldDefn defn, IValueReader reader)
+	private static IConverter getCollectionMapper(EntityFieldDefn defn)
 			  throws RuntimeException
 	{
 		FieldInfo fieldInfo = FieldInfo.forField(defn.getField());
@@ -78,7 +81,7 @@ final class Mappers
 		}
 		else if(genericTypeInfo.hasNoArgsConstructor())
 		{
-			return new EntitiesFromElementConverter(reader, fieldInfo.getFieldGenericType());
+			return new EntitiesFromElementConverter(fieldInfo.getFieldGenericType());
 		}
 		throw new RuntimeException("Cannot create a converter for collection type " +
 				  "[" + defn.getFieldName() + "] without a mapping");
@@ -86,14 +89,14 @@ final class Mappers
 
 	private static IConverter determineDefaultMapper(TypeInfo info)
 	{
-		AValueMapper mapper = getDefaultMapper(info);
+		AConverter mapper = getDefaultMapper(info);
 		return new ValueMapper(mapper);
 	}
 
-	private static AValueMapper getDefaultMapper(TypeInfo info)
+	private static AConverter getDefaultMapper(TypeInfo info)
 			  throws RuntimeException
 	{
-		AValueMapper mapper;
+		AConverter mapper;
 		if(info.isStringType())
 		{
 			mapper = new StringMapper();

@@ -31,20 +31,17 @@ import com.github.jamoamo.webjourney.api.web.AElement;
  */
 class EntityFromElementConverter implements IConverter<AElement, Object>
 {
-	private final IValueReader reader;
 	private final EntityDefn defn;
 	
-	EntityFromElementConverter(IValueReader reader, EntityFieldDefn fieldDefn)
+	EntityFromElementConverter(EntityFieldDefn fieldDefn)
 	{
-		this.reader = reader;
-		
 		this.defn = new EntityDefn(fieldDefn.getFieldType());
 	}
 
 	@Override
-	public Object mapValue(AElement source)
+	public Object convertValue(AElement source, IValueReader reader)
 	{
 		EntityCreator entityCreator = new EntityCreator(this.defn, source);
-		return entityCreator.createNewEntity(this.reader.getBrowser());
+		return entityCreator.createNewEntity(reader.getBrowser());
 	}
 }

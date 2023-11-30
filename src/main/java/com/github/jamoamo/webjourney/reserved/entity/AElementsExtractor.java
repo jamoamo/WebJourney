@@ -33,19 +33,16 @@ import java.util.List;
 abstract class AElementsExtractor implements IExtractor<List<? extends AElement>>
 {
 	private final String xPath;
-	private final IValueReader reader;
 	
-	AElementsExtractor(IValueReader reader, String xPath)
+	AElementsExtractor(String xPath)
 	{
-		this.reader = reader;
 		this.xPath = xPath;
 	}
 	
 	@Override
-	public List<? extends AElement> extractRawFieldValue()
+	public List<? extends AElement> extractRawFieldValue(IValueReader reader)
 	{
-		return this.reader.getElements(this.xPath);
-		
+		return reader.getElements(this.xPath);
 	}
 	
 }

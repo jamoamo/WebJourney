@@ -23,9 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.Transformation;
-import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
-import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.util.Collection;
 
 /**
@@ -34,18 +31,19 @@ import java.util.Collection;
  */
 class CollectionTransformer implements ITransformer<Collection>
 {
-	private final Transformation transformation;
-	CollectionTransformer(Transformation transformation)
+	private final ITransformer<String> individualTransformer;
+
+	CollectionTransformer(ITransformer<String> individualTransformer)
 	{
-		this.transformation = transformation;
+		this.individualTransformer = individualTransformer;
 	}
+	
+	
 
 	@Override
 	public Collection transformValue(Collection value)
 	{
-		ATransformationFunction function =
-				  InstanceCreator.getInstance().createInstance(this.transformation.transformFunction());
-		return value.stream().map(v -> function.transform(v.toString(), this.transformation.parameters())).toList();
+		return value.stream().map(v -> this.individualTransformer.transformValue(v.toString())).toList();
 	}
 	
 }

@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -225,8 +226,11 @@ public class EntityCreatorTest
 		EntityCreator creator = new EntityCreator(defn);
 
 		ValidEntityExtractValue createNewEntity = (ValidEntityExtractValue)creator.createNewEntity(browser);
+		assertNull(createNewEntity.getNoAnnotation());
 		assertEquals("String Data", createNewEntity.getStringData());
+		assertEquals("String", createNewEntity.getRegexStringData());
 		assertEquals(57, createNewEntity.getIntData());
+		assertEquals(125, createNewEntity.getRegexIntegerData());
 		assertEquals(125.9, createNewEntity.getDoubleData());
 		assertNotNull(createNewEntity.getSubData());
 		assertEquals("String Data", createNewEntity.getSubData().getStringData());
@@ -236,6 +240,10 @@ public class EntityCreatorTest
 		assertEquals("Item1", createNewEntity.getStringListData().get(0));
 		assertEquals("Item2", createNewEntity.getStringListData().get(1));
 		assertEquals("Item3", createNewEntity.getStringListData().get(2));
+		assertEquals(3, createNewEntity.getRegexIntegerListData().size());
+		assertEquals(1, createNewEntity.getRegexIntegerListData().get(0));
+		assertEquals(2, createNewEntity.getRegexIntegerListData().get(1));
+		assertEquals(3, createNewEntity.getRegexIntegerListData().get(2));
 		assertEquals(3, createNewEntity.getDoubleListData().size());
 		assertEquals(1.1, createNewEntity.getDoubleListData().get(0).doubleValue());
 		assertEquals(2.2, createNewEntity.getDoubleListData().get(1).doubleValue());
@@ -286,6 +294,7 @@ public class EntityCreatorTest
 
 		ValidEntityExtractValueTransformer createNewEntity = (ValidEntityExtractValueTransformer)creator.createNewEntity(browser);
 		assertEquals("ataD gnirtS", createNewEntity.getStringData());
+		assertEquals("gnirtS", createNewEntity.getRegexStringData());
 	}
 	
 	@Test
@@ -310,6 +319,7 @@ public class EntityCreatorTest
 
 		ValidEntityExtractValueAttribute createNewEntity = (ValidEntityExtractValueAttribute)creator.createNewEntity(browser);
 		assertEquals("Attribute Value", createNewEntity.getAttribute());
+		assertEquals("Attribute", createNewEntity.getRegexAttribute());
 	}
 	
 	@Test

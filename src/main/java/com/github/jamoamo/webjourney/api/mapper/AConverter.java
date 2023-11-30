@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2022 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.api.mapper;
 
 /**
+ * Abstract class for value mappers that map values from the html document to the target field value.
  *
  * @author James Amoore
- * @param <S> Source type
- * @param <T> Target type
+ * @param <T> The type of the value created by the mapper
  */
-interface IConverter<S, T>
+public abstract class AConverter<T>
 {
-	T convertValue(S source, IValueReader reader);
+	
+	/**
+	 * Maps a value read from the HTML document to the target type of the mapper.
+	 *
+	 * @param value The value read from the HTML document
+	 *
+	 * @return the mapped value.
+	 *
+	 * @throws XValueMappingException if there was a failure to map the value.
+	 */
+	public abstract T mapValue(String value)
+			  throws XValueMappingException;
+
 }

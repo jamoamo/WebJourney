@@ -30,5 +30,5 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 interface IExtractor<T>
 {
-	T extractRawFieldValue();
+	T extractRawFieldValue(IValueReader reader);
 }

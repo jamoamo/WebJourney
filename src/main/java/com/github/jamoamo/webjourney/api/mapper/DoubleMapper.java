@@ -29,7 +29,7 @@ package com.github.jamoamo.webjourney.api.mapper;
  * @author James Amoore
  */
 public class DoubleMapper
-	 extends AValueMapper<Double>
+	 extends AConverter<Double>
 {
 	/**
 	 * Maps the value to a double.

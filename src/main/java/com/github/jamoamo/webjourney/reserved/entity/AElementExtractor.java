@@ -32,17 +32,15 @@ import com.github.jamoamo.webjourney.api.web.AElement;
 abstract class AElementExtractor implements IExtractor<AElement>
 {
 	private final String xPath;
-	private final IValueReader reader;
 	
-	AElementExtractor(IValueReader reader, String elementXPath)
+	AElementExtractor(String elementXPath)
 	{
 		this.xPath = elementXPath;
-		this.reader = reader;
 	}
 
 	@Override
-	public AElement extractRawFieldValue()
+	public AElement extractRawFieldValue(IValueReader reader)
 	{
-		return this.reader.getElement(this.xPath);
+		return reader.getElement(this.xPath);
 	}
 }

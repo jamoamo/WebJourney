@@ -87,7 +87,7 @@ public final class EntityCreator<T>
 	 * @param reader the value ready to use
 	 * @return The newly created entity
 	 */
-	public T createNewEntity(IValueReader reader)
+	T createNewEntity(IValueReader reader)
 	{
 		T instance = this.defn.createInstance();
 		List<EntityFieldDefn> entityFields = this.defn.getEntityFields();
@@ -118,17 +118,6 @@ public final class EntityCreator<T>
 
 	private Object scrapeValue(EntityFieldDefn defn1, IValueReader reader)
 	{
-		IExtractor valueExtractor = Extractors.getExtractorForField(defn1, reader);
-		ITransformer valueTransformer = Transformers.getTransformerForField(defn1);
-		IConverter valueMapper = Mappers.getMapperForField(reader, defn1);
-		
-		Object value = valueExtractor.extractRawFieldValue();
-		if(valueTransformer != null)
-		{
-			value = valueTransformer.transformValue(value);
-		}
-
-		Object mappedValue = valueMapper.mapValue(value);
-		return mappedValue;
+		return defn1.getEvaluator().evaluate(reader);
 	}
 }
