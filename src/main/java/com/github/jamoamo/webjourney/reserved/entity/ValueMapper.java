@@ -23,7 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 
 /**
@@ -33,14 +33,14 @@ import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
  */
 class ValueMapper<T> implements IConverter<String, T>
 {
-	private final AValueMapper<T> mapper;
-	ValueMapper(AValueMapper<T> mapper)
+	private final AConverter<T> mapper;
+	ValueMapper(AConverter<T> mapper)
 	{
 		this.mapper = mapper;
 	}
 
 	@Override
-	public T mapValue(String source)
+	public T convertValue(String source, IValueReader reader)
 	{
 		try
 		{

@@ -26,10 +26,8 @@ package com.github.jamoamo.webjourney.reserved.entity;
 /**
  *
  * @author James Amoore
- * @param <S> Source type
- * @param <T> Target type
  */
-interface IConverter<S, T>
+interface IEntityFieldEvaluator
 {
-	T convertValue(S source, IValueReader reader);
+	Object evaluate(IValueReader browser);
 }

@@ -30,18 +30,16 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 class ElementTextExtractor implements IExtractor<String>
 {
-	private final IValueReader browser;
 	private final String xPath;
 	
-	ElementTextExtractor(IValueReader browser, String xPath)
+	ElementTextExtractor(String xPath)
 	{
-		this.browser = browser;
 		this.xPath = xPath;
 	}
 
 	@Override
-	public String extractRawFieldValue()
+	public String extractRawFieldValue(IValueReader reader)
 	{
-		return this.browser.getElementText(this.xPath);
+		return reader.getElementText(this.xPath);
 	}
 }

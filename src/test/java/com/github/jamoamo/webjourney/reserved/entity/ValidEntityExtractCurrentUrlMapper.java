@@ -24,7 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
-import com.github.jamoamo.webjourney.annotation.Mapping;
+import com.github.jamoamo.webjourney.annotation.Conversion;
 
 /**
  *
@@ -33,7 +33,7 @@ import com.github.jamoamo.webjourney.annotation.Mapping;
 public class ValidEntityExtractCurrentUrlMapper
 {
 	@ExtractCurrentUrl()
-	@Mapping(mapper = TestMapper.class)
+	@Conversion(mapper = TestMapper.class)
 	private String currentUrl;
 
 	public String getCurrentUrl()

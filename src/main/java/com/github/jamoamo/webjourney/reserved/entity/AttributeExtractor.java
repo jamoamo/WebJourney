@@ -31,20 +31,18 @@ package com.github.jamoamo.webjourney.reserved.entity;
 @SuppressWarnings("AbstractClassName")
 class AttributeExtractor implements IExtractor<String>
 {
-	private final IValueReader browser;
 	private final String elementXPath;
 	private final String attribute;
 	
-	AttributeExtractor(IValueReader browser, String elementXPath, String attribute)
+	AttributeExtractor(String elementXPath, String attribute)
 	{
-		this.browser = browser;
 		this.elementXPath = elementXPath;
 		this.attribute = attribute;
 	}
 
 	@Override
-	public String extractRawFieldValue()
+	public String extractRawFieldValue(IValueReader browser)
 	{
-		return this.browser.getElement(this.elementXPath).getAttribute(this.attribute);
+		return browser.getElement(this.elementXPath).getAttribute(this.attribute);
 	}
 }

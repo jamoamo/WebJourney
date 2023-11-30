@@ -29,8 +29,8 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 class ElementExtractor extends AElementExtractor
 {
-	ElementExtractor(IValueReader reader, String elementXPath)
+	ElementExtractor(String elementXPath)
 	{
-		super(reader, elementXPath);
+		super(elementXPath);
 	}
 }

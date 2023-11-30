@@ -33,23 +33,21 @@ import java.util.List;
  */
 class EntitiesFromElementConverter implements IConverter<List<AElement>, List<Object>>
 {
-	private final IValueReader reader;
 	private final EntityDefn defn;
 	
-	EntitiesFromElementConverter(IValueReader reader, Class<?> connectionType)
+	EntitiesFromElementConverter(Class<?> connectionType)
 	{
-		this.reader = reader;
 		this.defn = new EntityDefn(connectionType);
 	}
 
 	@Override
-	public List<Object> mapValue(List<AElement> source)
+	public List<Object> convertValue(List<AElement> source, IValueReader reader)
 	{
 		List<Object> result = new ArrayList<>(source.size());
 		for(AElement elems : source)
 		{
 			EntityCreator entityCreator = new EntityCreator(this.defn, elems);
-			result.add(entityCreator.createNewEntity(this.reader.getBrowser()));
+			result.add(entityCreator.createNewEntity(reader.getBrowser()));
 		}
 		return result;
 	}

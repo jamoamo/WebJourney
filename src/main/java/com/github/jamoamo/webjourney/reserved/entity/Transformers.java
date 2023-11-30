@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 
 /**
@@ -31,23 +32,52 @@ import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
  */
 final class Transformers
 {
-	private Transformers(){}
-	
+	private Transformers()
+	{
+	}
+
 	public static ITransformer getTransformerForField(EntityFieldDefn defn)
 	{
+		EntityAnnotations annotations = defn.getAnnotations();
 		TypeInfo typeInfo = TypeInfo.forClass(defn.getFieldType());
-		if(defn.getTransformation() != null)
+		if(annotations.hasTransformation())
 		{
-			if(typeInfo.isCollectionType() & !defn.isMappedCollection())
-			{
-				return new CollectionTransformer(defn.getTransformation());
-			}
-			else
-			{
-				return new Transformer(defn.getTransformation());
-			}
+			return getTransformerForTransformation(annotations, typeInfo, defn);
 		}
-		
+		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection() && annotations.
+			hasRegexExtractValue())
+		{
+			return new CollectionTransformer(new RegexTransformation(annotations.
+						getRegexExtract()));
+		}
+		else if(annotations.hasRegexExtractValue())
+		{
+			return new RegexTransformation(annotations.getRegexExtract());
+		}
+
 		return null;
+	}
+
+	private static ITransformer getTransformerForTransformation(EntityAnnotations annotations, TypeInfo typeInfo,
+																					EntityFieldDefn defn)
+	{
+		if(annotations.hasRegexExtractValue())
+		{
+			return new CombinedTransformer(new RegexTransformation(annotations.getRegexExtract()), new Transformer(
+				annotations.getTransformation()));
+		}
+		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection())
+		{
+			if(annotations.hasRegexExtractValue())
+			{
+				return new CollectionTransformer(new CombinedTransformer(new RegexTransformation(annotations.
+					getRegexExtract()), new Transformer(annotations.getTransformation())));
+			}
+			return new CollectionTransformer(new Transformer(annotations.getTransformation()));
+		}
+		else
+		{
+			return new Transformer(defn.getAnnotations().getTransformation());
+		}
 	}
 }

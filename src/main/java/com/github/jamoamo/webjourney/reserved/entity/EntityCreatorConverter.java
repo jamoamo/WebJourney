@@ -32,26 +32,24 @@ import java.net.URL;
  */
 class EntityCreatorConverter implements IConverter<String, Object>
 {
-	private final IValueReader browser;
 	private final EntityCreator entityCreator;
 	
-	EntityCreatorConverter(IValueReader browser, EntityFieldDefn fieldDefn)
+	EntityCreatorConverter(EntityFieldDefn fieldDefn)
 	{
-		this.browser = browser;
 		EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
 		this.entityCreator = new EntityCreator(defn);
 	}
 
 	@Override
-	public Object mapValue(String source)
+	public Object convertValue(String source, IValueReader reader)
 	{
 		try
 		{
-			this.browser.navigateTo(new URL(source));
+			reader.navigateTo(new URL(source));
 			
-			Object instance = this.entityCreator.createNewEntity(this.browser);
+			Object instance = this.entityCreator.createNewEntity(reader);
 
-			this.browser.navigateBack();
+			reader.navigateBack();
 			return instance;
 		}
 		catch(MalformedURLException e)

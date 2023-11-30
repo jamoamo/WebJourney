@@ -23,7 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,15 +38,15 @@ import java.util.logging.Logger;
  */
 class CollectionMapper<T> implements IConverter<Collection<String>, Collection<T>>
 {
-	private final AValueMapper<T> mapping;
+	private final AConverter<T> mapping;
 	
-	CollectionMapper(AValueMapper<T> mapping)
+	CollectionMapper(AConverter<T> mapping)
 	{
 		this.mapping = mapping;
 	}
 
 	@Override
-	public Collection<T> mapValue(Collection<String> source)
+	public Collection<T> convertValue(Collection<String> source, IValueReader reader)
 	{
 		List<T> mappedCollection = new ArrayList<>(source.size());
 		for(String value : source)

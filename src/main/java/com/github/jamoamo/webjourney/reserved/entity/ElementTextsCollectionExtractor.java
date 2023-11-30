@@ -31,19 +31,17 @@ import java.util.List;
  */
 class ElementTextsCollectionExtractor implements IExtractor<List<String>>
 {
-	private final IValueReader reader;
 	private final String path;
 	
-	ElementTextsCollectionExtractor(IValueReader browser, String path)
+	ElementTextsCollectionExtractor(String path)
 	{
-		this.reader = browser;
 		this.path = path;
 	}
 
 	@Override
-	public List<String> extractRawFieldValue()
+	public List<String> extractRawFieldValue(IValueReader reader)
 	{
-		return this.reader.getElementTexts(this.path);
+		return reader.getElementTexts(this.path);
 	}
 	
 }

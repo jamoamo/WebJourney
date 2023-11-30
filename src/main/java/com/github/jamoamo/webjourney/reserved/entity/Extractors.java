@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import java.lang.reflect.Field;
@@ -35,114 +36,130 @@ final class Extractors
 {
 	private Extractors(){}
 	
-	static IExtractor getExtractorForField(EntityFieldDefn defn, IValueReader reader)
+	static IExtractor getExtractorForField(EntityFieldDefn defn)
 	{
 		TypeInfo typeInfo = TypeInfo.forClass(defn.getFieldType());
+		EntityAnnotations annotations = defn.getAnnotations();
 		
-		if(defn.getCurrentUrl() != null)
+		if (annotations.hasCurrentUrl())
 		{
-			return getCurrentUrlExtractor(defn, reader, typeInfo);
+			return getCurrentUrlExtractor(defn, typeInfo);
 		}
-		else if(defn.getExtractFromUrl() != null)
+		else if(annotations.hasExtractFromUrl())
 		{
-			return getUrlExtractor(defn, reader);
+			return getUrlExtractor(defn);
 		}
-		else if(defn.getExtractValue() != null)
+		else if(annotations.hasExtractValue())
 		{
-			return getValueExtractor(defn, reader, typeInfo);
+			return getValueExtractor(defn, typeInfo);
 		}
 		
 		return null;
 	}
 	
-	private static IExtractor getCurrentUrlExtractor(EntityFieldDefn defn, IValueReader reader, TypeInfo typeInfo)
+	private static IExtractor getCurrentUrlExtractor(EntityFieldDefn defn, TypeInfo typeInfo)
 	{
+		EntityAnnotations annotations = defn.getAnnotations();
 		if(defn.isMappedCollection())
 		{
 			throw new RuntimeException("Unsupported Combination of MappedCollection and ExtractCurrentUrl");
 		}
 		
-		if(!typeInfo.isStandardType() && defn.getMapping() == null)
+		if(!typeInfo.isStandardType() && annotations.hasConversion())
 		{
 			throw new RuntimeException("ExtractCurrentUrl not supported for non standard Java type without a converter");
 		}
 		
-		return new CurrentUrlExtractor(reader);
+		return new CurrentUrlExtractor();
 	}
 
-	private static IExtractor getValueExtractor(EntityFieldDefn defn, IValueReader reader, TypeInfo typeInfo)
+	private static IExtractor getValueExtractor(EntityFieldDefn defn, TypeInfo typeInfo)
 	{
-		String xPath = defn.getExtractValue().path();
-		if(!defn.getExtractValue().attribute().isBlank())
+		EntityAnnotations annotations = defn.getAnnotations();
+		String xPath = annotations.getExtractValue().path();
+		
+		if(!annotations.getExtractValue().attribute().isBlank())
 		{
-			return new AttributeExtractor(reader, xPath, defn.getExtractValue().attribute());
+			return getAttributeExtractor(defn, xPath);
 		}
 		else if(typeInfo.isCollectionType())
 		{
-			if(defn.isMappedCollection())
+			if(annotations.hasMappedCollection())
 			{
-				return new ElementTextExtractor(reader, xPath);
+				return getTextExtractor(defn, xPath);
 			}
-			return getCollectionExtractor(defn, reader, xPath);
+			return getCollectionExtractor(defn, xPath);
 		}
 		else if(!typeInfo.isStandardType())
 		{
-			return getNonStandardValueExtractor(defn, reader, xPath, typeInfo);
+			return getNonStandardValueExtractor(defn, xPath, typeInfo);
 		}
 		else
 		{
-			return new ElementTextExtractor(reader, xPath);
+			return getTextExtractor(defn, xPath);
 		}
 	}
 
-	private static IExtractor getNonStandardValueExtractor(EntityFieldDefn defn, IValueReader reader, String xPath,
+	private static IExtractor getTextExtractor(EntityFieldDefn defn, String xPath)
+	{
+
+		return new ElementTextExtractor(xPath);
+	}
+
+	private static IExtractor getAttributeExtractor(EntityFieldDefn defn, String xPath)
+	{
+		String attribute = defn.getAnnotations().getExtractValue().attribute();
+		return new AttributeExtractor(xPath, attribute);
+	}
+
+	private static IExtractor getNonStandardValueExtractor(EntityFieldDefn defn, String xPath,
 																			TypeInfo typeInfo)
 			  throws RuntimeException
 	{
-		if(defn.getMapping() != null)
+		if(defn.getAnnotations().getConversion() != null)
 		{
-			return new ElementTextExtractor(reader, xPath);
+			return new ElementTextExtractor(xPath);
 		}
 		if(typeInfo.hasNoArgsConstructor())
 		{
-			return new ElementExtractor(reader, xPath);
+			return new ElementExtractor(xPath);
 		}
 		throw new RuntimeException("Unable to determine a suitable value extractor. " +
 				  "Is there a converter or no-args constructor missing?");
 	}
 
-	private static IExtractor getCollectionExtractor(EntityFieldDefn defn, IValueReader reader, String xPath)
+	private static IExtractor getCollectionExtractor(EntityFieldDefn defn, String xPath)
 	{
 		if(isCollectionTypeStandard(defn.getField()))
 		{
-			return new ElementTextsCollectionExtractor(reader, xPath);
+			return new ElementTextsCollectionExtractor(xPath);
 		}
 		else
 		{
-			if(defn.getMapping() != null)
+			if(defn.getAnnotations().getConversion() != null)
 			{
-				return new ElementTextsCollectionExtractor(reader, xPath);
+				return new ElementTextsCollectionExtractor(xPath);
 			}
 			else
 			{
-				return new ElementListExtractor(reader, xPath);
+				return new ElementListExtractor(xPath);
 			}
 		}
 	}
 
-	private static IExtractor getUrlExtractor(EntityFieldDefn defn, IValueReader browser)
+	private static IExtractor getUrlExtractor(EntityFieldDefn defn)
 	{
 		if(!TypeInfo.forClass(defn.getFieldType()).isStandardType() 
 				  && TypeInfo.forClass(defn.getFieldType()).hasNoArgsConstructor())
 		{
-			if(!defn.getExtractFromUrl().attribute().isBlank())
+			if(!defn.getAnnotations().getExtractFromUrl().attribute().isBlank())
 			{
-				return new AttributeExtractor(browser, defn.getExtractFromUrl().urlXpath(),
-						  defn.getExtractFromUrl().attribute());
+				return new AttributeExtractor(defn.getAnnotations().getExtractFromUrl().urlXpath(),
+						  defn.getAnnotations().getExtractFromUrl().attribute());
 			}
 			else
 			{
-				return new ElementTextExtractor(browser, defn.getExtractFromUrl().urlXpath());
+				return new ElementTextExtractor(defn.getAnnotations().getExtractFromUrl().urlXpath());
 			}
 		}
 		throw new RuntimeException("Cannot determine a suitable value extractor. " +

@@ -26,10 +26,30 @@ package com.github.jamoamo.webjourney.reserved.entity;
 /**
  *
  * @author James Amoore
- * @param <S> Source type
- * @param <T> Target type
  */
-interface IConverter<S, T>
+class EntityFieldEvaluator implements IEntityFieldEvaluator
 {
-	T convertValue(S source, IValueReader reader);
+	private final IExtractor extractor;
+	private final IConverter converter;
+	private final ITransformer transformer;
+	
+	EntityFieldEvaluator(IExtractor extractor, ITransformer transformer, IConverter converter)
+	{
+		this.extractor = extractor;
+		this.transformer = transformer;
+		this.converter = converter;
+	}
+
+	@Override
+	public Object evaluate(IValueReader browser)
+	{
+		Object value = this.extractor.extractRawFieldValue(browser);
+		if(this.transformer != null)
+		{
+			value = this.transformer.transformValue(value);
+		}
+
+		Object convertedValue = this.converter.convertValue(value, browser);
+		return convertedValue;
+	}
 }

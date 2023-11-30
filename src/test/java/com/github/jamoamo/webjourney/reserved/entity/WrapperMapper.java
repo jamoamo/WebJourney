@@ -23,14 +23,14 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.AValueMapper;
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 
 /**
  *
  * @author James Amoore
  */
-public class WrapperMapper extends AValueMapper<StringWrapper>
+public class WrapperMapper extends AConverter<StringWrapper>
 {
 	@Override
 	public StringWrapper mapValue(String value)

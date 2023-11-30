@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import java.util.List;
 
 /**
@@ -32,12 +33,20 @@ import java.util.List;
  */
 public class ValidEntityExtractValue
 {
+	private String noAnnotation;
 	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
 	private String stringData;
+	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA), 
+							 regexes = {"(?<group>\\w+)\\sData"}, groupName = "group")
+	private String regexStringData;
+	
 	@ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
 	private int intData;
 	@ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA)
 	private double doubleData;
+	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA), 
+							 regexes = {"(?<group>\\d+)(.\\d+)?"}, groupName = "group", defaultValue = "0")
+	private Integer regexIntegerData;
 	@ExtractValue(path = EntityCreatorTest.XPATH_SUB_DATA)
 	private SubEntity subData;
 	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
@@ -46,6 +55,9 @@ public class ValidEntityExtractValue
 	private List<Integer> integerListData;
 	@ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_LIST_DATA)
 	private List<Double> doubleListData;
+	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA), 
+							 regexes = {"Item(?<group>\\d+)"}, groupName = "group")
+	private List<Integer> regexIntegerListData;
 	@ExtractValue(path = EntityCreatorTest.XPATH_SUB_LIST_DATA)
 	private List<SubEntity> subs;
 	
@@ -89,6 +101,46 @@ public class ValidEntityExtractValue
 		}
 		
 		
+	}
+
+	public String getNoAnnotation()
+	{
+		return noAnnotation;
+	}
+
+	public void setNoAnnotation(String noAnnotation)
+	{
+		this.noAnnotation = noAnnotation;
+	}
+
+	public String getRegexStringData()
+	{
+		return regexStringData;
+	}
+
+	public void setRegexStringData(String regexStringData)
+	{
+		this.regexStringData = regexStringData;
+	}
+
+	public Integer getRegexIntegerData()
+	{
+		return regexIntegerData;
+	}
+
+	public void setRegexIntegerData(Integer regexIntegerData)
+	{
+		this.regexIntegerData = regexIntegerData;
+	}
+
+	public List<Integer> getRegexIntegerListData()
+	{
+		return regexIntegerListData;
+	}
+
+	public void setRegexIntegerListData(List<Integer> regexIntegerListData)
+	{
+		this.regexIntegerListData = regexIntegerListData;
 	}
 
 	public String getStringData()

@@ -23,51 +23,36 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.MappedCollection;
-import com.github.jamoamo.webjourney.annotation.Transformation;
-import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_SEPARATED_STRING_DATA;
-import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
-import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_LIST_DATA;
-import java.util.List;
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
+import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
+import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import com.github.jamoamo.webjourney.annotation.Conversion;
 
 /**
  *
  * @author James Amoore
  */
-public class ValidEntityExtractValueTransformerMapper
+class Converter implements IConverter
 {
-	@ExtractValue(path = XPATH_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	@Conversion(mapper = TestMapper.class)
-	private String stringData;
+	private final Conversion conversion;
 	
-	@ExtractValue(path = XPATH_SEPARATED_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	@Conversion(mapper = StringSplitMapper.class)
-	@MappedCollection()
-	private List<String> stringListData;
-
-	public String getStringData()
+	Converter(Conversion conversion)
 	{
-		return stringData;
+		this.conversion = conversion;
 	}
 
-	public void setStringData(String stringData)
+	@Override
+	public Object convertValue(Object source, IValueReader reader)
 	{
-		this.stringData = stringData;
+		AConverter valueConverter = InstanceCreator.getInstance().createInstance(this.conversion.mapper());
+		try
+		{
+			return valueConverter.mapValue(source.toString());
+		}
+		catch(XValueMappingException ex)
+		{
+			throw new RuntimeException(ex);
+		}
 	}
-
-	public List<String> getStringListData()
-	{
-		return stringListData;
-	}
-
-	public void setStringListData(List<String> stringListData)
-	{
-		this.stringListData = stringListData;
-	}
-	
 	
 }
