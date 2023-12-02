@@ -29,26 +29,67 @@ import java.net.URL;
 import java.util.List;
 
 /**
- *
+ * Reads a value from a source.
  * @author James Amoore
  */
-interface IValueReader
+public interface IValueReader
 {
+	/**
+	 * Get the current URL.
+	 * @return the current url.
+	 */
 	String getCurrentUrl();
 	
+	/**
+	 * Get the text of the element identified by the xpath.
+	 * @param xPath the element xpath
+	 * @return the element text
+	 */
 	String getElementText(String xPath);
 	
+	/**
+	 * Get the text of the elements identified by the xpath.
+	 * @param xPath the element xpath
+	 * @return the element texts
+	 */
 	List<String> getElementTexts(String xPath);
 	
+	/**
+	 * Get the element identified by the xpath.
+	 * @param xPath the element xpath
+	 * @return the element
+	 */
 	AElement getElement(String xPath);
 	
+	/**
+	 * Get the elements identified by the xpath.
+	 * @param xPath the element xpath
+	 * @return the elements
+	 */
 	List<? extends AElement> getElements(String xPath);
 	
-	String getAttribute(String element, String attr);
+	/**
+	 * Get the attribute identified by the element xpath and attribute name.
+	 * @param xPath the element xpath
+	 * @param attr the arribute name
+	 * @return the element attribute value
+	 */
+	String getAttribute(String xPath, String attr);
 	
+	/**
+	 * Navigates to the provided url.
+	 * @param url the target url
+	 */
 	void navigateTo(URL url);
 	
+	/**
+	 * Navigates back.
+	 */
 	void navigateBack();
 	
+	/**
+	 * Get the browser used by the value reader.
+	 * @return the browser.
+	 */
 	IBrowser getBrowser();
 }

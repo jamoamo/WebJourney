@@ -23,32 +23,20 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-
 /**
- *
+ * A condition that always evaluates to true.
  * @author James Amoore
  */
-@SuppressWarnings("AbstractClassName")
-class AttributeExtractor implements IExtractor<String>
+public class AlwaysCondition implements ICondition
 {
-	private final String elementXPath;
-	private final String attribute;
-	
-	AttributeExtractor(String elementXPath, String attribute)
-	{
-		this.elementXPath = elementXPath;
-		this.attribute = attribute;
-	}
-
+	/**
+	 * Evaluates the condition.
+	 * @param reader the value reader
+	 * @return true always
+	 */
 	@Override
-	public String extractRawFieldValue(IValueReader browser)
+	public boolean evaluate(IValueReader reader)
 	{
-		return browser.getElement(this.elementXPath).getAttribute(this.attribute);
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return new AlwaysCondition();
+		return true;
 	}
 }

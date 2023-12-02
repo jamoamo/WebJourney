@@ -35,4 +35,10 @@ class CurrentUrlExtractor implements IExtractor<String>
 	{
 		return reader.getCurrentUrl();
 	}
+	
+	@Override
+	public ICondition getCondition()
+	{
+		return new AlwaysCondition();
+	}
 }

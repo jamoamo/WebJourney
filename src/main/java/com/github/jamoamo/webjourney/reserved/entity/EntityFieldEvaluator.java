@@ -23,19 +23,29 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  *
  * @author James Amoore
  */
 class EntityFieldEvaluator implements IEntityFieldEvaluator
 {
-	private final IExtractor extractor;
+	private final List<IExtractor> extractors;
 	private final IConverter converter;
 	private final ITransformer transformer;
 	
 	EntityFieldEvaluator(IExtractor extractor, ITransformer transformer, IConverter converter)
 	{
-		this.extractor = extractor;
+		this.extractors = Collections.singletonList(extractor);
+		this.transformer = transformer;
+		this.converter = converter;
+	}
+	
+	EntityFieldEvaluator(List<IExtractor> extractors, ITransformer transformer, IConverter converter)
+	{
+		this.extractors = extractors;
 		this.transformer = transformer;
 		this.converter = converter;
 	}
@@ -43,13 +53,36 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 	@Override
 	public Object evaluate(IValueReader browser)
 	{
-		Object value = this.extractor.extractRawFieldValue(browser);
+		Object extractedValue = extractValue(browser);
+		
+		Object transformedValue = extractedValue;
 		if(this.transformer != null)
 		{
-			value = this.transformer.transformValue(value);
+			transformedValue = this.transformer.transformValue(extractedValue);
 		}
 
-		Object convertedValue = this.converter.convertValue(value, browser);
+		Object convertedValue = this.converter.convertValue(transformedValue, browser);
 		return convertedValue;
+	}
+
+	private Object extractValue(IValueReader browser)
+		throws RuntimeException
+	{
+		List<IExtractor> matchingExtractors =
+			this.extractors.stream().filter(extractor -> extractor.getCondition().evaluate(browser)).toList();
+		Object extractedValue = null;
+		if(matchingExtractors.isEmpty())
+		{
+			throw new RuntimeException("No Extractors apply");
+		}
+		else if(matchingExtractors.size() > 1)
+		{
+			throw new RuntimeException("More than one Extractor applies.");
+		}
+		else
+		{
+			extractedValue = this.extractors.get(0).extractRawFieldValue(browser);
+		}
+		return extractedValue;
 	}
 }
