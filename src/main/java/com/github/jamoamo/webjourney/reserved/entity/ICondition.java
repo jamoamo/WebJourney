@@ -23,32 +23,16 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-
 /**
  *
  * @author James Amoore
  */
-@SuppressWarnings("AbstractClassName")
-class AttributeExtractor implements IExtractor<String>
+public interface ICondition
 {
-	private final String elementXPath;
-	private final String attribute;
-	
-	AttributeExtractor(String elementXPath, String attribute)
-	{
-		this.elementXPath = elementXPath;
-		this.attribute = attribute;
-	}
-
-	@Override
-	public String extractRawFieldValue(IValueReader browser)
-	{
-		return browser.getElement(this.elementXPath).getAttribute(this.attribute);
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return new AlwaysCondition();
-	}
+	/**
+	 * Evaluates the condition.
+	 * @param reader the value reader
+	 * @return the evaluation result.
+	 */
+	boolean evaluate(IValueReader reader);
 }

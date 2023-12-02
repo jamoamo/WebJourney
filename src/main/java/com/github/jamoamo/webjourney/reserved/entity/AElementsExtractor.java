@@ -44,5 +44,10 @@ abstract class AElementsExtractor implements IExtractor<List<? extends AElement>
 	{
 		return reader.getElements(this.xPath);
 	}
-	
+
+	@Override
+	public ICondition getCondition()
+	{
+		return new AlwaysCondition();
+	}
 }

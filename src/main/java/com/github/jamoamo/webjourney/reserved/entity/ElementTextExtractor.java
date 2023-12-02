@@ -42,4 +42,10 @@ class ElementTextExtractor implements IExtractor<String>
 	{
 		return reader.getElementText(this.xPath);
 	}
+	
+	@Override
+	public ICondition getCondition()
+	{
+		return new AlwaysCondition();
+	}
 }

@@ -44,4 +44,9 @@ class ElementTextsCollectionExtractor implements IExtractor<List<String>>
 		return reader.getElementTexts(this.path);
 	}
 	
+	@Override
+	public ICondition getCondition()
+	{
+		return new AlwaysCondition();
+	}
 }
