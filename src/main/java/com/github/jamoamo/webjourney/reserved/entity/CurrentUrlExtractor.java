@@ -31,7 +31,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 class CurrentUrlExtractor implements IExtractor<String>
 {
 	@Override
-	public String extractRawFieldValue(IValueReader reader)
+	public String extractRawValue(IValueReader reader)
 	{
 		return reader.getCurrentUrl();
 	}

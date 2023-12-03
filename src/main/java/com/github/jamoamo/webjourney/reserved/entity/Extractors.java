@@ -23,100 +23,132 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
+import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
+import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
-import java.lang.reflect.Field;
+import java.lang.annotation.Annotation;
 
 /**
  *
  * @author James Amoore
  */
-final class Extractors
+public final class Extractors
 {
-	private Extractors(){}
-	
-	static IExtractor getExtractorForField(EntityFieldDefn defn)
+	private Extractors()
 	{
-		TypeInfo typeInfo = TypeInfo.forClass(defn.getFieldType());
-		EntityAnnotations annotations = defn.getAnnotations();
-		
-		if (annotations.hasCurrentUrl())
+	}
+
+	/**
+	 * Returns an extractor for the annotation.
+	 *
+	 * @param annotation                  the annotation
+	 * @param fieldInfo                   information about the field
+	 * @param extractCollectionSingularly whether collections should be extracted as one.
+	 * @param hasConverter                whether a converter is present
+	 *
+	 * @return the extractor
+	 */
+	public static IExtractor getExtractorForAnnotation(
+		Annotation annotation,
+		FieldInfo fieldInfo,
+		boolean extractCollectionSingularly,
+		boolean hasConverter)
+	{
+		if(annotation instanceof ExtractCurrentUrl)
 		{
-			return getCurrentUrlExtractor(defn, typeInfo);
+			return getCurrentUrlExtractor();
 		}
-		else if(annotations.hasExtractFromUrl())
+		else if(annotation instanceof ExtractFromUrl extractor)
 		{
-			return getUrlExtractor(defn);
+			return getUrlExtractor(fieldInfo, extractor.urlXpath(), extractor.attribute());
 		}
-		else if(annotations.hasExtractValue())
+		else if(annotation instanceof ExtractValue extractor)
 		{
-			return getValueExtractor(defn, typeInfo);
+			return getValueExtractor(fieldInfo, extractor.path(), extractor.attribute(),
+											 extractCollectionSingularly, hasConverter);
 		}
-		
+		else if(annotation instanceof RegexExtractValue extractor)
+		{
+			return getExtractorForAnnotation(extractor.extractValue(), fieldInfo,
+														extractCollectionSingularly, hasConverter);
+		}
 		return null;
 	}
-	
-	private static IExtractor getCurrentUrlExtractor(EntityFieldDefn defn, TypeInfo typeInfo)
+
+	private static IExtractor getCurrentUrlExtractor()
 	{
-		EntityAnnotations annotations = defn.getAnnotations();
-		if(defn.isMappedCollection())
-		{
-			throw new RuntimeException("Unsupported Combination of MappedCollection and ExtractCurrentUrl");
-		}
-		
-		if(!typeInfo.isStandardType() && annotations.hasConversion())
-		{
-			throw new RuntimeException("ExtractCurrentUrl not supported for non standard Java type without a converter");
-		}
-		
 		return new CurrentUrlExtractor();
 	}
 
-	private static IExtractor getValueExtractor(EntityFieldDefn defn, TypeInfo typeInfo)
+	private static IExtractor getUrlExtractor(FieldInfo fieldInfo, String xPath, String attribute)
 	{
-		EntityAnnotations annotations = defn.getAnnotations();
-		String xPath = annotations.getExtractValue().path();
-		
-		if(!annotations.getExtractValue().attribute().isBlank())
+		TypeInfo fieldTypeInfo = fieldInfo.getFieldTypeInfo();
+
+		if(!fieldTypeInfo.isStandardType() && fieldTypeInfo.hasNoArgsConstructor())
 		{
-			return getAttributeExtractor(defn, xPath);
+			if(!attribute.isBlank())
+			{
+				return new AttributeExtractor(xPath, attribute);
+			}
+			else
+			{
+				return new ElementTextExtractor(xPath);
+			}
+		}
+		throw new RuntimeException("Cannot determine a suitable value extractor. " +
+			"Missing a converter or no-args constructor?");
+	}
+
+	private static IExtractor getValueExtractor(
+		FieldInfo fieldInfo,
+		String xPath,
+		String attribute,
+		boolean extractCollectionSingularly,
+		boolean hasConverter)
+	{
+		TypeInfo typeInfo = fieldInfo.getFieldTypeInfo();
+		if(!attribute.isBlank())
+		{
+			return getAttributeExtractor(xPath, attribute);
 		}
 		else if(typeInfo.isCollectionType())
 		{
-			if(annotations.hasMappedCollection())
+			if(extractCollectionSingularly)
 			{
-				return getTextExtractor(defn, xPath);
+				return getTextExtractor(xPath);
 			}
-			return getCollectionExtractor(defn, xPath);
+			return getCollectionExtractor(fieldInfo, xPath, hasConverter);
 		}
 		else if(!typeInfo.isStandardType())
 		{
-			return getNonStandardValueExtractor(defn, xPath, typeInfo);
+			return getNonStandardValueExtractor(xPath, typeInfo, hasConverter);
 		}
 		else
 		{
-			return getTextExtractor(defn, xPath);
+			return getTextExtractor(xPath);
 		}
 	}
 
-	private static IExtractor getTextExtractor(EntityFieldDefn defn, String xPath)
+	private static IExtractor getTextExtractor(String xPath)
 	{
-
 		return new ElementTextExtractor(xPath);
 	}
 
-	private static IExtractor getAttributeExtractor(EntityFieldDefn defn, String xPath)
+	private static IExtractor getAttributeExtractor(String xPath, String attribute)
 	{
-		String attribute = defn.getAnnotations().getExtractValue().attribute();
 		return new AttributeExtractor(xPath, attribute);
 	}
 
-	private static IExtractor getNonStandardValueExtractor(EntityFieldDefn defn, String xPath,
-																			TypeInfo typeInfo)
-			  throws RuntimeException
+	private static IExtractor getNonStandardValueExtractor(
+		String xPath,
+		TypeInfo typeInfo,
+		boolean hasConverter)
+		throws RuntimeException
 	{
-		if(defn.getAnnotations().getConversion() != null)
+		if(hasConverter)
 		{
 			return new ElementTextExtractor(xPath);
 		}
@@ -125,18 +157,18 @@ final class Extractors
 			return new ElementExtractor(xPath);
 		}
 		throw new RuntimeException("Unable to determine a suitable value extractor. " +
-				  "Is there a converter or no-args constructor missing?");
+			"Is there a converter or no-args constructor missing?");
 	}
 
-	private static IExtractor getCollectionExtractor(EntityFieldDefn defn, String xPath)
+	private static IExtractor getCollectionExtractor(FieldInfo fieldInfo, String xPath, boolean hasConverter)
 	{
-		if(isCollectionTypeStandard(defn.getField()))
+		if(fieldInfo.getFieldGenericTypeInfo().isStandardType())
 		{
 			return new ElementTextsCollectionExtractor(xPath);
 		}
 		else
 		{
-			if(defn.getAnnotations().getConversion() != null)
+			if(hasConverter)
 			{
 				return new ElementTextsCollectionExtractor(xPath);
 			}
@@ -145,41 +177,5 @@ final class Extractors
 				return new ElementListExtractor(xPath);
 			}
 		}
-	}
-
-	private static IExtractor getUrlExtractor(EntityFieldDefn defn)
-	{
-		if(!TypeInfo.forClass(defn.getFieldType()).isStandardType() 
-				  && TypeInfo.forClass(defn.getFieldType()).hasNoArgsConstructor())
-		{
-			if(!defn.getAnnotations().getExtractFromUrl().attribute().isBlank())
-			{
-				return new AttributeExtractor(defn.getAnnotations().getExtractFromUrl().urlXpath(),
-						  defn.getAnnotations().getExtractFromUrl().attribute());
-			}
-			else
-			{
-				return new ElementTextExtractor(defn.getAnnotations().getExtractFromUrl().urlXpath());
-			}
-		}
-		throw new RuntimeException("Cannot determine a suitable value extractor. " +
-					  "Missing a converter or no-args constructor?");
-	}
-	
-	private static boolean isCollectionTypeStandard(Field field)
-	{
-		FieldInfo fieldInfo = FieldInfo.forField(field);
-		TypeInfo typeInfo = TypeInfo.forClass(field.getType());
-		if(typeInfo.isCollectionType())
-		{
-			Class<?> genType = fieldInfo.getFieldGenericType();
-			return TypeInfo.forClass(genType).isStandardType();
-		}
-		else if(typeInfo.isArrayType())
-		{
-			TypeInfo arrayTypeInfo = TypeInfo.forClass(field.getType().arrayType());
-			return arrayTypeInfo.isStandardType();
-		}
-		return false;
 	}
 }

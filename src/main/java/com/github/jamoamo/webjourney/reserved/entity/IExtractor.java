@@ -24,13 +24,22 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 /**
- *
+ * An extractor of values.
  * @author James Amoore
  * @param <T> Extractor type
  */
-interface IExtractor<T>
+public interface IExtractor<T>
 {
-	T extractRawFieldValue(IValueReader reader);
+	/**
+	 * Extracts a value using the provided value reader.
+	 * @param reader the reader
+	 * @return the raw value.
+	 */
+	T extractRawValue(IValueReader reader);
 	
+	/**
+	 * Returns the condition under which this extractor should be used.
+	 * @return the condition
+	 */
 	ICondition getCondition();
 }

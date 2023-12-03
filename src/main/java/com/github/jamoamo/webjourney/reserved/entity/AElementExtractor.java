@@ -39,7 +39,7 @@ abstract class AElementExtractor implements IExtractor<AElement>
 	}
 
 	@Override
-	public AElement extractRawFieldValue(IValueReader reader)
+	public AElement extractRawValue(IValueReader reader)
 	{
 		return reader.getElement(this.xPath);
 	}

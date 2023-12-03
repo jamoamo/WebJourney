@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import java.lang.reflect.Field;
 import com.github.jamoamo.webjourney.annotation.MappedCollection;
+import java.util.List;
 
 /**
  * Entity Field definition.
@@ -49,11 +50,11 @@ class EntityFieldDefn
 		this.annotations = new EntityAnnotations(field);
 		this.annotations.validate();
 		
-		IExtractor extractor = Extractors.getExtractorForField(this);
+		List<IExtractor> extractors = this.annotations.getExtractors();
 		ITransformer transformer = Transformers.getTransformerForField(this);
 		IConverter convert = Converters.getMapperForField(this);
 		
-		this.evaluator = new EntityFieldEvaluator(extractor, transformer, convert);
+		this.evaluator = new EntityFieldEvaluator(extractors, transformer, convert);
 	}
 
 	String getFieldName()

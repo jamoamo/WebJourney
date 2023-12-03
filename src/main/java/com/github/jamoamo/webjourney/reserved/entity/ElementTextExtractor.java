@@ -38,7 +38,7 @@ class ElementTextExtractor implements IExtractor<String>
 	}
 
 	@Override
-	public String extractRawFieldValue(IValueReader reader)
+	public String extractRawValue(IValueReader reader)
 	{
 		return reader.getElementText(this.xPath);
 	}

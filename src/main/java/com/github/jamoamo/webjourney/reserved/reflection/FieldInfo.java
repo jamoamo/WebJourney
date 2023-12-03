@@ -65,4 +65,20 @@ public final class FieldInfo
 		}
 		return null;
 	}
+	
+	/**
+	 * @return the TypeInfo for the field.
+	 */
+	public TypeInfo getFieldGenericTypeInfo()
+	{
+		return TypeInfo.forClass(getFieldGenericType());
+	}
+	
+	/**
+	 * @return the TypeInfo for the field.
+	 */
+	public TypeInfo getFieldTypeInfo()
+	{
+		return TypeInfo.forClass(this.field.getType());
+	}
 }
