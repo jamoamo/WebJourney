@@ -32,6 +32,10 @@ import com.github.jamoamo.webjourney.annotation.Transformation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
+import com.github.jamoamo.webjourney.reserved.entity.IExtractor;
+import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
+import java.lang.annotation.Annotation;
+import java.util.List;
 
 /**
  * A collection of the annotations for an entity.
@@ -46,6 +50,8 @@ public class EntityAnnotations
 	private final MappedCollection mappedCollection;
 	private final Transformation transformation;
 	private final Conversion conversion;
+	
+	private final ExtractionAnnotations extractionAnnotations;
 
 	/**
 	 * Constructor.
@@ -60,6 +66,12 @@ public class EntityAnnotations
 		this.mappedCollection = field.getAnnotation(MappedCollection.class);
 		this.transformation = field.getAnnotation(Transformation.class);
 		this.conversion = field.getAnnotation(Conversion.class);
+		
+		this.extractionAnnotations = new ExtractionAnnotations(
+			FieldInfo.forField(field), 
+			getExtractionAnnotations(field.getAnnotations()), 
+			this.mappedCollection != null, 
+			this.conversion != null);
 	}
 	
 	/**
@@ -204,5 +216,16 @@ public class EntityAnnotations
 		}
 	}
 
-	
+	private List<? extends Annotation> getExtractionAnnotations(Annotation[] annotations)
+	{
+		return Arrays.stream(annotations).filter(a -> ExtractionAnnotations.isExtractAnnotation(a)).toList();
+	}
+
+	/**
+	 * @return the extractors
+	 */
+	public List<IExtractor> getExtractors()
+	{
+		return this.extractionAnnotations.getExtractors();
+	}
 }

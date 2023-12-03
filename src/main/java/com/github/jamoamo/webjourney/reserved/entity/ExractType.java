@@ -23,31 +23,17 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.web.AElement;
-import java.util.List;
-
 /**
  *
  * @author James Amoore
  */
-abstract class AElementsExtractor implements IExtractor<List<? extends AElement>>
+public enum ExractType
 {
-	private final String xPath;
+	URL,
+	ATTRIBUTE,
+	ELEMENT,
+	ELEMENT_TEXT,
+	ELEMENTS,
+	ELEMENT_TEXTS
 	
-	AElementsExtractor(String xPath)
-	{
-		this.xPath = xPath;
-	}
-	
-	@Override
-	public List<? extends AElement> extractRawValue(IValueReader reader)
-	{
-		return reader.getElements(this.xPath);
-	}
-
-	@Override
-	public ICondition getCondition()
-	{
-		return new AlwaysCondition();
-	}
 }

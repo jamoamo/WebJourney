@@ -41,7 +41,7 @@ class AttributeExtractor implements IExtractor<String>
 	}
 
 	@Override
-	public String extractRawFieldValue(IValueReader browser)
+	public String extractRawValue(IValueReader browser)
 	{
 		return browser.getElement(this.elementXPath).getAttribute(this.attribute);
 	}

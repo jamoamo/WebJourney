@@ -39,7 +39,7 @@ class ElementTextsCollectionExtractor implements IExtractor<List<String>>
 	}
 
 	@Override
-	public List<String> extractRawFieldValue(IValueReader reader)
+	public List<String> extractRawValue(IValueReader reader)
 	{
 		return reader.getElementTexts(this.path);
 	}
