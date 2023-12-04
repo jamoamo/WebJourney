@@ -75,30 +75,12 @@ public class EntityAnnotations
 	}
 	
 	/**
-	 * Is the ExtractValue annotation present.
-	 * @return {code true} if the annotation is present.
-	 */
-	public boolean hasExtractValue()
-	{
-		return this.extractValue != null || this.hasRegexExtractValue();
-	}
-	
-	/**
-	 * Is the ExtractCurrentUrl annotation present.
-	 * @return {code true} if the annotation is present.
-	 */
-	public boolean hasCurrentUrl()
-	{
-		return this.currentUrl != null;
-	}
-	
-	/**
 	 * Is the ExtractFromUrl annotation present.
 	 * @return {code true} if the annotation is present.
 	 */
 	public boolean hasExtractFromUrl()
 	{
-		return this.extractFromUrl != null;
+		return this.extractionAnnotations.hasExtractFromUrl();
 	}
 
 	/**
@@ -126,15 +108,6 @@ public class EntityAnnotations
 	public boolean hasTransformation()
 	{
 		return this.transformation != null;
-	}
-	
-	/**
-	 * Is the Conversion annotation present.
-	 * @return {code true} if the annotation is present.
-	 */
-	public boolean hasConversion()
-	{
-		return this.conversion != null;
 	}
 	
 	/**
@@ -205,12 +178,11 @@ public class EntityAnnotations
 	 */
 	public void validate()
 	{
-		boolean onlyOneExtractorAnnotation = Arrays.stream(
-			new Object[]{this.extractValue, this.extractFromUrl, this.currentUrl, this.regexExtract})
-			.filter(o -> o != null)
-			.count() == 1;
+		boolean hasMaxOneAlwaysExtractor = this.extractionAnnotations.hasMaxiumOneAlwaysExtractor();
+		boolean hasConditionExtractor = this.extractionAnnotations.hasConditionalExtractor();
+		boolean hasAlwaysExtractor = this.extractionAnnotations.hasAlwaysExtractor();
 		
-		if(!onlyOneExtractorAnnotation)
+		if(!hasMaxOneAlwaysExtractor || !(hasConditionExtractor || hasAlwaysExtractor))
 		{
 			throw new RuntimeException("Invalid combination of annotations");
 		}

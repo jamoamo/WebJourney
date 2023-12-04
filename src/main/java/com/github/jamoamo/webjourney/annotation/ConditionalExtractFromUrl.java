@@ -21,38 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *
+ * Set of Conditions extract from url extractors. 
  * @author James Amoore
  */
-class ElementTextExtractor implements IExtractor<String>
+public @interface ConditionalExtractFromUrl
 {
-	private final String xPath;
-	private final ICondition condition;
-	
-	ElementTextExtractor(String xPath)
+	/**
+	* Container for RegexMatch.
+	*/
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	public @interface RegexMatches
 	{
-		this(xPath, new AlwaysCondition());
+		/**
+		 * Container for RegexMatch.
+		 * @return set of RegexMatch
+		 */
+		ConditionalExtractFromUrl.RegexMatch[] value();
 	}
 	
-	ElementTextExtractor(String xPath, ICondition condition)
+	/**
+	 * Extract if the regex pattern matches.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	@Repeatable(RegexMatches.class)
+	public @interface RegexMatch
 	{
-		this.xPath = xPath;
-		this.condition = condition;
-	}
-
-	@Override
-	public String extractRawValue(IValueReader reader)
-	{
-		return reader.getElementText(this.xPath);
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return this.condition;
+		/**
+		 * @return The extractor to use to get the value to match against the regex pattern.
+		 */
+		ExtractValue ifExtractValue();
+		
+		/**
+		 * @return The extractor to use to get the value if the regex pattern matches.
+		 */
+		ExtractFromUrl thenExtractFromUrl();
+		
+		/**
+		 * @return the regex pattern
+		 */
+		String regexPattern();
 	}
 }

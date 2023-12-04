@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -430,5 +431,39 @@ public class EntityCreatorTest
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
+	}
+	
+	@Test
+	public void testCreateNewEntity_ConditionalExtractValue_RegexMatch()
+	{
+		Mockito.clearInvocations(browser);
+		EntityDefn defn = new EntityDefn(ValidRegexMatchConditionalExtractValue.class);
+		EntityCreator creator = new EntityCreator(defn);
+		
+		ValidRegexMatchConditionalExtractValue createNewEntity = (ValidRegexMatchConditionalExtractValue)creator.createNewEntity(browser);
+		
+		assertEquals("String Data", createNewEntity.getSingleCondition());
+		assertEquals("String Data", createNewEntity.getMultipleConditions());
+	}
+	
+	@Test
+	public void testCreateNewEntity_ConditionalExtractFromUrl_RegexMatch()
+	{
+		Mockito.clearInvocations(browser);
+		EntityDefn defn = new EntityDefn(ValidRegexMatchConditionalExtractFromUrl.class);
+		EntityCreator creator = new EntityCreator(defn);
+		
+		ValidRegexMatchConditionalExtractFromUrl createNewEntity = (ValidRegexMatchConditionalExtractFromUrl)creator.createNewEntity(browser);
+		
+		Mockito.verify(browser, times(2)).navigateBack();
+		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
+		Mockito.verify(browser, times(2)).navigateToUrl(urlCaptor.capture());
+		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
+		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(1).toString());
+		
+		assertNotNull(createNewEntity.getSingleCondition());
+		assertEquals("String Data", createNewEntity.getSingleCondition().getStringData());
+		assertNotNull(createNewEntity.getMultipleConditions());
+		assertEquals("String Data", createNewEntity.getMultipleConditions().getStringData());
 	}
 }

@@ -81,7 +81,7 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 		}
 		else
 		{
-			extractedValue = this.extractors.get(0).extractRawValue(browser);
+			extractedValue = matchingExtractors.get(0).extractRawValue(browser);
 		}
 		return extractedValue;
 	}

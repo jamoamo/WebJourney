@@ -23,13 +23,10 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.util.Arrays;
 import java.util.List;
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
-import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
+import com.github.jamoamo.webjourney.reserved.annotation.ExtractionAnnotations;
 
 /**
  * An entity defn.
@@ -66,10 +63,9 @@ public final class EntityDefn<T>
 	private List<EntityFieldDefn> determineEntityFields()
 	{
 		return Arrays.stream(this.entityClass.getDeclaredFields())
-			 .filter(field -> field.isAnnotationPresent(ExtractValue.class) 
-						|| field.isAnnotationPresent(ExtractFromUrl.class)
-						|| field.isAnnotationPresent(ExtractCurrentUrl.class)
-						|| field.isAnnotationPresent(RegexExtractValue.class))
-			 .map(field -> new EntityFieldDefn(field)).toList();
+			 .filter(field -> Arrays.stream(field.getAnnotations())
+				 .anyMatch(a -> ExtractionAnnotations.isExtractAnnotation(a)))
+			 .map(field -> new EntityFieldDefn(field))
+			 .toList();
 	}
 }
