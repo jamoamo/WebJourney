@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import java.util.List;
 
 /**
  *
@@ -50,6 +51,18 @@ public class ValidRegexMatchConditionalExtractValue
 		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
 	)
 	private String multipleConditions;
+	
+	@ConditionalExtractValue.RegexMatch(
+		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		regexPattern = "String.*",
+		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
+	)
+	@ConditionalExtractValue.RegexMatch(
+		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		regexPattern = "Attribute.*",
+		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
+	)
+	private List<String> collection;
 
 	public String getSingleCondition()
 	{
@@ -70,4 +83,16 @@ public class ValidRegexMatchConditionalExtractValue
 	{
 		this.multipleConditions = multipleConditions;
 	}
+
+	public List<String> getCollection()
+	{
+		return collection;
+	}
+
+	public void setCollection(List<String> collection)
+	{
+		this.collection = collection;
+	}
+	
+	
 }

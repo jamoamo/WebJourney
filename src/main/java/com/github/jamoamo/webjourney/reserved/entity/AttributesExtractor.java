@@ -23,19 +23,34 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import java.util.List;
+
 /**
  *
  * @author James Amoore
  */
-class ElementListExtractor extends AElementsExtractor
+class AttributesExtractor implements IExtractor<List<String>>
 {
-	ElementListExtractor(String xPath)
+	private final String xpath;
+	private final String attribute;
+	private final ICondition condition;
+	
+	AttributesExtractor(String xPath, String attribute, ICondition condition)
 	{
-		super(xPath);
+		this.xpath = xPath;
+		this.attribute = attribute;
+		this.condition = condition;
 	}
-
-	ElementListExtractor(String xPath, ICondition condition)
+	
+	@Override
+	public List<String> extractRawValue(IValueReader browser)
 	{
-		super(xPath, condition);
+		return browser.getElements(this.xpath).stream().map(elem -> elem.getAttribute(this.attribute)).toList();
+	}
+	
+	@Override
+	public ICondition getCondition()
+	{
+		return this.condition;
 	}
 }

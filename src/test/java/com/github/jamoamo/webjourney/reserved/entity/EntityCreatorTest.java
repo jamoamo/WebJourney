@@ -49,6 +49,7 @@ import org.mockito.stubbing.Answer;
 public class EntityCreatorTest
 {
 	public static final String XPATH_STRING_DATA = "//div[@id='string-data']";
+	public static final String XPATH_DIFF_STRING_DATA = "//div[@id='string-diff-data']";
 	public static final String XPATH_INT_DATA = "//div[@id='int-data']";
 	public static final String XPATH_DOUBLE_DATA = "//div[@id='double-data']";
 	public static final String XPATH_SUB_DATA = "//div[@id='sub-data']";
@@ -57,6 +58,7 @@ public class EntityCreatorTest
 	public static final String XPATH_INTEGER_LIST_DATA = "//div[@id='integer-list-data']";
 	public static final String XPATH_DOUBLE_LIST_DATA = "//div[@id='double-list-data']";
 	public static final String XPATH_SUB_LIST_DATA = "//div[@id='sub-list-data']";
+	public static final String XPATH_URL_LIST_DATA = "//div[@class='url-list-data']";
 	public static final String XPATH_SEPARATED_STRING_DATA = "//div[@id='split-string-data']";
 	
 	private static IBrowser browser;
@@ -212,9 +214,43 @@ public class EntityCreatorTest
 		
 		when(browser.getElements(XPATH_SUB_LIST_DATA)).thenAnswer(subAnswer);
 		
+		List<TestElement> urlElements = new ArrayList<>();
+		urlElements.add(new TestElement("a", Collections.singletonMap("href", "https://newurlattr1.com") 
+			,"https://newurl1.com"));
+		urlElements.add(new TestElement("a", Collections.singletonMap("href", "https://newurlattr2.com") 
+			,"https://newurl2.com"));
+		urlElements.add(new TestElement("a", Collections.singletonMap("href", "https://newurlattr3.com") 
+			,"https://newurl3.com"));
+		
+		Answer<List<TestElement>> urlAnswer = new Answer<List<TestElement>>()
+		{
+			@Override
+			public List<TestElement> answer(InvocationOnMock iom)
+					  throws Throwable
+			{
+				return urlElements;
+			}
+		};
+		
+		Answer<List<String>> urlStringAnswer = new Answer<List<String>>()
+		{
+			@Override
+			public List<String> answer(InvocationOnMock iom)
+					  throws Throwable
+			{
+				return urlElements.stream().map(elem -> elem.getElementText()).toList();
+			}
+		};
+		
+		when(browser.getElements(XPATH_URL_LIST_DATA)).thenAnswer(urlAnswer);
+		when(browser.getElementTexts(XPATH_URL_LIST_DATA)).thenAnswer(urlStringAnswer);
+		
 		when(browser.getElement(XPATH_SEPARATED_STRING_DATA)).thenReturn(new TestElement("item1,item2,item3"));
 		when(browser.getElementText(XPATH_SEPARATED_STRING_DATA)).thenReturn("item1,item2,item3");
-		when(browser.getCurrentUrl()).thenReturn("https://currenturl.com");		
+		when(browser.getCurrentUrl()).thenReturn("https://currenturl.com");
+		
+		when(browser.getElement(XPATH_DIFF_STRING_DATA)).thenReturn(new TestElement("String1"), new TestElement("String2"), new TestElement("String3"), new TestElement("String4"), new TestElement("String5"));
+		when(browser.getElementText(XPATH_DIFF_STRING_DATA)).thenReturn("String1", "String2", "String3", "String4", "String5");
 	}
 	
 	/**
@@ -444,6 +480,10 @@ public class EntityCreatorTest
 		
 		assertEquals("String Data", createNewEntity.getSingleCondition());
 		assertEquals("String Data", createNewEntity.getMultipleConditions());
+		assertEquals(3, createNewEntity.getCollection().size());
+		assertEquals("Item1", createNewEntity.getCollection().get(0));
+		assertEquals("Item2", createNewEntity.getCollection().get(1));
+		assertEquals("Item3", createNewEntity.getCollection().get(2));
 	}
 	
 	@Test
@@ -455,15 +495,22 @@ public class EntityCreatorTest
 		
 		ValidRegexMatchConditionalExtractFromUrl createNewEntity = (ValidRegexMatchConditionalExtractFromUrl)creator.createNewEntity(browser);
 		
-		Mockito.verify(browser, times(2)).navigateBack();
+		Mockito.verify(browser, times(5)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser, times(2)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(browser, times(5)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
 		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(1).toString());
+		assertEquals("https://newurlattr1.com", urlCaptor.getAllValues().get(2).toString());
+		assertEquals("https://newurlattr2.com", urlCaptor.getAllValues().get(3).toString());
+		assertEquals("https://newurlattr3.com", urlCaptor.getAllValues().get(4).toString());
 		
 		assertNotNull(createNewEntity.getSingleCondition());
-		assertEquals("String Data", createNewEntity.getSingleCondition().getStringData());
+		assertEquals("String1", createNewEntity.getSingleCondition().getStringData());
 		assertNotNull(createNewEntity.getMultipleConditions());
-		assertEquals("String Data", createNewEntity.getMultipleConditions().getStringData());
+		assertEquals("String2", createNewEntity.getMultipleConditions().getStringData());
+		assertEquals(3, createNewEntity.getCollection().size());
+		assertEquals("String3", createNewEntity.getCollection().get(0).getStringData());
+		assertEquals("String4", createNewEntity.getCollection().get(1).getStringData());
+		assertEquals("String5", createNewEntity.getCollection().get(2).getStringData());
 	}
 }
