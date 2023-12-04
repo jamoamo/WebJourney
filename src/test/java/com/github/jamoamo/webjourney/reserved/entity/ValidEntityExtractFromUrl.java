@@ -29,6 +29,7 @@ import com.github.jamoamo.webjourney.annotation.Transformation;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_URL_DATA;
 import com.github.jamoamo.webjourney.annotation.Conversion;
+import java.util.List;
 
 /**
  *
@@ -38,6 +39,9 @@ public class ValidEntityExtractFromUrl
 {
 	@ExtractFromUrl(urlXpath = XPATH_URL_DATA)
 	private UrlEntity urlEntity;
+	
+	@ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA)
+	private List<UrlEntity> urlEntities;
 	
 	public static class UrlEntity
 	{
@@ -66,4 +70,16 @@ public class ValidEntityExtractFromUrl
 	{
 		this.urlEntity = urlEntity;
 	}
+
+	public List<UrlEntity> getUrlEntities()
+	{
+		return urlEntities;
+	}
+
+	public void setUrlEntities(List<UrlEntity> urlEntities)
+	{
+		this.urlEntities = urlEntities;
+	}
+	
+	
 }
