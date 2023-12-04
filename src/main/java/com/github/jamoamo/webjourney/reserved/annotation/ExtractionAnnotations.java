@@ -23,6 +23,8 @@
  */
 package com.github.jamoamo.webjourney.reserved.annotation;
 
+import com.github.jamoamo.webjourney.annotation.ConditionalExtractFromUrl;
+import com.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
@@ -32,25 +34,38 @@ import com.github.jamoamo.webjourney.reserved.entity.IExtractor;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  *
  * @author James Amoore
  */
-public class ExtractionAnnotations
+public final class ExtractionAnnotations
 {
-	private static final List<Class<? extends Annotation>> EXTRACT_ANNOTATION_CLASSES = new ArrayList<>();
+	private static final List<Class<? extends Annotation>> ALWAYS_EXTRACT_ANNOTATIONS = new ArrayList<>();
+	private static final List<Class<? extends Annotation>> CONDITIONALLY_EXTRACT_ANNOTATIONS = new ArrayList<>();
 	
 	static 
 	{
-		EXTRACT_ANNOTATION_CLASSES.add(ExtractValue.class);
-		EXTRACT_ANNOTATION_CLASSES.add(ExtractFromUrl.class);
-		EXTRACT_ANNOTATION_CLASSES.add(ExtractCurrentUrl.class);
-		EXTRACT_ANNOTATION_CLASSES.add(RegexExtractValue.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractValue.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractFromUrl.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractCurrentUrl.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(RegexExtractValue.class);
+		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractValue.RegexMatch.class);
+		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractValue.RegexMatches.class);
+		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractFromUrl.RegexMatch.class);
+		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractFromUrl.RegexMatches.class);
 	}
 	
 	private final List<IExtractor> extractors;
+	
+	private final List<? extends Annotation> alwaysExtractAnnotations;
+	
+	private final List<? extends Annotation> conditionalExtractAnnotations;
+	
+	private final boolean hasExtractFromUrl;
 	
 	/**
 	 * Constructor.
@@ -66,6 +81,18 @@ public class ExtractionAnnotations
 		boolean hasConverter)
 	{
 		this.extractors = getExtractorsForAnnotations(fieldInfo, annotations, extractCollectionSingularly, hasConverter);
+		
+		this.alwaysExtractAnnotations = annotations.stream()
+			.filter(a -> ALWAYS_EXTRACT_ANNOTATIONS.contains(a.annotationType()))
+			.toList();
+		
+		this.conditionalExtractAnnotations = annotations.stream()
+			.filter(a -> CONDITIONALLY_EXTRACT_ANNOTATIONS.contains(a.annotationType()))
+			.toList();
+		
+		this.hasExtractFromUrl = annotations.stream()
+			.map(a -> getFinalExtractor(a))
+			.anyMatch(a -> a instanceof ExtractFromUrl);
 	}
 	
 	/**
@@ -75,7 +102,24 @@ public class ExtractionAnnotations
 	 */
 	public static boolean isExtractAnnotation(Annotation annotation)
 	{
-		return EXTRACT_ANNOTATION_CLASSES.contains(annotation.annotationType());
+		return ALWAYS_EXTRACT_ANNOTATIONS.contains(annotation.annotationType()) 
+			|| CONDITIONALLY_EXTRACT_ANNOTATIONS.contains(annotation.annotationType());
+	}
+	
+	/**
+	 * @return the Always Extract Annotations
+	 */
+	public static List<Class<? extends Annotation>> getAlwaysExtractAnnotations()
+	{
+		return ALWAYS_EXTRACT_ANNOTATIONS;
+	}
+	
+	/**
+	 * @return the Conditionally Extract Annotations
+	 */
+	public static List<Class<? extends Annotation>> getConditionallyExtractAnnotations()
+	{
+		return CONDITIONALLY_EXTRACT_ANNOTATIONS;
 	}
 
 	private static List<IExtractor> getExtractorsForAnnotations(FieldInfo fieldInfo,
@@ -84,8 +128,22 @@ public class ExtractionAnnotations
 															boolean hasConverter)
 	{
 		return annotations.stream()
+			.flatMap(annotation -> getAnnotationStream(annotation))
 			.map(annotation -> getExtractor(annotation, fieldInfo, extractCollectionSingularly, hasConverter))
 			.toList();
+	}
+	
+	private static Stream<? extends Annotation> getAnnotationStream(Annotation annotation)
+	{
+		if(annotation instanceof ConditionalExtractFromUrl.RegexMatches regexMatches)
+		{
+			return Arrays.stream(regexMatches.value());
+		}
+		else if(annotation instanceof ConditionalExtractValue.RegexMatches regexMatches)
+		{
+			return Arrays.stream(regexMatches.value());
+		}
+		return Stream.of(annotation);
 	}
 	
 	private static IExtractor getExtractor(Annotation annotation, FieldInfo fieldInfo,
@@ -101,5 +159,46 @@ public class ExtractionAnnotations
 	public List<IExtractor> getExtractors()
 	{
 		return this.extractors;
+	}
+
+	boolean hasMaxiumOneAlwaysExtractor()
+	{
+		return this.alwaysExtractAnnotations.size() <= 1;
+	}
+	
+	boolean hasConditionalExtractor()
+	{
+		return !this.conditionalExtractAnnotations.isEmpty();
+	}
+	
+	boolean hasAlwaysExtractor()
+	{
+		return !this.alwaysExtractAnnotations.isEmpty();
+	}
+
+	private Annotation getFinalExtractor(Annotation a)
+	{
+		if(a instanceof ConditionalExtractFromUrl.RegexMatch con)
+		{
+			return con.thenExtractFromUrl();
+		}
+		else if(a instanceof ConditionalExtractValue.RegexMatch con)
+		{
+			return con.thenExtractValue();
+		}
+		else if(a instanceof ConditionalExtractValue.RegexMatches con)
+		{
+			return con.value()[0].thenExtractValue();
+		}
+		else if(a instanceof ConditionalExtractFromUrl.RegexMatches con)
+		{
+			return con.value()[0].thenExtractFromUrl();
+		}
+		return a;
+	}
+
+	boolean hasExtractFromUrl()
+	{
+		return this.hasExtractFromUrl;
 	}
 }

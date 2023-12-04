@@ -33,11 +33,18 @@ class AttributeExtractor implements IExtractor<String>
 {
 	private final String elementXPath;
 	private final String attribute;
+	private ICondition condition;
 	
 	AttributeExtractor(String elementXPath, String attribute)
 	{
+		this(elementXPath, attribute, new AlwaysCondition());
+	}
+	
+	AttributeExtractor(String elementXPath, String attribute, ICondition condition)
+	{
 		this.elementXPath = elementXPath;
 		this.attribute = attribute;
+		this.condition = condition;
 	}
 
 	@Override
@@ -49,6 +56,6 @@ class AttributeExtractor implements IExtractor<String>
 	@Override
 	public ICondition getCondition()
 	{
-		return new AlwaysCondition();
+		return this.condition;
 	}
 }

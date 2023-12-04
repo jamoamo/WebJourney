@@ -23,36 +23,31 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.reserved.regex.Patterns;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author James Amoore
  */
-class ElementTextExtractor implements IExtractor<String>
+class RegexCondition implements ICondition
 {
-	private final String xPath;
-	private final ICondition condition;
+	private final IExtractor<String> extractor;
+	private final String regexPattern;
 	
-	ElementTextExtractor(String xPath)
+	RegexCondition(IExtractor<String> extractor, String regexPattern)
 	{
-		this(xPath, new AlwaysCondition());
-	}
-	
-	ElementTextExtractor(String xPath, ICondition condition)
-	{
-		this.xPath = xPath;
-		this.condition = condition;
-	}
-
-	@Override
-	public String extractRawValue(IValueReader reader)
-	{
-		return reader.getElementText(this.xPath);
+		this.extractor = extractor;
+		this.regexPattern = regexPattern;
 	}
 	
 	@Override
-	public ICondition getCondition()
+	public boolean evaluate(IValueReader reader)
 	{
-		return this.condition;
+		String extractRawValue = this.extractor.extractRawValue(reader);
+		Pattern pattern = Patterns.getPattern(this.regexPattern);
+		boolean match = pattern.matcher(extractRawValue).matches();
+		return match;
 	}
+	
 }
