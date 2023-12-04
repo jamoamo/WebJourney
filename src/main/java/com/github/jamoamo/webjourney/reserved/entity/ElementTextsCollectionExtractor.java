@@ -32,10 +32,12 @@ import java.util.List;
 class ElementTextsCollectionExtractor implements IExtractor<List<String>>
 {
 	private final String path;
+	private final ICondition condition;
 	
-	ElementTextsCollectionExtractor(String path)
+	ElementTextsCollectionExtractor(String path, ICondition condition)
 	{
 		this.path = path;
+		this.condition = condition;
 	}
 
 	@Override
@@ -47,6 +49,6 @@ class ElementTextsCollectionExtractor implements IExtractor<List<String>>
 	@Override
 	public ICondition getCondition()
 	{
-		return new AlwaysCondition();
+		return this.condition;
 	}
 }

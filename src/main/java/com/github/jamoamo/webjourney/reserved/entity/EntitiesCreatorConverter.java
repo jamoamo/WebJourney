@@ -23,19 +23,46 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
 /**
  *
  * @author James Amoore
  */
-class ElementListExtractor extends AElementsExtractor
+class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 {
-	ElementListExtractor(String xPath)
+	private final EntityCreator entityCreator;
+	
+	EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
 	{
-		super(xPath);
+		EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField()).getFieldGenericType());
+		this.entityCreator = new EntityCreator(defn);
 	}
 
-	ElementListExtractor(String xPath, ICondition condition)
+	@Override
+	public List<Object> convertValue(List<String> source, IValueReader reader)
 	{
-		super(xPath, condition);
+		return source.stream().map(s -> createEntity(s, reader)).toList();
 	}
+	
+	public Object createEntity(String source, IValueReader reader)
+	{
+		try
+		{
+			reader.navigateTo(new URL(source));
+			
+			Object instance = this.entityCreator.createNewEntity(reader);
+
+			reader.navigateBack();
+			return instance;
+		}
+		catch(MalformedURLException e)
+		{
+			return null;
+		}
+	}
+	
 }

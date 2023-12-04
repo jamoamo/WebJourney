@@ -32,10 +32,17 @@ import com.github.jamoamo.webjourney.api.web.AElement;
 abstract class AElementExtractor implements IExtractor<AElement>
 {
 	private final String xPath;
+	private ICondition condition;
 	
 	AElementExtractor(String elementXPath)
 	{
+		this(elementXPath, new AlwaysCondition());
+	}
+	
+	AElementExtractor(String elementXPath, ICondition condition)
+	{
 		this.xPath = elementXPath;
+		this.condition = condition;
 	}
 
 	@Override
@@ -47,6 +54,6 @@ abstract class AElementExtractor implements IExtractor<AElement>
 	@Override
 	public ICondition getCondition()
 	{
-		return new AlwaysCondition();
+		return this.condition;
 	}
 }

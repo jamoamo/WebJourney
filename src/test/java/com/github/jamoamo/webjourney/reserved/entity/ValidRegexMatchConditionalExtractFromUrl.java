@@ -24,11 +24,10 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.ConditionalExtractFromUrl;
-import com.github.jamoamo.webjourney.annotation.Conversion;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.Transformation;
 import static com.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
+import java.util.List;
 
 /**
  *
@@ -55,9 +54,16 @@ public class ValidRegexMatchConditionalExtractFromUrl
 	)
 	private UrlEntity multipleConditions;
 	
+	@ConditionalExtractFromUrl.RegexMatch(
+		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		regexPattern = "String.*",
+		thenExtractFromUrl = @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA, attribute = "href")
+	)
+	private List<UrlEntity> collection;
+	
 	public static class UrlEntity
 	{
-		@ExtractValue(path = XPATH_STRING_DATA)
+		@ExtractValue(path = EntityCreatorTest.XPATH_DIFF_STRING_DATA)
 		private String stringData;
 
 		public String getStringData()
@@ -90,4 +96,16 @@ public class ValidRegexMatchConditionalExtractFromUrl
 	{
 		this.multipleConditions = urlEntity;
 	}
+
+	public List<UrlEntity> getCollection()
+	{
+		return collection;
+	}
+
+	public void setCollection(List<UrlEntity> collection)
+	{
+		this.collection = collection;
+	}
+	
+	
 }

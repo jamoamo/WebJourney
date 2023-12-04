@@ -111,7 +111,20 @@ public final class Extractors
 	{
 		TypeInfo fieldTypeInfo = fieldInfo.getFieldTypeInfo();
 
-		if(!fieldTypeInfo.isStandardType() && fieldTypeInfo.hasNoArgsConstructor())
+		if(fieldTypeInfo.isCollectionType() &&
+			!fieldInfo.getFieldGenericTypeInfo().isStandardType() &&
+			fieldInfo.getFieldGenericTypeInfo().hasNoArgsConstructor())
+		{
+			if(attribute.isBlank())
+			{
+				return new ElementTextsCollectionExtractor(xPath, condition);
+			}
+			else
+			{
+				return new AttributesExtractor(xPath, attribute, condition);
+			}
+		}
+		else if(!fieldTypeInfo.isStandardType() && fieldTypeInfo.hasNoArgsConstructor())
 		{
 			if(!attribute.isBlank())
 			{
@@ -159,11 +172,15 @@ public final class Extractors
 		}
 		else if(typeInfo.isCollectionType())
 		{
-			if(extractCollectionSingularly)
+			if(attribute.isBlank())
 			{
-				return getTextExtractor(xPath, condition);
+				return getElementTextCollectionExtractor(extractCollectionSingularly, xPath, condition, fieldInfo,
+																	  hasConverter);
 			}
-			return getCollectionExtractor(fieldInfo, xPath, hasConverter);
+			else
+			{
+				return new AttributesExtractor(xPath, attribute, condition);
+			}
 		}
 		else if(!typeInfo.isStandardType())
 		{
@@ -173,6 +190,17 @@ public final class Extractors
 		{
 			return new ElementTextExtractor(xPath, condition);
 		}
+	}
+
+	private static IExtractor getElementTextCollectionExtractor(boolean extractCollectionSingularly, String xPath,
+																					ICondition condition, FieldInfo fieldInfo,
+																					boolean hasConverter)
+	{
+		if(extractCollectionSingularly)
+		{
+			return getTextExtractor(xPath, condition);
+		}
+		return getCollectionExtractor(fieldInfo, xPath, hasConverter, condition);
 	}
 
 	private static IExtractor<String> getStringExtractor(String path, String attribute)
@@ -215,21 +243,22 @@ public final class Extractors
 			"Is there a converter or no-args constructor missing?");
 	}
 
-	private static IExtractor getCollectionExtractor(FieldInfo fieldInfo, String xPath, boolean hasConverter)
+	private static IExtractor getCollectionExtractor(FieldInfo fieldInfo, String xPath, boolean hasConverter,
+																	 ICondition condition)
 	{
 		if(fieldInfo.getFieldGenericTypeInfo().isStandardType())
 		{
-			return new ElementTextsCollectionExtractor(xPath);
+			return new ElementTextsCollectionExtractor(xPath, condition);
 		}
 		else
 		{
 			if(hasConverter)
 			{
-				return new ElementTextsCollectionExtractor(xPath);
+				return new ElementTextsCollectionExtractor(xPath, condition);
 			}
 			else
 			{
-				return new ElementListExtractor(xPath);
+				return new ElementListExtractor(xPath, condition);
 			}
 		}
 	}

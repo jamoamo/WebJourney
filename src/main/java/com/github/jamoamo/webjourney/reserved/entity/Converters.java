@@ -81,6 +81,10 @@ final class Converters
 		}
 		else if(genericTypeInfo.hasNoArgsConstructor())
 		{
+			if(defn.getAnnotations().hasExtractFromUrl())
+			{
+				return new EntitiesCreatorConverter(defn);
+			}
 			return new EntitiesFromElementConverter(fieldInfo.getFieldGenericType());
 		}
 		throw new RuntimeException("Cannot create a converter for collection type " +

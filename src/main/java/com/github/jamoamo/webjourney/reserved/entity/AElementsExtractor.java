@@ -33,12 +33,18 @@ import java.util.List;
 abstract class AElementsExtractor implements IExtractor<List<? extends AElement>>
 {
 	private final String xPath;
+	private final ICondition condition;
 	
 	AElementsExtractor(String xPath)
 	{
-		this.xPath = xPath;
+		this(xPath, new AlwaysCondition());
 	}
-	
+	AElementsExtractor(String xPath, ICondition condition)
+	{
+		this.xPath = xPath;
+		this.condition = condition;
+	}
+
 	@Override
 	public List<? extends AElement> extractRawValue(IValueReader reader)
 	{
@@ -48,6 +54,6 @@ abstract class AElementsExtractor implements IExtractor<List<? extends AElement>
 	@Override
 	public ICondition getCondition()
 	{
-		return new AlwaysCondition();
+		return this.condition;
 	}
 }
