@@ -442,13 +442,21 @@ public class EntityCreatorTest
 		
 		ValidEntityExtractFromUrl createNewEntity = (ValidEntityExtractFromUrl)creator.createNewEntity(browser);
 		
-		Mockito.verify(browser).navigateBack();
+		Mockito.verify(browser, times(4)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser).navigateToUrl(urlCaptor.capture());
-		assertEquals("https://newurl.com", urlCaptor.getValue().toString());
+		Mockito.verify(browser, times(4)).navigateToUrl(urlCaptor.capture());
+		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(0).toString());
+		assertEquals("https://newurl1.com", urlCaptor.getAllValues().get(1).toString());
+		assertEquals("https://newurl2.com", urlCaptor.getAllValues().get(2).toString());
+		assertEquals("https://newurl3.com", urlCaptor.getAllValues().get(3).toString());
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
+		
+		assertEquals(3, createNewEntity.getUrlEntities().size());
+		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntities().get(0).getStringData());
+		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntities().get(1).getStringData());
+		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntities().get(2).getStringData());
 	}
 	
 	@Test
@@ -460,13 +468,20 @@ public class EntityCreatorTest
 		
 		ValidEntityExtractFromUrlAttribute createNewEntity = (ValidEntityExtractFromUrlAttribute)creator.createNewEntity(browser);
 		
-		Mockito.verify(browser).navigateBack();
+		Mockito.verify(browser, times(4)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser).navigateToUrl(urlCaptor.capture());
-		assertEquals("https://newurlattr.com", urlCaptor.getValue().toString());
+		Mockito.verify(browser, times(4)).navigateToUrl(urlCaptor.capture());
+		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
+		assertEquals("https://newurlattr1.com", urlCaptor.getAllValues().get(1).toString());
+		assertEquals("https://newurlattr2.com", urlCaptor.getAllValues().get(2).toString());
+		assertEquals("https://newurlattr3.com", urlCaptor.getAllValues().get(3).toString());
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
+		assertEquals(3, createNewEntity.getUrlEntities().size());
+		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntities().get(0).getStringData());
+		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntities().get(1).getStringData());
+		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntities().get(2).getStringData());
 	}
 	
 	@Test
