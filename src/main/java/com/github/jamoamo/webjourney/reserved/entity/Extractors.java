@@ -23,8 +23,10 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.annotation.ConditionalConstant;
 import com.github.jamoamo.webjourney.annotation.ConditionalExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
+import com.github.jamoamo.webjourney.annotation.Constant;
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
@@ -60,6 +62,10 @@ public final class Extractors
 		boolean extractCollectionSingularly,
 		boolean hasConverter)
 	{
+		if(annotation instanceof Constant constant)
+		{
+			return new ConstantExtractor(constant.value(), new AlwaysCondition());
+		}
 		if(annotation instanceof ExtractCurrentUrl)
 		{
 			return getCurrentUrlExtractor();
@@ -87,7 +93,16 @@ public final class Extractors
 		{
 			return getRegexMatchConditionalUrlExtractor(extractor, fieldInfo);
 		}
-		return null;
+		else if(annotation instanceof ConditionalConstant.RegexMatch extractor)
+		{
+			return new ConstantExtractor(extractor.thenConstant().value(), 
+				new RegexCondition(
+					getStringExtractor(extractor.ifExtractValue().path(), 
+											 extractor.ifExtractValue().attribute()), 
+					extractor.regexPattern()));
+		}
+		throw new RuntimeException("Unable to determine an extractor for annotation of type " +
+			"[" + annotation.annotationType() + "].");
 	}
 
 	private static IExtractor getRegexMatchConditionalValueExtractor(ConditionalExtractValue.RegexMatch extractor,

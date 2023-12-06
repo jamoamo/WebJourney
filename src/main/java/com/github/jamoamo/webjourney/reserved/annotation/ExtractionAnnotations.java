@@ -23,8 +23,10 @@
  */
 package com.github.jamoamo.webjourney.reserved.annotation;
 
+import com.github.jamoamo.webjourney.annotation.ConditionalConstant;
 import com.github.jamoamo.webjourney.annotation.ConditionalExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
+import com.github.jamoamo.webjourney.annotation.Constant;
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
@@ -53,10 +55,13 @@ public final class ExtractionAnnotations
 		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractFromUrl.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractCurrentUrl.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(RegexExtractValue.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(Constant.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractValue.RegexMatch.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractValue.RegexMatches.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractFromUrl.RegexMatch.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractFromUrl.RegexMatches.class);
+		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalConstant.RegexMatch.class);
+		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalConstant.RegexMatches.class);
 	}
 	
 	private final List<IExtractor> extractors;
@@ -143,6 +148,10 @@ public final class ExtractionAnnotations
 		{
 			return Arrays.stream(regexMatches.value());
 		}
+		else if(annotation instanceof ConditionalConstant.RegexMatches regexMatches)
+		{
+			return Arrays.stream(regexMatches.value());
+		}
 		return Stream.of(annotation);
 	}
 	
@@ -193,6 +202,10 @@ public final class ExtractionAnnotations
 		else if(a instanceof ConditionalExtractFromUrl.RegexMatches con)
 		{
 			return con.value()[0].thenExtractFromUrl();
+		}
+		else if(a instanceof ConditionalConstant.RegexMatches con)
+		{
+			return con.value()[0].thenConstant();
 		}
 		return a;
 	}
