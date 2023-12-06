@@ -528,4 +528,28 @@ public class EntityCreatorTest
 		assertEquals("String4", createNewEntity.getCollection().get(1).getStringData());
 		assertEquals("String5", createNewEntity.getCollection().get(2).getStringData());
 	}
+	
+	@Test
+	public void testCreateNewEntity_Constant()
+	{
+		Mockito.clearInvocations(browser);
+		EntityDefn defn = new EntityDefn(ValidEntityConstant.class);
+		EntityCreator creator = new EntityCreator(defn);
+		
+		ValidEntityConstant createNewEntity = (ValidEntityConstant)creator.createNewEntity(browser);
+		
+		assertEquals("A Value", createNewEntity.getConstant());
+	}
+	
+	@Test
+	public void testCreateNewEntity_ConditionalConstant_RegexMatch()
+	{
+		Mockito.clearInvocations(browser);
+		EntityDefn defn = new EntityDefn(ValidEntityRegexMatchConditionalConstant.class);
+		EntityCreator creator = new EntityCreator(defn);
+		
+		ValidEntityRegexMatchConditionalConstant createNewEntity = (ValidEntityRegexMatchConditionalConstant)creator.createNewEntity(browser);
+		
+		assertEquals("Constant Value", createNewEntity.getConstant());
+	}
 }

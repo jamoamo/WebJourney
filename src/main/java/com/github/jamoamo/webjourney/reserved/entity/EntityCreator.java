@@ -94,7 +94,7 @@ public final class EntityCreator<T>
 		
 		for(EntityFieldDefn fieldDefn : entityFields)
 		{
-			LOGGER.info("Setting field: " + fieldDefn.getFieldName());
+			LOGGER.debug("Setting field: " + fieldDefn.getFieldName());
 			scrapeField(fieldDefn, instance, reader);
 		}
 
@@ -107,6 +107,7 @@ public final class EntityCreator<T>
 		try
 		{
 			Object value = scrapeValue(defn, reader);
+			LOGGER.debug("Set field value: " + defn.getFieldName() + " = " + value.toString());
 			BeanUtils.setProperty(instance, defn.getFieldName(), value);
 		}
 		catch(IllegalAccessException |
