@@ -50,7 +50,7 @@ final class Converters
 			if(info.isCollectionType() && !annotations.hasMappedCollection())
 			{
 				AConverter mapper = InstanceCreator.getInstance().createInstance(annotations.getConversion().mapper());
-				return new CollectionConverter(mapper);
+				return new CollectionTypeConverter(mapper);
 			}
 			return new Converter(annotations.getConversion());
 		}
@@ -77,7 +77,7 @@ final class Converters
 		TypeInfo genericTypeInfo = TypeInfo.forClass(fieldInfo.getFieldGenericType());
 		if(genericTypeInfo.isStandardType())
 		{
-			return new CollectionConverter(getDefaultMapper(genericTypeInfo));
+			return new CollectionTypeConverter(getDefaultMapper(genericTypeInfo));
 		}
 		else if(genericTypeInfo.hasNoArgsConstructor())
 		{

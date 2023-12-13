@@ -44,7 +44,7 @@ public class CollectionConverterTest
 	}
 
 	/**
-	 * Test of convertValue method, of class CollectionConverter.
+	 * Test of convertValue method, of class CollectionTypeConverter.
 	 */
 	@Test
 	public void testConvertValue() throws XValueMappingException
@@ -54,7 +54,7 @@ public class CollectionConverterTest
 		Mockito.when(converterMock.mapValue("5")).thenReturn(5);
 		Mockito.when(converterMock.mapValue("11")).thenReturn(11);
 		
-		CollectionConverter<Integer> converter = new CollectionConverter<>(converterMock);
+		CollectionTypeConverter<Integer> converter = new CollectionTypeConverter<>(converterMock);
 		List<String> source = new ArrayList<>();
 		source.add("2");
 		source.add("5");

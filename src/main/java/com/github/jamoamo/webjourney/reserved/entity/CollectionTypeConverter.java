@@ -36,11 +36,11 @@ import java.util.logging.Logger;
  * @author James Amoore
  * @param <T> The mapper type
  */
-class CollectionConverter<T> implements IConverter<Collection<String>, Collection<T>>
+class CollectionTypeConverter<T> implements IConverter<Collection<String>, Collection<T>>
 {
 	private final AConverter<T> mapping;
 	
-	CollectionConverter(AConverter<T> mapping)
+	CollectionTypeConverter(AConverter<T> mapping)
 	{
 		this.mapping = mapping;
 	}
@@ -58,7 +58,7 @@ class CollectionConverter<T> implements IConverter<Collection<String>, Collectio
 			}
 			catch(XValueMappingException ex)
 			{
-				Logger.getLogger(CollectionConverter.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(CollectionTypeConverter.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 		return mappedCollection;
