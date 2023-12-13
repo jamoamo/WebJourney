@@ -29,11 +29,6 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 class ElementListExtractor extends AElementsExtractor
 {
-	ElementListExtractor(String xPath)
-	{
-		super(xPath);
-	}
-
 	ElementListExtractor(String xPath, ICondition condition)
 	{
 		super(xPath, condition);

@@ -23,7 +23,10 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import com.github.jamoamo.webjourney.api.web.IWebPage;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentCaptor;
@@ -44,6 +47,12 @@ public class CompleteFormActionTest
 	public void testExecuteAction_noSubmit()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
+		AElement element = Mockito.mock(AElement.class);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(page.getElement("//input[@name='match']")).thenReturn(element);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
@@ -51,13 +60,9 @@ public class CompleteFormActionTest
 		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
-		Mockito.verify(browser, Mockito.never()).clickElement(ArgumentCaptor.forClass(String.class).capture());
-		
-		ArgumentCaptor<String> xPathArg = ArgumentCaptor.forClass(String.class);
 		ArgumentCaptor<String> valueArg = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(browser, Mockito.times(1)).fillElement(xPathArg.capture(), valueArg.capture());
+		Mockito.verify(element, Mockito.times(1)).enterText(valueArg.capture());
 		
-		assertEquals("//input[@name='match']", xPathArg.getValue());
 		assertEquals("t1", valueArg.getValue());
 	}
 	
@@ -65,6 +70,16 @@ public class CompleteFormActionTest
 	public void testExecuteAction_submit()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
+		AElement element = Mockito.mock(AElement.class);
+		AElement buttonElement = Mockito.mock(AElement.class);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(page.getElement("//input[@name='match']")).thenReturn(element);
+		Mockito.when(page.getElement("//form[@name='scorecard_oracle_form']//table//tbody//input[@type='submit']"))
+			.thenReturn(buttonElement);
+		
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
@@ -74,15 +89,10 @@ public class CompleteFormActionTest
 		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
-		ArgumentCaptor<String> submitXPathArg = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(browser, Mockito.times(1)).clickElement(submitXPathArg.capture());
-		assertEquals("//form[@name='scorecard_oracle_form']//table//tbody//input[@type='submit']", submitXPathArg.getValue());
-		
-		ArgumentCaptor<String> xPathArg = ArgumentCaptor.forClass(String.class);
 		ArgumentCaptor<String> valueArg = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(browser, Mockito.times(1)).fillElement(xPathArg.capture(), valueArg.capture());
+		Mockito.verify(element, Mockito.times(1)).enterText(valueArg.capture());
+		Mockito.verify(buttonElement).click();
 		
-		assertEquals("//input[@name='match']", xPathArg.getValue());
 		assertEquals("t1", valueArg.getValue());
 	}
 }

@@ -24,7 +24,8 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  *
@@ -43,16 +44,22 @@ class EntityCreatorConverter implements IConverter<String, Object>
 	@Override
 	public Object convertValue(String source, IValueReader reader)
 	{
+		if(source == null)
+		{
+			return null;
+		}
+		
 		try
 		{
-			reader.navigateTo(new URL(source));
+			URI uri = new URI(source);
+			reader.navigateTo(uri.toURL());
 			
 			Object instance = this.entityCreator.createNewEntity(reader);
 
 			reader.navigateBack();
 			return instance;
 		}
-		catch(MalformedURLException e)
+		catch(MalformedURLException | URISyntaxException e)
 		{
 			return null;
 		}

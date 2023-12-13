@@ -35,10 +35,6 @@ abstract class AElementsExtractor implements IExtractor<List<? extends AElement>
 	private final String xPath;
 	private final ICondition condition;
 	
-	AElementsExtractor(String xPath)
-	{
-		this(xPath, new AlwaysCondition());
-	}
 	AElementsExtractor(String xPath, ICondition condition)
 	{
 		this.xPath = xPath;

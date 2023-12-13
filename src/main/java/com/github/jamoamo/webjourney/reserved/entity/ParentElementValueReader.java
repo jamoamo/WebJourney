@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XNavigationError;
 import java.net.URL;
 import java.util.List;
 
@@ -45,7 +46,7 @@ class ParentElementValueReader implements IValueReader
 	@Override
 	public String getCurrentUrl()
 	{
-		return this.browser.getCurrentUrl();
+		return this.browser.getActiveWindow().getCurrentUrl();
 	}
 
 	@Override
@@ -74,13 +75,27 @@ class ParentElementValueReader implements IValueReader
 	@Override
 	public void navigateTo(URL url)
 	{
-		this.browser.navigateToUrl(url);
+		try
+		{
+			this.browser.getActiveWindow().navigateToUrl(url);
+		}
+		catch(XNavigationError err)
+		{
+			throw new RuntimeException(err);
+		}
 	}
 
 	@Override
 	public void navigateBack()
 	{
-		this.browser.navigateBack();
+		try
+		{
+			this.browser.getActiveWindow().navigateBack();
+		}
+		catch(XNavigationError err)
+		{
+			throw new RuntimeException(err);
+		}
 	}
 
 	@Override
@@ -99,6 +114,18 @@ class ParentElementValueReader implements IValueReader
 	public IBrowser getBrowser()
 	{
 		return this.browser;
+	}
+
+	@Override
+	public void openNewWindow()
+	{
+		this.browser.openNewWindow();
+	}
+
+	@Override
+	public void closeWindow()
+	{
+		this.browser.getActiveWindow().close();
 	}
 	
 }

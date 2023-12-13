@@ -38,8 +38,6 @@ class CollectionTransformer implements ITransformer<Collection>
 		this.individualTransformer = individualTransformer;
 	}
 	
-	
-
 	@Override
 	public Collection transformValue(Collection value)
 	{

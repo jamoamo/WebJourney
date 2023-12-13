@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import java.net.URL;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,11 +49,13 @@ public class UrlNavigationTargetTest
 	public void testNavigate() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
 		URL googleURL = new URL("https://www.google.com");
 		UrlNavigationTarget target = new UrlNavigationTarget(googleURL);
 		target.navigate(browser);
 		ArgumentCaptor<URL> urlArg = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser, Mockito.times(1)).navigateToUrl(urlArg.capture());
+		Mockito.verify(window, Mockito.times(1)).navigateToUrl(urlArg.capture());
 		assertEquals(googleURL, urlArg.getValue());
 	}
 	

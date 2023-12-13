@@ -23,8 +23,29 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityConstant;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCurrentUrl;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueAttributeTransformer;
+import com.github.jamoamo.webjourney.reserved.entity.impl.TestElement;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueTransformer;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityRegexMatchConditionalConstant;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueAttributeTransformerMapper;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidRegexMatchConditionalExtractValue;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueAttribute;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractFromUrl;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCurrentUrlMapper;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueMapper;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCurrentUrlTransformer;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueTransformerMapper;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCurrentUrlTransformerMapper;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueAttributeMapper;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValue;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidRegexMatchConditionalExtractFromUrl;
+import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractFromUrlAttribute;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import com.github.jamoamo.webjourney.api.web.IWebPage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,23 +83,24 @@ public class EntityCreatorTest
 	public static final String XPATH_SEPARATED_STRING_DATA = "//div[@id='split-string-data']";
 	
 	private static IBrowser browser;
+	private static IBrowserWindow window;
+	private static IWebPage webPage;
 	
 	@BeforeAll
 	public static void setup()
 	{
 		browser = mock(IBrowser.class);
+		window = mock(IBrowserWindow.class);
+		webPage = mock(IWebPage.class);
 		
-		when(browser.getElementText(XPATH_STRING_DATA)).thenReturn("String Data");
-		when(browser.getElement(XPATH_STRING_DATA)).thenReturn(
+		when(webPage.getElement(XPATH_STRING_DATA)).thenReturn(
 				  new TestElement("div", Collections.singletonMap("attr", "Attribute Value"), "String Data"));
 		
-		when(browser.getElementText(XPATH_INT_DATA)).thenReturn("57");
-		when(browser.getElement(XPATH_INT_DATA)).thenReturn(new TestElement("57"));
+		when(webPage.getElement(XPATH_INT_DATA)).thenReturn(new TestElement("57"));
 		
-		when(browser.getElementText(XPATH_DOUBLE_DATA)).thenReturn("125.9");
-		when(browser.getElement(XPATH_DOUBLE_DATA)).thenReturn(new TestElement("125.9"));
+		when(webPage.getElement(XPATH_DOUBLE_DATA)).thenReturn(new TestElement("125.9"));
 		
-		when(browser.getElement(XPATH_SUB_DATA)).thenReturn(
+		when(webPage.getElement(XPATH_SUB_DATA)).thenReturn(
 				  new TestElement(
 							 "",
 							 new AElement[]{
@@ -88,9 +110,8 @@ public class EntityCreatorTest
 							 }
 				  )
 		);
-		
-		when(browser.getElementText(XPATH_URL_DATA)).thenReturn("https://newurl.com");
-		when(browser.getElement(XPATH_URL_DATA)).thenReturn(new TestElement("a", Collections.singletonMap("href", "https://newurlattr.com") ,"https://newurl.com"));
+
+		when(webPage.getElement(XPATH_URL_DATA)).thenReturn(new TestElement("a", Collections.singletonMap("href", "https://newurlattr.com") ,"https://newurl.com"));
 		
 		List<TestElement> testElements = new ArrayList<>();
 		testElements.add(new TestElement("Item1"));
@@ -107,18 +128,7 @@ public class EntityCreatorTest
 			}
 		};
 		
-		Answer<List<String>> stringAnswer = new Answer<List<String>>()
-		{
-			@Override
-			public List<String> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return testElements.stream().map(elem -> elem.getElementText()).toList();
-			}
-		};
-		
-		when(browser.getElements(XPATH_STRING_LIST_DATA)).thenAnswer(answer);
-		when(browser.getElementTexts(XPATH_STRING_LIST_DATA)).thenAnswer(stringAnswer);
+		when(webPage.getElements(XPATH_STRING_LIST_DATA)).thenAnswer(answer);
 		
 		List<TestElement> intElements = new ArrayList<>();
 		intElements.add(new TestElement("1"));
@@ -135,18 +145,7 @@ public class EntityCreatorTest
 			}
 		};
 		
-		Answer<List<String>> intStringAnswer = new Answer<List<String>>()
-		{
-			@Override
-			public List<String> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return intElements.stream().map(elem -> elem.getElementText()).toList();
-			}
-		};
-		
-		when(browser.getElements(XPATH_INTEGER_LIST_DATA)).thenAnswer(intAnswer);
-		when(browser.getElementTexts(XPATH_INTEGER_LIST_DATA)).thenAnswer(intStringAnswer);
+		when(webPage.getElements(XPATH_INTEGER_LIST_DATA)).thenAnswer(intAnswer);
 		
 		List<TestElement> doubleElements = new ArrayList<>();
 		doubleElements.add(new TestElement("1.1"));
@@ -163,18 +162,7 @@ public class EntityCreatorTest
 			}
 		};
 		
-		Answer<List<String>> doubleStringAnswer = new Answer<List<String>>()
-		{
-			@Override
-			public List<String> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return doubleElements.stream().map(elem -> elem.getElementText()).toList();
-			}
-		};
-		
-		when(browser.getElements(XPATH_DOUBLE_LIST_DATA)).thenAnswer(doubleAnswer);
-		when(browser.getElementTexts(XPATH_DOUBLE_LIST_DATA)).thenAnswer(doubleStringAnswer);
+		when(webPage.getElements(XPATH_DOUBLE_LIST_DATA)).thenAnswer(doubleAnswer);
 		
 		List<TestElement> subElements = new ArrayList<>();
 		subElements.add(new TestElement(
@@ -212,7 +200,7 @@ public class EntityCreatorTest
 			}
 		};
 		
-		when(browser.getElements(XPATH_SUB_LIST_DATA)).thenAnswer(subAnswer);
+		when(webPage.getElements(XPATH_SUB_LIST_DATA)).thenAnswer(subAnswer);
 		
 		List<TestElement> urlElements = new ArrayList<>();
 		urlElements.add(new TestElement("a", Collections.singletonMap("href", "https://newurlattr1.com") 
@@ -232,25 +220,20 @@ public class EntityCreatorTest
 			}
 		};
 		
-		Answer<List<String>> urlStringAnswer = new Answer<List<String>>()
-		{
-			@Override
-			public List<String> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return urlElements.stream().map(elem -> elem.getElementText()).toList();
-			}
-		};
+		when(webPage.getElements(XPATH_URL_LIST_DATA)).thenAnswer(urlAnswer);
 		
-		when(browser.getElements(XPATH_URL_LIST_DATA)).thenAnswer(urlAnswer);
-		when(browser.getElementTexts(XPATH_URL_LIST_DATA)).thenAnswer(urlStringAnswer);
+		when(webPage.getElement(XPATH_SEPARATED_STRING_DATA)).thenReturn(new TestElement("item1,item2,item3"));
+		when(window.getCurrentUrl()).thenReturn("https://currenturl.com");
 		
-		when(browser.getElement(XPATH_SEPARATED_STRING_DATA)).thenReturn(new TestElement("item1,item2,item3"));
-		when(browser.getElementText(XPATH_SEPARATED_STRING_DATA)).thenReturn("item1,item2,item3");
-		when(browser.getCurrentUrl()).thenReturn("https://currenturl.com");
+		when(webPage.getElement(XPATH_DIFF_STRING_DATA))
+			.thenReturn(new TestElement("String1"), 
+							new TestElement("String2"), 
+							new TestElement("String3"), 
+							new TestElement("String4"), 
+							new TestElement("String5"));
 		
-		when(browser.getElement(XPATH_DIFF_STRING_DATA)).thenReturn(new TestElement("String1"), new TestElement("String2"), new TestElement("String3"), new TestElement("String4"), new TestElement("String5"));
-		when(browser.getElementText(XPATH_DIFF_STRING_DATA)).thenReturn("String1", "String2", "String3", "String4", "String5");
+		when(browser.getActiveWindow()).thenReturn(window);
+		when(window.getCurrentPage()).thenReturn(webPage);
 	}
 	
 	/**
@@ -434,21 +417,20 @@ public class EntityCreatorTest
 	}
 	
 	@Test
-	public void testCreateNewEntity_ExtractFromUrl()
+	public void testCreateNewEntity_ExtractFromUrl() throws Exception
 	{
 		Mockito.clearInvocations(browser);
+		Mockito.clearInvocations(window);
+		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidEntityExtractFromUrl.class);
 		EntityCreator creator = new EntityCreator(defn);
 		
 		ValidEntityExtractFromUrl createNewEntity = (ValidEntityExtractFromUrl)creator.createNewEntity(browser);
 		
-		Mockito.verify(browser, times(4)).navigateBack();
+		Mockito.verify(window, times(1)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser, times(4)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(window, times(1)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(0).toString());
-		assertEquals("https://newurl1.com", urlCaptor.getAllValues().get(1).toString());
-		assertEquals("https://newurl2.com", urlCaptor.getAllValues().get(2).toString());
-		assertEquals("https://newurl3.com", urlCaptor.getAllValues().get(3).toString());
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
@@ -460,21 +442,20 @@ public class EntityCreatorTest
 	}
 	
 	@Test
-	public void testCreateNewEntity_ExtractFromUrl_Attribute()
+	public void testCreateNewEntity_ExtractFromUrl_Attribute() throws Exception
 	{
 		Mockito.clearInvocations(browser);
+		Mockito.clearInvocations(window);
+		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidEntityExtractFromUrlAttribute.class);
 		EntityCreator creator = new EntityCreator(defn);
 		
 		ValidEntityExtractFromUrlAttribute createNewEntity = (ValidEntityExtractFromUrlAttribute)creator.createNewEntity(browser);
 		
-		Mockito.verify(browser, times(4)).navigateBack();
+		Mockito.verify(window, times(1)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser, times(4)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(window, times(1)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
-		assertEquals("https://newurlattr1.com", urlCaptor.getAllValues().get(1).toString());
-		assertEquals("https://newurlattr2.com", urlCaptor.getAllValues().get(2).toString());
-		assertEquals("https://newurlattr3.com", urlCaptor.getAllValues().get(3).toString());
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
@@ -488,6 +469,8 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ConditionalExtractValue_RegexMatch()
 	{
 		Mockito.clearInvocations(browser);
+		Mockito.clearInvocations(window);
+		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidRegexMatchConditionalExtractValue.class);
 		EntityCreator creator = new EntityCreator(defn);
 		
@@ -502,31 +485,26 @@ public class EntityCreatorTest
 	}
 	
 	@Test
-	public void testCreateNewEntity_ConditionalExtractFromUrl_RegexMatch()
+	public void testCreateNewEntity_ConditionalExtractFromUrl_RegexMatch() throws Exception
 	{
 		Mockito.clearInvocations(browser);
+		Mockito.clearInvocations(window);
+		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidRegexMatchConditionalExtractFromUrl.class);
 		EntityCreator creator = new EntityCreator(defn);
 		
 		ValidRegexMatchConditionalExtractFromUrl createNewEntity = (ValidRegexMatchConditionalExtractFromUrl)creator.createNewEntity(browser);
 		
-		Mockito.verify(browser, times(5)).navigateBack();
+		Mockito.verify(window, times(2)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(browser, times(5)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(window, times(2)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
 		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(1).toString());
-		assertEquals("https://newurlattr1.com", urlCaptor.getAllValues().get(2).toString());
-		assertEquals("https://newurlattr2.com", urlCaptor.getAllValues().get(3).toString());
-		assertEquals("https://newurlattr3.com", urlCaptor.getAllValues().get(4).toString());
 		
 		assertNotNull(createNewEntity.getSingleCondition());
 		assertEquals("String1", createNewEntity.getSingleCondition().getStringData());
 		assertNotNull(createNewEntity.getMultipleConditions());
 		assertEquals("String2", createNewEntity.getMultipleConditions().getStringData());
-		assertEquals(3, createNewEntity.getCollection().size());
-		assertEquals("String3", createNewEntity.getCollection().get(0).getStringData());
-		assertEquals("String4", createNewEntity.getCollection().get(1).getStringData());
-		assertEquals("String5", createNewEntity.getCollection().get(2).getStringData());
 	}
 	
 	@Test

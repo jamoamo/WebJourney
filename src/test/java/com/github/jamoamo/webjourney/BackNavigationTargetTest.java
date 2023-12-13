@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -42,13 +43,14 @@ public class BackNavigationTargetTest
 	 * Test of navigate method, of class BackNavigationTarget.
 	 */
 	@Test
-	public void testNavigate()
+	public void testNavigate() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
-
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
 		BackNavigationTarget target = new BackNavigationTarget();
 		target.navigate(browser);
-		Mockito.verify(browser, Mockito.times(1)).navigateBack();
+		Mockito.verify(window, Mockito.times(1)).navigateBack();
 	}
 	
 }

@@ -71,6 +71,10 @@ public final class FieldInfo
 	 */
 	public TypeInfo getFieldGenericTypeInfo()
 	{
+		if(getFieldGenericType() == null)
+		{
+			return null;
+		}
 		return TypeInfo.forClass(getFieldGenericType());
 	}
 	

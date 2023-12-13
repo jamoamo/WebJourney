@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XNavigationError;
 import java.net.URL;
 import java.util.List;
 
@@ -44,55 +45,86 @@ class BrowserValueReader implements IValueReader
 	@Override
 	public String getCurrentUrl()
 	{
-		return this.browser.getCurrentUrl();
+		return this.browser.getActiveWindow().getCurrentUrl();
 	}
 
 	@Override
 	public String getElementText(String xPath)
 	{
-		return this.browser.getElementText(xPath);
+		return this.browser.getActiveWindow().getCurrentPage().getElement(xPath).getElementText();
 	}
 
 	@Override
 	public AElement getElement(String xPath)
 	{
-		return this.browser.getElement(xPath);
+		return this.browser.getActiveWindow().getCurrentPage().getElement(xPath);
 	}
 
 	@Override
-	public String getAttribute(String element, String attr)
+	public String getAttribute(String elementXPath, String attr)
 	{
-		return this.browser.getElement(element).getAttribute(attr);
+		return this.browser.getActiveWindow().getCurrentPage().getElement(elementXPath).getAttribute(attr);
 	}
 
 	@Override
 	public void navigateTo(URL url)
 	{
-		this.browser.navigateToUrl(url);
+		try
+		{
+			this.browser.getActiveWindow().navigateToUrl(url);
+		}
+		catch(XNavigationError error)
+		{
+			throw new RuntimeException(error.getMessage());
+		}
 	}
 
 	@Override
 	public void navigateBack()
 	{
-		this.browser.navigateBack();
+		try
+		{
+			this.browser.getActiveWindow().navigateBack();
+		}
+		catch(XNavigationError error)
+		{
+			throw new RuntimeException(error.getMessage());
+		}
 	}
 
 	@Override
 	public List<? extends AElement> getElements(String xPath)
 	{
-		return this.browser.getElements(xPath);
+		return this.browser.getActiveWindow().getCurrentPage().getElements(xPath);
 	}
 
 	@Override
 	public List<String> getElementTexts(String xPath)
 	{
-		return this.browser.getElementTexts(xPath);
+		return this.browser.getActiveWindow()
+			.getCurrentPage()
+			.getElements(xPath)
+			.stream()
+			.map(e -> e.getElementText())
+			.toList();
 	}
 
 	@Override
 	public IBrowser getBrowser()
 	{
 		return this.browser;
+	}
+
+	@Override
+	public void openNewWindow()
+	{
+		this.browser.openNewWindow();
+	}
+
+	@Override
+	public void closeWindow()
+	{
+		this.browser.getActiveWindow().close();
 	}
 	
 }

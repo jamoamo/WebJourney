@@ -23,7 +23,10 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import com.github.jamoamo.webjourney.api.web.IWebPage;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentCaptor;
@@ -48,21 +51,31 @@ public class ClickButtonActionTest
 	public void testExecuteAction_class_buttonExists()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
+		AElement element = Mockito.mock(AElement.class);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(page.getElement("//a[@data-cc-event='click:dismiss']")).thenReturn(element);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		ClickButtonAction action = new ClickButtonAction(InputForm.class, "dismissBannerButton");
 		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
-		ArgumentCaptor<String> xPathArgument = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(browser, times(1)).clickElement(xPathArgument.capture());
-		assertEquals("//a[@data-cc-event='click:dismiss']", xPathArgument.getValue());
+		Mockito.verify(element, times(1)).click();
 	}
 	
 	@Test
 	public void testExecuteAction_object_buttonExists()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
+		AElement element = Mockito.mock(AElement.class);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(page.getElement("//a[@data-cc-event='click:dismiss']")).thenReturn(element);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
@@ -71,9 +84,7 @@ public class ClickButtonActionTest
 		ActionResult result = action.executeAction(context);
 		assertEquals(ActionResult.SUCCESS, result);
 		
-		ArgumentCaptor<String> xPathArgument = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(browser, times(1)).clickElement(xPathArgument.capture());
-		assertEquals("//a[@data-cc-event='click:dismiss']", xPathArgument.getValue());
+		Mockito.verify(element, times(1)).click();
 	}
 	
 	/**
@@ -83,6 +94,10 @@ public class ClickButtonActionTest
 	public void testExecuteAction_class_buttonDoesntExist()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
@@ -98,6 +113,10 @@ public class ClickButtonActionTest
 	public void testExecuteAction_class_buttonNotAnnotated()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		

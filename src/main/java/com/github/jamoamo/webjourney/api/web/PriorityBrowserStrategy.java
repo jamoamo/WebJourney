@@ -82,7 +82,7 @@ public class PriorityBrowserStrategy implements IPreferredBrowserStrategy
 			{
 				IBrowser browser = browserFactory.createBrowser(options);
 				//test the browser
-				browser.navigateToUrl(new URL("http://www.google.com"));
+				browser.getActiveWindow().navigateToUrl(new URL("http://www.google.com"));
 				return browser;
 			}
 			catch(Exception ex)

@@ -65,7 +65,7 @@ class ClickButtonAction extends AWebAction
 			return ActionResult.FAILURE;
 		}
 		
-		browser.clickElement(ef.xPath());
+		browser.getActiveWindow().getCurrentPage().getElement(ef.xPath()).click();
 		return ActionResult.SUCCESS;
 	}
 	

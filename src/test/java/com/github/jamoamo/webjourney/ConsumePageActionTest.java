@@ -23,12 +23,11 @@
  */
 package com.github.jamoamo.webjourney;
 
-import com.github.jamoamo.webjourney.reserved.selenium.MatchEntity;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import com.github.jamoamo.webjourney.api.web.IWebPage;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,6 +72,30 @@ public class ConsumePageActionTest
 		{
 			return null;
 		}
+
+		@Override
+		public void click()
+		{
+			
+		}
+
+		@Override
+		public void enterText(String text)
+		{
+			
+		}
+
+		@Override
+		public List<? extends AElement> getChildrenByTag(String childElementType)
+		{
+			return null;
+		}
+
+		@Override
+		public String getTag()
+		{
+			return "";
+		}
 	}
 	
 	public ConsumePageActionTest()
@@ -86,10 +109,14 @@ public class ConsumePageActionTest
 	public void testExecuteAction() throws Throwable
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
-		Mockito.when(browser.getElementText("//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")).thenReturn("Australia vs England");
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(page.getElement("//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")).thenReturn(new TestElement("Australia vs England"));
 		
 		EntityConsumer consumer = new EntityConsumer();
 		ConsumePageAction action = new ConsumePageAction(Entity.class, consumer);
@@ -103,9 +130,13 @@ public class ConsumePageActionTest
 	public void testConstructor_nullClass()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
 		
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
 		
-		Mockito.when(browser.getElement(any())).thenReturn(new TestElement("t1"));
+		Mockito.when(page.getElement(any())).thenReturn(new TestElement("t1"));
 		
 		EntityConsumer consumer = new EntityConsumer();
 		NullPointerException exception =
@@ -117,9 +148,12 @@ public class ConsumePageActionTest
 	public void testConstructor_nullConsumer()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		IWebPage page = Mockito.mock(IWebPage.class);
 		
-		
-		Mockito.when(browser.getElement(any())).thenReturn(new TestElement("t1"));
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		Mockito.when(window.getCurrentPage()).thenReturn(page);
+		Mockito.when(page.getElement(any())).thenReturn(new TestElement("t1"));
 		
 		NullPointerException exception =
 				  assertThrows(NullPointerException.class, () -> new ConsumePageAction(Test.class, null));

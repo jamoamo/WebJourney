@@ -64,8 +64,10 @@ class RepeatForChildElement implements IRepeatable<AElement>
 			throw new JourneyException("Not an element: " + this.elementName);
 		}
 
-		List<? extends AElement> childElementsByTag = browser.getChildElementsByTag(this.elementName,
-																											 this.childElementType);
+		List<? extends AElement> childElementsByTag = browser.getActiveWindow()
+			.getCurrentPage()
+			.getElement(this.elementName)
+			.getChildrenByTag(this.childElementType);
 
 		return childElementsByTag.stream().map(elem -> (AElement) elem).toList();
 	}

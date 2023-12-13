@@ -92,4 +92,14 @@ public interface IValueReader
 	 * @return the browser.
 	 */
 	IBrowser getBrowser();
+	
+	/**
+	 * Opens a new browser window.
+	 */
+	void openNewWindow();
+	
+	/**
+	 * Closes the current browser window.
+	 */
+	void closeWindow();
 }
