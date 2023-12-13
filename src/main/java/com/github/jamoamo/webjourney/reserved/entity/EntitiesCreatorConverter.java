@@ -24,8 +24,6 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -48,21 +46,14 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 		return source.stream().map(s -> createEntity(s, reader)).toList();
 	}
 	
-	public Object createEntity(String source, IValueReader reader)
+	private Object createEntity(String source, IValueReader reader)
 	{
-		try
-		{
-			reader.navigateTo(new URL(source));
-			
-			Object instance = this.entityCreator.createNewEntity(reader);
+		reader.openNewWindow();
 
-			reader.navigateBack();
-			return instance;
-		}
-		catch(MalformedURLException e)
-		{
-			return null;
-		}
+		Object instance = this.entityCreator.createNewEntity(reader);
+
+		reader.closeWindow();
+		return instance;
 	}
 	
 }

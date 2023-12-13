@@ -34,6 +34,6 @@ class RefreshNavigationTarget extends ANavigationTarget
 	@Override
 	public void navigate(IBrowser browser)
 	{
-		browser.refreshPage();
+		browser.getActiveWindow().refreshCurrentPage();
 	}
 }

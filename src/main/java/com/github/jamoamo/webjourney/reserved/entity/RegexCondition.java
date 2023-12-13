@@ -46,7 +46,7 @@ class RegexCondition implements ICondition
 	{
 		String extractRawValue = this.extractor.extractRawValue(reader);
 		Pattern pattern = Patterns.getPattern(this.regexPattern);
-		boolean match = pattern.matcher(extractRawValue).matches();
+		boolean match = pattern.matcher(extractRawValue).find();
 		return match;
 	}
 	

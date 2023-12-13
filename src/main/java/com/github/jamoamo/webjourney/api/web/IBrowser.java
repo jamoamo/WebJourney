@@ -23,12 +23,6 @@
  */
 package com.github.jamoamo.webjourney.api.web;
 
-import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Function;
-import org.openqa.selenium.WebElement;
-
 /**
  * A browser instance.
  *
@@ -36,130 +30,32 @@ import org.openqa.selenium.WebElement;
  */
 public interface IBrowser
 {
+	
 	/**
-	 * Navigates to the URL.
-	 *
-	 * @param url The URL to navigate to.
+	 * Returns the current active window. This is the first window to have been opened for the browser.
+	 * 
+	 * @return the main browser window.
 	 */
-	void navigateToUrl(URL url);
+	IBrowserWindow getActiveWindow();
+	
+	/**
+	 * Switches to the browser window with the given name. 
+	 * If that window doesn't exist or has subsequently been closed then null is returned and then no window 
+	 * is set as the active window.
+	 * 
+	 * @param windowName the name of the window
+	 * @return the main browser window.
+	 */
+	IBrowserWindow switchToWindow(String windowName);
+	
+	/**
+	 * Open a new browser window.
+	 * @return the openedWindow
+	 */
+	IBrowserWindow openNewWindow();
 
 	/**
-	 * Fill Text in the Element.
-	 *
-	 * @param xPathExpression The xpath to the tet field to fill.
-	 * @param value           The value to fill.
-	 */
-	void fillElement(String xPathExpression, String value);
-
-	/**
-	 * Gets the text from an element.
-	 *
-	 * @param xPathExpression The xPath expression to the element.
-	 *
-	 * @return test from the element.
-	 */
-	String getElementText(String xPathExpression);
-
-	/**
-	 * Get list of texts from the elements.
-	 *
-	 * @param xPathExpression The xpath expression to the elements.
-	 *
-	 * @return a list of text from the elements
-	 */
-	List<String> getElementTexts(String xPathExpression);
-
-	/**
-	 * Click an element.
-	 *
-	 * @param xPathExpression XPath to the element.
-	 */
-	void clickElement(String xPathExpression);
-
-	/**
-	 * Click an element.
-	 *
-	 * @param xPathExpression    XPath to the element.
-	 * @param ignoreIfNotPresent determines whether to ignore the error if the
-	 *                           element isn't present.
-	 */
-	void clickElement(String xPathExpression, boolean ignoreIfNotPresent);
-
-	/**
-	 * Quit the browser.
+	 * Exit the browser.
 	 */
 	void exit();
-
-	/**
-	 * Wait on elements to appear on the page.
-	 *
-	 * @param xPathExpressions The xPath
-	 */
-	void waitForAllElements(String... xPathExpressions);
-
-	/**
-	 * Get the Entities mapped from the elements found via the xpath expression.
-	 *
-	 * @param <T>      The Entity type
-	 * @param xPath    The xpath expression.
-	 * @param function The function to map a web element to an entity.
-	 *
-	 * @return the list of entities.
-	 */
-	<T> List<T> getElementEntities(String xPath, Function<WebElement, T> function);
-
-	/**
-	 * Find an element that matches the xpath expression.
-	 *
-	 * @param xPath xPath expression to the element.
-	 *
-	 * @return the found Element.
-	 */
-	AElement getElement(String xPath);
-
-	/**
-	 * Find a list of elements that match the xpath expression.
-	 *
-	 * @param xPath xPath expression to the elements.
-	 *
-	 * @return the found Elements.
-	 */
-	List<? extends AElement> getElements(String xPath);
-	
-	/**
-	 * Find a list of elements that match the xpath expression.
-	 *
-	 * @param xPath xPath expression to the elements.
-	 * @param tag the tag of the children to return
-	 *
-	 * @return the found Elements.
-	 */
-	List<? extends AElement> getChildElementsByTag(String xPath, String tag);
-
-	/**
-	 * Navigate to the previous page if available.
-	 */
-	void navigateBack();
-	
-	/**
-	 * Navigate to the next page if available.
-	 */
-	void navigateForward();
-	
-	/**
-	 * Refresh the current page.
-	 */
-	void refreshPage();
-	
-	/**
-	 * Retrieve the browser cookies.
-	 * @return the browser cookies.
-	 */
-	Collection<ICookie> getCookies();
-	
-	/**
-	 * Retrieve the current url.
-	 * @return the current url.
-	 */
-	String getCurrentUrl();
 }

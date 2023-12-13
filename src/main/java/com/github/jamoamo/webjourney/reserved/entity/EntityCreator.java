@@ -107,7 +107,8 @@ public final class EntityCreator<T>
 		try
 		{
 			Object value = scrapeValue(defn, reader);
-			LOGGER.debug("Set field value: " + defn.getFieldName() + " = " + value.toString());
+			LOGGER.debug("Set field value: " + defn.getFieldName() + " = " + 
+							 (value == null ? "(null)" : value.toString()));
 			BeanUtils.setProperty(instance, defn.getFieldName(), value);
 		}
 		catch(IllegalAccessException |

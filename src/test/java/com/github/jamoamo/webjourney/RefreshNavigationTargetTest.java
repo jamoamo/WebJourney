@@ -24,6 +24,8 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import com.github.jamoamo.webjourney.api.web.IWebPage;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -45,10 +47,12 @@ public class RefreshNavigationTargetTest
 	public void testNavigate()
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
-
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
 		RefreshNavigationTarget target = new RefreshNavigationTarget();
 		target.navigate(browser);
-		Mockito.verify(browser, Mockito.times(1)).refreshPage();
+		Mockito.verify(window, Mockito.times(1)).refreshCurrentPage();
 	}
 	
 }

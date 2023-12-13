@@ -61,11 +61,6 @@ final class Transformers
 	private static ITransformer getTransformerForTransformation(EntityAnnotations annotations, TypeInfo typeInfo,
 																					EntityFieldDefn defn)
 	{
-		if(annotations.hasRegexExtractValue())
-		{
-			return new CombinedTransformer(new RegexTransformation(annotations.getRegexExtract()), new Transformer(
-				annotations.getTransformation()));
-		}
 		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection())
 		{
 			if(annotations.hasRegexExtractValue())
@@ -74,6 +69,11 @@ final class Transformers
 					getRegexExtract()), new Transformer(annotations.getTransformation())));
 			}
 			return new CollectionTransformer(new Transformer(annotations.getTransformation()));
+		}
+		else if(annotations.hasRegexExtractValue())
+		{
+			return new CombinedTransformer(new RegexTransformation(annotations.getRegexExtract()), new Transformer(
+				annotations.getTransformation()));
 		}
 		else
 		{

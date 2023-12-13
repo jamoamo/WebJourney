@@ -23,8 +23,9 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -32,16 +33,11 @@ import java.util.List;
  */
 class EntityFieldEvaluator implements IEntityFieldEvaluator
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(EntityFieldEvaluator.class);
+	
 	private final List<IExtractor> extractors;
 	private final IConverter converter;
 	private final ITransformer transformer;
-	
-	EntityFieldEvaluator(IExtractor extractor, ITransformer transformer, IConverter converter)
-	{
-		this.extractors = Collections.singletonList(extractor);
-		this.transformer = transformer;
-		this.converter = converter;
-	}
 	
 	EntityFieldEvaluator(List<IExtractor> extractors, ITransformer transformer, IConverter converter)
 	{
@@ -73,7 +69,8 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 		Object extractedValue = null;
 		if(matchingExtractors.isEmpty())
 		{
-			throw new RuntimeException("No Extractors apply");
+			LOGGER.warn("No extractors apply. Defaulting to null.");
+			return null;
 		}
 		else if(matchingExtractors.size() > 1)
 		{

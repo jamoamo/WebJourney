@@ -64,7 +64,7 @@ class CompleteFormAction extends AWebAction
 		if(this.submit)
 		{
 			String submitXPath = this.form.getClass().getAnnotation(Form.class).submit();
-			browser.clickElement(submitXPath);
+			browser.getActiveWindow().getCurrentPage().getElement(submitXPath).click();
 		}
 		return ActionResult.SUCCESS;
 	}
@@ -84,9 +84,7 @@ class CompleteFormAction extends AWebAction
 				return;
 			}
 			TextField entityField = textField.getAnnotation(TextField.class);
-			browser.fillElement(
-					  entityField.xPath(),
-					  value.toString());
+			browser.getActiveWindow().getCurrentPage().getElement(entityField.xPath()).enterText(value.toString());
 		}
 		catch(IllegalAccessException | InvocationTargetException | NoSuchMethodException ex)
 		{

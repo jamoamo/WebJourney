@@ -57,4 +57,29 @@ public abstract class AElement
 	 * @return list of sub-elements
 	 */
 	public abstract List<? extends AElement> findElements(String path);
+	
+	/**
+	 * Clicks the element.
+	 */
+	public abstract void click();
+	
+	/**
+	 * Enters Text to the element.
+	 * @param text the text to enter in the element
+	 */
+	public abstract void enterText(String text);
+
+	/**
+	 * Get children by tag name.
+	 * @param childElementType the tag.
+	 * @return all the children of the element that have the given tag.
+	 */
+	public abstract List<? extends AElement> getChildrenByTag(String childElementType);
+
+	/**
+	 * Get the tag of the element.
+	 * @return the element's tag
+	 */
+	public abstract String getTag();
+
 }

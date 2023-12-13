@@ -181,11 +181,7 @@ public final class Extractors
 		ICondition condition)
 	{
 		TypeInfo typeInfo = fieldInfo.getFieldTypeInfo();
-		if(!attribute.isBlank())
-		{
-			return getAttributeExtractor(xPath, attribute, condition);
-		}
-		else if(typeInfo.isCollectionType())
+		if(typeInfo.isCollectionType())
 		{
 			if(attribute.isBlank())
 			{
@@ -196,6 +192,10 @@ public final class Extractors
 			{
 				return new AttributesExtractor(xPath, attribute, condition);
 			}
+		}
+		else if(!attribute.isBlank())
+		{
+			return getAttributeExtractor(xPath, attribute, condition);
 		}
 		else if(!typeInfo.isStandardType())
 		{

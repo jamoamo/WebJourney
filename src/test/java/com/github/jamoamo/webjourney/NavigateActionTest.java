@@ -24,6 +24,8 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import com.github.jamoamo.webjourney.api.web.XNavigationError;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -42,15 +44,17 @@ public class NavigateActionTest
 	 * Test of executeAction method, of class NavigateAction.
 	 */
 	@Test
-	public void testExecuteAction()
+	public void testExecuteAction() throws XNavigationError
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
+		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		Mockito.when(browser.getActiveWindow()).thenReturn(window);
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
 		
 		NavigateAction action = new NavigateAction(NavigationTarget.back());
 		action.executeAction(context);
-		Mockito.verify(browser).navigateBack();
+		Mockito.verify(window).navigateBack();
 	}
 	
 }

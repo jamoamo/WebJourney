@@ -33,10 +33,10 @@ import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
  */
 class ValueMapper<T> implements IConverter<String, T>
 {
-	private final AConverter<T> mapper;
-	ValueMapper(AConverter<T> mapper)
+	private final AConverter<T> converter;
+	ValueMapper(AConverter<T> converter)
 	{
-		this.mapper = mapper;
+		this.converter = converter;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ class ValueMapper<T> implements IConverter<String, T>
 	{
 		try
 		{
-			return this.mapper.mapValue(source);
+			return this.converter.mapValue(source);
 		}
 		catch(XValueMappingException e)
 		{

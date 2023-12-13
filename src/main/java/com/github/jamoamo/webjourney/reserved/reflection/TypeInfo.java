@@ -52,6 +52,15 @@ public final class TypeInfo
 	}
 	
 	/**
+	 * Return the type.
+	 * @return the class type
+	 */
+	public Class<?> getType()
+	{
+		return this.theClass;
+	}
+	
+	/**
 	 * Determines if the type implements an interface.
 	 * @param interfaceClazz the interface class to be tested.
 	 * @return boolean indicating if the interface is implemented by the type.
@@ -81,7 +90,7 @@ public final class TypeInfo
 	}
 	
 	/**
-	 * Determines if the class can be classed a collection. Returns true if the class 
+	 * Determines if the class can be classed a collection. Returns true if the class. 
 	 * implements a Collection interface or is an array type.
 	 * @return true if the class is a collection.
 	 */
