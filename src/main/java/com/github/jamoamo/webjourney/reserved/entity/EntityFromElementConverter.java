@@ -41,6 +41,10 @@ class EntityFromElementConverter implements IConverter<AElement, Object>
 	@Override
 	public Object convertValue(AElement source, IValueReader reader)
 	{
+		if(source == null)
+		{
+			return null;
+		}
 		EntityCreator entityCreator = new EntityCreator(this.defn, source);
 		return entityCreator.createNewEntity(reader.getBrowser());
 	}
