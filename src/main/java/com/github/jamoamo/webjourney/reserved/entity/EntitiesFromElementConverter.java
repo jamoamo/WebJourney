@@ -43,6 +43,11 @@ class EntitiesFromElementConverter implements IConverter<List<AElement>, List<Ob
 	@Override
 	public List<Object> convertValue(List<AElement> source, IValueReader reader)
 	{
+		if (source == null)
+		{
+			return null;
+		}
+		
 		List<Object> result = new ArrayList<>(source.size());
 		for(AElement elems : source)
 		{

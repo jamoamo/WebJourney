@@ -26,6 +26,8 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,6 +35,7 @@ import java.net.URISyntaxException;
  */
 class EntityCreatorConverter implements IConverter<String, Object>
 {
+	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
 	private final EntityCreator entityCreator;
 	
 	EntityCreatorConverter(EntityFieldDefn fieldDefn)
@@ -54,13 +57,14 @@ class EntityCreatorConverter implements IConverter<String, Object>
 			URI uri = new URI(source);
 			reader.navigateTo(uri.toURL());
 			
-			Object instance = this.entityCreator.createNewEntity(reader);
+			Object instance = this.entityCreator.createNewEntity(reader.getBrowser());
 
 			reader.navigateBack();
 			return instance;
 		}
 		catch(MalformedURLException | URISyntaxException e)
 		{
+			this.logger.error(String.format("There is a problem with the url %s", source), e);
 			return null;
 		}
 	}

@@ -427,10 +427,13 @@ public class EntityCreatorTest
 		
 		ValidEntityExtractFromUrl createNewEntity = (ValidEntityExtractFromUrl)creator.createNewEntity(browser);
 		
-		Mockito.verify(window, times(1)).navigateBack();
+		Mockito.verify(window, times(4)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(window, times(1)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(window, times(4)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(0).toString());
+		assertEquals("https://newurl1.com", urlCaptor.getAllValues().get(1).toString());
+		assertEquals("https://newurl2.com", urlCaptor.getAllValues().get(2).toString());
+		assertEquals("https://newurl3.com", urlCaptor.getAllValues().get(3).toString());
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
@@ -452,10 +455,13 @@ public class EntityCreatorTest
 		
 		ValidEntityExtractFromUrlAttribute createNewEntity = (ValidEntityExtractFromUrlAttribute)creator.createNewEntity(browser);
 		
-		Mockito.verify(window, times(1)).navigateBack();
+		Mockito.verify(window, times(4)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(window, times(1)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(window, times(4)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
+		assertEquals("https://newurlattr1.com", urlCaptor.getAllValues().get(1).toString());
+		assertEquals("https://newurlattr2.com", urlCaptor.getAllValues().get(2).toString());
+		assertEquals("https://newurlattr3.com", urlCaptor.getAllValues().get(3).toString());
 		
 		assertNotNull(createNewEntity.getUrlEntity());
 		assertEquals("<ataD gnirtS>", createNewEntity.getUrlEntity().getStringData());
@@ -495,11 +501,14 @@ public class EntityCreatorTest
 		
 		ValidRegexMatchConditionalExtractFromUrl createNewEntity = (ValidRegexMatchConditionalExtractFromUrl)creator.createNewEntity(browser);
 		
-		Mockito.verify(window, times(2)).navigateBack();
+		Mockito.verify(window, times(5)).navigateBack();
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(window, times(2)).navigateToUrl(urlCaptor.capture());
+		Mockito.verify(window, times(5)).navigateToUrl(urlCaptor.capture());
 		assertEquals("https://newurlattr.com", urlCaptor.getAllValues().get(0).toString());
 		assertEquals("https://newurl.com", urlCaptor.getAllValues().get(1).toString());
+		assertEquals("https://newurlattr1.com", urlCaptor.getAllValues().get(2).toString());
+		assertEquals("https://newurlattr2.com", urlCaptor.getAllValues().get(3).toString());
+		assertEquals("https://newurlattr3.com", urlCaptor.getAllValues().get(4).toString());
 		
 		assertNotNull(createNewEntity.getSingleCondition());
 		assertEquals("String1", createNewEntity.getSingleCondition().getStringData());

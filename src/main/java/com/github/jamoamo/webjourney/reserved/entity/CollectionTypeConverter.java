@@ -48,6 +48,10 @@ class CollectionTypeConverter<T> implements IConverter<Collection<String>, Colle
 	@Override
 	public Collection<T> convertValue(Collection<String> source, IValueReader reader)
 	{
+		if(source == null)
+		{
+			return null;
+		}
 		List<T> mappedCollection = new ArrayList<>(source.size());
 		for(String value : source)
 		{

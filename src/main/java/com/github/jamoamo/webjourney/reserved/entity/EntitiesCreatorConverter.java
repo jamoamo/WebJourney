@@ -24,7 +24,12 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -32,6 +37,7 @@ import java.util.List;
  */
 class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 {
+	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
 	private final EntityCreator entityCreator;
 	
 	EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
@@ -43,17 +49,34 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 	@Override
 	public List<Object> convertValue(List<String> source, IValueReader reader)
 	{
+		if(source == null)
+		{
+			return null;
+		}
 		return source.stream().map(s -> createEntity(s, reader)).toList();
 	}
 	
 	private Object createEntity(String source, IValueReader reader)
 	{
-		reader.openNewWindow();
+		if(source == null)
+		{
+			return null;
+		}
+		try
+		{
+			URI uri = new URI(source);
+			reader.navigateTo(uri.toURL());
 
-		Object instance = this.entityCreator.createNewEntity(reader);
+			Object instance = this.entityCreator.createNewEntity(reader.getBrowser());
 
-		reader.closeWindow();
-		return instance;
+			reader.navigateBack();
+			return instance;
+		}
+		catch(MalformedURLException | URISyntaxException e)
+		{
+			this.logger.error(String.format("There is a problem with the url %s", source), e);
+			return null;
+		}
 	}
 	
 }
