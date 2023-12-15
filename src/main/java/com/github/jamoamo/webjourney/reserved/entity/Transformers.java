@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
+import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 
 /**
  *
@@ -44,15 +45,13 @@ final class Transformers
 		{
 			return getTransformerForTransformation(annotations, typeInfo, defn);
 		}
-		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection() && annotations.
-			hasRegexExtractValue())
+		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection() && annotations.hasRegexExtract())
 		{
-			return new CollectionTransformer(new RegexTransformation(annotations.
-						getRegexExtract()));
+			return new CollectionTransformer(new RegexTransformation(annotations.getRegexExtractGroup()));
 		}
-		else if(annotations.hasRegexExtractValue())
+		else if(annotations.hasRegexExtract())
 		{
-			return new RegexTransformation(annotations.getRegexExtract());
+			return new RegexTransformation(annotations.getRegexExtractGroup());
 		}
 
 		return null;
@@ -63,16 +62,18 @@ final class Transformers
 	{
 		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection())
 		{
-			if(annotations.hasRegexExtractValue())
+			if(annotations.hasRegexExtract())
 			{
-				return new CollectionTransformer(new CombinedTransformer(new RegexTransformation(annotations.
-					getRegexExtract()), new Transformer(annotations.getTransformation())));
+				RegexGroup regexGroup = annotations.getRegexExtractGroup();
+				return new CollectionTransformer(new CombinedTransformer(new RegexTransformation(regexGroup), 
+					new Transformer(annotations.getTransformation())));
 			}
 			return new CollectionTransformer(new Transformer(annotations.getTransformation()));
 		}
-		else if(annotations.hasRegexExtractValue())
+		else if(annotations.hasRegexExtract())
 		{
-			return new CombinedTransformer(new RegexTransformation(annotations.getRegexExtract()), new Transformer(
+			RegexGroup regexGroup = annotations.getRegexExtractGroup();
+			return new CombinedTransformer(new RegexTransformation(regexGroup), new Transformer(
 				annotations.getTransformation()));
 		}
 		else
