@@ -32,6 +32,7 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  *
@@ -39,7 +40,7 @@ import org.openqa.selenium.WebElement;
  */
 public class SeleniumPageTest
 {
-	private WebDriver driverMock = Mockito.mock(WebDriver.class);
+	private RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
 
 	/**
 	 * Test of getElement method, of class SeleniumPage.

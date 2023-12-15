@@ -24,8 +24,10 @@
 package com.github.jamoamo.webjourney.reserved.selenium;
 
 import java.util.HashMap;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WindowType;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -33,24 +35,29 @@ import org.openqa.selenium.WindowType;
  */
 class SeleniumWindowManager
 {
-	private final HashMap<String, SeleniumWindow> windowNames = new HashMap<>();
-	private final WebDriver webDriver;
+	private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumWindowManager.class);
 	
-	SeleniumWindowManager(WebDriver webDriver)
+	private final HashMap<String, SeleniumWindow> windowNames = new HashMap<>();
+	private final RemoteWebDriver webDriver;
+	
+	SeleniumWindowManager(RemoteWebDriver webDriver)
 	{
 		this.webDriver = webDriver;
 		String windowHandle = this.webDriver.getWindowHandle();
 		SeleniumWindow window = new SeleniumWindow(windowHandle, this.webDriver);
 		this.windowNames.put(windowHandle, window);
+		LOGGER.info("Starting browser window has handle " + windowHandle);
 		window.setActive(true);
 	}
 	
 	SeleniumWindow switchToWindow(String windowHandle)
 	{
+		
 		//first deactivate existing active window
 		getActiveWindow().setActive(false);
 		//switch to new window
 		this.webDriver.switchTo().window(windowHandle);
+		LOGGER.info("Switched to window with handle " + windowHandle);
 		//set it active
 		SeleniumWindow window = this.windowNames.get(windowHandle);
 		window.setActive(true);
@@ -69,6 +76,7 @@ class SeleniumWindowManager
 		this.webDriver.switchTo().newWindow(WindowType.TAB);
 		SeleniumWindow window = new SeleniumWindow(this.webDriver.getWindowHandle(), this.webDriver);
 		this.windowNames.put(window.getName(), window);
+		LOGGER.info("Opened new window with handle " + window.getName());
 		window.setActive(true);
 		return window;
 	}

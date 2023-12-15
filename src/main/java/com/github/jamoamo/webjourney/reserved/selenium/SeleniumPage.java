@@ -28,7 +28,7 @@ import com.github.jamoamo.webjourney.api.web.IWebPage;
 import java.util.List;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  *
@@ -36,8 +36,8 @@ import org.openqa.selenium.WebDriver;
  */
 final class SeleniumPage implements IWebPage
 {
-	private final WebDriver webDriver;
-	SeleniumPage(WebDriver webDriver)
+	private final RemoteWebDriver webDriver;
+	SeleniumPage(RemoteWebDriver webDriver)
 	{
 		this.webDriver = webDriver;
 	}

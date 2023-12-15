@@ -30,10 +30,10 @@ import org.junit.jupiter.api.BeforeAll;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebDriver.Timeouts;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  *
@@ -41,7 +41,7 @@ import org.openqa.selenium.WebDriver.Timeouts;
  */
 public class SeleniumDrivenBrowserTest
 {
-	private static WebDriver driverMock = Mockito.mock(WebDriver.class);
+	private static RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
 	private static TargetLocator targetLocatorMock = Mockito.mock(TargetLocator.class);
 	
 	@BeforeAll

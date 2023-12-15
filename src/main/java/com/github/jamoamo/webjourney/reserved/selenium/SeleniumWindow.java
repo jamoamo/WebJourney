@@ -26,8 +26,17 @@ package com.github.jamoamo.webjourney.reserved.selenium;
 import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import com.github.jamoamo.webjourney.api.web.IWebPage;
 import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import org.openqa.selenium.WebDriver;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -35,12 +44,15 @@ import org.openqa.selenium.WebDriver;
  */
 final class SeleniumWindow implements IBrowserWindow
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumWindow.class);
 	private final String windowName;
 	private boolean active;
-	private final WebDriver webDriver;
+	private final RemoteWebDriver webDriver;
 	private IWebPage currentPage;
 	
-	SeleniumWindow(String windowName, WebDriver webDriver)
+	private boolean screenshotEnabled = false;
+	
+	SeleniumWindow(String windowName, RemoteWebDriver webDriver)
 	{
 		this.windowName = windowName;
 		this.webDriver = webDriver;
@@ -92,7 +104,10 @@ final class SeleniumWindow implements IBrowserWindow
 		throws XNavigationError
 	{
 		checkWindowIsActive();
+		LOGGER.info(String.format("Window [%s] navigating to url %s", this.windowName, url.toString()));
 		this.webDriver.navigate().to(url);
+		
+		takeScreenshot();
 		this.currentPage = new SeleniumPage(this.webDriver);
 		return this.currentPage;
 	}
@@ -102,7 +117,10 @@ final class SeleniumWindow implements IBrowserWindow
 		throws XNavigationError
 	{
 		checkWindowIsActive();
+		LOGGER.info(String.format("Window [%s] navigating back", this.windowName));
+		
 		this.webDriver.navigate().back();
+		takeScreenshot();
 		this.currentPage = new SeleniumPage(this.webDriver);
 		return this.currentPage;
 	}
@@ -112,7 +130,10 @@ final class SeleniumWindow implements IBrowserWindow
 		throws XNavigationError
 	{
 		checkWindowIsActive();
+		LOGGER.info(String.format("Window [%s] navigating forward", this.windowName));
+		
 		this.webDriver.navigate().forward();
+		takeScreenshot();
 		this.currentPage = new SeleniumPage(this.webDriver);
 		return this.currentPage;
 	}
@@ -131,5 +152,35 @@ final class SeleniumWindow implements IBrowserWindow
 	public String getName()
 	{
 		return this.windowName;
+	}
+	
+	private void takeScreenshot()
+	{
+		if(!this.screenshotEnabled)
+		{
+			return;
+		}
+		
+		try
+		{
+			LOGGER.debug("Taking Screenshot");
+			File srcFile = ((TakesScreenshot)this.webDriver).getScreenshotAs(OutputType.FILE);
+			
+			if(srcFile == null)
+			{
+				return;
+			}
+			
+			LocalDateTime time = LocalDateTime.now();
+			var timeStr = time.format(DateTimeFormatter.ofPattern("YYYYMMddHHmmss"));
+			String fileName = String.format("output/screenshot/screenshot-%s.png", timeStr);
+			File destFile = new File(fileName);
+			LOGGER.debug(String.format("Copying Screenshot [%s]", fileName));
+			FileUtils.copyFile(srcFile, destFile);
+		}
+		catch(IOException ioe)
+		{
+			LOGGER.error("Could not take screenshot.", ioe);
+		}
 	}
 }
