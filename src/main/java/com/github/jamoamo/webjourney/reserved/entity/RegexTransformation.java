@@ -23,7 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 
 /**
@@ -34,9 +33,9 @@ class RegexTransformation implements ITransformer<String>
 {
 	private final RegexGroup regexGroup;
 	
-	RegexTransformation(RegexExtractValue regexExtract)
+	RegexTransformation(RegexGroup regexGroup)
 	{
-		this.regexGroup = new RegexGroup(regexExtract.regexes(), regexExtract.groupName(), regexExtract.defaultValue());
+		this.regexGroup = regexGroup;
 	}
 
 	@Override

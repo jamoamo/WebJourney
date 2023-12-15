@@ -30,6 +30,7 @@ import com.github.jamoamo.webjourney.annotation.Constant;
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.RegexExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
@@ -920,5 +921,43 @@ public class ExtractorsTest
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
 		IExtractor extractor = Extractors.getExtractorForAnnotation(regex, fieldInfo, false, false);
 		assertInstanceOf(ConstantExtractor.class, extractor);
+	}
+	
+	@Test
+	public void testGetExtractorForAnnotation_RegexExtractCurrentUrl()
+	{
+		RegexExtractCurrentUrl regex = new RegexExtractCurrentUrl()
+		{
+
+			@Override
+			public String[] regexes()
+			{
+				return new String[]{"regex"};
+			}
+
+			@Override
+			public String groupName()
+			{
+				return "group";
+			}
+
+			@Override
+			public String defaultValue()
+			{
+				return "";
+			}
+
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return RegexExtractValue.class;
+			}
+		};
+		
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo()).thenReturn(TypeInfo.forClass(String.class));
+		
+		IExtractor extractor = Extractors.getExtractorForAnnotation(regex, fieldInfo, false, false);
+		assertInstanceOf(CurrentUrlExtractor.class, extractor);
 	}
 }

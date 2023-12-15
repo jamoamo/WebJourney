@@ -21,40 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
+package com.github.jamoamo.webjourney.annotation;
 
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
-import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
-import java.lang.annotation.Annotation;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.Mockito;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author James Amoore
  */
-public class RegexTransformationTest
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface RegexExtractCurrentUrl
 {
-	
-	public RegexTransformationTest()
-	{
-	}
-
 	/**
-	 * Test of transformValue method, of class RegexTransformation.
+	 * The regexes to evaluate use to extract the value. The first regex with a matching group will be used.
+	 * @return the regexes to use to extract the value.
 	 */
-	@Test
-	public void testTransformValue()
-	{
-		RegexGroup group = Mockito.mock(RegexGroup.class);
-		Mockito.when(group.findGroupValue("String value")).thenReturn("String");
-		
-		RegexTransformation transformation = new RegexTransformation(group);
-		String transformValue = transformation.transformValue("String value");
-		
-		assertEquals("String", transformValue);
-	}
+	String[] regexes();
 	
+	/**
+	 * 
+	 * @return the name of the regex group to extract
+	 */
+	String groupName();
+	
+	/**
+	 * The default value if the group is not matched. If not specified, empty string will be used as the default.
+	 * @return the default value.
+	 */
+	String defaultValue() default "";
 }

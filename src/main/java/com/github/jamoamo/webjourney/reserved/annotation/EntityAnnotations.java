@@ -28,12 +28,14 @@ import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
 import com.github.jamoamo.webjourney.annotation.MappedCollection;
+import com.github.jamoamo.webjourney.annotation.RegexExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.Transformation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.entity.IExtractor;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
+import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -46,12 +48,14 @@ public class EntityAnnotations
 	private final ExtractValue extractValue;
 	private final ExtractCurrentUrl currentUrl;
 	private final ExtractFromUrl extractFromUrl;
-	private final RegexExtractValue regexExtract;
+	private final RegexExtractValue regexExtractValue;
+	private final RegexExtractCurrentUrl regexCurrentUrl;
 	private final MappedCollection mappedCollection;
 	private final Transformation transformation;
 	private final Conversion conversion;
 	
 	private final ExtractionAnnotations extractionAnnotations;
+	
 
 	/**
 	 * Constructor.
@@ -62,7 +66,8 @@ public class EntityAnnotations
 		this.extractValue = field.getAnnotation(ExtractValue.class);
 		this.currentUrl = field.getAnnotation(ExtractCurrentUrl.class);
 		this.extractFromUrl = field.getAnnotation(ExtractFromUrl.class);
-		this.regexExtract = field.getAnnotation(RegexExtractValue.class);
+		this.regexExtractValue = field.getAnnotation(RegexExtractValue.class);
+		this.regexCurrentUrl = field.getAnnotation(RegexExtractCurrentUrl.class);
 		this.mappedCollection = field.getAnnotation(MappedCollection.class);
 		this.transformation = field.getAnnotation(Transformation.class);
 		this.conversion = field.getAnnotation(Conversion.class);
@@ -87,9 +92,9 @@ public class EntityAnnotations
 	 * Is the RegexExtractValue annotation present.
 	 * @return {code true} if the annotation is present.
 	 */
-	public boolean hasRegexExtractValue()
+	public boolean hasRegexExtract()
 	{
-		return this.regexExtract != null;
+		return this.regexExtractValue != null || this.regexCurrentUrl != null;
 	}
 	
 	/**
@@ -121,7 +126,7 @@ public class EntityAnnotations
 		}
 		else
 		{
-			return this.regexExtract.extractValue();
+			return this.regexExtractValue.extractValue();
 		}
 	}
 
@@ -144,9 +149,20 @@ public class EntityAnnotations
 	/**
 	 * @return the RegexExtractValue annotation.
 	 */
-	public RegexExtractValue getRegexExtract()
+	public RegexGroup getRegexExtractGroup()
 	{
-		return this.regexExtract;
+		if(this.regexExtractValue != null)
+		{
+			return new RegexGroup(this.regexExtractValue.regexes(), 
+				this.regexExtractValue.groupName(), 
+				this.regexExtractValue.defaultValue());
+		}
+		else if(this.regexCurrentUrl != null)
+		{
+			return new RegexGroup(this.regexCurrentUrl.regexes(), this.regexCurrentUrl.groupName(), 
+				this.regexCurrentUrl.defaultValue());
+		}
+		return null;
 	}
 
 	/**

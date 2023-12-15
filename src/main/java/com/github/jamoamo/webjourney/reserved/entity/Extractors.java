@@ -30,6 +30,7 @@ import com.github.jamoamo.webjourney.annotation.Constant;
 import com.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import com.github.jamoamo.webjourney.annotation.ExtractValue;
+import com.github.jamoamo.webjourney.annotation.RegexExtractCurrentUrl;
 import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
@@ -83,6 +84,17 @@ public final class Extractors
 		{
 			return getExtractorForAnnotation(extractor.extractValue(), fieldInfo,
 														extractCollectionSingularly, hasConverter);
+		}
+		else if(annotation instanceof RegexExtractCurrentUrl)
+		{
+			return getExtractorForAnnotation(new ExtractCurrentUrl()
+			{
+				@Override
+				public Class<? extends Annotation> annotationType()
+				{
+					return ExtractCurrentUrl.class;
+				}
+			}, fieldInfo, extractCollectionSingularly, hasConverter);
 		}
 		else if(annotation instanceof ConditionalExtractValue.RegexMatch extractor)
 		{
