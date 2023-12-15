@@ -24,14 +24,16 @@
 package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.api.web.IWebPage;
+import java.io.File;
 import java.net.URL;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver.Navigation;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  *
@@ -39,7 +41,7 @@ import org.openqa.selenium.WebDriver.Navigation;
  */
 public class SeleniumWindowTest
 {
-	WebDriver driverMock = Mockito.mock(WebDriver.class);
+	RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
 
 	/**
 	 * Test of getWindowName method, of class SeleniumWindow.
@@ -157,6 +159,7 @@ public class SeleniumWindowTest
 		Navigation navigate = Mockito.mock(Navigation.class);
 		
 		Mockito.when(driverMock.navigate()).thenReturn(navigate);
+		Mockito.when(driverMock.getScreenshotAs(OutputType.FILE)).thenReturn(new File(""));
 		
 		SeleniumWindow window = new SeleniumWindow("Name", driverMock);
 		window.setActive(true);

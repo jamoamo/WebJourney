@@ -26,7 +26,7 @@ package com.github.jamoamo.webjourney.reserved.selenium;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import java.time.Duration;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +38,13 @@ import org.slf4j.LoggerFactory;
 class SeleniumDrivenBrowser implements IBrowser
 {
 	private final static int DEFAULT_TIMEOUT_MINUTES = 1;
-	private final static int DEFAULT_POLLING_SECONDS = 10;
 
 	private final Logger logger = LoggerFactory.getLogger(SeleniumDrivenBrowser.class);
 
-	private final WebDriver driver;
+	private final RemoteWebDriver driver;
 	private final SeleniumWindowManager windowManager;
 
-	SeleniumDrivenBrowser(WebDriver driver)
+	SeleniumDrivenBrowser(RemoteWebDriver driver)
 	{
 		this.driver = driver;
 		this.windowManager = new SeleniumWindowManager(this.driver);
