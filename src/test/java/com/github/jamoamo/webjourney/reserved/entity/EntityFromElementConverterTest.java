@@ -76,7 +76,8 @@ public class EntityFromElementConverterTest
 	public void testConvertValue() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
-
+		Mockito.when(element.exists()).thenReturn(Boolean.TRUE);
+		
 		EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
 		
 		Answer<Class<?>> answer = new Answer<>()

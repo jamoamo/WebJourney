@@ -178,4 +178,10 @@ public class TestElement extends AElement
 	{
 		return this.elementName;
 	}
+
+	@Override
+	public boolean exists()
+	{
+		return true;
+	}
 }

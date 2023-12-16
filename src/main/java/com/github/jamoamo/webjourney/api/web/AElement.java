@@ -81,5 +81,11 @@ public abstract class AElement
 	 * @return the element's tag
 	 */
 	public abstract String getTag();
+	
+	/**
+	 * Indicates if the element exists in the current context.
+	 * @return true if the element exists
+	 */
+	public abstract boolean exists();
 
 }
