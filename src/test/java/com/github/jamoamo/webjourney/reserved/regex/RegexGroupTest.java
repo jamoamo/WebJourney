@@ -103,4 +103,12 @@ public class RegexGroupTest
 		String findGroupValue = group.findGroupValue("g17");
 		assertEquals("n/a", findGroupValue);
 	}
+	
+	@Test
+	public void testFindGroupValue_pattern_null()
+	{
+		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)","a(?<group>\\d+)"}, "group", "n/a");
+		String findGroupValue = group.findGroupValue(null);
+		assertNull(findGroupValue);
+	}
 }

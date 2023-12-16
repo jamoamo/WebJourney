@@ -57,6 +57,11 @@ public class RegexGroup
 	 */
 	public String findGroupValue(String value)
 	{
+		if (value == null)
+		{
+			return null;
+		}
+		
 		for(Pattern pattern : this.patternList)
 		{
 			Matcher matcher = pattern.matcher(value);
