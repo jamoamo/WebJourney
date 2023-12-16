@@ -41,7 +41,7 @@ class EntityFromElementConverter implements IConverter<AElement, Object>
 	@Override
 	public Object convertValue(AElement source, IValueReader reader)
 	{
-		if(source == null)
+		if(source == null || !source.exists())
 		{
 			return null;
 		}

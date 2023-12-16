@@ -96,6 +96,12 @@ public class ConsumePageActionTest
 		{
 			return "";
 		}
+
+		@Override
+		public boolean exists()
+		{
+			return true;
+		}
 	}
 	
 	public ConsumePageActionTest()

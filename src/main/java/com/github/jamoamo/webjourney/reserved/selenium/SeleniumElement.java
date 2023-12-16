@@ -27,6 +27,7 @@ import com.github.jamoamo.webjourney.api.web.AElement;
 import java.util.List;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -120,5 +121,20 @@ class SeleniumElement extends AElement
 	WebElement getWebElement()
 	{
 		return getElement();
+	}
+
+	@Override
+	public boolean exists()
+	{
+		WebElement element;
+		try
+		{
+			element = getElement();
+		}
+		catch(NoSuchElementException ex)
+		{
+			return false;
+		}
+		return element.isDisplayed();
 	}
 }
