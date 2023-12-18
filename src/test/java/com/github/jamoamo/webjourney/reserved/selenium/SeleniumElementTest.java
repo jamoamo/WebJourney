@@ -43,17 +43,19 @@ import org.openqa.selenium.WebElement;
  */
 public class SeleniumElementTest
 {
+	private static ISeleniumElementLocator locator = Mockito.mock(ISeleniumElementLocator.class);
 	private static WebElement webElementMock = Mockito.mock(WebElement.class);
-
+	
 	/**
 	 * Test of getElementText method, of class SeleniumElement.
 	 */
 	@Test
 	public void testGetElementText()
 	{
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		Mockito.when(webElementMock.getText()).thenReturn("Text");
 		
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		String result = element.getElementText();
 		assertEquals("Text", result);
 	}
@@ -64,12 +66,13 @@ public class SeleniumElementTest
 	@Test
 	public void testFindElement()
 	{
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		WebElement elem = Mockito.mock(WebElement.class);
 		Mockito.when(elem.getText()).thenReturn("Inner Element");
 		
 		Mockito.when(webElementMock.findElement(any())).thenReturn(elem);
 		
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		AElement result = element.findElement("//div");
 		assertEquals("Inner Element", result.getElementText());
 	}
@@ -80,12 +83,13 @@ public class SeleniumElementTest
 	@Test
 	public void testFindElements()
 	{
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		WebElement elem1 = Mockito.mock(WebElement.class);
 		Mockito.when(elem1.getText()).thenReturn("Inner Element");
 		
 		Mockito.when(webElementMock.findElements(any())).thenReturn(Collections.singletonList(elem1));
 		
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		List<? extends AElement> result = element.findElements("//div");
 		assertEquals(1, result.size());
 		assertEquals("Inner Element", result.get(0).getElementText());
@@ -97,9 +101,10 @@ public class SeleniumElementTest
 	@Test
 	public void testGetAttribute()
 	{
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		Mockito.when(webElementMock.getAttribute("Attr")).thenReturn("Value");
 		
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		String result = element.getAttribute("Attr");
 		assertEquals("Value", result);
 	}
@@ -110,7 +115,8 @@ public class SeleniumElementTest
 	@Test
 	public void testClick()
 	{
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		
 		element.click();
 		
@@ -123,7 +129,8 @@ public class SeleniumElementTest
 	@Test
 	public void testEnterText()
 	{
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		
 		element.enterText("Text Value");
 		
@@ -139,12 +146,13 @@ public class SeleniumElementTest
 	@Test
 	public void testGetChildrenByTag()
 	{
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		WebElement elem1 = Mockito.mock(WebElement.class);
 		Mockito.when(elem1.getText()).thenReturn("Inner Element");
 		
 		Mockito.when(webElementMock.findElements(By.tagName("div"))).thenReturn(Collections.singletonList(elem1));
 		
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		List<? extends AElement> result = element.getChildrenByTag("div");
 		assertEquals(1, result.size());
 		assertEquals("Inner Element", result.get(0).getElementText());
@@ -156,8 +164,9 @@ public class SeleniumElementTest
 	@Test
 	public void testGetTag()
 	{
+		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		Mockito.when(webElementMock.getTagName()).thenReturn("td");
-		SeleniumElement element = new SeleniumElement(webElementMock);
+		SeleniumElement element = new SeleniumElement(locator);
 		
 		String tag = element.getTag();
 		

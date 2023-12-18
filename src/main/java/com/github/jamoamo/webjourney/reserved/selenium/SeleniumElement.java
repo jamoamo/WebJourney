@@ -36,14 +36,7 @@ import org.openqa.selenium.WebElement;
  */
 class SeleniumElement extends AElement
 {
-	private WebElement webElement;
-	
 	private ISeleniumElementLocator locator;
-
-	SeleniumElement(WebElement webElement)
-	{
-		this.webElement = webElement;
-	}
 	
 	SeleniumElement(ISeleniumElementLocator locator)
 	{
@@ -108,14 +101,7 @@ class SeleniumElement extends AElement
 	
 	private WebElement getElement()
 	{
-		if(this.webElement != null)
-		{
-			return this.webElement;
-		}
-		else
-		{
-			return this.locator.findElement();
-		}
+		return this.locator.findElement();
 	}
 
 	WebElement getWebElement()
