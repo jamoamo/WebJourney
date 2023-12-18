@@ -66,7 +66,7 @@ public class AttributesExtractorTest
 		IValueReader reader = Mockito.mock(IValueReader.class);
 		Mockito.when(reader.getElements("//div")).then(answer);
 		
-		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition());
+		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
 		List<String> extractRawValue = extractor.extractRawValue(reader);
 		assertEquals(1, extractRawValue.size());
 		assertEquals("Value", extractRawValue.get(0));
@@ -78,7 +78,7 @@ public class AttributesExtractorTest
 	@Test
 	public void testGetCondition()
 	{
-		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition());
+		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
 		assertTrue(extractor.getCondition().evaluate(null));
 	}
 	

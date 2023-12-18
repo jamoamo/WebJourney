@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import java.util.List;
+import org.openqa.selenium.NoSuchElementException;
 
 /**
  *
@@ -34,18 +35,31 @@ class AttributesExtractor implements IExtractor<List<String>>
 	private final String xpath;
 	private final String attribute;
 	private final ICondition condition;
+	private final boolean optional;
 	
-	AttributesExtractor(String xPath, String attribute, ICondition condition)
+	AttributesExtractor(String xPath, String attribute, ICondition condition, boolean optional)
 	{
 		this.xpath = xPath;
 		this.attribute = attribute;
 		this.condition = condition;
+		this.optional = optional;
 	}
 	
 	@Override
 	public List<String> extractRawValue(IValueReader browser)
 	{
-		return browser.getElements(this.xpath).stream().map(elem -> elem.getAttribute(this.attribute)).toList();
+		try
+		{
+			return browser.getElements(this.xpath).stream().map(elem -> elem.getAttribute(this.attribute)).toList();
+		}
+		catch(NoSuchElementException ex)
+		{
+			if(this.optional)
+			{
+				return null;
+			}
+			throw ex;
+		}
 	}
 	
 	@Override

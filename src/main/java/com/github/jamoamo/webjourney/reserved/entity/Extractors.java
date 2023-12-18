@@ -77,7 +77,7 @@ public final class Extractors
 		}
 		else if(annotation instanceof ExtractValue extractor)
 		{
-			return getValueExtractor(fieldInfo, extractor.path(), extractor.attribute(),
+			return getValueExtractor(fieldInfo, extractor.path(), extractor.attribute(), extractor.optional(),
 											 extractCollectionSingularly, hasConverter, new AlwaysCondition());
 		}
 		else if(annotation instanceof RegexExtractValue extractor)
@@ -107,11 +107,11 @@ public final class Extractors
 		}
 		else if(annotation instanceof ConditionalConstant.RegexMatch extractor)
 		{
-			return new ConstantExtractor(extractor.thenConstant().value(), 
-				new RegexCondition(
-					getStringExtractor(extractor.ifExtractValue().path(), 
-											 extractor.ifExtractValue().attribute()), 
-					extractor.regexPattern()));
+			return new ConstantExtractor(extractor.thenConstant().value(),
+												  new RegexCondition(
+													  getStringExtractor(extractor.ifExtractValue().path(),
+																				extractor.ifExtractValue().attribute()),
+													  extractor.regexPattern()));
 		}
 		throw new RuntimeException("Unable to determine an extractor for annotation of type " +
 			"[" + annotation.annotationType() + "].");
@@ -129,6 +129,7 @@ public final class Extractors
 			fieldInfo,
 			extractor.thenExtractValue().path(),
 			extractor.thenExtractValue().attribute(),
+			false,
 			extractCollectionSingularly,
 			hasConverter,
 			condition);
@@ -148,18 +149,18 @@ public final class Extractors
 			}
 			else
 			{
-				return new AttributesExtractor(xPath, attribute, condition);
+				return new AttributesExtractor(xPath, attribute, condition, false);
 			}
 		}
 		else if(!fieldTypeInfo.isStandardType() && fieldTypeInfo.hasNoArgsConstructor())
 		{
 			if(!attribute.isBlank())
 			{
-				return new AttributeExtractor(xPath, attribute, condition);
+				return new AttributeExtractor(xPath, attribute, condition, false);
 			}
 			else
 			{
-				return new ElementTextExtractor(xPath, condition);
+				return new ElementTextExtractor(xPath, condition, false);
 			}
 		}
 		throw new RuntimeException("Cannot determine a suitable value extractor. " +
@@ -188,6 +189,7 @@ public final class Extractors
 		FieldInfo fieldInfo,
 		String xPath,
 		String attribute,
+		boolean optional,
 		boolean extractCollectionSingularly,
 		boolean hasConverter,
 		ICondition condition)
@@ -198,34 +200,35 @@ public final class Extractors
 			if(attribute.isBlank())
 			{
 				return getElementTextCollectionExtractor(extractCollectionSingularly, xPath, condition, fieldInfo,
-																	  hasConverter);
+																	  hasConverter, false);
 			}
 			else
 			{
-				return new AttributesExtractor(xPath, attribute, condition);
+				return new AttributesExtractor(xPath, attribute, condition, optional);
 			}
 		}
 		else if(!attribute.isBlank())
 		{
-			return getAttributeExtractor(xPath, attribute, condition);
+			return getAttributeExtractor(xPath, attribute, condition, optional);
 		}
 		else if(!typeInfo.isStandardType())
 		{
-			return getNonStandardValueExtractor(xPath, typeInfo, hasConverter);
+			return getNonStandardValueExtractor(xPath, typeInfo, hasConverter, optional);
 		}
 		else
 		{
-			return new ElementTextExtractor(xPath, condition);
+			return new ElementTextExtractor(xPath, condition, optional);
 		}
 	}
 
-	private static IExtractor getElementTextCollectionExtractor(boolean extractCollectionSingularly, String xPath,
-																					ICondition condition, FieldInfo fieldInfo,
-																					boolean hasConverter)
+	private static IExtractor getElementTextCollectionExtractor(boolean extractCollectionSingularly,
+																					String xPath, ICondition condition,
+																					FieldInfo fieldInfo, boolean hasConverter,
+																					boolean optional)
 	{
 		if(extractCollectionSingularly)
 		{
-			return getTextExtractor(xPath, condition);
+			return getTextExtractor(xPath, condition, optional);
 		}
 		return getCollectionExtractor(fieldInfo, xPath, hasConverter, condition);
 	}
@@ -242,36 +245,35 @@ public final class Extractors
 		}
 	}
 
-	private static IExtractor<String> getTextExtractor(String xPath, ICondition condition)
+	private static IExtractor<String> getTextExtractor(String xPath, ICondition condition, boolean optional)
 	{
-		return new ElementTextExtractor(xPath, condition);
+		return new ElementTextExtractor(xPath, condition, optional);
 	}
 
-	private static IExtractor<String> getAttributeExtractor(String xPath, String attribute, ICondition condition)
+	private static IExtractor<String> getAttributeExtractor(String xPath, String attribute, ICondition condition,
+																			  boolean optional)
 	{
-		return new AttributeExtractor(xPath, attribute, condition);
+		return new AttributeExtractor(xPath, attribute, condition, optional);
 	}
 
 	private static IExtractor getNonStandardValueExtractor(
-		String xPath,
-		TypeInfo typeInfo,
-		boolean hasConverter)
+		String xPath, TypeInfo typeInfo, boolean hasConverter, boolean optional)
 		throws RuntimeException
 	{
 		if(hasConverter)
 		{
-			return new ElementTextExtractor(xPath);
+			return new ElementTextExtractor(xPath, new AlwaysCondition(), optional);
 		}
 		if(typeInfo.hasNoArgsConstructor())
 		{
-			return new ElementExtractor(xPath);
+			return new ElementExtractor(xPath, optional);
 		}
 		throw new RuntimeException("Unable to determine a suitable value extractor. " +
 			"Is there a converter or no-args constructor missing?");
 	}
 
-	private static IExtractor getCollectionExtractor(FieldInfo fieldInfo, String xPath, boolean hasConverter,
-																	 ICondition condition)
+	private static IExtractor getCollectionExtractor(FieldInfo fieldInfo, String xPath,
+																	 boolean hasConverter, ICondition condition)
 	{
 		if(fieldInfo.getFieldGenericTypeInfo().isStandardType())
 		{

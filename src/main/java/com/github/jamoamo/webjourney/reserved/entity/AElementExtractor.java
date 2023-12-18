@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
+import org.openqa.selenium.NoSuchElementException;
 
 /**
  *
@@ -33,22 +34,35 @@ abstract class AElementExtractor implements IExtractor<AElement>
 {
 	private final String xPath;
 	private ICondition condition;
+	private final boolean optional;
 	
-	AElementExtractor(String elementXPath)
+	AElementExtractor(String elementXPath, boolean optional)
 	{
-		this(elementXPath, new AlwaysCondition());
+		this(elementXPath, new AlwaysCondition(), optional);
 	}
 	
-	AElementExtractor(String elementXPath, ICondition condition)
+	AElementExtractor(String elementXPath, ICondition condition, boolean optional)
 	{
 		this.xPath = elementXPath;
 		this.condition = condition;
+		this.optional = optional;
 	}
 
 	@Override
 	public AElement extractRawValue(IValueReader reader)
 	{
-		return reader.getElement(this.xPath);
+		try
+		{
+			return reader.getElement(this.xPath);
+		}
+		catch(NoSuchElementException ex)
+		{
+			if(this.optional)
+			{
+				return null;
+			}
+			throw ex;
+		}
 	}
 
 	@Override
