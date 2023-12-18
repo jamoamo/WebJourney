@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 class SeleniumDrivenBrowser implements IBrowser
 {
-	private final static int DEFAULT_TIMEOUT_MINUTES = 1;
+	private final static int DEFAULT_TIMEOUT = 10;
 
 	private final Logger logger = LoggerFactory.getLogger(SeleniumDrivenBrowser.class);
 
@@ -48,7 +48,7 @@ class SeleniumDrivenBrowser implements IBrowser
 	{
 		this.driver = driver;
 		this.windowManager = new SeleniumWindowManager(this.driver);
-		this.driver.manage().timeouts().implicitlyWait(Duration.ofMinutes(DEFAULT_TIMEOUT_MINUTES));
+		this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(DEFAULT_TIMEOUT));
 	}
 
 	@Override
