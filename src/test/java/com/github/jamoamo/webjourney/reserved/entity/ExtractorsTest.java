@@ -264,6 +264,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -295,6 +301,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -325,6 +337,12 @@ public class ExtractorsTest
 			public String path()
 			{
 				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
 			}
 		};
 		
@@ -358,6 +376,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -389,6 +413,12 @@ public class ExtractorsTest
 			public String path()
 			{
 				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
 			}
 		};
 		
@@ -422,6 +452,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -454,6 +490,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -484,6 +526,12 @@ public class ExtractorsTest
 			public String path()
 			{
 				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
 			}
 		};
 		
@@ -516,6 +564,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -546,6 +600,12 @@ public class ExtractorsTest
 			public String path()
 			{
 				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
 			}
 		};
 		
@@ -611,6 +671,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		RegexExtractValue regex = new RegexExtractValue()
@@ -675,6 +741,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		ConditionalExtractValue.RegexMatch regex = new ConditionalExtractValue.RegexMatch()
@@ -702,7 +774,6 @@ public class ExtractorsTest
 			{
 				return ConditionalExtractValue.RegexMatch.class;
 			}
-			
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -734,6 +805,12 @@ public class ExtractorsTest
 			{
 				return "xpath";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
 		};
 		
 		ConditionalExtractValue.RegexMatch regex = new ConditionalExtractValue.RegexMatch()
@@ -761,7 +838,6 @@ public class ExtractorsTest
 			{
 				return ConditionalExtractValue.RegexMatch.class;
 			}
-			
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -792,6 +868,12 @@ public class ExtractorsTest
 			public String path()
 			{
 				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
 			}
 		};
 		
@@ -872,6 +954,12 @@ public class ExtractorsTest
 			public String path()
 			{
 				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return false;
 			}
 		};
 		

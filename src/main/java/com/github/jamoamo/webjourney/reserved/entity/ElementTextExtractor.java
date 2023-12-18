@@ -23,6 +23,8 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import org.openqa.selenium.NoSuchElementException;
+
 
 /**
  *
@@ -32,22 +34,35 @@ class ElementTextExtractor implements IExtractor<String>
 {
 	private final String xPath;
 	private final ICondition condition;
+	private final boolean optional;
 	
 	ElementTextExtractor(String xPath)
 	{
-		this(xPath, new AlwaysCondition());
+		this(xPath, new AlwaysCondition(), false);
 	}
 	
-	ElementTextExtractor(String xPath, ICondition condition)
+	ElementTextExtractor(String xPath, ICondition condition, boolean optional)
 	{
 		this.xPath = xPath;
 		this.condition = condition;
+		this.optional = optional;
 	}
 
 	@Override
 	public String extractRawValue(IValueReader reader)
 	{
-		return reader.getElementText(this.xPath);
+		try
+		{
+			return reader.getElementText(this.xPath);
+		}
+		catch(NoSuchElementException ex)
+		{
+			if(this.optional)
+			{
+				return null;
+			}
+			throw ex;
+		}
 	}
 	
 	@Override

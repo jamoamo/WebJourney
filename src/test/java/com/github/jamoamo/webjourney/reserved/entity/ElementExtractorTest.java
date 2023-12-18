@@ -42,7 +42,7 @@ public class ElementExtractorTest
 		IValueReader reader = Mockito.mock(IValueReader.class);
 		Mockito.when(reader.getElement("//div")).thenReturn(element);
 		
-		ElementExtractor extractor = new ElementExtractor("//div");
+		ElementExtractor extractor = new ElementExtractor("//div", false);
 		AElement extractRawValue = extractor.extractRawValue(reader);
 		assertSame(element, extractRawValue);
 	}
