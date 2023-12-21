@@ -35,9 +35,16 @@ class EntitiesFromElementConverter implements IConverter<List<AElement>, List<Ob
 {
 	private final EntityDefn defn;
 	
-	EntitiesFromElementConverter(Class<?> connectionType)
+	EntitiesFromElementConverter(Class<?> connectionType) throws XEntityFieldDefinitionException
 	{
-		this.defn = new EntityDefn(connectionType);
+		try
+		{
+			this.defn = new EntityDefn(connectionType);
+		}
+		catch(XEntityDefinitionException e)
+		{
+			throw new XEntityFieldDefinitionException(e);
+		}
 	}
 
 	@Override

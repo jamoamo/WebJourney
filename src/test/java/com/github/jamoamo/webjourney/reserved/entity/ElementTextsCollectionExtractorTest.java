@@ -23,7 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.web.AElement;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ public class ElementTextsCollectionExtractorTest
 	 * Test of extractRawValue method, of class ElementTextsCollectionExtractor.
 	 */
 	@Test
-	public void testextractRawValue()
+	public void testextractRawValue() throws Exception
 	{
 		Answer<List<String>> answer = new Answer<>()
 		{

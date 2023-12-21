@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 	}
 
 	@Override
-	public Object evaluate(IValueReader browser)
+	public Object evaluate(IValueReader browser) throws XEntityEvaluationException
 	{
 		Object extractedValue = extractValue(browser);
 		
@@ -61,11 +62,17 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 		return convertedValue;
 	}
 
-	private Object extractValue(IValueReader browser)
-		throws RuntimeException
+	private Object extractValue(IValueReader browser) throws XExtractionException
 	{
-		List<IExtractor> matchingExtractors =
-			this.extractors.stream().filter(extractor -> extractor.getCondition().evaluate(browser)).toList();
+		List<IExtractor> matchingExtractors = new ArrayList<>();
+		for(IExtractor extractor : this.extractors)
+		{
+			if(extractor.getCondition().evaluate(browser))
+			{
+				matchingExtractors.add(extractor);
+			}
+		}
+		
 		Object extractedValue = null;
 		if(matchingExtractors.isEmpty())
 		{

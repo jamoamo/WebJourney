@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.reserved.regex.Patterns;
+import com.github.jamoamo.webjourney.reserved.regex.XRegexException;
 import java.util.regex.Pattern;
 
 /**
@@ -42,12 +43,19 @@ class RegexCondition implements ICondition
 	}
 	
 	@Override
-	public boolean evaluate(IValueReader reader)
+	public boolean evaluate(IValueReader reader) throws XExtractionException
 	{
-		String extractRawValue = this.extractor.extractRawValue(reader);
-		Pattern pattern = Patterns.getPattern(this.regexPattern);
-		boolean match = pattern.matcher(extractRawValue).find();
-		return match;
+		try
+		{
+			String extractRawValue = this.extractor.extractRawValue(reader);
+			Pattern pattern = Patterns.getPattern(this.regexPattern);
+			boolean match = pattern.matcher(extractRawValue).find();
+			return match;
+		}
+		catch(XRegexException ex)
+		{
+			throw new XExtractionException(ex);
+		}
 	}
 	
 }

@@ -29,5 +29,5 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 interface IEntityFieldEvaluator
 {
-	Object evaluate(IValueReader browser);
+	Object evaluate(IValueReader browser) throws XEntityEvaluationException;
 }

@@ -28,8 +28,6 @@ import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -46,7 +44,7 @@ class CollectionTypeConverter<T> implements IConverter<Collection<String>, Colle
 	}
 
 	@Override
-	public Collection<T> convertValue(Collection<String> source, IValueReader reader)
+	public Collection<T> convertValue(Collection<String> source, IValueReader reader) throws XConversionException
 	{
 		if(source == null)
 		{
@@ -62,7 +60,7 @@ class CollectionTypeConverter<T> implements IConverter<Collection<String>, Colle
 			}
 			catch(XValueMappingException ex)
 			{
-				Logger.getLogger(CollectionTypeConverter.class.getName()).log(Level.SEVERE, null, ex);
+				throw new XConversionException(ex);
 			}
 		}
 		return mappedCollection;

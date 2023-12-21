@@ -49,7 +49,7 @@ abstract class AElementExtractor implements IExtractor<AElement>
 	}
 
 	@Override
-	public AElement extractRawValue(IValueReader reader)
+	public AElement extractRawValue(IValueReader reader) throws XExtractionException
 	{
 		try
 		{
@@ -61,7 +61,11 @@ abstract class AElementExtractor implements IExtractor<AElement>
 			{
 				return null;
 			}
-			throw ex;
+			throw new XExtractionException(ex);
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XExtractionException(ex);
 		}
 	}
 

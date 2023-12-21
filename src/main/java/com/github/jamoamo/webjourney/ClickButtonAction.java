@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.annotation.form.Button;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.lang.reflect.Field;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -65,8 +66,15 @@ class ClickButtonAction extends AWebAction
 			return ActionResult.FAILURE;
 		}
 		
-		browser.getActiveWindow().getCurrentPage().getElement(ef.xPath()).click();
-		return ActionResult.SUCCESS;
+		try
+		{
+			browser.getActiveWindow().getCurrentPage().getElement(ef.xPath()).click();
+			
+			return ActionResult.SUCCESS;
+		}
+		catch(XWebException ex)
+		{
+			throw new JourneyException(ex);
+		}
 	}
-	
 }

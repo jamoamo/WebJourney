@@ -48,7 +48,7 @@ public class BrowserValueReaderTest
 	 * Test of getCurrentUrl method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testGetCurrentUrl()
+	public void testGetCurrentUrl() throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
@@ -67,7 +67,7 @@ public class BrowserValueReaderTest
 	 * Test of getElementText method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testGetElementText()
+	public void testGetElementText() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		Mockito.when(element.getElementText()).thenReturn("Element Value");
@@ -90,7 +90,7 @@ public class BrowserValueReaderTest
 	 * Test of getElement method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testGetElement()
+	public void testGetElement() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		Mockito.when(element.getElementText()).thenReturn("Element Value");
@@ -113,7 +113,7 @@ public class BrowserValueReaderTest
 	 * Test of getAttribute method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testGetAttribute()
+	public void testGetAttribute() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		Mockito.when(element.getElementText()).thenReturn("Element Value");
@@ -178,7 +178,7 @@ public class BrowserValueReaderTest
 	 * Test of getElements method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testGetElements()
+	public void testGetElements() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		
@@ -211,7 +211,7 @@ public class BrowserValueReaderTest
 	 * Test of getElementTexts method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testGetElementTexts()
+	public void testGetElementTexts() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		Mockito.when(element.getElementText()).thenReturn("Text");
@@ -246,7 +246,7 @@ public class BrowserValueReaderTest
 	 * Test of openNewWindow method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testOpenNewWindow()
+	public void testOpenNewWindow() throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		
@@ -263,7 +263,7 @@ public class BrowserValueReaderTest
 	 * Test of closeWindow method, of class BrowserValueReader.
 	 */
 	@Test
-	public void testCloseWindow()
+	public void testCloseWindow() throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		

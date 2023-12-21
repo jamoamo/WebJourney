@@ -25,7 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
 import java.util.List;
 
@@ -43,70 +43,118 @@ class BrowserValueReader implements IValueReader
 	}
 	
 	@Override
-	public String getCurrentUrl()
+	public String getCurrentUrl() throws XValueReaderException
 	{
-		return this.browser.getActiveWindow().getCurrentUrl();
+		try
+		{
+			return this.browser
+				.getActiveWindow()
+				.getCurrentUrl();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public String getElementText(String xPath)
+	public String getElementText(String xPath) throws XValueReaderException
 	{
-		return this.browser.getActiveWindow().getCurrentPage().getElement(xPath).getElementText();
+		try
+		{
+			return this.browser
+				.getActiveWindow()
+				.getCurrentPage()
+				.getElement(xPath)
+				.getElementText();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public AElement getElement(String xPath)
+	public AElement getElement(String xPath) throws XValueReaderException
 	{
-		return this.browser.getActiveWindow().getCurrentPage().getElement(xPath);
+		try
+		{
+			return this.browser.getActiveWindow().getCurrentPage().getElement(xPath);
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public String getAttribute(String elementXPath, String attr)
+	public String getAttribute(String elementXPath, String attr) throws XValueReaderException
 	{
-		return this.browser.getActiveWindow().getCurrentPage().getElement(elementXPath).getAttribute(attr);
+		try
+		{
+			return this.browser.getActiveWindow().getCurrentPage().getElement(elementXPath).getAttribute(attr);
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public void navigateTo(URL url)
+	public void navigateTo(URL url) throws XValueReaderException
 	{
 		try
 		{
 			this.browser.getActiveWindow().navigateToUrl(url);
 		}
-		catch(XNavigationError error)
+		catch(XWebException error)
 		{
-			throw new RuntimeException(error.getMessage());
+			throw new XValueReaderException(error);
 		}
 	}
 
 	@Override
-	public void navigateBack()
+	public void navigateBack() throws XValueReaderException
 	{
 		try
 		{
 			this.browser.getActiveWindow().navigateBack();
 		}
-		catch(XNavigationError error)
+		catch(XWebException error)
 		{
-			throw new RuntimeException(error.getMessage());
+			throw new XValueReaderException(error);
 		}
 	}
 
 	@Override
-	public List<? extends AElement> getElements(String xPath)
+	public List<? extends AElement> getElements(String xPath) throws XValueReaderException
 	{
-		return this.browser.getActiveWindow().getCurrentPage().getElements(xPath);
+		try
+		{
+			return this.browser.getActiveWindow().getCurrentPage().getElements(xPath);
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public List<String> getElementTexts(String xPath)
+	public List<String> getElementTexts(String xPath) throws XValueReaderException
 	{
-		return this.browser.getActiveWindow()
-			.getCurrentPage()
-			.getElements(xPath)
-			.stream()
-			.map(e -> e.getElementText())
-			.toList();
+		try
+		{
+			return this.browser.getActiveWindow()
+				.getCurrentPage()
+				.getElements(xPath)
+				.stream()
+				.map(e -> e.getElementText())
+				.toList();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
@@ -116,15 +164,29 @@ class BrowserValueReader implements IValueReader
 	}
 
 	@Override
-	public void openNewWindow()
+	public void openNewWindow() throws XValueReaderException
 	{
-		this.browser.openNewWindow();
+		try
+		{
+			this.browser.openNewWindow();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public void closeWindow()
+	public void closeWindow() throws XValueReaderException
 	{
-		this.browser.getActiveWindow().close();
+		try
+		{
+			this.browser.getActiveWindow().close();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 	
 }

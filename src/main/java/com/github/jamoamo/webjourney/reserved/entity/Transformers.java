@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import com.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
+import com.github.jamoamo.webjourney.reserved.regex.XRegexException;
 
 /**
  *
@@ -37,28 +38,35 @@ final class Transformers
 	{
 	}
 
-	public static ITransformer getTransformerForField(EntityFieldDefn defn)
+	public static ITransformer getTransformerForField(EntityFieldDefn defn) throws XEntityFieldDefinitionException
 	{
-		EntityAnnotations annotations = defn.getAnnotations();
-		TypeInfo typeInfo = TypeInfo.forClass(defn.getFieldType());
-		if(annotations.hasTransformation())
+		try
 		{
-			return getTransformerForTransformation(annotations, typeInfo, defn);
+			EntityAnnotations annotations = defn.getAnnotations();
+			TypeInfo typeInfo = TypeInfo.forClass(defn.getFieldType());
+			if(annotations.hasTransformation())
+			{
+				return getTransformerForTransformation(annotations, typeInfo, defn);
+			}
+			if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection() && annotations.hasRegexExtract())
+			{
+				return new CollectionTransformer(new RegexTransformation(annotations.getRegexExtractGroup()));
+			}
+			else if(annotations.hasRegexExtract())
+			{
+				return new RegexTransformation(annotations.getRegexExtractGroup());
+			}
 		}
-		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection() && annotations.hasRegexExtract())
+		catch(XRegexException ex)
 		{
-			return new CollectionTransformer(new RegexTransformation(annotations.getRegexExtractGroup()));
-		}
-		else if(annotations.hasRegexExtract())
-		{
-			return new RegexTransformation(annotations.getRegexExtractGroup());
+			throw new XEntityFieldDefinitionException(ex);
 		}
 
 		return null;
 	}
 
 	private static ITransformer getTransformerForTransformation(EntityAnnotations annotations, TypeInfo typeInfo,
-																					EntityFieldDefn defn)
+																					EntityFieldDefn defn) throws XRegexException
 	{
 		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection())
 		{

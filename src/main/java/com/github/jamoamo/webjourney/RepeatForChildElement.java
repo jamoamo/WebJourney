@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.annotation.form.Element;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.lang.reflect.Field;
 import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -63,13 +64,20 @@ class RepeatForChildElement implements IRepeatable<AElement>
 		{
 			throw new JourneyException("Not an element: " + this.elementName);
 		}
-
-		List<? extends AElement> childElementsByTag = browser.getActiveWindow()
-			.getCurrentPage()
-			.getElement(this.elementName)
-			.getChildrenByTag(this.childElementType);
-
-		return childElementsByTag.stream().map(elem -> (AElement) elem).toList();
+		
+		try
+		{
+			List<? extends AElement> childElementsByTag = browser.getActiveWindow()
+				.getCurrentPage()
+				.getElement(this.elementName)
+				.getChildrenByTag(this.childElementType);
+			
+			return childElementsByTag.stream().map(elem -> (AElement) elem).toList();
+		}
+		catch(XWebException e)
+		{
+			throw new JourneyException(e);
+		}
 	}
 
 }

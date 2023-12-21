@@ -61,7 +61,7 @@ public class SeleniumDrivenBrowserTest
 	 * Test of getActiveWindow method, of class SeleniumDrivenBrowser.
 	 */
 	@Test
-	public void testGetActiveWindow()
+	public void testGetActiveWindow() throws Exception
 	{
 		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1", "Window2");
 		
@@ -76,8 +76,8 @@ public class SeleniumDrivenBrowserTest
 	/**
 	 * Test of switchToWindow method, of class SeleniumDrivenBrowser.
 	 */
-	@Test
-	public void testSwitchToWindow()
+	@Test 
+	public void testSwitchToWindow() throws Exception
 	{
 		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1", "Window2");
 		
@@ -94,7 +94,7 @@ public class SeleniumDrivenBrowserTest
 	 * Test of openNewWindow method, of class SeleniumDrivenBrowser.
 	 */
 	@Test
-	public void testOpenNewWindow()
+	public void testOpenNewWindow() throws Exception
 	{
 		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1", "Window2");
 		

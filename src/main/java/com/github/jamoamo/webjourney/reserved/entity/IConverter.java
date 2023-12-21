@@ -31,5 +31,5 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 interface IConverter<S, T>
 {
-	T convertValue(S source, IValueReader reader);
+	T convertValue(S source, IValueReader reader) throws XConversionException;
 }

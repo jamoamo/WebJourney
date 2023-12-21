@@ -24,7 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 
 /**
  *
@@ -39,9 +39,9 @@ class ForwardNavigationTarget extends ANavigationTarget
 		{
 			browser.getActiveWindow().navigateForward();
 		}
-		catch(XNavigationError e)
+		catch(XWebException e)
 		{
-			throw new RuntimeException(e);
+			throw new JourneyException(e);
 		}
 	}
 }

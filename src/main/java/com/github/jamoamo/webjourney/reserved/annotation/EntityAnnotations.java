@@ -36,6 +36,7 @@ import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.entity.IExtractor;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
+import com.github.jamoamo.webjourney.reserved.regex.XRegexException;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -149,7 +150,7 @@ public class EntityAnnotations
 	/**
 	 * @return the RegexExtractValue annotation.
 	 */
-	public RegexGroup getRegexExtractGroup()
+	public RegexGroup getRegexExtractGroup() throws XRegexException
 	{
 		if(this.regexExtractValue != null)
 		{

@@ -23,44 +23,15 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 /**
  *
  * @author James Amoore
  */
-public class CollectionTransformerTest
+class XConversionException extends XEntityEvaluationException
 {
-	/**
-	 * Test of transformValue method, of class CollectionTransformer.
-	 */
-	@Test
-	public void testTransformValue() throws Exception
+	XConversionException(Exception ex)
 	{
-		ITransformer<String> indivTransformer = Mockito.mock(ITransformer.class);
-		Mockito.when(indivTransformer.transformValue("Test1")).thenReturn("!Test!1!");
-		Mockito.when(indivTransformer.transformValue("Test2")).thenReturn("2Test");
-		Mockito.when(indivTransformer.transformValue("Test3")).thenReturn("Testedx3");
-		
-		CollectionTransformer transformer = new CollectionTransformer(indivTransformer);
-		
-		List<String> list = new ArrayList<>();
-		list.add("Test1");
-		list.add("Test2");
-		list.add("Test3");
-		
-		Collection transformValue = transformer.transformValue(list);
-		
-		assertEquals(3, transformValue.size());
-		assertTrue(transformValue.contains("!Test!1!"));
-		assertTrue(transformValue.contains("2Test"));
-		assertTrue(transformValue.contains("Testedx3"));
+		super("There was an error during conversion.", ex);
 	}
 	
 }

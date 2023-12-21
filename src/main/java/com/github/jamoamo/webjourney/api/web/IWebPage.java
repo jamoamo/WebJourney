@@ -37,8 +37,9 @@ public interface IWebPage
 	 * @param xPath xPath expression to the element.
 	 *
 	 * @return the found Element.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	AElement getElement(String xPath);
+	AElement getElement(String xPath) throws XWebException;
 
 	/**
 	 * Find a list of elements that match the xpath expression.
@@ -46,8 +47,9 @@ public interface IWebPage
 	 * @param xPath xPath expression to the elements.
 	 *
 	 * @return the found Elements.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	List<? extends AElement> getElements(String xPath);
+	List<? extends AElement> getElements(String xPath) throws XWebException;
 	
 	/**
 	 * Find a list of elements that match the xpath expression.
@@ -55,6 +57,7 @@ public interface IWebPage
 	 * @param tag the tag of the children to return
 	 *
 	 * @return the found Elements.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	List<? extends AElement> getElementsByTag(String tag);
+	List<? extends AElement> getElementsByTag(String tag) throws XWebException;
 }

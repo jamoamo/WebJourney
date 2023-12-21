@@ -24,7 +24,6 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.mapper.AConverter;
-import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +46,7 @@ public class CollectionConverterTest
 	 * Test of convertValue method, of class CollectionTypeConverter.
 	 */
 	@Test
-	public void testConvertValue() throws XValueMappingException
+	public void testConvertValue() throws Exception 
 	{
 		AConverter<Integer> converterMock = Mockito.mock(AConverter.class);
 		Mockito.when(converterMock.mapValue("2")).thenReturn(2);

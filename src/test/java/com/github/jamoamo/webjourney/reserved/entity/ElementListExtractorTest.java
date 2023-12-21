@@ -27,7 +27,6 @@ import com.github.jamoamo.webjourney.api.web.AElement;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -39,7 +38,7 @@ import org.mockito.stubbing.Answer;
 public class ElementListExtractorTest
 {
 	@Test
-	public void testextractRawValue()
+	public void testextractRawValue() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		

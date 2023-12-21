@@ -48,7 +48,7 @@ public class ClickButtonActionTest
 	 * Test of executeAction method, of class ClickButtonAction.
 	 */
 	@Test
-	public void testExecuteAction_class_buttonExists()
+	public void testExecuteAction_class_buttonExists() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
@@ -67,7 +67,7 @@ public class ClickButtonActionTest
 	}
 	
 	@Test
-	public void testExecuteAction_object_buttonExists()
+	public void testExecuteAction_object_buttonExists() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
@@ -91,7 +91,7 @@ public class ClickButtonActionTest
 	 * Test of executeAction method, of class ClickButtonAction.
 	 */
 	@Test
-	public void testExecuteAction_class_buttonDoesntExist()
+	public void testExecuteAction_class_buttonDoesntExist() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
@@ -110,7 +110,7 @@ public class ClickButtonActionTest
 	 * Test of executeAction method, of class ClickButtonAction.
 	 */
 	@Test
-	public void testExecuteAction_class_buttonNotAnnotated()
+	public void testExecuteAction_class_buttonNotAnnotated() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);

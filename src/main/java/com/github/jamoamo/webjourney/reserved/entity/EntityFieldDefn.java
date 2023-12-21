@@ -39,7 +39,7 @@ class EntityFieldDefn
 	private EntityFieldEvaluator evaluator;
 	private EntityAnnotations annotations;
 
-	EntityFieldDefn(Field field)
+	EntityFieldDefn(Field field) throws XEntityFieldDefinitionException
 	{
 		if(field == null)
 		{

@@ -35,7 +35,7 @@ import org.mockito.Mockito;
 public class ElementExtractorTest
 {
 	@Test
-	public void testextractRawValue()
+	public void testextractRawValue() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		

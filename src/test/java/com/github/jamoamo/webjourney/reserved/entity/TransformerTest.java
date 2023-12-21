@@ -28,7 +28,6 @@ import com.github.jamoamo.webjourney.api.transform.ATransformationFunction;
 import java.lang.annotation.Annotation;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.Mockito;
 
 /**
  *
@@ -50,7 +49,7 @@ public class TransformerTest
 	 * Test of transformValue method, of class Transformer.
 	 */
 	@Test
-	public void testTransformValue()
+	public void testTransformValue() throws Exception
 	{
 		Transformation transformation = new Transformation()
 		{

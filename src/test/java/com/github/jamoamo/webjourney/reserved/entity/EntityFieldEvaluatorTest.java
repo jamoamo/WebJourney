@@ -23,16 +23,12 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.web.AElement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  *
@@ -59,7 +55,7 @@ public class EntityFieldEvaluatorTest
 	 * Test of evaluate method, of class EntityFieldEvaluator.
 	 */
 	@Test
-	public void testEvaluate()
+	public void testEvaluate() throws Exception
 	{
 		IValueReader browser = Mockito.mock(IValueReader.class);
 		
@@ -80,7 +76,7 @@ public class EntityFieldEvaluatorTest
 	}
 	
 	@Test
-	public void testEvaluate_nullTransformer()
+	public void testEvaluate_nullTransformer() throws Exception
 	{
 		IValueReader browser = Mockito.mock(IValueReader.class);
 		
@@ -98,7 +94,7 @@ public class EntityFieldEvaluatorTest
 	}
 	
 	@Test
-	public void testEvaluate_multipleExtractors_oneConditionMatch()
+	public void testEvaluate_multipleExtractors_oneConditionMatch() throws Exception
 	{
 		IValueReader browser = Mockito.mock(IValueReader.class);
 		

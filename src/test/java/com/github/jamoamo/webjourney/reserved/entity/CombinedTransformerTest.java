@@ -23,9 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
@@ -45,7 +42,7 @@ public class CombinedTransformerTest
 	 * Test of transformValue method, of class CombinedTransformer.
 	 */
 	@Test
-	public void testTransformValue()
+	public void testTransformValue() throws Exception
 	{
 		ITransformer<String> indivTransformer = Mockito.mock(ITransformer.class);
 		Mockito.when(indivTransformer.transformValue("Test1")).thenReturn("!Test!1!");

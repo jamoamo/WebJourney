@@ -24,7 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
 
 /**
@@ -47,9 +47,9 @@ class UrlNavigationTarget extends ANavigationTarget
 		{
 			browser.getActiveWindow().navigateToUrl(this.url);
 		}
-		catch(XNavigationError ex)
+		catch(XWebException ex)
 		{
-			throw new RuntimeException(ex);
+			throw new JourneyException(ex);
 		}
 	}
 }

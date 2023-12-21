@@ -42,7 +42,7 @@ public class PatternsTest
 	 * Test of getPattern method, of class Patterns.
 	 */
 	@Test
-	public void testGetPattern_samePattern()
+	public void testGetPattern_samePattern() throws Exception
 	{
 		Pattern pattern = Patterns.getPattern("Test.*Value");
 		Pattern repeatPattern = Patterns.getPattern("Test.*Value");

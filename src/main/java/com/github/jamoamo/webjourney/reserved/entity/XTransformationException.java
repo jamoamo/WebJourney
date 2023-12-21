@@ -23,32 +23,16 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.AConverter;
-import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
-
 /**
  *
  * @author James Amoore
- * @param <T> mapper type
  */
-class ValueMapper<T> implements IConverter<String, T>
+class XTransformationException 
+	extends XEntityEvaluationException
 {
-	private final AConverter<T> converter;
-	ValueMapper(AConverter<T> converter)
+	XTransformationException(Exception ex)
 	{
-		this.converter = converter;
+		super("There was an error during transformation. ", ex);
 	}
-
-	@Override
-	public T convertValue(String source, IValueReader reader)
-	{
-		try
-		{
-			return this.converter.mapValue(source);
-		}
-		catch(XValueMappingException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
+	
 }

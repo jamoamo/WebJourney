@@ -33,9 +33,16 @@ class EntityFromElementConverter implements IConverter<AElement, Object>
 {
 	private final EntityDefn defn;
 	
-	EntityFromElementConverter(EntityFieldDefn fieldDefn)
+	EntityFromElementConverter(EntityFieldDefn fieldDefn) throws XEntityFieldDefinitionException
 	{
-		this.defn = new EntityDefn(fieldDefn.getFieldType());
+		try
+		{
+			this.defn = new EntityDefn(fieldDefn.getFieldType());
+		}
+		catch(XEntityDefinitionException e)
+		{
+			throw new XEntityFieldDefinitionException(e);
+		}
 	}
 
 	@Override

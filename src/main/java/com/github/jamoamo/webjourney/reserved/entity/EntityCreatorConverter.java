@@ -38,14 +38,21 @@ class EntityCreatorConverter implements IConverter<String, Object>
 	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
 	private final EntityCreator entityCreator;
 	
-	EntityCreatorConverter(EntityFieldDefn fieldDefn)
+	EntityCreatorConverter(EntityFieldDefn fieldDefn) throws XEntityFieldDefinitionException
 	{
-		EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
-		this.entityCreator = new EntityCreator(defn);
+		try
+		{
+			EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
+			this.entityCreator = new EntityCreator(defn);
+		}
+		catch(XEntityDefinitionException e)
+		{
+			throw new XEntityFieldDefinitionException(e);
+		}
 	}
 
 	@Override
-	public Object convertValue(String source, IValueReader reader)
+	public Object convertValue(String source, IValueReader reader) throws XConversionException
 	{
 		if(source == null)
 		{
@@ -62,10 +69,14 @@ class EntityCreatorConverter implements IConverter<String, Object>
 			reader.navigateBack();
 			return instance;
 		}
-		catch(MalformedURLException | URISyntaxException e)
+		catch(MalformedURLException | URISyntaxException | IllegalArgumentException e)
 		{
 			this.logger.error(String.format("There is a problem with the url %s", source), e);
 			return null;
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XConversionException(ex);
 		}
 	}
 	

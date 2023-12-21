@@ -95,14 +95,21 @@ public final class EntityCreator<T>
 		for(EntityFieldDefn fieldDefn : entityFields)
 		{
 			LOGGER.debug("Setting field: " + fieldDefn.getFieldName());
-			scrapeField(fieldDefn, instance, reader);
+			try
+			{
+				scrapeField(fieldDefn, instance, reader);
+			}
+			catch(XEntityFieldScrapeException ex)
+			{
+				LOGGER.error(String.format("Scraping field [] failed. ", fieldDefn.getFieldName()), ex);
+			}
 		}
 
 		return instance;
 	}
 
 	private void scrapeField(EntityFieldDefn defn, T instance, IValueReader reader)
-			  throws RuntimeException
+			  throws XEntityFieldScrapeException
 	{
 		try
 		{
@@ -112,13 +119,14 @@ public final class EntityCreator<T>
 			BeanUtils.setProperty(instance, defn.getFieldName(), value);
 		}
 		catch(IllegalAccessException |
-				InvocationTargetException ex)
+				InvocationTargetException | 
+				XEntityEvaluationException ex)
 		{
-			throw new RuntimeException(ex);
+			throw new XEntityFieldScrapeException(ex);
 		}
 	}
 
-	private Object scrapeValue(EntityFieldDefn defn1, IValueReader reader)
+	private Object scrapeValue(EntityFieldDefn defn1, IValueReader reader) throws XEntityEvaluationException
 	{
 		return defn1.getEvaluator().evaluate(reader);
 	}

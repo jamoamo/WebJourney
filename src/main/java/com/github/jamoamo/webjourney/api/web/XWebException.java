@@ -21,38 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
-
-import com.github.jamoamo.webjourney.api.mapper.AConverter;
-import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
-import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
-import com.github.jamoamo.webjourney.annotation.Conversion;
+package com.github.jamoamo.webjourney.api.web;
 
 /**
  *
  * @author James Amoore
  */
-class Converter implements IConverter
+public class XWebException extends Exception
 {
-	private final Conversion conversion;
-	
-	Converter(Conversion conversion)
+	/**
+	 * Creates a new Navigation related Error.
+	 * @param description the description of the error that occurred
+	 */
+	public XWebException(String description)
 	{
-		this.conversion = conversion;
+		super(description);
 	}
-
-	@Override
-	public Object convertValue(Object source, IValueReader reader) throws XConversionException
-	{
-		AConverter valueConverter = InstanceCreator.getInstance().createInstance(this.conversion.mapper());
-		try
-		{
-			return valueConverter.mapValue(source.toString());
-		}
-		catch(XValueMappingException ex)
-		{
-			throw new XConversionException(ex);
-		}
-	}
-	
 }

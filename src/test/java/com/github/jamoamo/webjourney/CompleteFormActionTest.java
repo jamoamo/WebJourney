@@ -44,7 +44,7 @@ public class CompleteFormActionTest
 	}
 
 	@Test
-	public void testExecuteAction_noSubmit()
+	public void testExecuteAction_noSubmit() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
@@ -67,7 +67,7 @@ public class CompleteFormActionTest
 	}
 	
 	@Test
-	public void testExecuteAction_submit()
+	public void testExecuteAction_submit() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);

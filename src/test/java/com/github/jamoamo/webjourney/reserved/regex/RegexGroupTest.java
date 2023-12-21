@@ -41,7 +41,7 @@ public class RegexGroupTest
 	 * Test of findGroupValue method, of class RegexGroup.
 	 */
 	@Test
-	public void testFindGroupValue_singlePattern_match()
+	public void testFindGroupValue_singlePattern_match() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("17");
@@ -49,7 +49,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_singlePattern_nomatch()
+	public void testFindGroupValue_singlePattern_nomatch() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("g17");
@@ -57,7 +57,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_singlePattern_nomatchinggroup()
+	public void testFindGroupValue_singlePattern_nomatchinggroup() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"a(?<group>\\d+)?b"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("ab");
@@ -65,7 +65,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_singlePattern_nonexistentgroup()
+	public void testFindGroupValue_singlePattern_nonexistentgroup() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"a(?<group>\\d+)?b"}, "group2", "n/a");
 		String findGroupValue = group.findGroupValue("ab");
@@ -73,7 +73,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_multiplePattern_firstMatch()
+	public void testFindGroupValue_multiplePattern_firstMatch() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"c(?<group>\\d+)","a(?<group>\\d+)","t(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("c17");
@@ -81,7 +81,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_multiplePattern_lastMatch()
+	public void testFindGroupValue_multiplePattern_lastMatch() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)","a(?<group>\\d+)","t(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("t17");
@@ -89,7 +89,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_multiplePattern_middleMatch()
+	public void testFindGroupValue_multiplePattern_middleMatch() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)","a(?<group>\\d+)","t(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("a17");
@@ -97,7 +97,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_multiplePattern_noMatch()
+	public void testFindGroupValue_multiplePattern_noMatch() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)","a(?<group>\\d+)","t(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue("g17");
@@ -105,7 +105,7 @@ public class RegexGroupTest
 	}
 	
 	@Test
-	public void testFindGroupValue_pattern_null()
+	public void testFindGroupValue_pattern_null() throws Exception
 	{
 		RegexGroup group = new RegexGroup(new String[]{"(?<group>\\d+)","a(?<group>\\d+)"}, "group", "n/a");
 		String findGroupValue = group.findGroupValue(null);

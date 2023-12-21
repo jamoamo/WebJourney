@@ -42,9 +42,16 @@ abstract class AElementsExtractor implements IExtractor<List<? extends AElement>
 	}
 
 	@Override
-	public List<? extends AElement> extractRawValue(IValueReader reader)
+	public List<? extends AElement> extractRawValue(IValueReader reader) throws XExtractionException
 	{
-		return reader.getElements(this.xPath);
+		try
+		{
+			return reader.getElements(this.xPath);
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XExtractionException(ex);
+		}
 	}
 
 	@Override

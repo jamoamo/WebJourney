@@ -34,5 +34,5 @@ public interface ICondition
 	 * @param reader the value reader
 	 * @return the evaluation result.
 	 */
-	boolean evaluate(IValueReader reader);
+	boolean evaluate(IValueReader reader) throws XExtractionException;
 }

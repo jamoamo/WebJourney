@@ -133,7 +133,7 @@ public class ConsumePageActionTest
 	}
 	
 	@Test
-	public void testConstructor_nullClass()
+	public void testConstructor_nullClass() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
@@ -151,7 +151,7 @@ public class ConsumePageActionTest
 	}
 	
 	@Test
-	public void testConstructor_nullConsumer()
+	public void testConstructor_nullConsumer() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);

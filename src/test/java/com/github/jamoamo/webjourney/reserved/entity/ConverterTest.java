@@ -26,8 +26,6 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import com.github.jamoamo.webjourney.annotation.Conversion;
 import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
-import com.github.jamoamo.webjourney.reserved.entity.impl.TestElement;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -58,7 +56,7 @@ public class ConverterTest
 	 * Test of convertValue method, of class Converter.
 	 */
 	@Test
-	public void testConvertValue()
+	public void testConvertValue() throws Exception
 	{
 		Conversion conversion = Mockito.mock(Conversion.class);
 		Answer<Class<TestConverter>> answer = new Answer<>()

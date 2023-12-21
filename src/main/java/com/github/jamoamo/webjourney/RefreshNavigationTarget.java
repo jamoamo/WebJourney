@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 
 /**
  *
@@ -34,6 +35,13 @@ class RefreshNavigationTarget extends ANavigationTarget
 	@Override
 	public void navigate(IBrowser browser)
 	{
-		browser.getActiveWindow().refreshCurrentPage();
+		try
+		{
+			browser.getActiveWindow().refreshCurrentPage();
+		}
+		catch(XWebException ex)
+		{
+			throw new JourneyException(ex);
+		}
 	}
 }

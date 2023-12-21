@@ -21,47 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api.web;
+package com.github.jamoamo.webjourney.reserved.entity;
+
+import com.github.jamoamo.webjourney.api.mapper.AConverter;
+import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 
 /**
  *
  * @author James Amoore
+ * @param <T> mapper type
  */
-public interface IWebUser
+class ValueConverter<T> implements IConverter<String, T>
 {
-	/**
-	 * Opens a new browser window.
-	 */
-	void openNewWindow();
-	
-	/**
-	 * Closes a browser window.
-	 */
-	void closeWindow();
-	
-	/**
-	 * Switches to the window with the provided title.
-	 * @param windowName the name of the window
-	 */
-	void switchToWindow(String windowName);
-	
-	/**
-	 * Select a button.
-	 * @param xPath the xPath that identifies the button.
-	 */
-	void selectButton(String xPath);
-	
-	/**
-	 * Enter a value into an element.
-	 * @param xPath the xPath that identifies the button.
-	 * @param value the value to enter in the element
-	 */
-	void enterValueInElement(String xPath, String value);
-	
-	/**
-	 * Retrieve the value of an element.
-	 * @param xPath the xpath that identifies the element
-	 * @return the element value
-	 */
-	String getElementValue(String xPath);
+	private final AConverter<T> converter;
+	ValueConverter(AConverter<T> converter)
+	{
+		this.converter = converter;
+	}
+
+	@Override
+	public T convertValue(String source, IValueReader reader) throws XConversionException
+	{
+		try
+		{
+			return this.converter.mapValue(source);
+		}
+		catch(XValueMappingException e)
+		{
+			throw new XConversionException(e);
+		}
+	}
 }

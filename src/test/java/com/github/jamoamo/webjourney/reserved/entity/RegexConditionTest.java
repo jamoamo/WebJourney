@@ -43,7 +43,7 @@ public class RegexConditionTest
 	 * Test of evaluate method, of class RegexCondition.
 	 */
 	@Test
-	public void testEvaluate_match()
+	public void testEvaluate_match() throws Exception
 	{
 		IExtractor<String> extractor = Mockito.mock(IExtractor.class);
 		Mockito.when(extractor.extractRawValue(any())).thenReturn("String value");
@@ -55,7 +55,7 @@ public class RegexConditionTest
 	}
 	
 	@Test
-	public void testEvaluate_nomatch()
+	public void testEvaluate_nomatch() throws Exception
 	{
 		IExtractor<String> extractor = Mockito.mock(IExtractor.class);
 		Mockito.when(extractor.extractRawValue(any())).thenReturn("String value");

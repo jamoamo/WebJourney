@@ -27,45 +27,49 @@ import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import java.util.Arrays;
 import java.util.List;
 import com.github.jamoamo.webjourney.reserved.annotation.ExtractionAnnotations;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.function.Failable;
 
 /**
  * An entity defn.
+ *
  * @author James Amoore
  * @param <T> The Entity class.
  */
 public final class EntityDefn<T>
 {
 	private final Class<T> entityClass;
-	private final T entityInstance;
 	private final List<EntityFieldDefn> entityFields;
-	
+
 	/**
 	 * A new EntityDefn for the entity class.
+	 *
 	 * @param entityClass The entity class.
+	 * @throws com.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException 
+	 *		if there was an error creating the definition
 	 */
-	public EntityDefn(Class<T> entityClass)
+	public EntityDefn(Class<T> entityClass) throws XEntityDefinitionException
 	{
 		this.entityClass = entityClass;
-		this.entityInstance = InstanceCreator.getInstance().createInstance(this.entityClass);
 		this.entityFields = determineEntityFields();
 	}
-	
+
 	T createInstance()
 	{
 		return InstanceCreator.getInstance().createInstance(this.entityClass);
 	}
-	
+
 	List<EntityFieldDefn> getEntityFields()
 	{
 		return this.entityFields;
 	}
 
-	private List<EntityFieldDefn> determineEntityFields()
+	private List<EntityFieldDefn> determineEntityFields() throws XEntityDefinitionException
 	{
-		return Arrays.stream(this.entityClass.getDeclaredFields())
-			 .filter(field -> Arrays.stream(field.getAnnotations())
-				 .anyMatch(a -> ExtractionAnnotations.isExtractAnnotation(a)))
-			 .map(field -> new EntityFieldDefn(field))
-			 .toList();
+		return Failable.stream(Arrays.stream(this.entityClass.getDeclaredFields()))
+			.filter(field -> Arrays.stream(field.getAnnotations())
+				.anyMatch(a -> ExtractionAnnotations.isExtractAnnotation(a)))
+			.map(field -> new EntityFieldDefn(field))
+			.collect(Collectors.toList());
 	}
 }

@@ -23,7 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.web.AElement;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
@@ -43,7 +42,7 @@ public class ElementTextExtractorTest
 	 * Test of extractRawValue method, of class ElementTextExtractor.
 	 */
 	@Test
-	public void testExtractRawValue()
+	public void testExtractRawValue() throws Exception
 	{
 		IValueReader reader = Mockito.mock(IValueReader.class);
 		Mockito.when(reader.getElementText("//div")).thenReturn("Text");
