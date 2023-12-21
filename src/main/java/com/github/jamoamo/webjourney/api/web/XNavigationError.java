@@ -27,7 +27,7 @@ package com.github.jamoamo.webjourney.api.web;
  * An exception that may occur during web navigation.
  * @author James Amoore
  */
-public class XNavigationError extends Exception
+public class XNavigationError extends XWebException
 {
 	/**
 	 * Creates a new Navigation related Error.

@@ -23,7 +23,9 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -39,9 +41,15 @@ class CollectionTransformer implements ITransformer<Collection>
 	}
 	
 	@Override
-	public Collection transformValue(Collection value)
+	public Collection transformValue(Collection value) throws XTransformationException
 	{
-		return value.stream().map(v -> this.individualTransformer.transformValue(v.toString())).toList();
+		List<String> transformations = new ArrayList<>();
+		for(Object v : value)
+		{
+			transformations.add(this.individualTransformer.transformValue(v.toString()));
+		}
+		
+		return transformations;
 	}
 	
 }

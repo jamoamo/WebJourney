@@ -23,44 +23,20 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 /**
- *
+ * An exception that prevents an entity from being defined.
  * @author James Amoore
  */
-public class CollectionTransformerTest
+public class XEntityDefinitionException extends Exception
 {
 	/**
-	 * Test of transformValue method, of class CollectionTransformer.
+	 * Constructs an instance of <code>XEntityCreationException</code> with the specified detail message.
+	 *
+	 * @param cls the class of the entity that failed to be defined
+	 * @param ex the exception cause.
 	 */
-	@Test
-	public void testTransformValue() throws Exception
+	public XEntityDefinitionException(Class<?> cls, Exception ex)
 	{
-		ITransformer<String> indivTransformer = Mockito.mock(ITransformer.class);
-		Mockito.when(indivTransformer.transformValue("Test1")).thenReturn("!Test!1!");
-		Mockito.when(indivTransformer.transformValue("Test2")).thenReturn("2Test");
-		Mockito.when(indivTransformer.transformValue("Test3")).thenReturn("Testedx3");
-		
-		CollectionTransformer transformer = new CollectionTransformer(indivTransformer);
-		
-		List<String> list = new ArrayList<>();
-		list.add("Test1");
-		list.add("Test2");
-		list.add("Test3");
-		
-		Collection transformValue = transformer.transformValue(list);
-		
-		assertEquals(3, transformValue.size());
-		assertTrue(transformValue.contains("!Test!1!"));
-		assertTrue(transformValue.contains("2Test"));
-		assertTrue(transformValue.contains("Testedx3"));
+		super(String.format("An error occurred defining entity with type [%s]", cls.toString()), ex);
 	}
-	
 }

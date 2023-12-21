@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.annotation.form.Form;
 import com.github.jamoamo.webjourney.annotation.form.TextField;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -63,8 +64,15 @@ class CompleteFormAction extends AWebAction
 
 		if(this.submit)
 		{
-			String submitXPath = this.form.getClass().getAnnotation(Form.class).submit();
-			browser.getActiveWindow().getCurrentPage().getElement(submitXPath).click();
+			try
+			{
+				String submitXPath = this.form.getClass().getAnnotation(Form.class).submit();
+				browser.getActiveWindow().getCurrentPage().getElement(submitXPath).click();
+			}
+			catch(XWebException ex)
+			{
+				throw new JourneyException(ex);
+			}
 		}
 		return ActionResult.SUCCESS;
 	}
@@ -86,13 +94,14 @@ class CompleteFormAction extends AWebAction
 			TextField entityField = textField.getAnnotation(TextField.class);
 			browser.getActiveWindow().getCurrentPage().getElement(entityField.xPath()).enterText(value.toString());
 		}
-		catch(IllegalAccessException | InvocationTargetException | NoSuchMethodException ex)
+		catch(IllegalAccessException | InvocationTargetException | NoSuchMethodException | XWebException ex)
 		{
 			String logMessageFormat = "Could not set field [%s] on class [%s]";
 			this.logger.error(String.format(
 					  logMessageFormat,
 					  textField.getName(),
 					  this.form.getClass().getCanonicalName()));
+			throw new JourneyException(ex);
 		}
 	}
 }

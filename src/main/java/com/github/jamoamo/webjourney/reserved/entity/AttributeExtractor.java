@@ -51,7 +51,7 @@ class AttributeExtractor implements IExtractor<String>
 	}
 
 	@Override
-	public String extractRawValue(IValueReader browser)
+	public String extractRawValue(IValueReader browser) throws XExtractionException
 	{
 		try
 		{
@@ -63,7 +63,11 @@ class AttributeExtractor implements IExtractor<String>
 			{
 				return null;
 			}
-			throw ex;
+			throw new XExtractionException(ex);
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XExtractionException(ex);
 		}
 	}
 	

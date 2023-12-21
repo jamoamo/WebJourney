@@ -27,6 +27,7 @@ import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,23 +41,36 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
 	private final EntityCreator entityCreator;
 	
-	EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
+	EntitiesCreatorConverter(EntityFieldDefn fieldDefn) throws XEntityFieldDefinitionException
 	{
-		EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField()).getFieldGenericType());
-		this.entityCreator = new EntityCreator(defn);
+		try
+		{
+			EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField()).getFieldGenericType());
+			this.entityCreator = new EntityCreator(defn);
+		}
+		catch(XEntityDefinitionException e)
+		{
+			throw new XEntityFieldDefinitionException(e);
+		}
 	}
 
 	@Override
-	public List<Object> convertValue(List<String> source, IValueReader reader)
+	public List<Object> convertValue(List<String> source, IValueReader reader) throws XConversionException
 	{
 		if(source == null)
 		{
 			return null;
 		}
-		return source.stream().map(s -> createEntity(s, reader)).toList();
+		List<Object> objects = new ArrayList<>();
+		for(String s : source)
+		{
+			objects.add(createEntity(s, reader));
+		}
+		
+		return objects;
 	}
 	
-	private Object createEntity(String source, IValueReader reader)
+	private Object createEntity(String source, IValueReader reader) throws XConversionException
 	{
 		if(source == null)
 		{
@@ -76,6 +90,15 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 		{
 			this.logger.error(String.format("There is a problem with the url %s", source), e);
 			return null;
+		}
+		catch(IllegalArgumentException ex)
+		{
+			this.logger.error(String.format("There is an Argument problem with the url %s", source), ex);
+			return null;
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XConversionException(ex);
 		}
 	}
 	

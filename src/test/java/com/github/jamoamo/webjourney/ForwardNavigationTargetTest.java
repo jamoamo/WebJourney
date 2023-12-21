@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -44,7 +45,7 @@ public class ForwardNavigationTargetTest
 	 * Test of navigate method, of class ForwardNavigationTarget.
 	 */
 	@Test
-	public void testNavigate() throws XNavigationError
+	public void testNavigate() throws XWebException
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);

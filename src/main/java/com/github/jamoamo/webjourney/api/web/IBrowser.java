@@ -35,8 +35,9 @@ public interface IBrowser
 	 * Returns the current active window. This is the first window to have been opened for the browser.
 	 * 
 	 * @return the main browser window.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	IBrowserWindow getActiveWindow();
+	IBrowserWindow getActiveWindow() throws XWebException;
 	
 	/**
 	 * Switches to the browser window with the given name. 
@@ -45,14 +46,16 @@ public interface IBrowser
 	 * 
 	 * @param windowName the name of the window
 	 * @return the main browser window.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	IBrowserWindow switchToWindow(String windowName);
+	IBrowserWindow switchToWindow(String windowName) throws XWebException;
 	
 	/**
 	 * Open a new browser window.
 	 * @return the openedWindow
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	IBrowserWindow openNewWindow();
+	IBrowserWindow openNewWindow() throws XWebException;
 
 	/**
 	 * Exit the browser.

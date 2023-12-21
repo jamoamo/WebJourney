@@ -26,7 +26,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IBrowserWindow;
-import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public class ParentElementValueReaderTest
 	 * Test of getCurrentUrl method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetCurrentUrl()
+	public void testGetCurrentUrl() throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
@@ -72,7 +72,7 @@ public class ParentElementValueReaderTest
 	 * Test of getElementText method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetElementText()
+	public void testGetElementText() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 
@@ -92,7 +92,7 @@ public class ParentElementValueReaderTest
 	 * Test of getElement method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetElement()
+	public void testGetElement() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 
@@ -112,7 +112,7 @@ public class ParentElementValueReaderTest
 	 * Test of getAttribute method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetAttribute()
+	public void testGetAttribute() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 
@@ -134,7 +134,7 @@ public class ParentElementValueReaderTest
 	 */
 	@Test
 	public void testNavigateTo()
-		throws MalformedURLException, XNavigationError
+		throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
@@ -159,7 +159,7 @@ public class ParentElementValueReaderTest
 	 */
 	@Test
 	public void testNavigateBack()
-		throws XNavigationError
+		throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
@@ -180,7 +180,7 @@ public class ParentElementValueReaderTest
 	 * Test of getElements method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetElements()
+	public void testGetElements() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 
@@ -212,7 +212,7 @@ public class ParentElementValueReaderTest
 	 * Test of getElementTexts method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetElementTexts()
+	public void testGetElementTexts() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 
@@ -244,7 +244,7 @@ public class ParentElementValueReaderTest
 	 * Test of getBrowser method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testGetBrowser()
+	public void testGetBrowser() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		AElement parentElement = Mockito.mock(AElement.class);
@@ -259,7 +259,7 @@ public class ParentElementValueReaderTest
 	 * Test of openNewWindow method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testOpenNewWindow()
+	public void testOpenNewWindow() throws Exception
 	{
 		IBrowser browser = Mockito.mock(IBrowser.class);
 		AElement parentElement = Mockito.mock(AElement.class);
@@ -275,7 +275,7 @@ public class ParentElementValueReaderTest
 	 * Test of closeWindow method, of class ParentElementValueReader.
 	 */
 	@Test
-	public void testCloseWindow()
+	public void testCloseWindow() throws Exception
 	{
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		

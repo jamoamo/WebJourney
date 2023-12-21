@@ -23,10 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.ExtractValue;
-import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
-import java.lang.annotation.Annotation;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
@@ -46,7 +43,7 @@ public class RegexTransformationTest
 	 * Test of transformValue method, of class RegexTransformation.
 	 */
 	@Test
-	public void testTransformValue()
+	public void testTransformValue() throws Exception
 	{
 		RegexGroup group = Mockito.mock(RegexGroup.class);
 		Mockito.when(group.findGroupValue("String value")).thenReturn("String");

@@ -49,7 +49,7 @@ class ElementTextExtractor implements IExtractor<String>
 	}
 
 	@Override
-	public String extractRawValue(IValueReader reader)
+	public String extractRawValue(IValueReader reader) throws XExtractionException
 	{
 		try
 		{
@@ -61,7 +61,11 @@ class ElementTextExtractor implements IExtractor<String>
 			{
 				return null;
 			}
-			throw ex;
+			throw new XExtractionException(ex);
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XExtractionException(ex);
 		}
 	}
 	

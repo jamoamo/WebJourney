@@ -23,7 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.regex;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
  */
 public class RegexGroup
 {
-	private final List<Pattern> patternList;
+	private final List<Pattern> patternList = new ArrayList<>();
 	private final String group;
 	private final String defaultValue;
 	/**
@@ -43,9 +43,13 @@ public class RegexGroup
 	 * @param group The group name
 	 * @param defaultValue The default value
 	 */
-	public RegexGroup(String[] patterns, String group, String defaultValue)
+	public RegexGroup(String[] patterns, String group, String defaultValue) throws XRegexException
 	{
-		this.patternList = Arrays.stream(patterns).map(regex -> Patterns.getPattern(regex)).toList();
+		for(String pattern : patterns)
+		{
+			this.patternList.add(Patterns.getPattern(pattern));
+		}
+		
 		this.group = group;
 		this.defaultValue = defaultValue;
 	}
@@ -64,23 +68,33 @@ public class RegexGroup
 		
 		for(Pattern pattern : this.patternList)
 		{
-			Matcher matcher = pattern.matcher(value);
-			if(matcher.matches())
+			String groupValue = matchPattern(pattern, value);
+			if(groupValue != null)
 			{
-				try
-				{
-					String groupValue = matcher.group(this.group);
-					if(groupValue != null)
-					{
-						return groupValue;
-					}
-				}
-				catch(IllegalArgumentException iae)
-				{
-					//ignore if group doesn't exist
-				}
+				return groupValue;
 			}
 		}
 		return this.defaultValue;
+	}
+
+	private String matchPattern(Pattern pattern, String value)
+	{
+		Matcher matcher = pattern.matcher(value);
+		if(matcher.matches())
+		{
+			try
+			{
+				String groupValue = matcher.group(this.group);
+				if(groupValue != null)
+				{
+					return groupValue;
+				}
+			}
+			catch(IllegalArgumentException iae)
+			{
+				//ignore if group doesn't exist
+			}
+		}
+		return null;
 	}
 }

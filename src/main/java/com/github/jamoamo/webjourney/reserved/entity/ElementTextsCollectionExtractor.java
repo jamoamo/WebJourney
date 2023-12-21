@@ -41,9 +41,16 @@ class ElementTextsCollectionExtractor implements IExtractor<List<String>>
 	}
 
 	@Override
-	public List<String> extractRawValue(IValueReader reader)
+	public List<String> extractRawValue(IValueReader reader) throws XExtractionException
 	{
-		return reader.getElementTexts(this.path);
+		try
+		{
+			return reader.getElementTexts(this.path);
+		}
+		catch(XValueReaderException ex)
+		{
+			throw new XExtractionException(ex);
+		}
 	}
 	
 	@Override

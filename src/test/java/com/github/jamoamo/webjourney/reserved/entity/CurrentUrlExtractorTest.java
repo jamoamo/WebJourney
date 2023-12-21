@@ -42,7 +42,7 @@ public class CurrentUrlExtractorTest
 	 * Test of extractRawValue method, of class CurrentUrlExtractor.
 	 */
 	@Test
-	public void testExtractRawValue()
+	public void testExtractRawValue() throws Exception
 	{
 		IValueReader reader = Mockito.mock(IValueReader.class);
 		Mockito.when(reader.getCurrentUrl()).thenReturn("https://new.url");

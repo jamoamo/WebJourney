@@ -41,15 +41,15 @@ public class ValueMapperTest
 	}
 
 	/**
-	 * Test of convertValue method, of class ValueMapper.
+	 * Test of convertValue method, of class ValueConverter.
 	 */
 	@Test
-	public void testConvertValue() throws XValueMappingException
+	public void testConvertValue() throws Exception
 	{
 		AConverter converter = Mockito.mock(AConverter.class);
 		Mockito.when(converter.mapValue("Value")).thenReturn("Some Value");
 		
-		ValueMapper mapper = new ValueMapper(converter);
+		ValueConverter mapper = new ValueConverter(converter);
 		Object convertValue = mapper.convertValue("Value", null);
 		assertEquals("Some Value", convertValue);
 	}

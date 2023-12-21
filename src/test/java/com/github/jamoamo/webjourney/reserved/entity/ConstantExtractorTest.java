@@ -47,7 +47,7 @@ public class ConstantExtractorTest
 	 * Test of getCondition method, of class ConstantExtractor.
 	 */
 	@Test
-	public void testGetCondition()
+	public void testGetCondition() throws Exception
 	{
 		ConstantExtractor extractor = new ConstantExtractor("Constant", new AlwaysCondition());
 		assertTrue(extractor.getCondition().evaluate(null));

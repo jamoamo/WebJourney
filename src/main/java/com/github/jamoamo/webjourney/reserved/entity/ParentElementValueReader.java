@@ -25,7 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import com.github.jamoamo.webjourney.api.web.XNavigationError;
+import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
 import java.util.List;
 
@@ -44,9 +44,16 @@ class ParentElementValueReader implements IValueReader
 	}
 	
 	@Override
-	public String getCurrentUrl()
+	public String getCurrentUrl() throws XValueReaderException
 	{
-		return this.browser.getActiveWindow().getCurrentUrl();
+		try
+		{
+			return this.browser.getActiveWindow().getCurrentUrl();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
@@ -73,28 +80,28 @@ class ParentElementValueReader implements IValueReader
 	}
 
 	@Override
-	public void navigateTo(URL url)
+	public void navigateTo(URL url) throws XValueReaderException
 	{
 		try
 		{
 			this.browser.getActiveWindow().navigateToUrl(url);
 		}
-		catch(XNavigationError err)
+		catch(XWebException err)
 		{
-			throw new RuntimeException(err);
+			throw new XValueReaderException(err);
 		}
 	}
 
 	@Override
-	public void navigateBack()
+	public void navigateBack() throws XValueReaderException
 	{
 		try
 		{
 			this.browser.getActiveWindow().navigateBack();
 		}
-		catch(XNavigationError err)
+		catch(XWebException err)
 		{
-			throw new RuntimeException(err);
+			throw new XValueReaderException(err);
 		}
 	}
 
@@ -117,15 +124,29 @@ class ParentElementValueReader implements IValueReader
 	}
 
 	@Override
-	public void openNewWindow()
+	public void openNewWindow() throws XValueReaderException
 	{
-		this.browser.openNewWindow();
+		try
+		{
+			this.browser.openNewWindow();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public void closeWindow()
+	public void closeWindow() throws XValueReaderException
 	{
-		this.browser.getActiveWindow().close();
+		try
+		{
+			this.browser.getActiveWindow().close();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 	
 }

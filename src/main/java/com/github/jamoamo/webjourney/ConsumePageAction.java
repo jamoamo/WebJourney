@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.reserved.entity.EntityCreator;
 import com.github.jamoamo.webjourney.reserved.entity.EntityDefn;
+import com.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,16 +62,15 @@ class ConsumePageAction<T> extends AWebAction
 	protected ActionResult executeAction(IJourneyContext context)
 			  throws BaseJourneyActionException
 	{
-		IBrowser browser = context.getBrowser();
-		EntityDefn entityDefn = new EntityDefn(this.pageClass);
-		EntityCreator<T> creator = new EntityCreator(entityDefn);
-		T instance = creator.createNewEntity(browser);
-		
 		try
 		{
+			IBrowser browser = context.getBrowser();
+			EntityDefn entityDefn = new EntityDefn(this.pageClass);
+			EntityCreator<T> creator = new EntityCreator(entityDefn);
+			T instance = creator.createNewEntity(browser);
 			this.pageConsumer.accept(instance);
 		}
-		catch(PageConsumerException ex)
+		catch(PageConsumerException | XEntityDefinitionException ex)
 		{
 			throw new BaseJourneyActionException(ex.getMessage(), this);
 		}

@@ -23,7 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.api.mapper.StringMapper;
 import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,7 +43,7 @@ public class ConvertersTest
 	 * Test of getMapperForField method, of class Converters.
 	 */
 	@Test
-	public void testGetMapperForField_String_noConverter()
+	public void testGetMapperForField_String_noConverter() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.getConversion()).thenReturn(null);
@@ -55,11 +54,11 @@ public class ConvertersTest
 		
 		IConverter mapperForField = Converters.getMapperForField(defn);
 		
-		assertInstanceOf(ValueMapper.class, mapperForField);
+		assertInstanceOf(ValueConverter.class, mapperForField);
 	}
 	
 	@Test
-	public void testGetMapperForField_Integer_noConverter()
+	public void testGetMapperForField_Integer_noConverter() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.getConversion()).thenReturn(null);
@@ -70,11 +69,11 @@ public class ConvertersTest
 		
 		IConverter mapperForField = Converters.getMapperForField(defn);
 		
-		assertInstanceOf(ValueMapper.class, mapperForField);
+		assertInstanceOf(ValueConverter.class, mapperForField);
 	}
 	
 	@Test
-	public void testGetMapperForField_Double_noConverter()
+	public void testGetMapperForField_Double_noConverter() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.getConversion()).thenReturn(null);
@@ -85,7 +84,7 @@ public class ConvertersTest
 		
 		IConverter mapperForField = Converters.getMapperForField(defn);
 		
-		assertInstanceOf(ValueMapper.class, mapperForField);
+		assertInstanceOf(ValueConverter.class, mapperForField);
 	}
 	
 }

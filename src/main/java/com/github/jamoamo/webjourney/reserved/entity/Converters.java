@@ -40,7 +40,7 @@ final class Converters
 {
 	private Converters(){}
 	
-	public static IConverter getMapperForField(EntityFieldDefn defn)
+	public static IConverter getMapperForField(EntityFieldDefn defn) throws XEntityFieldDefinitionException
 	{
 		TypeInfo info = TypeInfo.forClass(defn.getFieldType());
 		EntityAnnotations annotations = defn.getAnnotations();
@@ -71,7 +71,7 @@ final class Converters
 	}
 
 	private static IConverter getCollectionMapper(EntityFieldDefn defn)
-			  throws RuntimeException
+			  throws XEntityFieldDefinitionException
 	{
 		FieldInfo fieldInfo = FieldInfo.forField(defn.getField());
 		TypeInfo genericTypeInfo = TypeInfo.forClass(fieldInfo.getFieldGenericType());
@@ -87,14 +87,14 @@ final class Converters
 			}
 			return new EntitiesFromElementConverter(fieldInfo.getFieldGenericType());
 		}
-		throw new RuntimeException("Cannot create a converter for collection type " +
+		throw new XEntityFieldDefinitionException("Cannot create a converter for collection type " +
 				  "[" + defn.getFieldName() + "] without a mapping");
 	}
 
 	private static IConverter determineDefaultMapper(TypeInfo info)
 	{
 		AConverter mapper = getDefaultMapper(info);
-		return new ValueMapper(mapper);
+		return new ValueConverter(mapper);
 	}
 
 	private static AConverter getDefaultMapper(TypeInfo info)

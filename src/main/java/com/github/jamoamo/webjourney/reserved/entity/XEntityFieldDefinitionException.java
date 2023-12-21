@@ -21,57 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.api.web;
+package com.github.jamoamo.webjourney.reserved.entity;
 
 /**
- * A user of the web.
+ * An exception that prevents an entity field from being defined.
  * @author James Amoore
  */
-final class WebUser implements IWebUser
+public class XEntityFieldDefinitionException extends Exception
 {
-	private final IBrowser browser;
-	private IBrowserWindow currentWindow;
+
+	private static final String MESSAGE = "An error occurred defining an entity field.";
 	
-	WebUser(IBrowser browser)
+	/**
+	 * Constructs an instance of <code>XEntityFieldDefinitionException</code> with the specified detail message.
+	 *
+	 * @param ex the exception cause.
+	 */
+	public XEntityFieldDefinitionException(Exception ex)
 	{
-		this.browser = browser;
-		this.currentWindow = browser.getActiveWindow();
-	}
-	
-	@Override
-	public void openNewWindow()
-	{
-		this.currentWindow = this.browser.openNewWindow();
-	}
-
-	@Override
-	public void closeWindow()
-	{
-		this.currentWindow.close();
-	}
-
-	@Override
-	public void switchToWindow(String windowName)
-	{
-		this.currentWindow = this.browser.switchToWindow(windowName);
-	}
-
-	@Override
-	public void selectButton(String xPath)
-	{
-		this.currentWindow.getCurrentPage().getElement(xPath).click();
-	}
-
-	@Override
-	public void enterValueInElement(String xPath, String value)
-	{
-		this.currentWindow.getCurrentPage().getElement(xPath).enterText(value);
-	}
-
-	@Override
-	public String getElementValue(String xPath)
-	{
-		return this.currentWindow.getCurrentPage().getElement(xPath).getElementText();
+		super(MESSAGE, ex);
 	}
 	
+	/**
+	 * Constructs an instance of <code>XEntityFieldDefinitionException</code> with the specified detail message.
+	 *
+	 * @param message exception detail.
+	 */
+	public XEntityFieldDefinitionException(String message)
+	{
+		super(MESSAGE + " " + message);
+	}
 }

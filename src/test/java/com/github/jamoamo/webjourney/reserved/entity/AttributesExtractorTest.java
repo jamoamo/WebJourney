@@ -48,7 +48,7 @@ public class AttributesExtractorTest
 	 * Test of extractRawValue method, of class AttributesExtractor.
 	 */
 	@Test
-	public void testExtractRawValue()
+	public void testExtractRawValue() throws Exception
 	{
 		AElement element = Mockito.mock(AElement.class);
 		Mockito.when(element.getAttribute("attr")).thenReturn("Value");
@@ -76,7 +76,7 @@ public class AttributesExtractorTest
 	 * Test of getCondition method, of class AttributesExtractor.
 	 */
 	@Test
-	public void testGetCondition()
+	public void testGetCondition() throws Exception
 	{
 		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
 		assertTrue(extractor.getCondition().evaluate(null));

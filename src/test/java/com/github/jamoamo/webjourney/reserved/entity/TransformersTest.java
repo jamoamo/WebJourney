@@ -23,7 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import com.github.jamoamo.webjourney.annotation.RegexExtractValue;
 import com.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import com.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 import java.util.List;
@@ -46,7 +45,7 @@ public class TransformersTest
 	 * Test of getTransformerForField method, of class Transformers.
 	 */
 	@Test
-	public void testGetTransformerForField_transformation_string_regexValue()
+	public void testGetTransformerForField_transformation_string_regexValue() throws Exception
 	{
 		RegexGroup regex = Mockito.mock(RegexGroup.class);
 		
@@ -64,7 +63,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_transformation_collection_notMapped_RegexValue()
+	public void testGetTransformerForField_transformation_collection_notMapped_RegexValue() throws Exception
 	{
 		RegexGroup regex = Mockito.mock(RegexGroup.class);
 		
@@ -83,7 +82,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_transformation_collection_notMapped_noRegexValue()
+	public void testGetTransformerForField_transformation_collection_notMapped_noRegexValue() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
@@ -99,7 +98,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_transfomation_collection_Mapped_RegexValue()
+	public void testGetTransformerForField_transfomation_collection_Mapped_RegexValue() throws Exception
 	{
 		RegexGroup regex = Mockito.mock(RegexGroup.class);
 		
@@ -118,7 +117,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_transfomation_collection_Mapped_noRegexValue()
+	public void testGetTransformerForField_transfomation_collection_Mapped_noRegexValue() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
@@ -134,7 +133,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_transfomation_string_noRegexValue()
+	public void testGetTransformerForField_transfomation_string_noRegexValue() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
@@ -150,7 +149,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_noTransfomation_collection_notMapped_RegexValue()
+	public void testGetTransformerForField_noTransfomation_collection_notMapped_RegexValue() throws Exception
 	{
 		RegexGroup regex = Mockito.mock(RegexGroup.class);
 		
@@ -169,7 +168,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_noTransfomation_collection_Mapped_RegexValue()
+	public void testGetTransformerForField_noTransfomation_collection_Mapped_RegexValue() throws Exception
 	{
 		RegexGroup regex = Mockito.mock(RegexGroup.class);
 		
@@ -188,7 +187,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_noTransfomation_string_RegexValue()
+	public void testGetTransformerForField_noTransfomation_string_RegexValue() throws Exception
 	{
 		RegexGroup regex = Mockito.mock(RegexGroup.class);
 		
@@ -207,7 +206,7 @@ public class TransformersTest
 	}
 	
 	@Test
-	public void testGetTransformerForField_noTransfomation_string_noRegexValue()
+	public void testGetTransformerForField_noTransfomation_string_noRegexValue() throws Exception
 	{
 		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
 		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.FALSE);

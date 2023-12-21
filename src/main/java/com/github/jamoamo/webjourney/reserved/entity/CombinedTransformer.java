@@ -36,7 +36,7 @@ class CombinedTransformer implements ITransformer<String>
 	}
 
 	@Override
-	public String transformValue(String value)
+	public String transformValue(String value) throws XTransformationException
 	{
 		String transformedValue = value;
 		for(ITransformer transformer : this.transformers)

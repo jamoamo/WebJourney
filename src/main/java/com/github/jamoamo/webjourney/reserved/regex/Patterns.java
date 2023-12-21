@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.regex;
 
 import java.util.HashMap;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  *
@@ -40,13 +41,21 @@ public final class Patterns
 	 * Get a cached pattern.
 	 * @param patternString The pattern string to get a Pattern for.
 	 * @return a cached pattern.
+	 * @throws com.github.jamoamo.webjourney.reserved.regex.XRegexException if invalid regex pattern syntax
 	 */
-	public static Pattern getPattern(String patternString)
+	public static Pattern getPattern(String patternString) throws XRegexException
 	{
-		if(!PATTERN_MAP.containsKey(patternString))
+		try
 		{
-			PATTERN_MAP.put(patternString, Pattern.compile(patternString));
+			if(!PATTERN_MAP.containsKey(patternString))
+			{
+				PATTERN_MAP.put(patternString, Pattern.compile(patternString));
+			}
+			return PATTERN_MAP.get(patternString);
 		}
-		return PATTERN_MAP.get(patternString);
+		catch(PatternSyntaxException ex)
+		{
+			throw new XRegexException(ex);
+		}
 	}
 }

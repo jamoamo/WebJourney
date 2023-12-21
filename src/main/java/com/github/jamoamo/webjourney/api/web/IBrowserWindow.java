@@ -33,29 +33,34 @@ public interface IBrowserWindow extends IWebNavigator
 	/**
 	 * Retrieve the url of the current page.
 	 * @return the url of the current page.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	String getCurrentUrl();
+	String getCurrentUrl() throws XWebException;
 	
 	/**
 	 * Retrieves the current WebPage.
 	 * @return the current page
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	IWebPage getCurrentPage();
+	IWebPage getCurrentPage() throws XWebException;
 	
 	/**
 	 * Refreshes the current page.
 	 * @return the current page
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	IWebPage refreshCurrentPage();
+	IWebPage refreshCurrentPage() throws XWebException;
 	
 	/**
 	 * Close the window.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	void close();
+	void close() throws XWebException;
 	
 	/**
 	 * Return the name of this window.
-	 * @return name
+	 * @return name 
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
-	String getName();
+	String getName() throws XWebException;
 }

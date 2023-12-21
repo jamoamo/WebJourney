@@ -30,5 +30,5 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 interface ITransformer<T>
 {
-	T transformValue(T value);
+	T transformValue(T value) throws XTransformationException;
 }
