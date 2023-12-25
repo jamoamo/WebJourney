@@ -72,4 +72,9 @@ public final class EntityDefn<T>
 			.map(field -> new EntityFieldDefn(field))
 			.collect(Collectors.toList());
 	}
+
+	Class<T> getFieldType()
+	{
+		return this.entityClass;
+	}
 }

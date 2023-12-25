@@ -26,6 +26,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -40,18 +41,23 @@ import org.slf4j.LoggerFactory;
 public final class EntityCreator<T>
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityCreator.class);
+	private static final HashMap<String, Object> ENTITY_MAP = new HashMap<>();
+	private static boolean cacheEnabled = true;
 
 	private final EntityDefn<T> defn;
 	private AElement element;
+	private boolean useCache = false;
 
 	/**
 	 * Creates a new instance.
 	 *
 	 * @param defn The entity definition to create an instance for
+	 * @param useCache if the cache should be used
 	 */
-	public EntityCreator(EntityDefn<T> defn)
+	public EntityCreator(EntityDefn<T> defn, boolean useCache)
 	{
 		this.defn = defn;
+		this.useCache = useCache;
 	}
 	
 	/**
@@ -64,6 +70,11 @@ public final class EntityCreator<T>
 	{
 		this.defn = defn;
 		this.element = element;
+	}
+	
+	static void disableCache()
+	{
+		cacheEnabled = false;
 	}
 
 	/**
@@ -90,6 +101,14 @@ public final class EntityCreator<T>
 	 */
 	T createNewEntity(IValueReader reader) throws XEntityFieldScrapeException
 	{
+		String entityKey = createEntityKey(reader);
+		
+		if(cacheEnabled && this.useCache && entityKey != null && ENTITY_MAP.containsKey(entityKey))
+		{
+			LOGGER.debug(String.format("Retrieving entity from cache [%s]", entityKey));
+			return this.defn.getFieldType().cast(ENTITY_MAP.get(entityKey));
+		}
+		
 		T instance = this.defn.createInstance();
 		List<EntityFieldDefn> entityFields = this.defn.getEntityFields();
 		
@@ -98,8 +117,36 @@ public final class EntityCreator<T>
 			LOGGER.debug("Setting field: " + fieldDefn.getFieldName());
 			scrapeField(fieldDefn, instance, reader);
 		}
-
+		storeInstanceInCache(entityKey, instance);
 		return instance;
+	}
+
+	private String createEntityKey(IValueReader reader)
+	{
+		if(reader.getBrowser() == null)
+		{
+			return null;
+		}
+		
+		String entityKey = null;
+		try
+		{
+			entityKey = this.defn.getFieldType().getName() + ":@:" + reader.getCurrentUrl();
+		}
+		catch(XValueReaderException ex)
+		{
+			//Ignore
+		}
+		return entityKey;
+	}
+
+	private void storeInstanceInCache(String entityKey, T instance)
+	{
+		if(cacheEnabled && this.useCache && entityKey != null)
+		{
+			LOGGER.debug(String.format("Storing entity to cache [%s]", entityKey));
+			ENTITY_MAP.put(entityKey, instance);
+		}
 	}
 
 	private void scrapeField(EntityFieldDefn defn, T instance, IValueReader reader)

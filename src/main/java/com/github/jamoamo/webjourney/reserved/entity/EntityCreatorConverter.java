@@ -43,7 +43,7 @@ class EntityCreatorConverter implements IConverter<String, Object>
 		try
 		{
 			EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
-			this.entityCreator = new EntityCreator(defn);
+			this.entityCreator = new EntityCreator(defn, true);
 		}
 		catch(XEntityDefinitionException e)
 		{
