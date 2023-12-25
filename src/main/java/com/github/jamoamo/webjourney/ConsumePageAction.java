@@ -67,7 +67,7 @@ class ConsumePageAction<T> extends AWebAction
 		{
 			IBrowser browser = context.getBrowser();
 			EntityDefn entityDefn = new EntityDefn(this.pageClass);
-			EntityCreator<T> creator = new EntityCreator(entityDefn);
+			EntityCreator<T> creator = new EntityCreator(entityDefn, false);
 			T instance = creator.createNewEntity(browser);
 			this.pageConsumer.accept(instance);
 		}

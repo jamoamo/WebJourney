@@ -47,7 +47,7 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 		try
 		{
 			EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField()).getFieldGenericType());
-			this.entityCreator = new EntityCreator(defn);
+			this.entityCreator = new EntityCreator(defn, true);
 		}
 		catch(XEntityDefinitionException e)
 		{
