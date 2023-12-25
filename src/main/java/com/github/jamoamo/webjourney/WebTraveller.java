@@ -67,6 +67,7 @@ public class WebTraveller
 		catch(JourneyException ex)
 		{
 			this.logger.error("Can't complete journey: ", ex);
+			throw ex;
 		}
 		finally
 		{

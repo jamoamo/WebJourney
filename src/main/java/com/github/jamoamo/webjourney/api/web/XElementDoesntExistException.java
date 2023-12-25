@@ -21,51 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
-
-import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
+package com.github.jamoamo.webjourney.api.web;
 
 /**
- *
+ * An exception that occurs when a required web element doesn't exist.
  * @author James Amoore
  */
-@SuppressWarnings("AbstractClassName")
-class AttributeExtractor implements IExtractor<String>
+public class XElementDoesntExistException extends XWebException
 {
-	private final String elementXPath;
-	private final String attribute;
-	private ICondition condition;
-	private final boolean optional;
-	
-	AttributeExtractor(String elementXPath, String attribute)
+	/**
+	 * Constructor.
+	 */
+	public XElementDoesntExistException()
 	{
-		this(elementXPath, attribute, new AlwaysCondition(), false);
+		super("Element doesn't exist.");
 	}
 	
-	AttributeExtractor(String elementXPath, String attribute, ICondition condition, boolean optional)
-	{
-		this.elementXPath = elementXPath;
-		this.attribute = attribute;
-		this.condition = condition;
-		this.optional = optional;
-	}
-
-	@Override
-	public String extractRawValue(IValueReader browser) throws XExtractionException
-	{
-		try
-		{
-			return browser.getElement(this.elementXPath, this.optional).getAttribute(this.attribute);
-		}
-		catch(XElementDoesntExistException | XValueReaderException ex)
-		{
-			throw new XExtractionException(ex);
-		}
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return this.condition;
-	}
 }

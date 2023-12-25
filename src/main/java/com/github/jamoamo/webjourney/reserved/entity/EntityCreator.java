@@ -72,8 +72,9 @@ public final class EntityCreator<T>
 	 * @param browser The browser to use.
 	 *
 	 * @return The newly created entity.
+	 * @throws com.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException if a field could not be scraped.
 	 */
-	public T createNewEntity(IBrowser browser)
+	public T createNewEntity(IBrowser browser) throws XEntityFieldScrapeException
 	{
 		IValueReader reader = this.element == null ? 
 									 new BrowserValueReader(browser) : new ParentElementValueReader(browser, this.element);
@@ -87,7 +88,7 @@ public final class EntityCreator<T>
 	 * @param reader the value ready to use
 	 * @return The newly created entity
 	 */
-	T createNewEntity(IValueReader reader)
+	T createNewEntity(IValueReader reader) throws XEntityFieldScrapeException
 	{
 		T instance = this.defn.createInstance();
 		List<EntityFieldDefn> entityFields = this.defn.getEntityFields();
@@ -95,14 +96,7 @@ public final class EntityCreator<T>
 		for(EntityFieldDefn fieldDefn : entityFields)
 		{
 			LOGGER.debug("Setting field: " + fieldDefn.getFieldName());
-			try
-			{
-				scrapeField(fieldDefn, instance, reader);
-			}
-			catch(XEntityFieldScrapeException ex)
-			{
-				LOGGER.error(String.format("Scraping field [] failed. ", fieldDefn.getFieldName()), ex);
-			}
+			scrapeField(fieldDefn, instance, reader);
 		}
 
 		return instance;

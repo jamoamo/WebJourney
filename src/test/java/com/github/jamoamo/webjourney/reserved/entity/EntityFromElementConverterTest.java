@@ -80,15 +80,7 @@ public class EntityFromElementConverterTest
 		
 		EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
 		
-		Answer<Class<?>> answer = new Answer<>()
-		{
-			@Override
-			public Class<?> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return SubEntity.class;
-			}
-		};
+		Answer<Class<?>> answer = (InvocationOnMock iom) -> SubEntity.class;
 		
 		Mockito.when(fieldDefn.getFieldType()).then(answer);
 		

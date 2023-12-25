@@ -48,6 +48,11 @@ class RegexCondition implements ICondition
 		try
 		{
 			String extractRawValue = this.extractor.extractRawValue(reader);
+			if(extractRawValue == null)
+			{
+				return false;
+			}
+			
 			Pattern pattern = Patterns.getPattern(this.regexPattern);
 			boolean match = pattern.matcher(extractRawValue).find();
 			return match;

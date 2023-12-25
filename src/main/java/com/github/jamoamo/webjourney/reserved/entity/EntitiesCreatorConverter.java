@@ -40,8 +40,9 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 {
 	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
 	private final EntityCreator entityCreator;
-	
-	EntitiesCreatorConverter(EntityFieldDefn fieldDefn) throws XEntityFieldDefinitionException
+
+	EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
+		throws XEntityFieldDefinitionException
 	{
 		try
 		{
@@ -55,7 +56,8 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 	}
 
 	@Override
-	public List<Object> convertValue(List<String> source, IValueReader reader) throws XConversionException
+	public List<Object> convertValue(List<String> source, IValueReader reader)
+		throws XConversionException
 	{
 		if(source == null)
 		{
@@ -66,11 +68,12 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 		{
 			objects.add(createEntity(s, reader));
 		}
-		
+
 		return objects;
 	}
-	
-	private Object createEntity(String source, IValueReader reader) throws XConversionException
+
+	private Object createEntity(String source, IValueReader reader)
+		throws XConversionException
 	{
 		if(source == null)
 		{
@@ -86,20 +89,11 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 			reader.navigateBack();
 			return instance;
 		}
-		catch(MalformedURLException | URISyntaxException e)
-		{
-			this.logger.error(String.format("There is a problem with the url %s", source), e);
-			return null;
-		}
-		catch(IllegalArgumentException ex)
-		{
-			this.logger.error(String.format("There is an Argument problem with the url %s", source), ex);
-			return null;
-		}
-		catch(XValueReaderException ex)
+		catch(MalformedURLException | URISyntaxException | IllegalArgumentException | XValueReaderException |
+				XEntityFieldScrapeException ex)
 		{
 			throw new XConversionException(ex);
 		}
 	}
-	
+
 }

@@ -84,7 +84,7 @@ public class ParentElementValueReaderTest
 
 		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		String text = reader.getElementText("xpath");
+		String text = reader.getElementText("xpath", false);
 		assertEquals("Text", text);
 	}
 
@@ -104,7 +104,7 @@ public class ParentElementValueReaderTest
 
 		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		AElement result = reader.getElement("xpath");
+		AElement result = reader.getElement("xpath", false);
 		assertSame(childElement, result);
 	}
 
@@ -189,15 +189,7 @@ public class ParentElementValueReaderTest
 
 		AElement parentElement = Mockito.mock(AElement.class);
 
-		Answer<List<AElement>> answer = new Answer<>()
-		{
-			@Override
-			public List<AElement> answer(InvocationOnMock invocation)
-				throws Throwable
-			{
-				 return Collections.singletonList(childElement);
-			}
-		};
+		Answer<List<AElement>> answer = (InvocationOnMock invocation) -> Collections.singletonList(childElement);
 		
 		Mockito.when(parentElement.findElements("xpath")).then(answer);
 
@@ -221,15 +213,7 @@ public class ParentElementValueReaderTest
 
 		AElement parentElement = Mockito.mock(AElement.class);
 
-		Answer<List<AElement>> answer = new Answer<>()
-		{
-			@Override
-			public List<AElement> answer(InvocationOnMock invocation)
-				throws Throwable
-			{
-				 return Collections.singletonList(childElement);
-			}
-		};
+		Answer<List<AElement>> answer = (InvocationOnMock invocation) -> Collections.singletonList(childElement);
 		
 		Mockito.when(parentElement.findElements("xpath")).then(answer);
 

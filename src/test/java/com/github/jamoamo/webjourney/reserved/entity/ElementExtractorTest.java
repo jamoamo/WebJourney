@@ -40,7 +40,7 @@ public class ElementExtractorTest
 		AElement element = Mockito.mock(AElement.class);
 		
 		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElement("//div")).thenReturn(element);
+		Mockito.when(reader.getElement("//div", false)).thenReturn(element);
 		
 		ElementExtractor extractor = new ElementExtractor("//div", false);
 		AElement extractRawValue = extractor.extractRawValue(reader);

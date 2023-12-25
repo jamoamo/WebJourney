@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.collections.iterators.SingletonIterator;
@@ -50,7 +51,7 @@ public class SeleniumElementTest
 	 * Test of getElementText method, of class SeleniumElement.
 	 */
 	@Test
-	public void testGetElementText()
+	public void testGetElementText() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		Mockito.when(webElementMock.getText()).thenReturn("Text");
@@ -64,7 +65,7 @@ public class SeleniumElementTest
 	 * Test of findElement method, of class SeleniumElement.
 	 */
 	@Test
-	public void testFindElement()
+	public void testFindElement() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		WebElement elem = Mockito.mock(WebElement.class);
@@ -81,7 +82,7 @@ public class SeleniumElementTest
 	 * Test of findElements method, of class SeleniumElement.
 	 */
 	@Test
-	public void testFindElements()
+	public void testFindElements() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		WebElement elem1 = Mockito.mock(WebElement.class);
@@ -99,7 +100,7 @@ public class SeleniumElementTest
 	 * Test of getAttribute method, of class SeleniumElement.
 	 */
 	@Test
-	public void testGetAttribute()
+	public void testGetAttribute() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		Mockito.when(webElementMock.getAttribute("Attr")).thenReturn("Value");
@@ -113,7 +114,7 @@ public class SeleniumElementTest
 	 * Test of click method, of class SeleniumElement.
 	 */
 	@Test
-	public void testClick()
+	public void testClick() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		SeleniumElement element = new SeleniumElement(locator);
@@ -127,7 +128,7 @@ public class SeleniumElementTest
 	 * Test of enterText method, of class SeleniumElement.
 	 */
 	@Test
-	public void testEnterText()
+	public void testEnterText() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		SeleniumElement element = new SeleniumElement(locator);
@@ -144,7 +145,7 @@ public class SeleniumElementTest
 	 * Test of getChildrenByTag method, of class SeleniumElement.
 	 */
 	@Test
-	public void testGetChildrenByTag()
+	public void testGetChildrenByTag() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		WebElement elem1 = Mockito.mock(WebElement.class);
@@ -162,7 +163,7 @@ public class SeleniumElementTest
 	 * Test of getTag method, of class SeleniumElement.
 	 */
 	@Test
-	public void testGetTag()
+	public void testGetTag() throws XElementDoesntExistException
 	{
 		Mockito.when(locator.findElement()).thenReturn(webElementMock);
 		Mockito.when(webElementMock.getTagName()).thenReturn("td");

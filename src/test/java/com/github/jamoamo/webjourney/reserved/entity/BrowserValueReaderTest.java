@@ -33,6 +33,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 import org.mockito.invocation.InvocationOnMock;
@@ -73,7 +76,7 @@ public class BrowserValueReaderTest
 		Mockito.when(element.getElementText()).thenReturn("Element Value");
 		
 		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElement("//div")).thenReturn(element);
+		Mockito.when(page.getElement(eq("//div"), anyBoolean())).thenReturn(element);
 		
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentPage()).thenReturn(page);
@@ -82,7 +85,7 @@ public class BrowserValueReaderTest
 		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
 		
 		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		String text = reader.getElementText("//div");
+		String text = reader.getElementText("//div", false);
 		assertEquals("Element Value", text);
 	}
 
@@ -96,7 +99,7 @@ public class BrowserValueReaderTest
 		Mockito.when(element.getElementText()).thenReturn("Element Value");
 		
 		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElement("//div")).thenReturn(element);
+		Mockito.when(page.getElement(eq("//div"), anyBoolean())).thenReturn(element);
 		
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentPage()).thenReturn(page);
@@ -105,7 +108,7 @@ public class BrowserValueReaderTest
 		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
 		
 		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		AElement elementResult = reader.getElement("//div");
+		AElement elementResult = reader.getElement("//div", false);
 		assertSame(element, elementResult);
 	}
 
@@ -120,7 +123,7 @@ public class BrowserValueReaderTest
 		Mockito.when(element.getAttribute("attr")).thenReturn("Attribute Value");
 		
 		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElement("//div")).thenReturn(element);
+		Mockito.when(page.getElement(eq("//div"), anyBoolean())).thenReturn(element);
 		
 		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
 		Mockito.when(window.getCurrentPage()).thenReturn(page);

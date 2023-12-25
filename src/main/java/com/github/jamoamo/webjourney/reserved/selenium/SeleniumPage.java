@@ -45,7 +45,13 @@ final class SeleniumPage implements IWebPage
 	@Override
 	public AElement getElement(String xPath)
 	{
-		return new SeleniumElement(new SingleEntityLocator(this.webDriver, By.xpath(xPath)));
+		return getElement(xPath, false);
+	}
+	
+	@Override
+	public AElement getElement(String xPath, boolean optional)
+	{
+		return new SeleniumElement(new SingleElementLocator(this.webDriver, By.xpath(xPath), optional));
 	}
 
 	@Override

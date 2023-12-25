@@ -79,7 +79,7 @@ public class EntitiesCreatorConverterTest
 		Mockito.when(fieldDefn.getField()).thenReturn(Entity.class.getDeclaredField("subEntities"));
 		
 		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElementText("https://some.url")).thenReturn("Value");
+		Mockito.when(reader.getElementText("https://some.url", false)).thenReturn("Value");
 		
 		EntitiesCreatorConverter converter = new EntitiesCreatorConverter(fieldDefn);
 		List<Object> convertValue = converter.convertValue(Collections.singletonList("https://some.url"), reader);

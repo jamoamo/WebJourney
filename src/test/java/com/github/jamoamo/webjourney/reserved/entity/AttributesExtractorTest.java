@@ -50,21 +50,10 @@ public class AttributesExtractorTest
 	@Test
 	public void testExtractRawValue() throws Exception
 	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getAttribute("attr")).thenReturn("Value");
-		
-		Answer<List<AElement>> answer = new Answer<List<AElement>>()
-		{
-			@Override
-			public List<AElement> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return Collections.singletonList(element);
-			}
-		};
+		Answer<List<String>> answer = (InvocationOnMock iom) -> Collections.singletonList("Value");
 		
 		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElements("//div")).then(answer);
+		Mockito.when(reader.getAttributes("//div", "attr")).then(answer);
 		
 		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
 		List<String> extractRawValue = extractor.extractRawValue(reader);

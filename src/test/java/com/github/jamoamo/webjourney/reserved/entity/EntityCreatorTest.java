@@ -56,6 +56,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -95,10 +98,14 @@ public class EntityCreatorTest
 		
 		when(webPage.getElement(XPATH_STRING_DATA)).thenReturn(
 				  new TestElement("div", Collections.singletonMap("attr", "Attribute Value"), "String Data"));
+		when(webPage.getElement(eq(XPATH_STRING_DATA), anyBoolean())).thenReturn(
+				  new TestElement("div", Collections.singletonMap("attr", "Attribute Value"), "String Data"));
 		
 		when(webPage.getElement(XPATH_INT_DATA)).thenReturn(new TestElement("57"));
+		when(webPage.getElement(eq(XPATH_INT_DATA), anyBoolean())).thenReturn(new TestElement("57"));
 		
 		when(webPage.getElement(XPATH_DOUBLE_DATA)).thenReturn(new TestElement("125.9"));
+		when(webPage.getElement(eq(XPATH_DOUBLE_DATA), anyBoolean())).thenReturn(new TestElement("125.9"));
 		
 		when(webPage.getElement(XPATH_SUB_DATA)).thenReturn(
 				  new TestElement(
@@ -110,8 +117,20 @@ public class EntityCreatorTest
 							 }
 				  )
 		);
+		
+		when(webPage.getElement(eq(XPATH_SUB_DATA), anyBoolean())).thenReturn(
+				  new TestElement(
+							 "",
+							 new AElement[]{
+								 new TestElement("div", Collections.singletonMap("id", "string-data"), "String Data"),
+								 new TestElement("div", Collections.singletonMap("id", "int-data"), "57"),
+								 new TestElement("div", Collections.singletonMap("id", "double-data"), "125.9")
+							 }
+				  )
+		);
 
 		when(webPage.getElement(XPATH_URL_DATA)).thenReturn(new TestElement("a", Collections.singletonMap("href", "https://newurlattr.com") ,"https://newurl.com"));
+		when(webPage.getElement(eq(XPATH_URL_DATA), anyBoolean())).thenReturn(new TestElement("a", Collections.singletonMap("href", "https://newurlattr.com") ,"https://newurl.com"));
 		
 		List<TestElement> testElements = new ArrayList<>();
 		testElements.add(new TestElement("Item1"));
@@ -223,9 +242,17 @@ public class EntityCreatorTest
 		when(webPage.getElements(XPATH_URL_LIST_DATA)).thenAnswer(urlAnswer);
 		
 		when(webPage.getElement(XPATH_SEPARATED_STRING_DATA)).thenReturn(new TestElement("item1,item2,item3"));
+		when(webPage.getElement(eq(XPATH_SEPARATED_STRING_DATA), anyBoolean())).thenReturn(new TestElement("item1,item2,item3"));
 		when(window.getCurrentUrl()).thenReturn("https://currenturl.com");
 		
 		when(webPage.getElement(XPATH_DIFF_STRING_DATA))
+			.thenReturn(new TestElement("String1"), 
+							new TestElement("String2"), 
+							new TestElement("String3"), 
+							new TestElement("String4"), 
+							new TestElement("String5"));
+		
+		when(webPage.getElement(eq(XPATH_DIFF_STRING_DATA), anyBoolean()))
 			.thenReturn(new TestElement("String1"), 
 							new TestElement("String2"), 
 							new TestElement("String3"), 

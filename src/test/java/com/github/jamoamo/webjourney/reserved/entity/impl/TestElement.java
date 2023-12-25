@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import org.apache.commons.lang3.function.Failable;
 
 /**
  *
@@ -107,7 +108,8 @@ public class TestElement extends AElement
 		String id = path.substring(5, path.length() - 1);
 
 		Optional<AElement> findFirst =
-				  Arrays.stream(subElements).filter(element -> element.getAttribute("id").equals(id)).findFirst();
+				  Failable.stream(Arrays.stream(subElements))
+					  .filter(element -> element.getAttribute("id").equals(id)).stream().findFirst();
 
 		return findFirst.orElse(null);
 	}
@@ -144,7 +146,8 @@ public class TestElement extends AElement
 		String id = path.substring(4, path.length() - 1);
 
 		List<AElement> list =
-				  Arrays.stream(subElements).filter(element -> element.getAttribute("id").equals(id)).toList();
+				  Failable.stream(Arrays.stream(subElements))
+					  .filter(element -> element.getAttribute("id").equals(id)).stream().toList();
 
 		return list;
 	}
@@ -170,7 +173,9 @@ public class TestElement extends AElement
 	@Override
 	public List<? extends AElement> getChildrenByTag(String childElementType)
 	{
-		return Arrays.stream(this.subElements).filter(elem -> elem.getTag().equals(childElementType)).toList();
+		return Failable.stream(Arrays.stream(this.subElements))
+			.filter(elem -> elem.getTag().equals(childElementType))
+			.stream().toList();
 	}
 
 	@Override

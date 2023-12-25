@@ -32,8 +32,9 @@ import com.github.jamoamo.webjourney.api.web.AElement;
 class EntityFromElementConverter implements IConverter<AElement, Object>
 {
 	private final EntityDefn defn;
-	
-	EntityFromElementConverter(EntityFieldDefn fieldDefn) throws XEntityFieldDefinitionException
+
+	EntityFromElementConverter(EntityFieldDefn fieldDefn)
+		throws XEntityFieldDefinitionException
 	{
 		try
 		{
@@ -47,12 +48,21 @@ class EntityFromElementConverter implements IConverter<AElement, Object>
 
 	@Override
 	public Object convertValue(AElement source, IValueReader reader)
+		throws XConversionException
 	{
 		if(source == null || !source.exists())
 		{
 			return null;
 		}
-		EntityCreator entityCreator = new EntityCreator(this.defn, source);
-		return entityCreator.createNewEntity(reader.getBrowser());
+
+		try
+		{
+			EntityCreator entityCreator = new EntityCreator(this.defn, source);
+			return entityCreator.createNewEntity(reader.getBrowser());
+		}
+		catch(XEntityFieldScrapeException ex)
+		{
+			throw new XConversionException(ex);
+		}
 	}
 }

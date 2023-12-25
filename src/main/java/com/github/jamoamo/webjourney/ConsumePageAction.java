@@ -27,6 +27,7 @@ import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.reserved.entity.EntityCreator;
 import com.github.jamoamo.webjourney.reserved.entity.EntityDefn;
 import com.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
+import com.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +71,9 @@ class ConsumePageAction<T> extends AWebAction
 			T instance = creator.createNewEntity(browser);
 			this.pageConsumer.accept(instance);
 		}
-		catch(PageConsumerException | XEntityDefinitionException ex)
+		catch(PageConsumerException | XEntityDefinitionException | XEntityFieldScrapeException ex)
 		{
-			throw new BaseJourneyActionException(ex.getMessage(), this);
+			throw new BaseJourneyActionException(ex.getMessage(), this, ex);
 		}
 		return ActionResult.SUCCESS;
 	}
