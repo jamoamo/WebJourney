@@ -50,7 +50,7 @@ public class AttributeExtractorTest
 		Mockito.when(element.getAttribute("attr")).thenReturn("Value");
 		
 		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElement("//div")).thenReturn(element);
+		Mockito.when(reader.getElement("//div", false)).thenReturn(element);
 		
 		AttributeExtractor extractor = new AttributeExtractor("//div", "attr");
 		String extractRawValue = extractor.extractRawValue(reader);

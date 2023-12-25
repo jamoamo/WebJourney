@@ -69,12 +69,11 @@ class EntityCreatorConverter implements IConverter<String, Object>
 			reader.navigateBack();
 			return instance;
 		}
-		catch(MalformedURLException | URISyntaxException | IllegalArgumentException e)
-		{
-			this.logger.error(String.format("There is a problem with the url %s", source), e);
-			return null;
-		}
-		catch(XValueReaderException ex)
+		catch(MalformedURLException | 
+			URISyntaxException | 
+			IllegalArgumentException | 
+			XValueReaderException | 
+			XEntityFieldScrapeException ex)
 		{
 			throw new XConversionException(ex);
 		}

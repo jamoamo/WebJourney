@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.selenium;
 
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -31,5 +32,5 @@ import org.openqa.selenium.WebElement;
  */
 interface ISeleniumElementLocator
 {
-	WebElement findElement();
+	WebElement findElement() throws XElementDoesntExistException;
 }

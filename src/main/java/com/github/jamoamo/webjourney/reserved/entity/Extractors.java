@@ -110,7 +110,8 @@ public final class Extractors
 			return new ConstantExtractor(extractor.thenConstant().value(),
 												  new RegexCondition(
 													  getStringExtractor(extractor.ifExtractValue().path(),
-																				extractor.ifExtractValue().attribute()),
+																				extractor.ifExtractValue().attribute(),
+																				true),
 													  extractor.regexPattern()));
 		}
 		throw new RuntimeException("Unable to determine an extractor for annotation of type " +
@@ -123,7 +124,7 @@ public final class Extractors
 																						  boolean hasConverter)
 	{
 		IExtractor<String> ifExtractor = getStringExtractor(extractor.ifExtractValue().path(), extractor.
-																			 ifExtractValue().attribute());
+																			 ifExtractValue().attribute(), true);
 		RegexCondition condition = new RegexCondition(ifExtractor, extractor.regexPattern());
 		return getValueExtractor(
 			fieldInfo,
@@ -176,7 +177,7 @@ public final class Extractors
 																						FieldInfo fieldInfo)
 	{
 		IExtractor<String> ifExtractor = getStringExtractor(extractor.ifExtractValue().path(), extractor.
-																			 ifExtractValue().attribute());
+																			 ifExtractValue().attribute(), true);
 		RegexCondition condition = new RegexCondition(ifExtractor, extractor.regexPattern());
 		return getUrlExtractor(
 			fieldInfo,
@@ -233,15 +234,15 @@ public final class Extractors
 		return getCollectionExtractor(fieldInfo, xPath, hasConverter, condition);
 	}
 
-	private static IExtractor<String> getStringExtractor(String path, String attribute)
+	private static IExtractor<String> getStringExtractor(String path, String attribute, boolean optional)
 	{
 		if(!attribute.isBlank())
 		{
-			return new AttributeExtractor(path, attribute);
+			return new AttributeExtractor(path, attribute, new AlwaysCondition(), optional);
 		}
 		else
 		{
-			return new ElementTextExtractor(path);
+			return new ElementTextExtractor(path, new AlwaysCondition(), optional);
 		}
 	}
 

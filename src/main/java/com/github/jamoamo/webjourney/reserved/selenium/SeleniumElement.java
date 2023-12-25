@@ -23,11 +23,13 @@
  */
 package com.github.jamoamo.webjourney.reserved.selenium;
 
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import com.github.jamoamo.webjourney.api.web.AElement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -36,7 +38,7 @@ import org.openqa.selenium.WebElement;
  */
 class SeleniumElement extends AElement
 {
-	private ISeleniumElementLocator locator;
+	private final ISeleniumElementLocator locator;
 	
 	SeleniumElement(ISeleniumElementLocator locator)
 	{
@@ -44,83 +46,105 @@ class SeleniumElement extends AElement
 	}
 
 	@Override
-	public String getElementText()
+	public String getElementText() throws XElementDoesntExistException
 	{
-		return getElement().getText();
+		Optional<WebElement> elem = getElement();
+		if(elem.isEmpty())
+		{
+			return null;
+		}
+		
+		return elem.get().getText();
 	}
 
 	@Override
 	public AElement findElement(String path)
 	{
-		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path)));
+		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), false));
 	}
 
 	@Override
-	public List<? extends AElement> findElements(String path)
+	public List<? extends AElement> findElements(String path) throws XElementDoesntExistException
 	{
+		Optional<WebElement> elem = getElement();
+		if(elem.isEmpty())
+		{
+			return new ArrayList<>();
+		}
+		
 		return IntStreams
-			.range(getElement().findElements(By.xpath(path)).size())
-			.mapToObj(i -> new ChildElementListItemLocator(this, By.xpath(path), i))
+			.range(elem.get().findElements(By.xpath(path)).size())
+			.mapToObj(i -> new ChildElementListItemLocator(this, By.xpath(path), i, false))
 			.map(locator -> new SeleniumElement(locator))
 			.toList();
 	}
 
 	@Override
-	public String getAttribute(String attribute)
+	public String getAttribute(String attribute) throws XElementDoesntExistException
 	{
-		return getElement().getAttribute(attribute);
+		Optional<WebElement> elem = getElement();
+		if(elem.isEmpty())
+		{
+			return null;
+		}
+		return elem.get().getAttribute(attribute);
 	}
 
 	@Override
-	public void click()
+	public void click() throws XElementDoesntExistException
 	{
-		getElement().click();
+		getElement().ifPresent(e -> e.click());
 	}
 
 	@Override
-	public void enterText(String text)
+	public void enterText(String text) throws XElementDoesntExistException
 	{
-		getElement().sendKeys(text);
+		getElement().ifPresent(e -> e.sendKeys(text));
 	}
 
 	@Override
-	public List<? extends AElement> getChildrenByTag(String childElementType)
+	public List<? extends AElement> getChildrenByTag(String childElementType) throws XElementDoesntExistException
 	{
+		Optional<WebElement> elem = getElement();
+		if(!elem.isPresent())
+		{
+			return new ArrayList<>();
+		}
+		
 		return IntStreams
-			.range(getElement().findElements(By.tagName(childElementType)).size())
-			.mapToObj(i -> new ChildElementListItemLocator(this, By.tagName(childElementType), i))
+			.range(elem.get().findElements(By.tagName(childElementType)).size())
+			.mapToObj(i -> new ChildElementListItemLocator(this, By.tagName(childElementType), i, false))
 			.map(locator -> new SeleniumElement(locator))
 			.toList();
 	}
 
 	@Override
-	public String getTag()
+	public String getTag() throws XElementDoesntExistException
 	{
-		return getElement().getTagName();
+		Optional<WebElement> elem = getElement();
+		return elem.isPresent() ? elem.get().getTagName() : null;
 	}
 	
-	private WebElement getElement()
+	private Optional<WebElement> getElement() throws XElementDoesntExistException
 	{
-		return this.locator.findElement();
+		return Optional.ofNullable(this.locator.findElement());
 	}
 
-	WebElement getWebElement()
+	WebElement getWebElement() throws XElementDoesntExistException
 	{
-		return getElement();
+		return getElement().orElse(null);
 	}
 
 	@Override
 	public boolean exists()
 	{
-		WebElement element;
 		try
 		{
-			element = getElement();
+			return getElement().isPresent();
 		}
-		catch(NoSuchElementException ex)
+		catch(XElementDoesntExistException ex)
 		{
 			return false;
 		}
-		return element.isDisplayed();
 	}
 }

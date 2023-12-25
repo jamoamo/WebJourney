@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.selenium;
 
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -45,7 +46,7 @@ class ElementListItemLocator implements ISeleniumElementLocator
 	}
 
 	@Override
-	public WebElement findElement()
+	public WebElement findElement() throws XElementDoesntExistException
 	{
 		try
 		{
@@ -53,7 +54,7 @@ class ElementListItemLocator implements ISeleniumElementLocator
 		}
 		catch(IndexOutOfBoundsException ex)
 		{
-			throw new RuntimeException("Element does not exist.");
+			throw new XElementDoesntExistException();
 		}
 	}
 	

@@ -23,7 +23,9 @@
  */
 package com.github.jamoamo.webjourney.reserved.selenium;
 
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -35,18 +37,31 @@ class ChildElementListItemLocator implements ISeleniumElementLocator
 	private final SeleniumElement element;
 	private final By by;
 	private final int index;
+	private final boolean optional;
 	
-	ChildElementListItemLocator(SeleniumElement element, By by, int index)
+	ChildElementListItemLocator(SeleniumElement element, By by, int index, boolean optional)
 	{
 		this.element = element;
 		this.by = by;
 		this.index = index;
+		this.optional = optional;
 	}
 	
 	@Override
-	public WebElement findElement()
+	public WebElement findElement() throws XElementDoesntExistException
 	{
-		return this.element.getWebElement().findElements(this.by).get(this.index);
+		try
+		{
+			return this.element.getWebElement().findElements(this.by).get(this.index);
+		}
+		catch(NoSuchElementException | IndexOutOfBoundsException ex)
+		{
+			if(this.optional)
+			{
+				return null;
+			}
+			throw new XElementDoesntExistException();
+		}
 	}
 	
 }

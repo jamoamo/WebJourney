@@ -48,15 +48,7 @@ public class ElementTextsCollectionExtractorTest
 	@Test
 	public void testextractRawValue() throws Exception
 	{
-		Answer<List<String>> answer = new Answer<>()
-		{
-			@Override
-			public List<String> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return Collections.singletonList("Text");
-			}
-		};
+		Answer<List<String>> answer = (InvocationOnMock iom) -> Collections.singletonList("Text");
 		
 		IValueReader reader = Mockito.mock(IValueReader.class);
 		Mockito.when(reader.getElementTexts("//div")).then(answer);

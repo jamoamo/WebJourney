@@ -23,9 +23,6 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
-import org.openqa.selenium.NoSuchElementException;
-
-
 /**
  *
  * @author James Amoore
@@ -53,15 +50,7 @@ class ElementTextExtractor implements IExtractor<String>
 	{
 		try
 		{
-			return reader.getElementText(this.xPath);
-		}
-		catch(NoSuchElementException ex)
-		{
-			if(this.optional)
-			{
-				return null;
-			}
-			throw new XExtractionException(ex);
+			return reader.getElementText(this.xPath, this.optional);
 		}
 		catch(XValueReaderException ex)
 		{

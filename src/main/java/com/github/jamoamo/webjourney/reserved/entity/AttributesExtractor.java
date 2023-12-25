@@ -24,7 +24,6 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import java.util.List;
-import org.openqa.selenium.NoSuchElementException;
 
 /**
  *
@@ -50,15 +49,7 @@ class AttributesExtractor implements IExtractor<List<String>>
 	{
 		try
 		{
-			return browser.getElements(this.xpath).stream().map(elem -> elem.getAttribute(this.attribute)).toList();
-		}
-		catch(NoSuchElementException ex)
-		{
-			if(this.optional)
-			{
-				return null;
-			}
-			throw new XExtractionException(ex);
+			return browser.getAttributes(this.xpath, this.attribute);
 		}
 		catch(XValueReaderException ex)
 		{

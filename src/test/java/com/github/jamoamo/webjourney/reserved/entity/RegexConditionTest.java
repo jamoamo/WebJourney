@@ -66,4 +66,16 @@ public class RegexConditionTest
 		assertFalse(evaluate);
 	}
 	
+	@Test
+	public void testEvaluate_null() throws Exception
+	{
+		IExtractor<String> extractor = Mockito.mock(IExtractor.class);
+		Mockito.when(extractor.extractRawValue(any())).thenReturn(null);
+		
+		RegexCondition condition = new RegexCondition(extractor, "values");
+		
+		boolean evaluate = condition.evaluate(null);
+		assertFalse(evaluate);
+	}
+	
 }

@@ -45,7 +45,7 @@ public class ElementTextExtractorTest
 	public void testExtractRawValue() throws Exception
 	{
 		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElementText("//div")).thenReturn("Text");
+		Mockito.when(reader.getElementText("//div", false)).thenReturn("Text");
 		
 		ElementTextExtractor extractor = new ElementTextExtractor("//div");
 		String extractRawValue = extractor.extractRawValue(reader);

@@ -24,13 +24,13 @@
 package com.github.jamoamo.webjourney.reserved.selenium;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import java.util.Collections;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -46,7 +46,7 @@ public class SeleniumPageTest
 	 * Test of getElement method, of class SeleniumPage.
 	 */
 	@Test
-	public void testGetElement()
+	public void testGetElement() throws XElementDoesntExistException
 	{
 		WebElement elem = Mockito.mock(WebElement.class);
 		Mockito.when(elem.getText()).thenReturn("Elem Text");
@@ -62,7 +62,7 @@ public class SeleniumPageTest
 	 * Test of getElements method, of class SeleniumPage.
 	 */
 	@Test
-	public void testGetElements()
+	public void testGetElements() throws XElementDoesntExistException
 	{
 		WebElement elem = Mockito.mock(WebElement.class);
 		Mockito.when(elem.getText()).thenReturn("Elem Text");
@@ -79,7 +79,7 @@ public class SeleniumPageTest
 	 * Test of getElementsByTag method, of class SeleniumPage.
 	 */
 	@Test
-	public void testGetElementsByTag()
+	public void testGetElementsByTag() throws XElementDoesntExistException
 	{
 		WebElement elem = Mockito.mock(WebElement.class);
 		Mockito.when(elem.getText()).thenReturn("Elem Text");

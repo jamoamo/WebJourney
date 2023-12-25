@@ -35,10 +35,11 @@ public class BaseJourneyActionException extends JourneyException
 	 * Creates a new exception.
 	 * @param message The exception message.
 	 * @param action The action the exception occurred whilst performing
+	 * @param ex the cause of the exception
 	 */
-	public BaseJourneyActionException(String message, AWebAction action)
+	public BaseJourneyActionException(String message, AWebAction action, Exception ex)
 	{
-		super(message);
+		super(message, ex);
 		this.action = action;
 	}
 

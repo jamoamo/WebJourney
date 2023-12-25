@@ -53,7 +53,7 @@ abstract class AElementExtractor implements IExtractor<AElement>
 	{
 		try
 		{
-			return reader.getElement(this.xPath);
+			return reader.getElement(this.xPath, false);
 		}
 		catch(NoSuchElementException ex)
 		{

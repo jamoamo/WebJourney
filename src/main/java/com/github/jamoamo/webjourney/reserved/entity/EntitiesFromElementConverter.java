@@ -48,7 +48,7 @@ class EntitiesFromElementConverter implements IConverter<List<AElement>, List<Ob
 	}
 
 	@Override
-	public List<Object> convertValue(List<AElement> source, IValueReader reader)
+	public List<Object> convertValue(List<AElement> source, IValueReader reader) throws XConversionException
 	{
 		if (source == null)
 		{
@@ -58,8 +58,15 @@ class EntitiesFromElementConverter implements IConverter<List<AElement>, List<Ob
 		List<Object> result = new ArrayList<>(source.size());
 		for(AElement elems : source)
 		{
-			EntityCreator entityCreator = new EntityCreator(this.defn, elems);
-			result.add(entityCreator.createNewEntity(reader.getBrowser()));
+			try
+			{
+				EntityCreator entityCreator = new EntityCreator(this.defn, elems);
+				result.add(entityCreator.createNewEntity(reader.getBrowser()));
+			}
+			catch(XEntityFieldScrapeException ex)
+			{
+				throw new XConversionException(ex);
+			}
 		}
 		return result;
 	}

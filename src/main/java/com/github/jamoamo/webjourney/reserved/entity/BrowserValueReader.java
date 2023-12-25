@@ -28,6 +28,8 @@ import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.function.Failable;
 
 /**
  *
@@ -58,14 +60,14 @@ class BrowserValueReader implements IValueReader
 	}
 
 	@Override
-	public String getElementText(String xPath) throws XValueReaderException
+	public String getElementText(String xPath, boolean optional) throws XValueReaderException
 	{
 		try
 		{
 			return this.browser
 				.getActiveWindow()
 				.getCurrentPage()
-				.getElement(xPath)
+				.getElement(xPath, optional)
 				.getElementText();
 		}
 		catch(XWebException ex)
@@ -75,11 +77,11 @@ class BrowserValueReader implements IValueReader
 	}
 
 	@Override
-	public AElement getElement(String xPath) throws XValueReaderException
+	public AElement getElement(String xPath, boolean optional) throws XValueReaderException
 	{
 		try
 		{
-			return this.browser.getActiveWindow().getCurrentPage().getElement(xPath);
+			return this.browser.getActiveWindow().getCurrentPage().getElement(xPath, optional);
 		}
 		catch(XWebException ex)
 		{
@@ -92,7 +94,26 @@ class BrowserValueReader implements IValueReader
 	{
 		try
 		{
-			return this.browser.getActiveWindow().getCurrentPage().getElement(elementXPath).getAttribute(attr);
+			return this.browser.getActiveWindow().getCurrentPage().getElement(elementXPath, false).getAttribute(attr);
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+	
+	@Override
+	public List<String> getAttributes(String elementXPath, String attr) throws XValueReaderException
+	{
+		try
+		{
+			return Failable.stream(
+					this.browser
+						.getActiveWindow()
+						.getCurrentPage()
+						.getElements(elementXPath))
+				.map(e -> e.getAttribute(attr))
+				.collect(Collectors.toList());
 		}
 		catch(XWebException ex)
 		{
@@ -144,12 +165,13 @@ class BrowserValueReader implements IValueReader
 	{
 		try
 		{
-			return this.browser.getActiveWindow()
-				.getCurrentPage()
-				.getElements(xPath)
-				.stream()
+			return Failable.stream(
+					this.browser
+						.getActiveWindow()
+						.getCurrentPage()
+						.getElements(xPath))
 				.map(e -> e.getElementText())
-				.toList();
+				.collect(Collectors.toList());
 		}
 		catch(XWebException ex)
 		{

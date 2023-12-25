@@ -35,52 +35,61 @@ public abstract class AElement
 	 * Gets an attribute of the element by name.
 	 * @param attribute the attribute name
 	 * @return the value of the attribute
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract String getAttribute(String attribute);
+	public abstract String getAttribute(String attribute) throws XElementDoesntExistException;
 	
 	/**
 	 * Get the text from the element.
 	 * @return element text.
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract String getElementText();
+	public abstract String getElementText() throws XElementDoesntExistException;
 
 	/**
 	 * Finds a sub-element using the xpath.
 	 * @param path the xpath.
 	 * @return the sub-element
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract AElement findElement(String path);
+	public abstract AElement findElement(String path) throws XElementDoesntExistException;
 
 	/**
 	 * Finds a list of sub-element using the xpath.
 	 * @param path the xpath.
 	 * @return list of sub-elements
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract List<? extends AElement> findElements(String path);
+	public abstract List<? extends AElement> findElements(String path) throws XElementDoesntExistException;
 	
 	/**
 	 * Clicks the element.
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract void click();
+	public abstract void click() throws XElementDoesntExistException;
 	
 	/**
 	 * Enters Text to the element.
 	 * @param text the text to enter in the element
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract void enterText(String text);
+	public abstract void enterText(String text) throws XElementDoesntExistException;
 
 	/**
 	 * Get children by tag name.
 	 * @param childElementType the tag.
 	 * @return all the children of the element that have the given tag.
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract List<? extends AElement> getChildrenByTag(String childElementType);
+	public abstract List<? extends AElement> getChildrenByTag(String childElementType) 
+		throws XElementDoesntExistException;
 
 	/**
 	 * Get the tag of the element.
 	 * @return the element's tag
+	 * @throws com.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
-	public abstract String getTag();
+	public abstract String getTag() throws XElementDoesntExistException;
 	
 	/**
 	 * Indicates if the element exists in the current context.

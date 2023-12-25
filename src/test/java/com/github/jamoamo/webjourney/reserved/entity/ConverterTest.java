@@ -59,15 +59,7 @@ public class ConverterTest
 	public void testConvertValue() throws Exception
 	{
 		Conversion conversion = Mockito.mock(Conversion.class);
-		Answer<Class<TestConverter>> answer = new Answer<>()
-		{
-			@Override
-			public Class<TestConverter> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return TestConverter.class;
-			}
-		};
+		Answer<Class<TestConverter>> answer = (InvocationOnMock iom) -> TestConverter.class;
 		Mockito.when(conversion.mapper()).then(answer);
 		
 		Converter converter = new Converter(conversion);

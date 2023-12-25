@@ -25,9 +25,12 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.function.Failable;
 
 /**
  *
@@ -57,26 +60,64 @@ class ParentElementValueReader implements IValueReader
 	}
 
 	@Override
-	public String getElementText(String xPath)
+	public String getElementText(String xPath, boolean optional) throws XValueReaderException
 	{
-		AElement element = getElement(xPath);
-		if(element == null)
+		try
 		{
-			return null;
+			AElement element = getElement(xPath, optional);
+			if(element == null)
+			{
+				return null;
+			}
+			return element.getElementText();
 		}
-		return element.getElementText();
+		catch(XElementDoesntExistException e)
+		{
+			throw new XValueReaderException(e);
+		}
 	}
 
 	@Override
-	public AElement getElement(String xPath)
+	public AElement getElement(String xPath, boolean optional) throws XValueReaderException
 	{
-		return this.parentElement.findElement(xPath);
+		try
+		{
+			return this.parentElement.findElement(xPath);
+		}
+		catch(XElementDoesntExistException e)
+		{
+			throw new XValueReaderException(e);
+		}
 	}
 
 	@Override
-	public String getAttribute(String element, String attr)
+	public String getAttribute(String element, String attr) throws XValueReaderException
 	{
-		return this.parentElement.findElement(element).getAttribute(attr);
+		try
+		{
+			return this.parentElement.findElement(element).getAttribute(attr);
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+	
+	@Override
+	public List<String> getAttributes(String element, String attr) throws XValueReaderException
+	{
+		try
+		{
+			return Failable.stream(
+					this.parentElement.findElements(element)
+				)
+				.map(elem -> elem.getAttribute(attr))
+				.collect(Collectors.toList());
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
@@ -106,15 +147,31 @@ class ParentElementValueReader implements IValueReader
 	}
 
 	@Override
-	public List<? extends AElement> getElements(String xPath)
+	public List<? extends AElement> getElements(String xPath) throws XValueReaderException
 	{
-		return this.parentElement.findElements(xPath);
+		try
+		{
+			return this.parentElement.findElements(xPath);
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override
-	public List<String> getElementTexts(String xPath)
+	public List<String> getElementTexts(String xPath) throws XValueReaderException
 	{
-		return this.parentElement.findElements(xPath).stream().map(element -> element.getElementText()).toList();
+		try
+		{
+			return Failable.stream(this.parentElement.findElements(xPath))
+				.map(element -> element.getElementText())
+					.collect(Collectors.toList());
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
 	}
 
 	@Override

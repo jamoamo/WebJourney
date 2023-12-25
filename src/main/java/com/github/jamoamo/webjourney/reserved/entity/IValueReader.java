@@ -44,10 +44,11 @@ public interface IValueReader
 	/**
 	 * Get the text of the element identified by the xpath.
 	 * @param xPath the element xpath
+	 * @param optional if the element is optional
 	 * @return the element text
 	 * @throws com.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
-	String getElementText(String xPath) throws XValueReaderException;
+	String getElementText(String xPath, boolean optional) throws XValueReaderException;
 	
 	/**
 	 * Get the text of the elements identified by the xpath.
@@ -60,10 +61,11 @@ public interface IValueReader
 	/**
 	 * Get the element identified by the xpath.
 	 * @param xPath the element xpath
+	 * @param optional if the element is optional
 	 * @return the element
 	 * @throws com.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
-	AElement getElement(String xPath) throws XValueReaderException;
+	AElement getElement(String xPath, boolean optional) throws XValueReaderException;
 	
 	/**
 	 * Get the elements identified by the xpath.
@@ -81,6 +83,15 @@ public interface IValueReader
 	 * @throws com.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
 	String getAttribute(String xPath, String attr) throws XValueReaderException;
+	
+	/**
+	 * Get the attribute identified by the element xpath and attribute name.
+	 * @param xPath the element xpath
+	 * @param attr the arribute name
+	 * @return the element attribute value
+	 * @throws com.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
+	 */
+	List<String> getAttributes(String xPath, String attr) throws XValueReaderException;
 	
 	/**
 	 * Navigates to the provided url.

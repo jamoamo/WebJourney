@@ -40,6 +40,17 @@ public interface IWebPage
 	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
 	AElement getElement(String xPath) throws XWebException;
+	
+	/**
+	 * Find an element that matches the xpath expression.
+	 *
+	 * @param xPath xPath expression to the element.
+	 * @param optional indicates if the element is optional.
+	 *
+	 * @return the found Element.
+	 * @throws com.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
+	 */
+	AElement getElement(String xPath, boolean optional) throws XWebException;
 
 	/**
 	 * Find a list of elements that match the xpath expression.
