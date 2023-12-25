@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.reflection;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -169,6 +170,13 @@ public class TypeInfoTest
 		TypeInfo info = TypeInfo.forClass(ArrayList.class);
 		assertFalse(info.isStandardType());
 	}
+	
+	@Test
+	public void testIsStandardType_LocalDate()
+	{
+		TypeInfo info = TypeInfo.forClass(LocalDate.class);
+		assertTrue(info.isStandardType());
+	}
 
 	/**
 	 * Test of isStringType method, of class TypeInfo.
@@ -257,6 +265,21 @@ public class TypeInfoTest
 		TypeInfo info = TypeInfo.forClass(String.class);
 		assertFalse(info.isArrayType());
 	}
+
+	/**
+	 * Test of isDateType method, of class TypeInfo.
+	 */
+	@Test
+	public void testIsDateType_LocalDate()
+	{
+		TypeInfo info = TypeInfo.forClass(LocalDate.class);
+		assertTrue(info.isDateType());
+	}
 	
-	
+	@Test
+	public void testIsDateType_String()
+	{
+		TypeInfo info = TypeInfo.forClass(String.class);
+		assertFalse(info.isDateType());
+	}
 }

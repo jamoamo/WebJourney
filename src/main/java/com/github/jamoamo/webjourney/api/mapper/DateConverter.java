@@ -21,32 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.selenium;
+package com.github.jamoamo.webjourney.api.mapper;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- *
+ * Converter for LocalDate.
  * @author James Amoore
  */
-class SingleEntityLocator implements ISeleniumElementLocator
+public final class DateConverter extends AConverter<LocalDate>
 {
-	private final WebDriver driver;
-	private final By by;
+	//Matches full date, e.g. 28th Feburary 2023
+	private Pattern datePattern = 
+		Pattern.compile("(?<day>\\d{1,2})(st|nd|rd|th)\\s(?<month>\\w+)\\s(?<year>\\d{4})");
 	
-	SingleEntityLocator(WebDriver driver, By by)
-	{
-		this.driver = driver;
-		this.by = by;
-	}
-	
-	
+	/**
+	 * Converts a String to a LocalDate.
+	 * @param value the value to convert
+	 * @return the converted value
+	 * @throws XValueMappingException if the string cannot be converted to a date.
+	 */
 	@Override
-	public WebElement findElement()
+	public LocalDate mapValue(String value)
+		throws XValueMappingException
 	{
-		return this.driver.findElement(this.by);
+		Matcher dateMatcher = this.datePattern.matcher(value);
+		if(dateMatcher.find())
+		{
+			String dayString = dateMatcher.group("day");
+			String monthString = dateMatcher.group("month");
+			String yearString = dateMatcher.group("year");
+			
+			return LocalDate.of(Integer.parseInt(yearString), 
+									  Month.valueOf(monthString.toUpperCase()), 
+									  Integer.parseInt(dayString));
+		}
+		throw new XValueMappingException("Unsupported date format");
 	}
 	
 }

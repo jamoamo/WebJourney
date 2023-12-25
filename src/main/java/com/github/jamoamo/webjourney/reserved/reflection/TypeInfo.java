@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.reflection;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -112,7 +113,7 @@ public final class TypeInfo
 	 */
 	public boolean isStandardType()
 	{
-		return isStringType() || isNumericType() || isBoolean();
+		return isStringType() || isNumericType() || isBoolean() || isDateType();
 	}
 	
 	private boolean isBoolean()
@@ -164,6 +165,15 @@ public final class TypeInfo
 	public boolean isArrayType()
 	{
 		return this.theClass.isArray();
+	}
+	
+	/**
+	 * Determines if the class is a date type.
+	 * @return true is its a date type
+	 */
+	public boolean isDateType()
+	{
+		return this.theClass == LocalDate.class;
 	}
 	
 	private static Set<Class<?>> getAllExtendedOrImplementedInterfacesRecursively(Class<?> clazz) 
