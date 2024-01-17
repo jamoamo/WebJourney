@@ -172,4 +172,31 @@ public class DateConverterTest
 		assertEquals(Month.DECEMBER, date.getMonth());
 		assertEquals(2023, date.getYear());
 	}
+	
+	@Test
+	public void testMapValue_null()
+		throws Exception
+	{
+		DateConverter converter = new DateConverter();
+		LocalDate date = converter.mapValue(null);
+		assertNull(date);
+	}
+	
+	@Test
+	public void testMapValue_blank()
+		throws Exception
+	{
+		DateConverter converter = new DateConverter();
+		LocalDate date = converter.mapValue(" ");
+		assertNull(date);
+	}
+	
+	@Test
+	public void testMapValue_empty()
+		throws Exception
+	{
+		DateConverter converter = new DateConverter();
+		LocalDate date = converter.mapValue("");
+		assertNull(date);
+	}
 }
