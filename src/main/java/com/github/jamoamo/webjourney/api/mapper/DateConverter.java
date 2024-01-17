@@ -48,6 +48,11 @@ public final class DateConverter extends AConverter<LocalDate>
 	public LocalDate mapValue(String value)
 		throws XValueMappingException
 	{
+		if(value == null || value.isBlank())
+		{
+			return null;
+		}
+		
 		Matcher dateMatcher = this.datePattern.matcher(value);
 		if(dateMatcher.find())
 		{
