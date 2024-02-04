@@ -65,12 +65,12 @@
       <dependency>
          <groupId>org.seleniumhq.selenium</groupId>
          <artifactId>selenium-java</artifactId>
-         <version>4.16.1</version>
+         <version>4.17.0</version>
       </dependency>
       <dependency>
          <groupId>org.seleniumhq.selenium</groupId>
          <artifactId>selenium-chrome-driver</artifactId>
-         <version>4.16.1</version>
+         <version>4.17.0</version>
          <type>pom</type>
       </dependency>
       <dependency>
@@ -116,6 +116,11 @@
          <type>jar</type>
       </dependency>
       <dependency>
+         <groupId>dev.failsafe</groupId>
+         <artifactId>failsafe</artifactId>
+         <version>3.3.2</version>
+      </dependency>
+      <dependency>
          <groupId>org.mockito</groupId>
          <artifactId>mockito-core</artifactId>
          <version>5.8.0</version>
@@ -134,13 +139,13 @@
          <version>1.14.11</version>
          <scope>test</scope>
       </dependency>
-       <dependency>
+      <dependency>
          <groupId>org.junit.jupiter</groupId>
          <artifactId>junit-jupiter-api</artifactId>
          <version>5.10.1</version>
          <scope>test</scope>
-       </dependency>
-         <dependency>
+      </dependency>
+      <dependency>
          <groupId>org.junit.jupiter</groupId>
          <artifactId>junit-jupiter-params</artifactId>
          <version>5.10.1</version>
@@ -298,10 +303,10 @@
             <version>3.2.2</version>
          </plugin>
          <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.2.2</version>
-        </plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>3.2.2</version>
+         </plugin>
          <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
