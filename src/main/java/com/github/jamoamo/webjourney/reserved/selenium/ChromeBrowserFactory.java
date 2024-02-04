@@ -26,46 +26,64 @@ package com.github.jamoamo.webjourney.reserved.selenium;
 import com.github.jamoamo.webjourney.api.web.IBrowserFactory;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IBrowserOptions;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 /**
  * Browser factory to create a chrome browser.
+ *
  * @author James Amoore
  */
-public class ChromeBrowserFactory implements IBrowserFactory
+public final class ChromeBrowserFactory implements IBrowserFactory
 {
+	private static final int MAX_RETRIES = 5;
+	
 	/**
 	 * Creates a new Chrome browser.
+	 *
 	 * @param browserOptions the options to use to create the browser
-	 * @return a new Chrome browser instance. 
+	 *
+	 * @return a new Chrome browser instance.
 	 */
 	@Override
 	public IBrowser createBrowser(IBrowserOptions browserOptions)
 	{
-		
-		WebDriverManager.chromedriver().setup();
 
-		ChromeOptions options
-				  = new ChromeOptions();
+		setupDriver();
+
+		ChromeOptions options =
+			new ChromeOptions();
 		options = options.addArguments("--remote-allow-origins=*");
 		options = setHeadless(browserOptions, options);
 		options = setUnexpectedAlertBehaviour(browserOptions, options);
-		
+
 		return new SeleniumDrivenBrowser(new ChromeDriver(options));
+	}
+
+	private void setupDriver()
+	{
+		RetryPolicy<Object> retryPolicy = RetryPolicy.builder()
+			.withBackoff(Duration.ofSeconds(2), Duration.ofMinutes(1))
+			.withMaxRetries(MAX_RETRIES)
+			.build();
+		
+		Failsafe.with(retryPolicy).run(() -> WebDriverManager.chromedriver().setup());
 	}
 
 	private ChromeOptions setUnexpectedAlertBehaviour(IBrowserOptions browserOptions, ChromeOptions options)
 	{
 		if(browserOptions.acceptUnexpectedAlerts())
 		{
-			options = (ChromeOptions)options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
+			options = (ChromeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
 		}
 		else
 		{
-			options = (ChromeOptions)options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
+			options = (ChromeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
 		}
 		return options;
 	}
