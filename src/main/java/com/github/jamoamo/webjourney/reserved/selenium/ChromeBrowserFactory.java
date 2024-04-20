@@ -26,10 +26,6 @@ package com.github.jamoamo.webjourney.reserved.selenium;
 import com.github.jamoamo.webjourney.api.web.IBrowserFactory;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IBrowserOptions;
-import dev.failsafe.Failsafe;
-import dev.failsafe.RetryPolicy;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import java.time.Duration;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -53,9 +49,6 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 	@Override
 	public IBrowser createBrowser(IBrowserOptions browserOptions)
 	{
-
-		setupDriver();
-
 		ChromeOptions options =
 			new ChromeOptions();
 		options = options.addArguments("--remote-allow-origins=*");
@@ -63,16 +56,6 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 		options = setUnexpectedAlertBehaviour(browserOptions, options);
 
 		return new SeleniumDrivenBrowser(new ChromeDriver(options));
-	}
-
-	private void setupDriver()
-	{
-		RetryPolicy<Object> retryPolicy = RetryPolicy.builder()
-			.withBackoff(Duration.ofSeconds(2), Duration.ofMinutes(1))
-			.withMaxRetries(MAX_RETRIES)
-			.build();
-		
-		Failsafe.with(retryPolicy).run(() -> WebDriverManager.chromedriver().setup());
 	}
 
 	private ChromeOptions setUnexpectedAlertBehaviour(IBrowserOptions browserOptions, ChromeOptions options)
