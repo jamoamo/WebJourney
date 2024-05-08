@@ -29,8 +29,6 @@ import com.github.jamoamo.webjourney.reserved.entity.EntityDefn;
 import com.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
 import com.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
 import org.apache.commons.lang3.function.FailableConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author James Amoore
@@ -38,8 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 class ConsumePageAction<T> extends AWebAction
 {
-	private final Logger logger = LoggerFactory.getLogger(ConsumePageAction.class);
-	
 	private final Class<T> pageClass;
 	private final FailableConsumer<T, ? extends PageConsumerException> pageConsumer;
 	
@@ -67,7 +63,7 @@ class ConsumePageAction<T> extends AWebAction
 		{
 			IBrowser browser = context.getBrowser();
 			EntityDefn entityDefn = new EntityDefn(this.pageClass);
-			EntityCreator<T> creator = new EntityCreator(entityDefn, false);
+			EntityCreator<T> creator = new EntityCreator(entityDefn, false, context.getJourneyObservers());
 			T instance = creator.createNewEntity(browser);
 			this.pageConsumer.accept(instance);
 		}

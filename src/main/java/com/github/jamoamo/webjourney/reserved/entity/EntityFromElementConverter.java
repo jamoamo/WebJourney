@@ -23,7 +23,9 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import com.github.jamoamo.webjourney.api.web.AElement;
+import java.util.List;
 
 /**
  *
@@ -47,7 +49,7 @@ class EntityFromElementConverter implements IConverter<AElement, Object>
 	}
 
 	@Override
-	public Object convertValue(AElement source, IValueReader reader)
+	public Object convertValue(AElement source, IValueReader reader, List<IEntityCreationListener> listeners)
 		throws XConversionException
 	{
 		if(source == null || !source.exists())
@@ -57,7 +59,7 @@ class EntityFromElementConverter implements IConverter<AElement, Object>
 
 		try
 		{
-			EntityCreator entityCreator = new EntityCreator(this.defn, source);
+			EntityCreator entityCreator = new EntityCreator(this.defn, source, listeners);
 			return entityCreator.createNewEntity(reader.getBrowser());
 		}
 		catch(XEntityFieldScrapeException ex)

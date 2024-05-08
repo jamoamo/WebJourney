@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import com.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -47,7 +48,7 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 		try
 		{
 			EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField()).getFieldGenericType());
-			this.entityCreator = new EntityCreator(defn, true);
+			this.entityCreator = new EntityCreator(defn, true, null);
 		}
 		catch(XEntityDefinitionException e)
 		{
@@ -56,7 +57,7 @@ class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
 	}
 
 	@Override
-	public List<Object> convertValue(List<String> source, IValueReader reader)
+	public List<Object> convertValue(List<String> source, IValueReader reader, List<IEntityCreationListener> listeners)
 		throws XConversionException
 	{
 		if(source == null)

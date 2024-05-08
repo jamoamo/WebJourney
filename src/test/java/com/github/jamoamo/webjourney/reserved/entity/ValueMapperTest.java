@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
@@ -50,7 +51,7 @@ public class ValueMapperTest
 		Mockito.when(converter.mapValue("Value")).thenReturn("Some Value");
 		
 		ValueConverter mapper = new ValueConverter(converter);
-		Object convertValue = mapper.convertValue("Value", null);
+		Object convertValue = mapper.convertValue("Value", null, new ArrayList<>());
 		assertEquals("Some Value", convertValue);
 	}
 	

@@ -58,7 +58,7 @@ public class CollectionConverterTest
 		source.add("2");
 		source.add("5");
 		source.add("11");
-		Collection<Integer> convertValue = converter.convertValue(source, null);
+		Collection<Integer> convertValue = converter.convertValue(source, null, new ArrayList<>());
 		
 		assertEquals(3, convertValue.size());
 		assertTrue(convertValue.contains(2));

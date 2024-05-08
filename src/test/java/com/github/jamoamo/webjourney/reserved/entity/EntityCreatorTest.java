@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityConstant;
 import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCurrentUrl;
 import com.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractValueAttributeTransformer;
@@ -276,7 +277,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_noMapper_noTransformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValue.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<IEntityCreationListener>());
 
 		ValidEntityExtractValue createNewEntity = (ValidEntityExtractValue)creator.createNewEntity(browser);
 		assertNull(createNewEntity.getNoAnnotation());
@@ -325,7 +326,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_Mapper_noTransformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueMapper.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<IEntityCreationListener>());
 
 		ValidEntityExtractValueMapper createNewEntity = (ValidEntityExtractValueMapper)creator.createNewEntity(browser);
 		assertEquals("<String Data>", createNewEntity.getStringData());
@@ -343,7 +344,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_noMapper_Transformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueTransformer.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<IEntityCreationListener>());
 
 		ValidEntityExtractValueTransformer createNewEntity = (ValidEntityExtractValueTransformer)creator.createNewEntity(browser);
 		assertEquals("ataD gnirtS", createNewEntity.getStringData());
@@ -354,7 +355,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_Mapper_Transformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueTransformerMapper.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<IEntityCreationListener>());
 
 		ValidEntityExtractValueTransformerMapper createNewEntity = (ValidEntityExtractValueTransformerMapper)creator.createNewEntity(browser);
 		assertEquals("<ataD gnirtS>", createNewEntity.getStringData());
@@ -368,7 +369,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_Attribute_noMapper_noTransformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueAttribute.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<IEntityCreationListener>());
 
 		ValidEntityExtractValueAttribute createNewEntity = (ValidEntityExtractValueAttribute)creator.createNewEntity(browser);
 		assertEquals("Attribute Value", createNewEntity.getAttribute());
@@ -379,7 +380,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_Attribute_Mapper_noTransformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueAttributeMapper.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		ValidEntityExtractValueAttributeMapper createNewEntity = (ValidEntityExtractValueAttributeMapper)creator.createNewEntity(browser);
 		assertEquals("<Attribute Value>", createNewEntity.getAttribute());
@@ -389,7 +390,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_Attribute_noMapper_Transformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueAttributeTransformer.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		ValidEntityExtractValueAttributeTransformer createNewEntity = (ValidEntityExtractValueAttributeTransformer)creator.createNewEntity(browser);
 		assertEquals("eulaV etubirttA", createNewEntity.getAttribute());
@@ -399,7 +400,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractValue_Attribute_Mapper_Transformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractValueAttributeTransformerMapper.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		ValidEntityExtractValueAttributeTransformerMapper createNewEntity = (ValidEntityExtractValueAttributeTransformerMapper)creator.createNewEntity(browser);
 		assertEquals("<eulaV etubirttA>", createNewEntity.getAttribute());
@@ -409,7 +410,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractCurrentUrl_noMapper_noTransformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractCurrentUrl.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		
 		ValidEntityExtractCurrentUrl createNewEntity = (ValidEntityExtractCurrentUrl)creator.createNewEntity(browser);
@@ -420,7 +421,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractCurrentUrl_Mapper_noTransformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractCurrentUrlMapper.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		
 		ValidEntityExtractCurrentUrlMapper createNewEntity = (ValidEntityExtractCurrentUrlMapper)creator.createNewEntity(browser);
@@ -431,7 +432,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractCurrentUrl_noMapper_Transformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractCurrentUrlTransformer.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		
 		ValidEntityExtractCurrentUrlTransformer createNewEntity = (ValidEntityExtractCurrentUrlTransformer)creator.createNewEntity(browser);
@@ -442,7 +443,7 @@ public class EntityCreatorTest
 	public void testCreateNewEntity_ExtractCurrentUrl_Mapper_Transformation() throws Exception
 	{
 		EntityDefn defn = new EntityDefn(ValidEntityExtractCurrentUrlTransformerMapper.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 
 		
 		ValidEntityExtractCurrentUrlTransformerMapper createNewEntity = (ValidEntityExtractCurrentUrlTransformerMapper)creator.createNewEntity(browser);
@@ -456,7 +457,7 @@ public class EntityCreatorTest
 		Mockito.clearInvocations(window);
 		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidEntityExtractFromUrl.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 		
 		ValidEntityExtractFromUrl createNewEntity = (ValidEntityExtractFromUrl)creator.createNewEntity(browser);
 		
@@ -484,7 +485,7 @@ public class EntityCreatorTest
 		Mockito.clearInvocations(window);
 		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidEntityExtractFromUrlAttribute.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 		
 		ValidEntityExtractFromUrlAttribute createNewEntity = (ValidEntityExtractFromUrlAttribute)creator.createNewEntity(browser);
 		
@@ -511,7 +512,7 @@ public class EntityCreatorTest
 		Mockito.clearInvocations(window);
 		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidRegexMatchConditionalExtractValue.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 		
 		ValidRegexMatchConditionalExtractValue createNewEntity = (ValidRegexMatchConditionalExtractValue)creator.createNewEntity(browser);
 		
@@ -530,7 +531,7 @@ public class EntityCreatorTest
 		Mockito.clearInvocations(window);
 		Mockito.clearInvocations(webPage);
 		EntityDefn defn = new EntityDefn(ValidRegexMatchConditionalExtractFromUrl.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 		
 		ValidRegexMatchConditionalExtractFromUrl createNewEntity = (ValidRegexMatchConditionalExtractFromUrl)creator.createNewEntity(browser);
 		
@@ -554,7 +555,7 @@ public class EntityCreatorTest
 	{
 		Mockito.clearInvocations(browser);
 		EntityDefn defn = new EntityDefn(ValidEntityConstant.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 		
 		ValidEntityConstant createNewEntity = (ValidEntityConstant)creator.createNewEntity(browser);
 		
@@ -566,7 +567,7 @@ public class EntityCreatorTest
 	{
 		Mockito.clearInvocations(browser);
 		EntityDefn defn = new EntityDefn(ValidEntityRegexMatchConditionalConstant.class);
-		EntityCreator creator = new EntityCreator(defn, false);
+		EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
 		
 		ValidEntityRegexMatchConditionalConstant createNewEntity = (ValidEntityRegexMatchConditionalConstant)creator.createNewEntity(browser);
 		

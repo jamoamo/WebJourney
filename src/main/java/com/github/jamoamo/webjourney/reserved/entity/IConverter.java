@@ -23,6 +23,9 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import java.util.List;
+
 /**
  *
  * @author James Amoore
@@ -31,5 +34,8 @@ package com.github.jamoamo.webjourney.reserved.entity;
  */
 interface IConverter<S, T>
 {
-	T convertValue(S source, IValueReader reader) throws XConversionException;
+	T convertValue(S source, 
+						IValueReader reader, 
+						List<IEntityCreationListener> entityCreationListeners) 
+		throws XConversionException;
 }

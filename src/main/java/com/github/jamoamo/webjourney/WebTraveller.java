@@ -59,6 +59,7 @@ public class WebTraveller
 		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions());
 		JourneyContext context = new JourneyContext();
 		context.setBrowser(browser);
+		context.setJourneyObservers(this.travelOptions.getJourneyObservers());
 		try
 		{
 			SubJourney subJourney = new SubJourney(journey.getActions());

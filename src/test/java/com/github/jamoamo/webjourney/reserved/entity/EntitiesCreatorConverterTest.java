@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.Constant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -82,7 +83,8 @@ public class EntitiesCreatorConverterTest
 		Mockito.when(reader.getElementText("https://some.url", false)).thenReturn("Value");
 		
 		EntitiesCreatorConverter converter = new EntitiesCreatorConverter(fieldDefn);
-		List<Object> convertValue = converter.convertValue(Collections.singletonList("https://some.url"), reader);
+		List<Object> convertValue = 
+			converter.convertValue(Collections.singletonList("https://some.url"), reader, new ArrayList<>());
 		
 		assertEquals(1, convertValue.size());
 		assertInstanceOf(SubEntity.class, convertValue.get(0));

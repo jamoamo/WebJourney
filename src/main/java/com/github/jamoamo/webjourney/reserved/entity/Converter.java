@@ -27,12 +27,14 @@ import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import com.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import com.github.jamoamo.webjourney.annotation.Conversion;
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import java.util.List;
 
 /**
  *
  * @author James Amoore
  */
-class Converter implements IConverter
+class Converter implements IConverter<Object, Object>
 {
 	private final Conversion conversion;
 	
@@ -42,7 +44,10 @@ class Converter implements IConverter
 	}
 
 	@Override
-	public Object convertValue(Object source, IValueReader reader) throws XConversionException
+	public Object convertValue(Object source, 
+										IValueReader reader, 
+										List<IEntityCreationListener> listeners) 
+		throws XConversionException
 	{
 		AConverter valueConverter = InstanceCreator.getInstance().createInstance(this.conversion.mapper());
 		try
