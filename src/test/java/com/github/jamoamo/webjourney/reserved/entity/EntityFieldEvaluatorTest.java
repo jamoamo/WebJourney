@@ -67,10 +67,10 @@ public class EntityFieldEvaluatorTest
 		Mockito.when(transformer.transformValue(Mockito.any())).thenReturn("TheValue");
 		
 		IConverter converter = Mockito.mock(IConverter.class);
-		Mockito.when(converter.convertValue(any(), any())).thenReturn("SomeValue");
+		Mockito.when(converter.convertValue(any(), any(), any())).thenReturn("SomeValue");
 		
 		EntityFieldEvaluator evaluator = new EntityFieldEvaluator(Collections.singletonList(extractor), transformer, converter);
-		Object evaluate = evaluator.evaluate(browser);
+		Object evaluate = evaluator.evaluate(browser, new ArrayList<>());
 		
 		assertEquals("SomeValue", evaluate);
 	}
@@ -85,10 +85,10 @@ public class EntityFieldEvaluatorTest
 		Mockito.when(extractor.getCondition()).thenReturn(new BooleanCondition(true));
 		
 		IConverter converter = Mockito.mock(IConverter.class);
-		Mockito.when(converter.convertValue(any(), any())).thenReturn("SomeValue");
+		Mockito.when(converter.convertValue(any(), any(), any())).thenReturn("SomeValue");
 		
 		EntityFieldEvaluator evaluator = new EntityFieldEvaluator(Collections.singletonList(extractor), null, converter);
-		Object evaluate = evaluator.evaluate(browser);
+		Object evaluate = evaluator.evaluate(browser, new ArrayList<>());
 		
 		assertEquals("SomeValue", evaluate);
 	}
@@ -114,10 +114,10 @@ public class EntityFieldEvaluatorTest
 		Mockito.when(transformer.transformValue("Value")).thenReturn("TheValue");
 		
 		IConverter converter = Mockito.mock(IConverter.class);
-		Mockito.when(converter.convertValue(any(), any())).thenReturn("SomeValue");
+		Mockito.when(converter.convertValue(any(), any(), any())).thenReturn("SomeValue");
 		
 		EntityFieldEvaluator evaluator = new EntityFieldEvaluator(list, transformer, converter);
-		Object evaluate = evaluator.evaluate(browser);
+		Object evaluate = evaluator.evaluate(browser, new ArrayList<>());
 		
 		assertEquals("SomeValue", evaluate);
 	}

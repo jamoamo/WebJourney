@@ -40,7 +40,7 @@ public class ConvertersTest
 	}
 
 	/**
-	 * Test of getMapperForField method, of class Converters.
+	 * Test of getConverterForField method, of class Converters.
 	 */
 	@Test
 	public void testGetMapperForField_String_noConverter() throws Exception
@@ -52,7 +52,7 @@ public class ConvertersTest
 		Mockito.when(defn.getFieldType()).then(in -> String.class);
 		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
 		
-		IConverter mapperForField = Converters.getMapperForField(defn);
+		IConverter mapperForField = Converters.getConverterForField(defn);
 		
 		assertInstanceOf(ValueConverter.class, mapperForField);
 	}
@@ -67,7 +67,7 @@ public class ConvertersTest
 		Mockito.when(defn.getFieldType()).then(in -> Integer.class);
 		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
 		
-		IConverter mapperForField = Converters.getMapperForField(defn);
+		IConverter mapperForField = Converters.getConverterForField(defn);
 		
 		assertInstanceOf(ValueConverter.class, mapperForField);
 	}
@@ -82,7 +82,7 @@ public class ConvertersTest
 		Mockito.when(defn.getFieldType()).then(in -> Double.class);
 		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
 		
-		IConverter mapperForField = Converters.getMapperForField(defn);
+		IConverter mapperForField = Converters.getConverterForField(defn);
 		
 		assertInstanceOf(ValueConverter.class, mapperForField);
 	}

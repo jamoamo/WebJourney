@@ -25,6 +25,7 @@ package com.github.jamoamo.webjourney.reserved.entity;
 
 import com.github.jamoamo.webjourney.annotation.Constant;
 import com.github.jamoamo.webjourney.api.web.AElement;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,7 +90,7 @@ public class EntityFromElementConverterTest
 		IValueReader reader = Mockito.mock(IValueReader.class);
 		
 		EntityFromElementConverter converter = new EntityFromElementConverter(fieldDefn);
-		Object convertValue = converter.convertValue(element, reader);
+		Object convertValue = converter.convertValue(element, reader, new ArrayList<>());
 		
 		assertInstanceOf(SubEntity.class, convertValue);
 		assertEquals("Value", ((SubEntity)convertValue).getField());

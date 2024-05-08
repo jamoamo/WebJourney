@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.jamoamo.webjourney.reserved.entity;
-
-import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
-import java.util.List;
+package com.github.jamoamo.webjourney.api.entity;
 
 /**
  *
  * @author James Amoore
  */
-interface IEntityFieldEvaluator
+public interface IEntityCreationListener
 {
-	Object evaluate(IValueReader browser, 
-						 List<IEntityCreationListener> listeners) throws XEntityEvaluationException;
+	/**
+	 * Called when a new entity is created.
+	 * @param object the entity that was created.
+	 */
+	void entityCreated(Object object);
+
+	/**
+	 * Called when the creation of an entity is started.
+	 * @param entityClass The type of the entity
+	 */
+	void entityCreationStarted(Class<?> entityClass);
 }

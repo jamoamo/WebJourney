@@ -23,8 +23,13 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.api.IJourneyObserver;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -33,7 +38,8 @@ import java.util.Hashtable;
 class JourneyContext implements IJourneyContext
 {
 	private IBrowser browser;
-	private Hashtable inputs = new Hashtable(2);
+	private final Map<String, Object> inputs = new HashMap<>(2);
+	private final List<IJourneyObserver> journeyObservers = new ArrayList<>();
 	
 	void setBrowser(IBrowser browser)
 	{
@@ -49,12 +55,24 @@ class JourneyContext implements IJourneyContext
 	@Override
 	public void setJourneyInput(String inputType, Object inputValue)
 	{
-		this.inputs.put(inputValue, inputValue);
+		this.inputs.put(inputType, inputValue);
 	}
 
 	@Override
 	public Object getJourneyInput(String inputType)
 	{
 		return this.inputs.get(inputType);
+	}
+
+	@Override
+	public List<IJourneyObserver> getJourneyObservers()
+	{
+		return Collections.unmodifiableList(this.journeyObservers);
+	}
+
+	@Override
+	public void setJourneyObservers(List<IJourneyObserver> observers)
+	{
+		this.journeyObservers.addAll(observers);
 	}
 }

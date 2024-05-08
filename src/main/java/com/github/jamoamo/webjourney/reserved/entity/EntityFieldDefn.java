@@ -52,7 +52,7 @@ class EntityFieldDefn
 		
 		List<IExtractor> extractors = this.annotations.getExtractors();
 		ITransformer transformer = Transformers.getTransformerForField(this);
-		IConverter convert = Converters.getMapperForField(this);
+		IConverter convert = Converters.getConverterForField(this);
 		
 		this.evaluator = new EntityFieldEvaluator(extractors, transformer, convert);
 	}

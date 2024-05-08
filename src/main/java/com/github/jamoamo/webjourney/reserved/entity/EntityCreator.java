@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import java.lang.reflect.InvocationTargetException;
@@ -47,17 +48,20 @@ public final class EntityCreator<T>
 	private final EntityDefn<T> defn;
 	private AElement element;
 	private boolean useCache = false;
+	private List<IEntityCreationListener> creationListeners;
 
 	/**
 	 * Creates a new instance.
 	 *
 	 * @param defn The entity definition to create an instance for
 	 * @param useCache if the cache should be used
+	 * @param creationListeners the creation listeners
 	 */
-	public EntityCreator(EntityDefn<T> defn, boolean useCache)
+	public EntityCreator(EntityDefn<T> defn, boolean useCache, List<IEntityCreationListener> creationListeners)
 	{
 		this.defn = defn;
 		this.useCache = useCache;
+		this.creationListeners = creationListeners;
 	}
 	
 	/**
@@ -65,8 +69,9 @@ public final class EntityCreator<T>
 	 * 
 	 * @param defn The entity definition to create an instance for.
 	 * @param element The parent element.
+	 * @param listeners the creation listeners
 	 */
-	public EntityCreator(EntityDefn<T> defn, AElement element)
+	public EntityCreator(EntityDefn<T> defn, AElement element, List<IEntityCreationListener> listeners)
 	{
 		this.defn = defn;
 		this.element = element;
@@ -101,6 +106,7 @@ public final class EntityCreator<T>
 	 */
 	T createNewEntity(IValueReader reader) throws XEntityFieldScrapeException
 	{
+		fireEntityCreationStarted();
 		String entityKey = createEntityKey(reader);
 		
 		if(cacheEnabled && this.useCache && entityKey != null && ENTITY_MAP.containsKey(entityKey))
@@ -110,6 +116,7 @@ public final class EntityCreator<T>
 		}
 		
 		T instance = this.defn.createInstance();
+		
 		List<EntityFieldDefn> entityFields = this.defn.getEntityFields();
 		
 		for(EntityFieldDefn fieldDefn : entityFields)
@@ -118,6 +125,7 @@ public final class EntityCreator<T>
 			scrapeField(fieldDefn, instance, reader);
 		}
 		storeInstanceInCache(entityKey, instance);
+		fireEntityCreated(instance);
 		return instance;
 	}
 
@@ -169,6 +177,24 @@ public final class EntityCreator<T>
 
 	private Object scrapeValue(EntityFieldDefn defn1, IValueReader reader) throws XEntityEvaluationException
 	{
-		return defn1.getEvaluator().evaluate(reader);
+		return defn1.getEvaluator().evaluate(reader, this.creationListeners);
+	}
+
+	private void fireEntityCreated(T instance)
+	{
+		if(this.creationListeners == null)
+		{
+			return;
+		}
+		this.creationListeners.forEach(l -> l.entityCreated(instance));
+	}
+
+	private void fireEntityCreationStarted()
+	{
+		if(this.creationListeners == null)
+		{
+			return;
+		}
+		this.creationListeners.forEach(listener -> listener.entityCreationStarted(this.defn.getFieldType()));
 	}
 }

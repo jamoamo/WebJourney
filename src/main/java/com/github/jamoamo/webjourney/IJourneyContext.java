@@ -23,7 +23,9 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.api.IJourneyObserver;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
+import java.util.List;
 
 /**
  * The context of a specific browser journey.
@@ -53,4 +55,16 @@ public interface IJourneyContext
 	 * @return the input value.
 	 */
 	Object getJourneyInput(String inputType);
+	
+	/**
+	 * Gets all the observers of the journey.
+	 * @return the journey observers.
+	 */
+	List<IJourneyObserver> getJourneyObservers();
+	
+	/**
+	 * Sets all the observers of the journey.
+	 * @param observers The journey observers
+	 */
+	void setJourneyObservers(List<IJourneyObserver> observers);
 }

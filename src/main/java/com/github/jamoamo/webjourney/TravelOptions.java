@@ -23,23 +23,31 @@
  */
 package com.github.jamoamo.webjourney;
 
+import com.github.jamoamo.webjourney.api.IJourneyObserver;
+import com.github.jamoamo.webjourney.api.ITravelOptions;
 import com.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
 import com.github.jamoamo.webjourney.api.web.PreferredBrowserStrategy;
 import com.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A set of options for travelling a web journey.
  * @author James Amoore
  */
-public class TravelOptions
+public final class TravelOptions implements ITravelOptions
 {
 	private IPreferredBrowserStrategy preferredBrowserStrategy 
 			  = new PreferredBrowserStrategy(new ChromeBrowserFactory());
+	
+	private List<IJourneyObserver> journeyObservers = new ArrayList<>();
 	
 	/**
 	 * Sets the preferred browser strategy to use. 
 	 * @param strategy the strategy to use to create the preferred browser.
 	 */
+	@Override
 	public void setPreferredBrowserStrategy(IPreferredBrowserStrategy strategy)
 	{
 		this.preferredBrowserStrategy = strategy;
@@ -53,5 +61,23 @@ public class TravelOptions
 	{
 		return this.preferredBrowserStrategy;
 	}
+
+	/**
+	 * Adds an observer to the journey.
+	 * @param observer the observer to add.
+	 */
+	@Override
+	public void addObserver(IJourneyObserver observer)
+	{
+		this.journeyObservers.add(observer);
+	}
 	
+	/**
+	 * Retrieves the journey observers.
+	 * @return the journey observers
+	 */
+	public List<IJourneyObserver> getJourneyObservers()
+	{
+		return Collections.unmodifiableList(this.journeyObservers);
+	}
 }

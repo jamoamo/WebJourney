@@ -23,8 +23,10 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
+import java.util.List;
 
 /**
  *
@@ -40,7 +42,10 @@ class ValueConverter<T> implements IConverter<String, T>
 	}
 
 	@Override
-	public T convertValue(String source, IValueReader reader) throws XConversionException
+	public T convertValue(String source, 
+								 IValueReader reader, 
+								 List<IEntityCreationListener> listeners) 
+		throws XConversionException
 	{
 		try
 		{

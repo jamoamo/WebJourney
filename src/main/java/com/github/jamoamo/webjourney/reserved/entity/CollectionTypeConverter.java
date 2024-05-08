@@ -23,6 +23,7 @@
  */
 package com.github.jamoamo.webjourney.reserved.entity;
 
+import com.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import com.github.jamoamo.webjourney.api.mapper.AConverter;
 import com.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import java.util.ArrayList;
@@ -44,7 +45,10 @@ class CollectionTypeConverter<T> implements IConverter<Collection<String>, Colle
 	}
 
 	@Override
-	public Collection<T> convertValue(Collection<String> source, IValueReader reader) throws XConversionException
+	public Collection<T> convertValue(Collection<String> source, 
+												 IValueReader reader, 
+												 List<IEntityCreationListener> listeners) 
+		throws XConversionException
 	{
 		if(source == null)
 		{

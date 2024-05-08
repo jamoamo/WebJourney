@@ -41,7 +41,7 @@ final class Converters
 {
 	private Converters(){}
 	
-	public static IConverter getMapperForField(EntityFieldDefn defn) throws XEntityFieldDefinitionException
+	public static IConverter getConverterForField(EntityFieldDefn defn) throws XEntityFieldDefinitionException
 	{
 		TypeInfo info = TypeInfo.forClass(defn.getFieldType());
 		EntityAnnotations annotations = defn.getAnnotations();
