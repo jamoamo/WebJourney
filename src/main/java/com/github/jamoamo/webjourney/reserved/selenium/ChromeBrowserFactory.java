@@ -37,8 +37,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
  */
 public final class ChromeBrowserFactory implements IBrowserFactory
 {
-	private static final int MAX_RETRIES = 5;
-	
 	/**
 	 * Creates a new Chrome browser.
 	 *
@@ -51,7 +49,7 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 	{
 		ChromeOptions options =
 			new ChromeOptions();
-		options = options.addArguments("--remote-allow-origins=*");
+		options = options.addArguments("--no-sandbox", "--remote-allow-origins=*", "--disable-dev-shm-usage");
 		options = setHeadless(browserOptions, options);
 		options = setUnexpectedAlertBehaviour(browserOptions, options);
 
