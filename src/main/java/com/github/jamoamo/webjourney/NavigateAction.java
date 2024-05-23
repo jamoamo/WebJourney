@@ -39,10 +39,16 @@ class NavigateAction extends AWebAction
 	}
 
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	protected ActionResult executeActionImpl(IJourneyContext context)
 	{
 		IBrowser browser = context.getBrowser();
 		this.target.navigate(browser);
 		return ActionResult.SUCCESS;
+	}
+
+	@Override
+	protected String getActionName()
+	{
+		return "Navigate";
 	}
 }

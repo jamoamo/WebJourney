@@ -28,6 +28,7 @@ import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.lang.reflect.Field;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.MDC;
 
 /**
  *
@@ -51,7 +52,7 @@ class ClickButtonAction extends AWebAction
 	}
 	
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	protected ActionResult executeActionImpl(IJourneyContext context)
 	{
 		IBrowser browser = context.getBrowser();
 		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
@@ -76,5 +77,16 @@ class ClickButtonAction extends AWebAction
 		{
 			throw new JourneyException(ex);
 		}
+		finally
+		{
+			MDC.popByKey("Journey.Action");
+		}
+		
+	}
+
+	@Override
+	protected String getActionName()
+	{
+		return "Click Buttton";
 	}
 }

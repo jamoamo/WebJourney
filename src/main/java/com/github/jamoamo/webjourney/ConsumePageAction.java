@@ -56,7 +56,7 @@ class ConsumePageAction<T> extends AWebAction
 	}
 	
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	protected ActionResult executeActionImpl(IJourneyContext context)
 			  throws BaseJourneyActionException
 	{
 		try
@@ -72,5 +72,11 @@ class ConsumePageAction<T> extends AWebAction
 			throw new BaseJourneyActionException(ex.getMessage(), this, ex);
 		}
 		return ActionResult.SUCCESS;
+	}
+
+	@Override
+	protected String getActionName()
+	{
+		return "Consume Page";
 	}
 }

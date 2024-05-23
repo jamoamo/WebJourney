@@ -29,6 +29,8 @@ import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.XWebException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -52,7 +54,7 @@ class CompleteFormAction extends AWebAction
 	}
 
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	protected ActionResult executeActionImpl(IJourneyContext context)
 	{
 		IBrowser browser = context.getBrowser();
 		List<Field> textFields =
@@ -96,12 +98,20 @@ class CompleteFormAction extends AWebAction
 		}
 		catch(IllegalAccessException | InvocationTargetException | NoSuchMethodException | XWebException ex)
 		{
-			String logMessageFormat = "Could not set field [%s] on class [%s]";
-			this.logger.error(String.format(
-					  logMessageFormat,
-					  textField.getName(),
-					  this.form.getClass().getCanonicalName()));
+			this.logger.atError().setMessage("Could not set a the value of a field")
+				.addKeyValue("@timestamp", LocalDateTime.now().atZone(ZoneId.of("GMT")).toString())
+				.addKeyValue("labels.field", textField.getName())
+				.addKeyValue("labels.formClass", this.form.getClass().getCanonicalName())
+				.addKeyValue("error.type", ex.getClass().getCanonicalName())
+				.addKeyValue("error.message", ex.getMessage())
+				.addKeyValue("error.stacktrace", ex.getStackTrace());
 			throw new JourneyException(ex);
 		}
+	}
+
+	@Override
+	protected String getActionName()
+	{
+		return "Complete Form";
 	}
 }
