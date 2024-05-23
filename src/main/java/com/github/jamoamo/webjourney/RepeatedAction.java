@@ -52,7 +52,7 @@ class RepeatedAction<T> extends AWebAction
 	}
 
 	@Override
-	protected ActionResult executeAction(IJourneyContext context)
+	protected ActionResult executeActionImpl(IJourneyContext context)
 	{
 		try
 		{
@@ -69,6 +69,12 @@ class RepeatedAction<T> extends AWebAction
 		{
 			return ActionResult.FAILURE;
 		}
+	}
+
+	@Override
+	protected String getActionName()
+	{
+		return "Repeat";
 	}
 
 }

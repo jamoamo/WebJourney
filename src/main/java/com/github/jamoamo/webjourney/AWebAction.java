@@ -24,6 +24,7 @@
 package com.github.jamoamo.webjourney;
 
 import java.util.concurrent.TimeUnit;
+import org.slf4j.MDC;
 
 /**
  * Abstract class for actions that can be performed on a web journey.
@@ -31,12 +32,30 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AWebAction
 {
+	private static final String ACTION_LOG_LABEL = "labels.WebJourney.Action";
 	private static final int DEFAULT_WAIT_SEC = 1;
 	private long preActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	private long postActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	
-	protected abstract ActionResult executeAction(IJourneyContext context)
-			  throws BaseJourneyActionException;
+	protected abstract ActionResult executeActionImpl(IJourneyContext context)
+		throws BaseJourneyActionException;
+	
+	protected abstract String getActionName();
+	
+	protected final ActionResult executeAction(IJourneyContext context)
+			  throws BaseJourneyActionException
+	{
+		MDC.pushByKey(ACTION_LOG_LABEL, getActionName());
+		
+		try
+		{
+			return executeActionImpl(context);
+		}
+		finally
+		{
+			MDC.popByKey(ACTION_LOG_LABEL);
+		}
+	}
 
 	/**
 	 * Sets the wait to be performed prior to the action being performed.
