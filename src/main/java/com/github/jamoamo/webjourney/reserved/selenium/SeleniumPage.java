@@ -51,7 +51,9 @@ final class SeleniumPage implements IWebPage
 	@Override
 	public AElement getElement(String xPath, boolean optional)
 	{
-		return new SeleniumElement(new SingleElementLocator(this.webDriver, By.xpath(xPath), optional));
+		return new SeleniumElement(
+			new SingleElementLocator(this.webDriver, By.xpath(xPath), optional), 
+			new ScriptExecutor(this.webDriver));
 	}
 
 	@Override
@@ -59,7 +61,7 @@ final class SeleniumPage implements IWebPage
 	{
 		return IntStreams.range(this.webDriver.findElements(By.xpath(xPath)).size())
 			.mapToObj(i -> new ElementListItemLocator(this.webDriver, By.xpath(xPath), i))
-			.map(locator -> new SeleniumElement(locator))
+			.map(locator -> new SeleniumElement(locator, new ScriptExecutor(this.webDriver)))
 			.toList();
 	}
 
@@ -68,7 +70,7 @@ final class SeleniumPage implements IWebPage
 	{
 		return IntStreams.range(this.webDriver.findElements(By.tagName(tag)).size())
 			.mapToObj(i -> new ElementListItemLocator(this.webDriver, By.tagName(tag), i))
-			.map(locator -> new SeleniumElement(locator))
+			.map(locator -> new SeleniumElement(locator, new ScriptExecutor(this.webDriver)))
 			.toList();
 	}
 	
