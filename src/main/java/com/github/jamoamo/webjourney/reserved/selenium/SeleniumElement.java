@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -39,10 +40,17 @@ import org.openqa.selenium.WebElement;
 class SeleniumElement extends AElement
 {
 	private final ISeleniumElementLocator locator;
-	
+	private final ScriptExecutor executor;
+
 	SeleniumElement(ISeleniumElementLocator locator)
 	{
+		this(locator, null);
+	}
+	
+	SeleniumElement(ISeleniumElementLocator locator, ScriptExecutor executor)
+	{
 		this.locator = locator;
+		this.executor = executor;
 	}
 
 	@Override
@@ -60,7 +68,7 @@ class SeleniumElement extends AElement
 	@Override
 	public AElement findElement(String path)
 	{
-		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), false));
+		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), false), this.executor);
 	}
 
 	@Override
@@ -75,7 +83,7 @@ class SeleniumElement extends AElement
 		return IntStreams
 			.range(elem.get().findElements(By.xpath(path)).size())
 			.mapToObj(i -> new ChildElementListItemLocator(this, By.xpath(path), i, false))
-			.map(locator -> new SeleniumElement(locator))
+			.map(locator -> new SeleniumElement(locator, this.executor))
 			.toList();
 	}
 
@@ -93,7 +101,21 @@ class SeleniumElement extends AElement
 	@Override
 	public void click() throws XElementDoesntExistException
 	{
-		getElement().ifPresent(e -> e.click());
+		try
+		{
+			getElement().ifPresent(e -> e.click());
+		}
+		catch(ElementClickInterceptedException ex)
+		{
+			if(this.executor != null && getElement().isPresent())
+			{
+				this.executor.executeScript("arguments[0].click();", getElement().get());
+			}
+			else
+			{
+				throw ex;
+			}
+		}
 	}
 
 	@Override
@@ -114,7 +136,7 @@ class SeleniumElement extends AElement
 		return IntStreams
 			.range(elem.get().findElements(By.tagName(childElementType)).size())
 			.mapToObj(i -> new ChildElementListItemLocator(this, By.tagName(childElementType), i, false))
-			.map(locator -> new SeleniumElement(locator))
+			.map(locator -> new SeleniumElement(locator, this.executor))
 			.toList();
 	}
 

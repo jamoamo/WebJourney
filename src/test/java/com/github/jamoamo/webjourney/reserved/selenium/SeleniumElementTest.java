@@ -27,15 +27,15 @@ import com.github.jamoamo.webjourney.api.web.AElement;
 import com.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.collections.iterators.SingletonIterator;
+import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -44,8 +44,8 @@ import org.openqa.selenium.WebElement;
  */
 public class SeleniumElementTest
 {
-	private static ISeleniumElementLocator locator = Mockito.mock(ISeleniumElementLocator.class);
-	private static WebElement webElementMock = Mockito.mock(WebElement.class);
+	private static final ISeleniumElementLocator locator = Mockito.mock(ISeleniumElementLocator.class);
+	private static final WebElement webElementMock = Mockito.mock(WebElement.class);
 	
 	/**
 	 * Test of getElementText method, of class SeleniumElement.
@@ -116,12 +116,48 @@ public class SeleniumElementTest
 	@Test
 	public void testClick() throws XElementDoesntExistException
 	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		SeleniumElement element = new SeleniumElement(locator);
+		Mockito.clearInvocations(this.webElementMock);
+		
+		Mockito.when(locator.findElement()).thenReturn(this.webElementMock);
+		SeleniumElement element = new SeleniumElement(this.locator);
 		
 		element.click();
 		
-		verify(webElementMock).click();
+		verify(this.webElementMock).click();
+		Mockito.reset(this.webElementMock);
+	}
+	
+	/**
+	 * Test of click method, of class SeleniumElement.
+	 */
+	@Test
+	public void testClick_fallback() throws XElementDoesntExistException
+	{
+		Mockito.when(this.locator.findElement()).thenReturn(this.webElementMock);
+		Mockito.doThrow(new ElementClickInterceptedException("An exception message")).when(this.webElementMock).click();
+		
+		ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+		SeleniumElement element = new SeleniumElement(this.locator, mockExecutor);
+		
+		element.click();
+		
+		verify(mockExecutor).executeScript("arguments[0].click();", webElementMock);
+		Mockito.reset(this.webElementMock);
+	}
+	
+	/**
+	 * Test of click method, of class SeleniumElement.
+	 */
+	@Test
+	public void testClick_fallback_nullExecutor() throws XElementDoesntExistException
+	{
+		Mockito.when(this.locator.findElement()).thenReturn(this.webElementMock);
+		Mockito.doThrow(new ElementClickInterceptedException("An exception message")).when(this.webElementMock).click();
+		
+		SeleniumElement element = new SeleniumElement(this.locator, null);
+
+		Assertions.assertThrows(ElementClickInterceptedException.class, () -> element.click());
+		Mockito.reset(this.webElementMock);
 	}
 
 	/**
