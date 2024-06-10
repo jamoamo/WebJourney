@@ -26,8 +26,10 @@ package com.github.jamoamo.webjourney;
 import com.github.jamoamo.webjourney.api.web.DefaultBrowserOptions;
 import com.github.jamoamo.webjourney.api.web.IBrowser;
 import com.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * A traveller of web journeys.
@@ -35,6 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WebTraveller
 {
+	private static final String LOGGER_CONTEXT_JOURNEY_LABEL = "label.WebJourney.id";
 	private final Logger logger = LoggerFactory.getLogger(WebTraveller.class);
 	
 	private final TravelOptions travelOptions;
@@ -54,6 +57,7 @@ public class WebTraveller
 	 */
 	public void travelJourney(WebJourney journey)
 	{
+		MDC.put(LOGGER_CONTEXT_JOURNEY_LABEL, UUID.randomUUID().toString());
 		this.logger.info("Starting Journey.");
 		IPreferredBrowserStrategy browserStrategy = this.travelOptions.getPreferredBrowserStrategy();
 		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions());
@@ -73,6 +77,7 @@ public class WebTraveller
 		finally
 		{
 			browser.exit();
+			MDC.remove(LOGGER_CONTEXT_JOURNEY_LABEL);
 		}
 	}
 }

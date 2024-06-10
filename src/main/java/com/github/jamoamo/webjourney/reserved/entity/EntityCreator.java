@@ -32,6 +32,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * Creator of entities.
@@ -41,6 +42,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class EntityCreator<T>
 {
+	private static final String LOGGING_ENTITY_FIELD_LABEL = "labels.WebJourney.scrape.entity.field";
+	private static final String LOGGING_ENTITY_CLASS_LABEL = "labels.WebJourney.scrape.entity.class";
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityCreator.class);
 	private static final HashMap<String, Object> ENTITY_MAP = new HashMap<>();
 	private static boolean cacheEnabled = true;
@@ -59,9 +62,11 @@ public final class EntityCreator<T>
 	 */
 	public EntityCreator(EntityDefn<T> defn, boolean useCache, List<IEntityCreationListener> creationListeners)
 	{
+		MDC.put(LOGGING_ENTITY_CLASS_LABEL, defn.getFieldType().getCanonicalName());
 		this.defn = defn;
 		this.useCache = useCache;
 		this.creationListeners = creationListeners;
+		MDC.remove(LOGGING_ENTITY_CLASS_LABEL);
 	}
 	
 	/**
@@ -94,8 +99,8 @@ public final class EntityCreator<T>
 	{
 		IValueReader reader = this.element == null ? 
 									 new BrowserValueReader(browser) : new ParentElementValueReader(browser, this.element);
-
-		return createNewEntity(reader);
+		T result = createNewEntity(reader);
+		return result;
 	}
 
 	/**
@@ -106,6 +111,7 @@ public final class EntityCreator<T>
 	 */
 	T createNewEntity(IValueReader reader) throws XEntityFieldScrapeException
 	{
+		MDC.put(LOGGING_ENTITY_CLASS_LABEL, this.defn.getFieldType().getCanonicalName());
 		fireEntityCreationStarted();
 		String entityKey = createEntityKey(reader);
 		
@@ -121,11 +127,15 @@ public final class EntityCreator<T>
 		
 		for(EntityFieldDefn fieldDefn : entityFields)
 		{
+			MDC.put(LOGGING_ENTITY_FIELD_LABEL, 
+					  this.defn.getClass().getCanonicalName() + "[" + fieldDefn.getFieldName() + "]");
 			LOGGER.debug("Setting field: " + fieldDefn.getFieldName());
 			scrapeField(fieldDefn, instance, reader);
+			MDC.remove(LOGGING_ENTITY_FIELD_LABEL);
 		}
 		storeInstanceInCache(entityKey, instance);
 		fireEntityCreated(instance);
+		MDC.remove(LOGGING_ENTITY_CLASS_LABEL);
 		return instance;
 	}
 
