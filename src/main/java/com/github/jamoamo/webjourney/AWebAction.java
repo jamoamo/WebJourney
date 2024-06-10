@@ -45,7 +45,7 @@ public abstract class AWebAction
 	protected final ActionResult executeAction(IJourneyContext context)
 			  throws BaseJourneyActionException
 	{
-		MDC.pushByKey(ACTION_LOG_LABEL, getActionName());
+		MDC.put(ACTION_LOG_LABEL, getActionName());
 		
 		try
 		{
@@ -53,7 +53,7 @@ public abstract class AWebAction
 		}
 		finally
 		{
-			MDC.popByKey(ACTION_LOG_LABEL);
+			MDC.remove(ACTION_LOG_LABEL);
 		}
 	}
 
