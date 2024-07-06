@@ -8,6 +8,11 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WebJourney Parent</name>
+    <description>
+        Java library for automating web interactions via the concept of a sequence of actions on the web, 
+        defined as a web journey. Define the Path and interactions and let it run.
+    </description>
+    <url>https://github.com/jamoamo/webjourney</url>
 
     <modules>
         <module>webjourney</module>
@@ -21,6 +26,13 @@
             <email>amoore.james@gmail.com</email>
         </developer>
     </developers>
+    
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
    
     <scm>
         <connection>scm:git:https://github.com/jamoamo/webjourney.git</connection>
