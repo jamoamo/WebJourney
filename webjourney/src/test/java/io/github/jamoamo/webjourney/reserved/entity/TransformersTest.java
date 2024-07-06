@@ -23,13 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.RegexTransformation;
-import io.github.jamoamo.webjourney.reserved.entity.ITransformer;
-import io.github.jamoamo.webjourney.reserved.entity.Transformers;
-import io.github.jamoamo.webjourney.reserved.entity.EntityFieldDefn;
-import io.github.jamoamo.webjourney.reserved.entity.CombinedTransformer;
-import io.github.jamoamo.webjourney.reserved.entity.CollectionTransformer;
-import io.github.jamoamo.webjourney.reserved.entity.Transformer;
 import io.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import io.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 import java.util.List;

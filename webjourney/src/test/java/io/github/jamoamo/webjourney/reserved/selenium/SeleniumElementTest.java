@@ -23,9 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.selenium;
 
-import io.github.jamoamo.webjourney.reserved.selenium.ISeleniumElementLocator;
-import io.github.jamoamo.webjourney.reserved.selenium.ScriptExecutor;
-import io.github.jamoamo.webjourney.reserved.selenium.SeleniumElement;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import java.util.Collections;

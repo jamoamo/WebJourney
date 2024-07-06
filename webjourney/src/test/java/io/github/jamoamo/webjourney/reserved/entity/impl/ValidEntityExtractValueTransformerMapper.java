@@ -28,7 +28,6 @@ import io.github.jamoamo.webjourney.annotation.MappedCollection;
 import io.github.jamoamo.webjourney.annotation.Transformation;
 import static io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_SEPARATED_STRING_DATA;
 import static io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
-import static io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_LIST_DATA;
 import java.util.List;
 import io.github.jamoamo.webjourney.annotation.Conversion;
 

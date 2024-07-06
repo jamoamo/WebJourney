@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.AlwaysCondition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

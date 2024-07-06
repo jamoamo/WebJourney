@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney;
 
-import io.github.jamoamo.webjourney.RefreshNavigationTarget;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import org.junit.jupiter.api.Test;

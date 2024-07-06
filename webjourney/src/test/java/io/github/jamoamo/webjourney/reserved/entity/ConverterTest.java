@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.Converter;
 import io.github.jamoamo.webjourney.annotation.Conversion;
 import io.github.jamoamo.webjourney.api.mapper.AConverter;
 import io.github.jamoamo.webjourney.api.mapper.XValueMappingException;

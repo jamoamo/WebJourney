@@ -27,7 +27,6 @@ import io.github.jamoamo.webjourney.annotation.ConditionalExtractFromUrl;
 import io.github.jamoamo.webjourney.annotation.ExtractFromUrl;
 import io.github.jamoamo.webjourney.annotation.ExtractValue;
 import io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest;
-import static io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPATH_STRING_DATA;
 import java.util.List;
 
 /**

@@ -23,8 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.EntityDefn;
-import io.github.jamoamo.webjourney.reserved.entity.EntityCreator;
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import io.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityConstant;
 import io.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCurrentUrl;

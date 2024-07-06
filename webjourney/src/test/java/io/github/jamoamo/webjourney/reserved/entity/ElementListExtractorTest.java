@@ -23,9 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.AlwaysCondition;
-import io.github.jamoamo.webjourney.reserved.entity.ElementListExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.IValueReader;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import java.util.Collections;
 import java.util.List;

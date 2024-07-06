@@ -23,10 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.ValueConverter;
-import io.github.jamoamo.webjourney.reserved.entity.IConverter;
-import io.github.jamoamo.webjourney.reserved.entity.EntityFieldDefn;
-import io.github.jamoamo.webjourney.reserved.entity.Converters;
 import io.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

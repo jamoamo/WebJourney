@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.reflection;
 
-import io.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;

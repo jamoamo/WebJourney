@@ -23,9 +23,6 @@
  */
 package io.github.jamoamo.webjourney;
 
-import io.github.jamoamo.webjourney.JourneyContext;
-import io.github.jamoamo.webjourney.ConsumePageAction;
-import io.github.jamoamo.webjourney.ActionResult;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;

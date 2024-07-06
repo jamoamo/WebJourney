@@ -24,7 +24,6 @@
 package io.github.jamoamo.webjourney;
 
 import io.github.jamoamo.webjourney.annotation.ExtractValue;
-import java.util.List;
 
 /**
  *
