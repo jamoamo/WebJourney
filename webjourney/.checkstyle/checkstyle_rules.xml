@@ -91,7 +91,7 @@ THE SOFTWARE.
       <module name="SimplifyBooleanReturn"/>
       <module name="StringLiteralEquality"/>
       <module name="UnnecessaryParentheses"/>
-                       
+      <module name="RequireThis"/>                 
       <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
       <module name="UnnecessarySemicolonInEnumeration"/>
       <module name="UnnecessarySemicolonInTryWithResources"/>
