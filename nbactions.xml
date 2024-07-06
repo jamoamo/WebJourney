@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-prepare release (all)</actionName>
+        <displayName>prepare release (all)</displayName>
+        <goals>
+            <goal>release:clean</goal>
+            <goal>release:prepare</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>release</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-perform release (all)</actionName>
+        <displayName>perform release (all)</displayName>
+        <goals>
+            <goal>release:perform</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>release</activatedProfile>
+        </activatedProfiles>
+    </action>
+</actions>
+
