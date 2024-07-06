@@ -23,12 +23,12 @@
  */
 package io.github.jamoamo.webjourney.test;
 
-import io.github.jamoamo.webjourney.api.web.AElement;
-import io.github.jamoamo.webjourney.api.web.IBrowser;
-import io.github.jamoamo.webjourney.reserved.entity.EntityCreator;
-import io.github.jamoamo.webjourney.reserved.entity.EntityDefn;
-import io.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
-import io.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
+import com.github.jamoamo.webjourney.api.web.AElement;
+import com.github.jamoamo.webjourney.api.web.IBrowser;
+import com.github.jamoamo.webjourney.reserved.entity.EntityCreator;
+import com.github.jamoamo.webjourney.reserved.entity.EntityDefn;
+import com.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
+import com.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
 import java.util.ArrayList;
 
 /**
