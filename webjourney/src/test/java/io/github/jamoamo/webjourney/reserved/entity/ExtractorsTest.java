@@ -23,16 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.ElementTextsCollectionExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.Extractors;
-import io.github.jamoamo.webjourney.reserved.entity.IExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.ElementTextExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.ElementListExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.ElementExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.CurrentUrlExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.ConstantExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.AttributeExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.AttributesExtractor;
 import io.github.jamoamo.webjourney.annotation.ConditionalConstant;
 import io.github.jamoamo.webjourney.annotation.ConditionalExtractFromUrl;
 import io.github.jamoamo.webjourney.annotation.ConditionalExtractValue;

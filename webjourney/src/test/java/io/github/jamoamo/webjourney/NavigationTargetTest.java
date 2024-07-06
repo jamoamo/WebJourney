@@ -23,12 +23,6 @@
  */
 package io.github.jamoamo.webjourney;
 
-import io.github.jamoamo.webjourney.BackNavigationTarget;
-import io.github.jamoamo.webjourney.ANavigationTarget;
-import io.github.jamoamo.webjourney.ForwardNavigationTarget;
-import io.github.jamoamo.webjourney.RefreshNavigationTarget;
-import io.github.jamoamo.webjourney.UrlNavigationTarget;
-import io.github.jamoamo.webjourney.NavigationTarget;
 import java.net.URL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

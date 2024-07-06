@@ -23,8 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.IValueReader;
-import io.github.jamoamo.webjourney.reserved.entity.ElementExtractor;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

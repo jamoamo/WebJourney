@@ -23,9 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.ElementTextsCollectionExtractor;
-import io.github.jamoamo.webjourney.reserved.entity.AlwaysCondition;
-import io.github.jamoamo.webjourney.reserved.entity.IValueReader;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;

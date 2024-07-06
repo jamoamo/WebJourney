@@ -23,16 +23,12 @@
  */
 package io.github.jamoamo.webjourney;
 
-import io.github.jamoamo.webjourney.ClickButtonAction;
-import io.github.jamoamo.webjourney.JourneyContext;
-import io.github.jamoamo.webjourney.ActionResult;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 

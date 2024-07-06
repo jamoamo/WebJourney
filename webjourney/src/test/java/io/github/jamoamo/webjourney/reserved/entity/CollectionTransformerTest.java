@@ -23,8 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.ITransformer;
-import io.github.jamoamo.webjourney.reserved.entity.CollectionTransformer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

@@ -23,8 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.selenium;
 
-import io.github.jamoamo.webjourney.reserved.selenium.XInactiveWindowException;
-import io.github.jamoamo.webjourney.reserved.selenium.SeleniumWindow;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
 import java.io.File;
 import java.net.URL;

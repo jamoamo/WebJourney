@@ -23,8 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.selenium;
 
-import io.github.jamoamo.webjourney.reserved.selenium.SeleniumDrivenBrowser;
-import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
 import org.junit.jupiter.api.Assertions;

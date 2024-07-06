@@ -23,9 +23,7 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.ValueConverter;
 import io.github.jamoamo.webjourney.api.mapper.AConverter;
-import io.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

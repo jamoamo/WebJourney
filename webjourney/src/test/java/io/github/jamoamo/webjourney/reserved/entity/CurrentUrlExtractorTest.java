@@ -23,8 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.IValueReader;
-import io.github.jamoamo.webjourney.reserved.entity.CurrentUrlExtractor;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;

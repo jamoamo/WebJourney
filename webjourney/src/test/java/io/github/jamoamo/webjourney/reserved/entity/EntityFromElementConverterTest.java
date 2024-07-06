@@ -23,9 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.IValueReader;
-import io.github.jamoamo.webjourney.reserved.entity.EntityFieldDefn;
-import io.github.jamoamo.webjourney.reserved.entity.EntityFromElementConverter;
 import io.github.jamoamo.webjourney.annotation.Constant;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import java.util.ArrayList;

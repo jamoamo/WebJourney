@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.Transformer;
 import io.github.jamoamo.webjourney.annotation.Transformation;
 import io.github.jamoamo.webjourney.api.transform.ATransformationFunction;
 import java.lang.annotation.Annotation;

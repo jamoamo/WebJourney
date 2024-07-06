@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.reflection;
 
-import io.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import java.lang.reflect.Field;
 import java.util.List;
 import org.junit.jupiter.api.Test;

@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.reserved.entity.CollectionTypeConverter;
 import io.github.jamoamo.webjourney.api.mapper.AConverter;
 import java.util.ArrayList;
 import java.util.Collection;

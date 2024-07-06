@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney;
 
-import io.github.jamoamo.webjourney.UrlNavigationTarget;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import java.net.URL;

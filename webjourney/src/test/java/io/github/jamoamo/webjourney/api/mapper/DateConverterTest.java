@@ -23,7 +23,6 @@
  */
 package io.github.jamoamo.webjourney.api.mapper;
 
-import io.github.jamoamo.webjourney.api.mapper.DateConverter;
 import java.time.LocalDate;
 import java.time.Month;
 import org.junit.jupiter.api.Test;
