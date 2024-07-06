@@ -152,7 +152,7 @@ THE SOFTWARE.
          https://checkstyle.sourceforge.io/config_modifier.html
       -->
       <module name="AbstractClassName"> 
-         <property name="format" value="^A[A-Z]*.+$"/>
+         <property name="format" value="^A[A-Z].+$"/>
       </module>
       <module name="ClassTypeParameterName"/>
       <module name="ConstantName"/>

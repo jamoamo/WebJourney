@@ -7,7 +7,10 @@
    <version>0.0.1-SNAPSHOT</version>
     
    <name>Web Journey</name>
-   <description>Automate web interactions with web journeys</description>
+   <description>
+      Java library for automating web interactions via the concept of a sequence of actions on the web, 
+      defined as a web journey. Define the Path and intereactions and let it run.
+   </description>
    <url>https://github.com/jamoamo/webjourney</url>
    
    <parent>
@@ -41,6 +44,7 @@
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <maven.compiler.release>21</maven.compiler.release>
+      <netbeans.compile.on.save>all</netbeans.compile.on.save>
    </properties>
     
    <packaging>jar</packaging>
