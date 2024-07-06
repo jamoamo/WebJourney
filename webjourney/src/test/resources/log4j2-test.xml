@@ -4,7 +4,7 @@
  
   <Appenders>
     <Appender type="Console" name="STDOUT">
-      <Layout type="PatternLayout" pattern="%d{dd MM yyyy HH:mm:ss.SSS} [%p ] - [%C] %m %n"/>
+      <Layout type="PatternLayout" pattern="%d{dd MM yyyy HH:mm:ss.SSS} [%p] - [%C] %m %n"/>
     </Appender>
   </Appenders>
  
