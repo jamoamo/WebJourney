@@ -26,11 +26,14 @@ package io.github.jamoamo.webjourney.reserved.entity;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -85,6 +88,20 @@ public class ParentElementValueReaderTest
 		String text = reader.getElementText("xpath", false);
 		assertEquals("Text", text);
 	}
+	
+	@Test
+	public void testGetElementText_optional_exception() throws Exception
+	{
+		IBrowser browser = Mockito.mock(IBrowser.class);
+
+		AElement parentElement = Mockito.mock(AElement.class);
+		Mockito.when(parentElement.findElement("xpath")).thenThrow(new XElementDoesntExistException());
+
+		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		String text = reader.getElementText("xpath", true);
+		assertNull(text);
+	}
 
 	/**
 	 * Test of getElement method, of class ParentElementValueReader.
@@ -104,6 +121,20 @@ public class ParentElementValueReaderTest
 
 		AElement result = reader.getElement("xpath", false);
 		assertSame(childElement, result);
+	}
+	
+	@Test
+	public void testGetElement_optional_exception() throws Exception
+	{
+		IBrowser browser = Mockito.mock(IBrowser.class);
+
+		AElement parentElement = Mockito.mock(AElement.class);
+		Mockito.when(parentElement.findElement("xpath")).thenThrow(new XElementDoesntExistException());
+
+		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		AElement result = reader.getElement("xpath", true);
+		assertNull(result);
 	}
 
 	/**

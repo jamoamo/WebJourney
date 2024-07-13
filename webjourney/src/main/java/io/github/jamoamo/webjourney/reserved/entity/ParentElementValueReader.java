@@ -73,6 +73,10 @@ class ParentElementValueReader implements IValueReader
 		}
 		catch(XElementDoesntExistException e)
 		{
+			if(optional)
+			{
+				 return null;
+			}
 			throw new XValueReaderException(e);
 		}
 	}
@@ -86,6 +90,10 @@ class ParentElementValueReader implements IValueReader
 		}
 		catch(XElementDoesntExistException e)
 		{
+			if(optional)
+			{
+				 return null;
+			}
 			throw new XValueReaderException(e);
 		}
 	}
