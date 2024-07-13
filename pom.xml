@@ -36,7 +36,7 @@
         <connection>scm:git:https://github.com/jamoamo/webjourney.git</connection>
         <developerConnection>scm:git:https://github.com/jamoamo/webjourney.git</developerConnection>
         <url>https://github.com/jamoamo/webjourney</url>
-        <tag>HEAD</tag>
+        <tag>webjourney-0.0.2</tag>
     </scm>
    
     <distributionManagement>
