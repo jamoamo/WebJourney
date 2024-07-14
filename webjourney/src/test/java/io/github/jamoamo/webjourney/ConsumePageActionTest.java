@@ -60,6 +60,12 @@ public class ConsumePageActionTest
 		{
 			return null;
 		}
+		
+		@Override
+		public AElement findElement(String path, boolean optional)
+		{
+			return null;
+		}
 
 		@Override
 		public List<? extends AElement> findElements(String path)

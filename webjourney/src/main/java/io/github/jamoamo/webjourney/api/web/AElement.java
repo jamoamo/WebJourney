@@ -53,6 +53,16 @@ public abstract class AElement
 	 * @throws io.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
 	public abstract AElement findElement(String path) throws XElementDoesntExistException;
+	
+	/**
+	 * Finds a sub-element using the xpath.
+	 * @param path the xpath.
+	 * @param optional if the element is optional.
+	 * @return the sub-element
+	 * @throws io.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist and 
+	 * is not optional
+	 */
+	public abstract AElement findElement(String path, boolean optional) throws XElementDoesntExistException;
 
 	/**
 	 * Finds a list of sub-element using the xpath.

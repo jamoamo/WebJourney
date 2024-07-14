@@ -27,11 +27,15 @@ import io.github.jamoamo.webjourney.annotation.Conversion;
 import io.github.jamoamo.webjourney.api.mapper.AConverter;
 import io.github.jamoamo.webjourney.api.mapper.XValueMappingException;
 import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -67,6 +71,22 @@ public class ConverterTest
 		
 		Object convertValue = converter.convertValue("A Test", null, new ArrayList<>());
 		assertEquals("--A Test--", convertValue);
+	}
+	
+	/**
+	 * Test of convertValue method, of class Converter.
+	 */
+	@Test
+	public void testConvertValue_null() throws Exception
+	{
+		Conversion conversion = Mockito.mock(Conversion.class);
+		Answer<Class<TestConverter>> answer = (InvocationOnMock iom) -> TestConverter.class;
+		Mockito.when(conversion.mapper()).then(answer);
+		
+		Converter converter = new Converter(conversion);
+		
+		Object convertValue = converter.convertValue(null, null, new ArrayList<>());
+		assertNull(convertValue);
 	}
 	
 }

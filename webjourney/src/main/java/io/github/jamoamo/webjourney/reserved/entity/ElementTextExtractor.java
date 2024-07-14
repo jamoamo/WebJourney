@@ -44,6 +44,11 @@ class ElementTextExtractor implements IExtractor<String>
 		this.condition = condition;
 		this.optional = optional;
 	}
+	
+	boolean isOptional()
+	{
+		 return this.optional;
+	}
 
 	@Override
 	public String extractRawValue(IValueReader reader) throws XExtractionException

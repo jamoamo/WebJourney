@@ -317,6 +317,45 @@ public class ExtractorsTest
 	}
 	
 	@Test
+	public void testGetExtractorForAnnotation_ExtractValue_List_BlankAttribute_extractCollectionSingularly_optional()
+	{
+		ExtractValue extractFromUrl = new ExtractValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractValue.class;
+			}
+
+			@Override
+			public String attribute()
+			{
+				return "";
+			}
+
+			@Override
+			public String path()
+			{
+				return "xpath";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				return true;
+			}
+		};
+		
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo()).thenReturn(TypeInfo.forClass(List.class));
+		
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, true, false);
+		assertInstanceOf(ElementTextExtractor.class, extractor);
+		 ElementTextExtractor textExtractor = (ElementTextExtractor)extractor;
+		 assertTrue(textExtractor.isOptional());
+	}
+	
+	@Test
 	public void testGetExtractorForAnnotation_ExtractValue_List_BlankAttribute_noExtractCollectionSingularly()
 	{
 		ExtractValue extractFromUrl = new ExtractValue()
