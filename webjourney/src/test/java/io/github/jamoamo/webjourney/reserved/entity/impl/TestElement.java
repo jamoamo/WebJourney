@@ -75,6 +75,12 @@ public class TestElement extends AElement
 	{
 		return text;
 	}
+	
+	@Override
+	public AElement findElement(String path, boolean optional)
+	{
+		 return this.findElement(path);
+	}
 
 	@Override
 	public AElement findElement(String path)

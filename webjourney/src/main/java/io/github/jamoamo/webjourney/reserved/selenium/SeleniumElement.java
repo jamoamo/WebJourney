@@ -70,6 +70,12 @@ class SeleniumElement extends AElement
 	{
 		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), false), this.executor);
 	}
+	
+	@Override
+	public AElement findElement(String path, boolean optional)
+	{
+		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), optional), this.executor);
+	}
 
 	@Override
 	public List<? extends AElement> findElements(String path) throws XElementDoesntExistException

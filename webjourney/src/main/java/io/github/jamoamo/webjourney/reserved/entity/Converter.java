@@ -34,30 +34,37 @@ import java.util.List;
  *
  * @author James Amoore
  */
-class Converter implements IConverter<Object, Object>
+class Converter
+	 implements IConverter<Object, Object>
 {
-	private final Conversion conversion;
-	
-	Converter(Conversion conversion)
-	{
-		this.conversion = conversion;
-	}
+	 private final Conversion conversion;
 
-	@Override
-	public Object convertValue(Object source, 
-										IValueReader reader, 
-										List<IEntityCreationListener> listeners) 
-		throws XConversionException
-	{
-		AConverter valueConverter = InstanceCreator.getInstance().createInstance(this.conversion.mapper());
-		try
-		{
-			return valueConverter.mapValue(source.toString());
-		}
-		catch(XValueMappingException ex)
-		{
-			throw new XConversionException(ex);
-		}
-	}
-	
+	 Converter(Conversion conversion)
+	 {
+		  this.conversion = conversion;
+	 }
+
+	 @Override
+	 public Object convertValue(Object source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> listeners)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return null;
+		  }
+		  
+		  AConverter valueConverter = InstanceCreator.getInstance()
+				.createInstance(this.conversion.mapper());
+		  try
+		  {
+				return valueConverter.mapValue(source.toString());
+		  }
+		  catch(XValueMappingException ex)
+		  {
+				throw new XConversionException(ex);
+		  }
+	 }
+
 }
