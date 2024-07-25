@@ -24,10 +24,14 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -55,6 +59,20 @@ public class AttributeExtractorTest
 		AttributeExtractor extractor = new AttributeExtractor("//div", "attr");
 		String extractRawValue = extractor.extractRawValue(reader);
 		assertEquals("Value", extractRawValue);
+	}
+	
+	@Test
+	public void testExtractRawValue_optional() throws Exception
+	{
+		AElement element = Mockito.mock(AElement.class);
+		Mockito.when(element.getAttribute("attr")).thenReturn("Value");
+		
+		IValueReader reader = Mockito.mock(IValueReader.class);
+		Mockito.when(reader.getElement("//div", true)).thenReturn(null);
+		
+		AttributeExtractor extractor = new AttributeExtractor("//div", "attr", new AlwaysCondition(), true);
+		String extractRawValue = extractor.extractRawValue(reader);
+		assertNull(extractRawValue);
 	}
 
 	/**
