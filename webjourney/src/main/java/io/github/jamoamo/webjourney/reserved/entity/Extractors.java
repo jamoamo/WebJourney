@@ -80,7 +80,12 @@ public final class Extractors
 		  else if(annotation instanceof ExtractFromUrl extractor)
 		  {
 				LOGGER.debug("Finding Extractor from url.");
-				return getUrlExtractor(fieldInfo, extractor.urlXpath(), extractor.attribute(), new AlwaysCondition());
+				return getUrlExtractor(
+					 fieldInfo, 
+					 extractor.urlXpath(), 
+					 extractor.attribute(), 
+					 extractor.optional(), 
+					 new AlwaysCondition());
 		  }
 		  else if(annotation instanceof ExtractValue extractor)
 		  {
@@ -159,7 +164,12 @@ public final class Extractors
 				condition);
 	 }
 
-	 private static IExtractor getUrlExtractor(FieldInfo fieldInfo, String xPath, String attribute, ICondition condition)
+	 private static IExtractor getUrlExtractor(
+		  FieldInfo fieldInfo, 
+		  String xPath, 
+		  String attribute, 
+		  boolean optional, 
+		  ICondition condition)
 	 {
 		  TypeInfo fieldTypeInfo = fieldInfo.getFieldTypeInfo();
 
@@ -175,8 +185,8 @@ public final class Extractors
 				else
 				{
 					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + " and attribute = " + attribute + 
-						  " and optional = false");
-					 return new AttributesExtractor(xPath, attribute, condition, false);
+						  " and optional = " + optional);
+					 return new AttributesExtractor(xPath, attribute, condition, optional);
 				}
 		  }
 		  else if(!fieldTypeInfo.isStandardType() && fieldTypeInfo.hasNoArgsConstructor())
@@ -184,13 +194,13 @@ public final class Extractors
 				if(!attribute.isBlank())
 				{
 					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + " and attribute = " + attribute + 
-						  " and optional = false");
-					 return new AttributeExtractor(xPath, attribute, condition, false);
+						  " and optional = " + optional);
+					 return new AttributeExtractor(xPath, attribute, condition, optional);
 				}
 				else
 				{
-					 LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = false");
-					 return new ElementTextExtractor(xPath, condition, false);
+					 LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + optional);
+					 return new ElementTextExtractor(xPath, condition, optional);
 				}
 		  }
 		  throw new RuntimeException("Cannot determine a suitable value extractor. "
@@ -218,6 +228,7 @@ public final class Extractors
 					 .urlXpath(),
 				extractor.thenExtractFromUrl()
 					 .attribute(),
+				false,
 				condition);
 	 }
 

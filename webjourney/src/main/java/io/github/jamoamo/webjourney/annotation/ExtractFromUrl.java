@@ -47,4 +47,11 @@ public @interface ExtractFromUrl
 	 * @return The attribute name to extract the value of.
 	 */
 	String attribute() default "";
+	
+	/**
+	 * Is the extracted value optional? If true the extraction will result in null if the element the value is 
+	 * extracted from doesn't exist.
+	 * @return true if the value is optional. 
+	 */
+	boolean optional() default false;
 }

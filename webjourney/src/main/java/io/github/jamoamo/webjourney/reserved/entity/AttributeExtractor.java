@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
+import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 
 /**
@@ -49,13 +50,28 @@ class AttributeExtractor implements IExtractor<String>
 		this.condition = condition;
 		this.optional = optional;
 	}
+	
+	boolean getOptional()
+	{
+		 return this.optional;
+	}
 
 	@Override
 	public String extractRawValue(IValueReader browser) throws XExtractionException
 	{
 		try
 		{
-			return browser.getElement(this.elementXPath, this.optional).getAttribute(this.attribute);
+			 AElement element = browser.getElement(this.elementXPath, this.optional);
+			 if(this.optional && element == null)
+			 {
+				  return null;
+			 }
+			 else if(element == null)
+			 {
+				  throw new XElementDoesntExistException();
+			 }
+			 
+			 return element.getAttribute(this.attribute);
 		}
 		catch(XElementDoesntExistException | XValueReaderException ex)
 		{

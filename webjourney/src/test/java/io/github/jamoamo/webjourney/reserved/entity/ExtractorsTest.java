@@ -134,6 +134,12 @@ public class ExtractorsTest
 			{
 				return "";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				 return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -167,6 +173,12 @@ public class ExtractorsTest
 			public String attribute()
 			{
 				return "attr";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				 return false;
 			}
 		};
 		
@@ -202,6 +214,12 @@ public class ExtractorsTest
 			{
 				return "attr";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				 return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -209,6 +227,46 @@ public class ExtractorsTest
 		
 		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, false, false);
 		assertInstanceOf(AttributeExtractor.class, extractor);
+	}
+	
+	@Test
+	public void testGetExtractorForAnnotation_ExtractFromUrl_Attribute_OptionalElement()
+	{
+		Field field = Mockito.mock(Field.class);
+		
+		ExtractFromUrl extractFromUrl = new ExtractFromUrl()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractFromUrl.class;
+			}
+
+			@Override
+			public String urlXpath()
+			{
+				return "xpath";
+			}
+
+			@Override
+			public String attribute()
+			{
+				return "attr";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				 return true;
+			}
+		};
+		
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo()).thenReturn(TypeInfo.forClass(Entity.class));
+		
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, false, false);
+		assertInstanceOf(AttributeExtractor.class, extractor);
+		assertTrue(((AttributeExtractor)extractor).getOptional());
 	}
 	
 	@Test
@@ -233,6 +291,12 @@ public class ExtractorsTest
 			{
 				return "";
 			}
+			
+			@Override
+			public boolean optional()
+			{
+				 return false;
+			}
 		};
 		
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -240,6 +304,44 @@ public class ExtractorsTest
 		
 		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, false, false);
 		assertInstanceOf(ElementTextExtractor.class, extractor);
+	}
+	
+	@Test
+	public void testGetExtractorForAnnotation_ExtractFromUrl_BlankAttribute_optional()
+	{
+		ExtractFromUrl extractFromUrl = new ExtractFromUrl()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractFromUrl.class;
+			}
+
+			@Override
+			public String urlXpath()
+			{
+				return "xpath";
+			}
+
+			@Override
+			public String attribute()
+			{
+				return "";
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				 return true;
+			}
+		};
+		
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo()).thenReturn(TypeInfo.forClass(Entity.class));
+		
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, false, false);
+		assertInstanceOf(ElementTextExtractor.class, extractor);
+		assertTrue(((ElementTextExtractor)extractor).isOptional());
 	}
 	
 	@Test
@@ -934,6 +1036,12 @@ public class ExtractorsTest
 			public Class<? extends Annotation> annotationType()
 			{
 				return ExtractFromUrl.class;
+			}
+			
+			@Override
+			public boolean optional()
+			{
+				 return false;
 			}
 		};
 		
