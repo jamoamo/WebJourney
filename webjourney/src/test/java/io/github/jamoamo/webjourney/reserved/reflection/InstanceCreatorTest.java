@@ -32,50 +32,56 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class InstanceCreatorTest
 {
-	public static class Test1
-	{
-		
-	}
-	
-	public static class Test2
-	{
-		public Test2()
-		{
-			
-		}
-	}
-	
-	public static class Test3
-	{
-		public Test3(String test3)
-		{
-			
-		}
-	}
+	 public static class Test1
+	 {
 
-	/**
-	 * Test of createInstance method, of class InstanceCreator.
-	 */
-	@Test
-	public void testCreateInstance_defaultConstructor()
-	{
-		Test1 instance = InstanceCreator.getInstance().createInstance(Test1.class);
-		assertNotNull(instance);
-	}
-	
-	@Test
-	public void testCreateInstance_emptyConstructor()
-	{
-		Test2 instance = InstanceCreator.getInstance().createInstance(Test2.class);
-		assertNotNull(instance);
-	}
-	
-	@Test
-	public void testCreateInstance_noEmptyConstructor()
-	{
-		InstanceCreator creator = InstanceCreator.getInstance();
-		RuntimeException assertThrows = assertThrows(RuntimeException.class, () -> creator.createInstance(Test3.class));
-		assertEquals("Type does not have a no-args constructor: Test3", assertThrows.getMessage());
-	
-	}
+	 }
+
+	 public static class Test2
+	 {
+		  public Test2()
+		  {
+
+		  }
+
+	 }
+
+	 public static class Test3
+	 {
+		  public Test3(String test3)
+		  {
+
+		  }
+
+	 }
+
+	 /**
+	  * Test of createInstance method, of class InstanceCreator.
+	  */
+	 @Test
+	 public void testCreateInstance_defaultConstructor()
+	 {
+		  Test1 instance = InstanceCreator.getInstance()
+				.createInstance(Test1.class);
+		  assertNotNull(instance);
+	 }
+
+	 @Test
+	 public void testCreateInstance_emptyConstructor()
+	 {
+		  Test2 instance = InstanceCreator.getInstance()
+				.createInstance(Test2.class);
+		  assertNotNull(instance);
+	 }
+
+	 @Test
+	 public void testCreateInstance_noEmptyConstructor()
+	 {
+		  InstanceCreator creator = InstanceCreator.getInstance();
+		  RuntimeException assertThrows =
+				assertThrows(RuntimeException.class, () -> creator.createInstance(Test3.class));
+		  assertEquals("Type does not have a no-args constructor: Test3", assertThrows.getMessage());
+
+	 }
+
 }

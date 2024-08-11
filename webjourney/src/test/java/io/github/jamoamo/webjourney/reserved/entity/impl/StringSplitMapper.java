@@ -32,14 +32,15 @@ import java.util.List;
  *
  * @author James Amoore
  */
-public class StringSplitMapper extends AConverter<List<String>>
+public class StringSplitMapper
+	 extends AConverter<List<String>>
 {
-	@Override
-	public List<String> mapValue(String value)
-			  throws XValueMappingException
-	{
-		String[] split = value.split(",");
-		return Arrays.asList(split);
-	}
-	
+	 @Override
+	 public List<String> mapValue(String value)
+		  throws XValueMappingException
+	 {
+		  String[] split = value.split(",");
+		  return Arrays.asList(split);
+	 }
+
 }

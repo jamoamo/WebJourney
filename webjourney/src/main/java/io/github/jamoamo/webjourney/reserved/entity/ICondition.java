@@ -29,10 +29,15 @@ package io.github.jamoamo.webjourney.reserved.entity;
  */
 public interface ICondition
 {
-	/**
-	 * Evaluates the condition.
-	 * @param reader the value reader
-	 * @return the evaluation result.
-	 */
-	boolean evaluate(IValueReader reader) throws XExtractionException;
+	 /**
+	  * Evaluates the condition.
+	  *
+	  * @param reader the value reader
+	  * @param entityCreationContext entity creation context
+	  * 
+	  * @return the evaluation result.
+	  */
+	 boolean evaluate(IValueReader reader, EntityCreationContext entityCreationContext)
+		  throws XExtractionException;
+
 }

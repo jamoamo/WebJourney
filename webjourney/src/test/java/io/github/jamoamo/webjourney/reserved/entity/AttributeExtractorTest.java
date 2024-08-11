@@ -39,50 +39,58 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class AttributeExtractorTest
 {
-	
-	public AttributeExtractorTest()
-	{
-	}
 
-	/**
-	 * Test of extractRawValue method, of class AttributeExtractor.
-	 */
-	@Test
-	public void testExtractRawValue() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getAttribute("attr")).thenReturn("Value");
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElement("//div", false)).thenReturn(element);
-		
-		AttributeExtractor extractor = new AttributeExtractor("//div", "attr");
-		String extractRawValue = extractor.extractRawValue(reader);
-		assertEquals("Value", extractRawValue);
-	}
-	
-	@Test
-	public void testExtractRawValue_optional() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getAttribute("attr")).thenReturn("Value");
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElement("//div", true)).thenReturn(null);
-		
-		AttributeExtractor extractor = new AttributeExtractor("//div", "attr", new AlwaysCondition(), true);
-		String extractRawValue = extractor.extractRawValue(reader);
-		assertNull(extractRawValue);
-	}
+	 public AttributeExtractorTest()
+	 {
+	 }
 
-	/**
-	 * Test of getCondition method, of class AttributeExtractor.
-	 */
-	@Test
-	public void testGetCondition() throws Exception
-	{
-		AttributeExtractor extractor = new AttributeExtractor("//div", "attr");
-		assertTrue(extractor.getCondition().evaluate(null));
-	}
-	
+	 /**
+	  * Test of extractRawValue method, of class AttributeExtractor.
+	  */
+	 @Test
+	 public void testExtractRawValue()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.getAttribute("attr"))
+				.thenReturn("Value");
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElement("//div", false))
+				.thenReturn(element);
+
+		  AttributeExtractor extractor = new AttributeExtractor("//div", "attr");
+		  String extractRawValue = extractor.extractRawValue(reader, null);
+		  assertEquals("Value", extractRawValue);
+	 }
+
+	 @Test
+	 public void testExtractRawValue_optional()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.getAttribute("attr"))
+				.thenReturn("Value");
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElement("//div", true))
+				.thenReturn(null);
+
+		  AttributeExtractor extractor = new AttributeExtractor("//div", "attr", new AlwaysCondition(), true);
+		  String extractRawValue = extractor.extractRawValue(reader, null);
+		  assertNull(extractRawValue);
+	 }
+
+	 /**
+	  * Test of getCondition method, of class AttributeExtractor.
+	  */
+	 @Test
+	 public void testGetCondition()
+		  throws Exception
+	 {
+		  AttributeExtractor extractor = new AttributeExtractor("//div", "attr");
+		  assertTrue(extractor.getCondition()
+				.evaluate(null, null));
+	 }
+
 }

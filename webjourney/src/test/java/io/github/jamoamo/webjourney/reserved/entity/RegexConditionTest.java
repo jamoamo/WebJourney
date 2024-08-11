@@ -34,48 +34,54 @@ import org.mockito.Mockito;
  */
 public class RegexConditionTest
 {
-	
-	public RegexConditionTest()
-	{
-	}
 
-	/**
-	 * Test of evaluate method, of class RegexCondition.
-	 */
-	@Test
-	public void testEvaluate_match() throws Exception
-	{
-		IExtractor<String> extractor = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor.extractRawValue(any())).thenReturn("String value");
-		
-		RegexCondition condition = new RegexCondition(extractor, "value");
-		
-		boolean evaluate = condition.evaluate(null);
-		assertTrue(evaluate);
-	}
-	
-	@Test
-	public void testEvaluate_nomatch() throws Exception
-	{
-		IExtractor<String> extractor = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor.extractRawValue(any())).thenReturn("String value");
-		
-		RegexCondition condition = new RegexCondition(extractor, "values");
-		
-		boolean evaluate = condition.evaluate(null);
-		assertFalse(evaluate);
-	}
-	
-	@Test
-	public void testEvaluate_null() throws Exception
-	{
-		IExtractor<String> extractor = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor.extractRawValue(any())).thenReturn(null);
-		
-		RegexCondition condition = new RegexCondition(extractor, "values");
-		
-		boolean evaluate = condition.evaluate(null);
-		assertFalse(evaluate);
-	}
-	
+	 public RegexConditionTest()
+	 {
+	 }
+
+	 /**
+	  * Test of evaluate method, of class RegexCondition.
+	  */
+	 @Test
+	 public void testEvaluate_match()
+		  throws Exception
+	 {
+		  IExtractor<String> extractor = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor.extractRawValue(any(), any()))
+				.thenReturn("String value");
+
+		  RegexCondition condition = new RegexCondition(extractor, "value");
+
+		  boolean evaluate = condition.evaluate(null, null);
+		  assertTrue(evaluate);
+	 }
+
+	 @Test
+	 public void testEvaluate_nomatch()
+		  throws Exception
+	 {
+		  IExtractor<String> extractor = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor.extractRawValue(any(), any()))
+				.thenReturn("String value");
+
+		  RegexCondition condition = new RegexCondition(extractor, "values");
+
+		  boolean evaluate = condition.evaluate(null, null);
+		  assertFalse(evaluate);
+	 }
+
+	 @Test
+	 public void testEvaluate_null()
+		  throws Exception
+	 {
+		  IExtractor<String> extractor = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor.extractRawValue(any(), any()))
+				.thenReturn(null);
+
+		  RegexCondition condition = new RegexCondition(extractor, "values");
+
+		  boolean evaluate = condition.evaluate(null, null);
+		  assertFalse(evaluate);
+	 }
+
 }

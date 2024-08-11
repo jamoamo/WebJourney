@@ -34,23 +34,26 @@ import org.mockito.Mockito;
  */
 public class BackNavigationTargetTest
 {
-	
-	public BackNavigationTargetTest()
-	{
-	}
 
-	/**
-	 * Test of navigate method, of class BackNavigationTarget.
-	 */
-	@Test
-	public void testNavigate() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		BackNavigationTarget target = new BackNavigationTarget();
-		target.navigate(browser);
-		Mockito.verify(window, Mockito.times(1)).navigateBack();
-	}
-	
+	 public BackNavigationTargetTest()
+	 {
+	 }
+
+	 /**
+	  * Test of navigate method, of class BackNavigationTarget.
+	  */
+	 @Test
+	 public void testNavigate()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  BackNavigationTarget target = new BackNavigationTarget();
+		  target.navigate(browser);
+		  Mockito.verify(window, Mockito.times(1))
+				.navigateBack();
+	 }
+
 }

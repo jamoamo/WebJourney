@@ -35,26 +35,29 @@ import org.mockito.Mockito;
  */
 public class NavigateActionTest
 {
-	
-	public NavigateActionTest()
-	{
-	}
 
-	/**
-	 * Test of executeAction method, of class NavigateAction.
-	 */
-	@Test
-	public void testExecuteAction() throws XWebException
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		JourneyContext context = new JourneyContext();
-		context.setBrowser(browser);
-		
-		NavigateAction action = new NavigateAction(NavigationTarget.back());
-		action.executeAction(context);
-		Mockito.verify(window).navigateBack();
-	}
-	
+	 public NavigateActionTest()
+	 {
+	 }
+
+	 /**
+	  * Test of executeAction method, of class NavigateAction.
+	  */
+	 @Test
+	 public void testExecuteAction()
+		  throws XWebException
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  JourneyContext context = new JourneyContext();
+		  context.setBrowser(browser);
+
+		  NavigateAction action = new NavigateAction(NavigationTarget.back());
+		  action.executeAction(context);
+		  Mockito.verify(window)
+				.navigateBack();
+	 }
+
 }

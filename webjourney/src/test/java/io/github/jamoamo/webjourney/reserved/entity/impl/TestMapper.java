@@ -30,12 +30,14 @@ import io.github.jamoamo.webjourney.api.mapper.XValueMappingException;
  *
  * @author James Amoore
  */
-public class TestMapper extends AConverter<String>
+public class TestMapper
+	 extends AConverter<String>
 {
-	@Override
-	public String mapValue(String value)
-			  throws XValueMappingException
-	{
-		return "<" + value + ">";
-	}
+	 @Override
+	 public String mapValue(String value)
+		  throws XValueMappingException
+	 {
+		  return "<" + value + ">";
+	 }
+
 }

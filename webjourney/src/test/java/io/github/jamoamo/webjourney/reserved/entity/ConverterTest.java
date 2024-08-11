@@ -43,50 +43,56 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public class ConverterTest
 {
-	public static class TestConverter extends AConverter<String>
-	{
-		public TestConverter()
-		{
-		}
+	 public static class TestConverter
+		  extends AConverter<String>
+	 {
+		  public TestConverter()
+		  {
+		  }
 
-		@Override
-		public String mapValue(String value)
-			throws XValueMappingException
-		{
-			return "--" + value + "--";
-		}
-	}
-	
-	/**
-	 * Test of convertValue method, of class Converter.
-	 */
-	@Test
-	public void testConvertValue() throws Exception
-	{
-		Conversion conversion = Mockito.mock(Conversion.class);
-		Answer<Class<TestConverter>> answer = (InvocationOnMock iom) -> TestConverter.class;
-		Mockito.when(conversion.mapper()).then(answer);
-		
-		Converter converter = new Converter(conversion);
-		
-		Object convertValue = converter.convertValue("A Test", null, new ArrayList<>());
-		assertEquals("--A Test--", convertValue);
-	}
-	
-	/**
-	 * Test of convertValue method, of class Converter.
-	 */
-	@Test
-	public void testConvertValue_null() throws Exception
-	{
-		Conversion conversion = Mockito.mock(Conversion.class);
-		Answer<Class<TestConverter>> answer = (InvocationOnMock iom) -> TestConverter.class;
-		Mockito.when(conversion.mapper()).then(answer);
-		
-		Converter converter = new Converter(conversion);
-		
-		Object convertValue = converter.convertValue(null, null, new ArrayList<>());
-		assertNull(convertValue);
-	}
-	
+		  @Override
+		  public String mapValue(String value)
+				throws XValueMappingException
+		  {
+				return "--" + value + "--";
+		  }
+
+	 }
+
+	 /**
+	  * Test of convertValue method, of class Converter.
+	  */
+	 @Test
+	 public void testConvertValue()
+		  throws Exception
+	 {
+		  Conversion conversion = Mockito.mock(Conversion.class);
+		  Answer<Class<TestConverter>> answer = (InvocationOnMock iom) -> TestConverter.class;
+		  Mockito.when(conversion.mapper())
+				.then(answer);
+
+		  Converter converter = new Converter(conversion);
+
+		  Object convertValue = converter.convertValue("A Test", null, new ArrayList<>(), new EntityCreationContext(null));
+		  assertEquals("--A Test--", convertValue);
+	 }
+
+	 /**
+	  * Test of convertValue method, of class Converter.
+	  */
+	 @Test
+	 public void testConvertValue_null()
+		  throws Exception
+	 {
+		  Conversion conversion = Mockito.mock(Conversion.class);
+		  Answer<Class<TestConverter>> answer = (InvocationOnMock iom) -> TestConverter.class;
+		  Mockito.when(conversion.mapper())
+				.then(answer);
+
+		  Converter converter = new Converter(conversion);
+
+		  Object convertValue = converter.convertValue(null, null, new ArrayList<>(), new EntityCreationContext(null));
+		  assertNull(convertValue);
+	 }
+
 }

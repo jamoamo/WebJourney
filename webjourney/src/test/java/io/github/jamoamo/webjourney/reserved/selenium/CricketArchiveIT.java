@@ -38,38 +38,51 @@ import org.junit.jupiter.api.Test;
  */
 public class CricketArchiveIT
 {
-	@Test
-	public void test()
-			  throws Exception
-	{
-		LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
+	 @Test
+	 public void test()
+		  throws Exception
+	 {
+		  LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
 
-		WebJourney journey = JourneyBuilder.path()
-				  .navigateTo("https://my.cricketarchive.com")
-				  .completeFormAndSubmit(loginForm)
-				  .navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
-				  .completeFormAndSubmit(new InputForm(1))
-				  .consumePage(MatchEntity.class, ((c) -> 
-						 {
-							 Assertions.assertEquals("James Lillywhite's XI in Australia and New Zealand 1876/77 (1st Test)",
-															 c.getTestName());
-							 Assertions.assertEquals("Melbourne Cricket Ground, Melbourne",
-															 c.getGround().getGroundName());
-							 Assertions.assertEquals("Australia",
-															 c.getGround().getCountry());
-							 Assertions.assertEquals("https://cricketarchive.com/Archive/Grounds/2/121.html", c.getGround().getId());
-							Assertions.assertEquals(2, c.getTeams().size());
-							Assertions.assertEquals("Australia", c.getTeams().get(0).getName());
-							Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/20/20.html", 
-															 c.getTeams().get(0).getUrl());
-							Assertions.assertEquals("England", c.getTeams().get(1).getName());
-							Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/681/681.html", 
-															 c.getTeams().get(1).getUrl());
-						 })
-				  )
-				  .build();
+		  WebJourney journey = JourneyBuilder.path()
+				.navigateTo("https://my.cricketarchive.com")
+				.completeFormAndSubmit(loginForm)
+				.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")
+				.completeFormAndSubmit(new InputForm(1))
+				.consumePage(MatchEntity.class, ((c) ->
+				{
+					 Assertions.assertEquals("James Lillywhite's XI in Australia and New Zealand 1876/77 (1st Test)",
+						  c.getTestName());
+					 Assertions.assertEquals("Melbourne Cricket Ground, Melbourne",
+						  c.getGround()
+								.getGroundName());
+					 Assertions.assertEquals("Australia",
+						  c.getGround()
+								.getCountry());
+					 Assertions.assertEquals("https://cricketarchive.com/Archive/Grounds/2/121.html", c.getGround()
+						  .getId());
+					 Assertions.assertEquals(2, c.getTeams()
+						  .size());
+					 Assertions.assertEquals("Australia", c.getTeams()
+						  .get(0)
+						  .getName());
+					 Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/20/20.html",
+						  c.getTeams()
+								.get(0)
+								.getUrl());
+					 Assertions.assertEquals("England", c.getTeams()
+						  .get(1)
+						  .getName());
+					 Assertions.assertEquals("https://cricketarchive.com/Archive/Teams/0/681/681.html",
+						  c.getTeams()
+								.get(1)
+								.getUrl());
+				})
+				)
+				.build();
 
-		WebTraveller traveller = new WebTraveller(new TravelOptions());
-		traveller.travelJourney(journey);
-	}
+		  WebTraveller traveller = new WebTraveller(new TravelOptions());
+		  traveller.travelJourney(journey);
+	 }
+
 }

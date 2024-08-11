@@ -35,23 +35,26 @@ import org.mockito.Mockito;
  */
 public class ForwardNavigationTargetTest
 {
-	
-	public ForwardNavigationTargetTest()
-	{
-	}
 
-	/**
-	 * Test of navigate method, of class ForwardNavigationTarget.
-	 */
-	@Test
-	public void testNavigate() throws XWebException
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		ForwardNavigationTarget target = new ForwardNavigationTarget();
-		target.navigate(browser);
-		Mockito.verify(window, Mockito.times(1)).navigateForward();
-	}
-	
+	 public ForwardNavigationTargetTest()
+	 {
+	 }
+
+	 /**
+	  * Test of navigate method, of class ForwardNavigationTarget.
+	  */
+	 @Test
+	 public void testNavigate()
+		  throws XWebException
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  ForwardNavigationTarget target = new ForwardNavigationTarget();
+		  target.navigate(browser);
+		  Mockito.verify(window, Mockito.times(1))
+				.navigateForward();
+	 }
+
 }

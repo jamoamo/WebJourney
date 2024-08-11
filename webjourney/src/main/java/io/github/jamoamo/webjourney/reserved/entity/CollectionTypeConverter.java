@@ -35,39 +35,42 @@ import java.util.List;
  * @author James Amoore
  * @param <T> The mapper type
  */
-class CollectionTypeConverter<T> implements IConverter<Collection<String>, Collection<T>>
+class CollectionTypeConverter<T>
+	 implements IConverter<Collection<String>, Collection<T>>
 {
-	private final AConverter<T> mapping;
-	
-	CollectionTypeConverter(AConverter<T> mapping)
-	{
-		this.mapping = mapping;
-	}
+	 private final AConverter<T> mapping;
 
-	@Override
-	public Collection<T> convertValue(Collection<String> source, 
-												 IValueReader reader, 
-												 List<IEntityCreationListener> listeners) 
-		throws XConversionException
-	{
-		if(source == null)
-		{
-			return null;
-		}
-		List<T> mappedCollection = new ArrayList<>(source.size());
-		for(String value : source)
-		{
-			try
-			{
-				T mapValue = this.mapping.mapValue(value);
-				mappedCollection.add(mapValue);
-			}
-			catch(XValueMappingException ex)
-			{
-				throw new XConversionException(ex);
-			}
-		}
-		return mappedCollection;
-	}
-	
+	 CollectionTypeConverter(AConverter<T> mapping)
+	 {
+		  this.mapping = mapping;
+	 }
+
+	 @Override
+	 public Collection<T> convertValue(Collection<String> source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> listeners,
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return null;
+		  }
+		  List<T> mappedCollection = new ArrayList<>(source.size());
+		  for(String value : source)
+		  {
+				try
+				{
+					 context.processCollectionItem();
+					 T mapValue = this.mapping.mapValue(value);
+					 mappedCollection.add(mapValue);
+				}
+				catch(XValueMappingException ex)
+				{
+					 throw new XConversionException(ex);
+				}
+		  }
+		  return mappedCollection;
+	 }
+
 }

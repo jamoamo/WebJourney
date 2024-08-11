@@ -30,13 +30,14 @@ import io.github.jamoamo.webjourney.api.mapper.XValueMappingException;
  *
  * @author James Amoore
  */
-public class WrapperMapper extends AConverter<StringWrapper>
+public class WrapperMapper
+	 extends AConverter<StringWrapper>
 {
-	@Override
-	public StringWrapper mapValue(String value)
-			  throws XValueMappingException
-	{
-		return new StringWrapper(value);
-	}
-	
+	 @Override
+	 public StringWrapper mapValue(String value)
+		  throws XValueMappingException
+	 {
+		  return new StringWrapper(value);
+	 }
+
 }

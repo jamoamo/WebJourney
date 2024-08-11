@@ -38,49 +38,49 @@ import java.util.List;
  */
 public class ValidEntityExtractFromUrl
 {
-	@ExtractFromUrl(urlXpath = XPATH_URL_DATA)
-	private UrlEntity urlEntity;
-	
-	@ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA)
-	private List<UrlEntity> urlEntities;
-	
-	public static class UrlEntity
-	{
-		@ExtractValue(path = XPATH_STRING_DATA)
-		@Conversion(mapper = TestMapper.class)
-		@Transformation(transformFunction = TestTransformer.class)
-		private String stringData;
+	 @ExtractFromUrl(urlXpath = XPATH_URL_DATA)
+	 private UrlEntity urlEntity;
 
-		public String getStringData()
-		{
-			return stringData;
-		}
+	 @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA)
+	 private List<UrlEntity> urlEntities;
 
-		public void setStringData(String stringData)
-		{
-			this.stringData = stringData;
-		}
-	}
+	 public static class UrlEntity
+	 {
+		  @ExtractValue(path = XPATH_STRING_DATA)
+		  @Conversion(mapper = TestMapper.class)
+		  @Transformation(transformFunction = TestTransformer.class)
+		  private String stringData;
 
-	public UrlEntity getUrlEntity()
-	{
-		return urlEntity;
-	}
+		  public String getStringData()
+		  {
+				return stringData;
+		  }
 
-	public void setUrlEntity(UrlEntity urlEntity)
-	{
-		this.urlEntity = urlEntity;
-	}
+		  public void setStringData(String stringData)
+		  {
+				this.stringData = stringData;
+		  }
 
-	public List<UrlEntity> getUrlEntities()
-	{
-		return urlEntities;
-	}
+	 }
 
-	public void setUrlEntities(List<UrlEntity> urlEntities)
-	{
-		this.urlEntities = urlEntities;
-	}
-	
-	
+	 public UrlEntity getUrlEntity()
+	 {
+		  return urlEntity;
+	 }
+
+	 public void setUrlEntity(UrlEntity urlEntity)
+	 {
+		  this.urlEntity = urlEntity;
+	 }
+
+	 public List<UrlEntity> getUrlEntities()
+	 {
+		  return urlEntities;
+	 }
+
+	 public void setUrlEntities(List<UrlEntity> urlEntities)
+	 {
+		  this.urlEntities = urlEntities;
+	 }
+
 }

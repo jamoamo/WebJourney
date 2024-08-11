@@ -33,28 +33,31 @@ import org.mockito.Mockito;
  */
 public class CombinedTransformerTest
 {
-	
-	public CombinedTransformerTest()
-	{
-	}
 
-	/**
-	 * Test of transformValue method, of class CombinedTransformer.
-	 */
-	@Test
-	public void testTransformValue() throws Exception
-	{
-		ITransformer<String> indivTransformer = Mockito.mock(ITransformer.class);
-		Mockito.when(indivTransformer.transformValue("Test1")).thenReturn("!Test!1!");
-		
-		ITransformer<String> indivTransformer2 = Mockito.mock(ITransformer.class);
-		Mockito.when(indivTransformer2.transformValue("!Test!1!")).thenReturn("<!Test!1!>");
-		
-		CombinedTransformer transformer = new CombinedTransformer(indivTransformer, indivTransformer2);
-		
-		String transformValue = transformer.transformValue("Test1");
-		
-		assertEquals("<!Test!1!>", transformValue);
-	}
-	
+	 public CombinedTransformerTest()
+	 {
+	 }
+
+	 /**
+	  * Test of transformValue method, of class CombinedTransformer.
+	  */
+	 @Test
+	 public void testTransformValue()
+		  throws Exception
+	 {
+		  ITransformer<String> indivTransformer = Mockito.mock(ITransformer.class);
+		  Mockito.when(indivTransformer.transformValue("Test1"))
+				.thenReturn("!Test!1!");
+
+		  ITransformer<String> indivTransformer2 = Mockito.mock(ITransformer.class);
+		  Mockito.when(indivTransformer2.transformValue("!Test!1!"))
+				.thenReturn("<!Test!1!>");
+
+		  CombinedTransformer transformer = new CombinedTransformer(indivTransformer, indivTransformer2);
+
+		  String transformValue = transformer.transformValue("Test1");
+
+		  assertEquals("<!Test!1!>", transformValue);
+	 }
+
 }

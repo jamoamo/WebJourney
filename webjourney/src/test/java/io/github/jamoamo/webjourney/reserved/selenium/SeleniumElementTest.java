@@ -44,170 +44,208 @@ import org.openqa.selenium.WebElement;
  */
 public class SeleniumElementTest
 {
-	private static final ISeleniumElementLocator locator = Mockito.mock(ISeleniumElementLocator.class);
-	private static final WebElement webElementMock = Mockito.mock(WebElement.class);
-	
-	/**
-	 * Test of getElementText method, of class SeleniumElement.
-	 */
-	@Test
-	public void testGetElementText() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		Mockito.when(webElementMock.getText()).thenReturn("Text");
-		
-		SeleniumElement element = new SeleniumElement(locator);
-		String result = element.getElementText();
-		assertEquals("Text", result);
-	}
+	 private static final ISeleniumElementLocator locator = Mockito.mock(ISeleniumElementLocator.class);
+	 private static final WebElement webElementMock = Mockito.mock(WebElement.class);
 
-	/**
-	 * Test of findElement method, of class SeleniumElement.
-	 */
-	@Test
-	public void testFindElement() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		WebElement elem = Mockito.mock(WebElement.class);
-		Mockito.when(elem.getText()).thenReturn("Inner Element");
-		
-		Mockito.when(webElementMock.findElement(any())).thenReturn(elem);
-		
-		SeleniumElement element = new SeleniumElement(locator);
-		AElement result = element.findElement("//div");
-		assertEquals("Inner Element", result.getElementText());
-	}
+	 /**
+	  * Test of getElementText method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testGetElementText()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  Mockito.when(webElementMock.getText())
+				.thenReturn("Text");
 
-	/**
-	 * Test of findElements method, of class SeleniumElement.
-	 */
-	@Test
-	public void testFindElements() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		WebElement elem1 = Mockito.mock(WebElement.class);
-		Mockito.when(elem1.getText()).thenReturn("Inner Element");
-		
-		Mockito.when(webElementMock.findElements(any())).thenReturn(Collections.singletonList(elem1));
-		
-		SeleniumElement element = new SeleniumElement(locator);
-		List<? extends AElement> result = element.findElements("//div");
-		assertEquals(1, result.size());
-		assertEquals("Inner Element", result.get(0).getElementText());
-	}
+		  SeleniumElement element = new SeleniumElement(locator);
+		  String result = element.getElementText();
+		  assertEquals("Text", result);
+	 }
 
-	/**
-	 * Test of getAttribute method, of class SeleniumElement.
-	 */
-	@Test
-	public void testGetAttribute() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		Mockito.when(webElementMock.getAttribute("Attr")).thenReturn("Value");
-		
-		SeleniumElement element = new SeleniumElement(locator);
-		String result = element.getAttribute("Attr");
-		assertEquals("Value", result);
-	}
+	 /**
+	  * Test of findElement method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testFindElement()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  WebElement elem = Mockito.mock(WebElement.class);
+		  Mockito.when(elem.getText())
+				.thenReturn("Inner Element");
 
-	/**
-	 * Test of click method, of class SeleniumElement.
-	 */
-	@Test
-	public void testClick() throws XElementDoesntExistException
-	{
-		Mockito.clearInvocations(this.webElementMock);
-		
-		Mockito.when(locator.findElement()).thenReturn(this.webElementMock);
-		SeleniumElement element = new SeleniumElement(this.locator);
-		
-		element.click();
-		
-		verify(this.webElementMock).click();
-		Mockito.reset(this.webElementMock);
-	}
-	
-	/**
-	 * Test of click method, of class SeleniumElement.
-	 */
-	@Test
-	public void testClick_fallback() throws XElementDoesntExistException
-	{
-		Mockito.when(this.locator.findElement()).thenReturn(this.webElementMock);
-		Mockito.doThrow(new ElementClickInterceptedException("An exception message")).when(this.webElementMock).click();
-		
-		ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
-		SeleniumElement element = new SeleniumElement(this.locator, mockExecutor);
-		
-		element.click();
-		
-		verify(mockExecutor).executeScript("arguments[0].click();", webElementMock);
-		Mockito.reset(this.webElementMock);
-	}
-	
-	/**
-	 * Test of click method, of class SeleniumElement.
-	 */
-	@Test
-	public void testClick_fallback_nullExecutor() throws XElementDoesntExistException
-	{
-		Mockito.when(this.locator.findElement()).thenReturn(this.webElementMock);
-		Mockito.doThrow(new ElementClickInterceptedException("An exception message")).when(this.webElementMock).click();
-		
-		SeleniumElement element = new SeleniumElement(this.locator, null);
+		  Mockito.when(webElementMock.findElement(any()))
+				.thenReturn(elem);
 
-		Assertions.assertThrows(ElementClickInterceptedException.class, () -> element.click());
-		Mockito.reset(this.webElementMock);
-	}
+		  SeleniumElement element = new SeleniumElement(locator);
+		  AElement result = element.findElement("//div");
+		  assertEquals("Inner Element", result.getElementText());
+	 }
 
-	/**
-	 * Test of enterText method, of class SeleniumElement.
-	 */
-	@Test
-	public void testEnterText() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		SeleniumElement element = new SeleniumElement(locator);
-		
-		element.enterText("Text Value");
-		
-		ArgumentCaptor<CharSequence> keysArg = ArgumentCaptor.forClass(CharSequence.class);
-		verify(webElementMock).sendKeys(keysArg.capture());
-		
-		assertEquals("Text Value", keysArg.getValue());
-	}
+	 /**
+	  * Test of findElements method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testFindElements()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  WebElement elem1 = Mockito.mock(WebElement.class);
+		  Mockito.when(elem1.getText())
+				.thenReturn("Inner Element");
 
-	/**
-	 * Test of getChildrenByTag method, of class SeleniumElement.
-	 */
-	@Test
-	public void testGetChildrenByTag() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		WebElement elem1 = Mockito.mock(WebElement.class);
-		Mockito.when(elem1.getText()).thenReturn("Inner Element");
-		
-		Mockito.when(webElementMock.findElements(By.tagName("div"))).thenReturn(Collections.singletonList(elem1));
-		
-		SeleniumElement element = new SeleniumElement(locator);
-		List<? extends AElement> result = element.getChildrenByTag("div");
-		assertEquals(1, result.size());
-		assertEquals("Inner Element", result.get(0).getElementText());
-	}
+		  Mockito.when(webElementMock.findElements(any()))
+				.thenReturn(Collections.singletonList(elem1));
 
-	/**
-	 * Test of getTag method, of class SeleniumElement.
-	 */
-	@Test
-	public void testGetTag() throws XElementDoesntExistException
-	{
-		Mockito.when(locator.findElement()).thenReturn(webElementMock);
-		Mockito.when(webElementMock.getTagName()).thenReturn("td");
-		SeleniumElement element = new SeleniumElement(locator);
-		
-		String tag = element.getTag();
-		
-		assertEquals("td", tag);
-	}
-	
+		  SeleniumElement element = new SeleniumElement(locator);
+		  List<? extends AElement> result = element.findElements("//div");
+		  assertEquals(1, result.size());
+		  assertEquals("Inner Element", result.get(0)
+				.getElementText());
+	 }
+
+	 /**
+	  * Test of getAttribute method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testGetAttribute()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  Mockito.when(webElementMock.getAttribute("Attr"))
+				.thenReturn("Value");
+
+		  SeleniumElement element = new SeleniumElement(locator);
+		  String result = element.getAttribute("Attr");
+		  assertEquals("Value", result);
+	 }
+
+	 /**
+	  * Test of click method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testClick()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.clearInvocations(this.webElementMock);
+
+		  Mockito.when(locator.findElement())
+				.thenReturn(this.webElementMock);
+		  SeleniumElement element = new SeleniumElement(this.locator);
+
+		  element.click();
+
+		  verify(this.webElementMock)
+				.click();
+		  Mockito.reset(this.webElementMock);
+	 }
+
+	 /**
+	  * Test of click method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testClick_fallback()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(this.locator.findElement())
+				.thenReturn(this.webElementMock);
+		  Mockito.doThrow(new ElementClickInterceptedException("An exception message"))
+				.when(this.webElementMock)
+				.click();
+
+		  ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+		  SeleniumElement element = new SeleniumElement(this.locator, mockExecutor);
+
+		  element.click();
+
+		  verify(mockExecutor)
+				.executeScript("arguments[0].click();", webElementMock);
+		  Mockito.reset(this.webElementMock);
+	 }
+
+	 /**
+	  * Test of click method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testClick_fallback_nullExecutor()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(this.locator.findElement())
+				.thenReturn(this.webElementMock);
+		  Mockito.doThrow(new ElementClickInterceptedException("An exception message"))
+				.when(this.webElementMock)
+				.click();
+
+		  SeleniumElement element = new SeleniumElement(this.locator, null);
+
+		  Assertions.assertThrows(ElementClickInterceptedException.class, () -> element.click());
+		  Mockito.reset(this.webElementMock);
+	 }
+
+	 /**
+	  * Test of enterText method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testEnterText()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  SeleniumElement element = new SeleniumElement(locator);
+
+		  element.enterText("Text Value");
+
+		  ArgumentCaptor<CharSequence> keysArg = ArgumentCaptor.forClass(CharSequence.class);
+		  verify(webElementMock)
+				.sendKeys(keysArg.capture());
+
+		  assertEquals("Text Value", keysArg.getValue());
+	 }
+
+	 /**
+	  * Test of getChildrenByTag method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testGetChildrenByTag()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  WebElement elem1 = Mockito.mock(WebElement.class);
+		  Mockito.when(elem1.getText())
+				.thenReturn("Inner Element");
+
+		  Mockito.when(webElementMock.findElements(By.tagName("div")))
+				.thenReturn(Collections.singletonList(elem1));
+
+		  SeleniumElement element = new SeleniumElement(locator);
+		  List<? extends AElement> result = element.getChildrenByTag("div");
+		  assertEquals(1, result.size());
+		  assertEquals("Inner Element", result.get(0)
+				.getElementText());
+	 }
+
+	 /**
+	  * Test of getTag method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testGetTag()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  Mockito.when(webElementMock.getTagName())
+				.thenReturn("td");
+		  SeleniumElement element = new SeleniumElement(locator);
+
+		  String tag = element.getTag();
+
+		  assertEquals("td", tag);
+	 }
+
 }

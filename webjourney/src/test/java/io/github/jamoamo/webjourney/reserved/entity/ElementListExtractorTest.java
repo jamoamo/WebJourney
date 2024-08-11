@@ -37,26 +37,29 @@ import org.mockito.stubbing.Answer;
  */
 public class ElementListExtractorTest
 {
-	@Test
-	public void testextractRawValue() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		
-		Answer<List<AElement>> answer = new Answer<List<AElement>>()
-		{
-			@Override
-			public List<AElement> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return Collections.singletonList(element);
-			}
-		};
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElements("//div")).then(answer);
-		
-		ElementListExtractor extractor = new ElementListExtractor("//div", new AlwaysCondition());
-		extractor.extractRawValue(reader);
-	}
-	
+	 @Test
+	 public void testextractRawValue()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+
+		  Answer<List<AElement>> answer = new Answer<List<AElement>>()
+		  {
+				@Override
+				public List<AElement> answer(InvocationOnMock iom)
+					 throws Throwable
+				{
+					 return Collections.singletonList(element);
+				}
+
+		  };
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElements("//div"))
+				.then(answer);
+
+		  ElementListExtractor extractor = new ElementListExtractor("//div", new AlwaysCondition());
+		  extractor.extractRawValue(reader, null);
+	 }
+
 }

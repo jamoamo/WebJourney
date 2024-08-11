@@ -35,46 +35,52 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class TransformerTest
 {
-	
-	public static class Function extends ATransformationFunction
-	{
-		@Override
-		public String transform(String extractedValue, String[] parameters)
-		{
-			return extractedValue + "!";
-		}
-	}
 
-	/**
-	 * Test of transformValue method, of class Transformer.
-	 */
-	@Test
-	public void testTransformValue() throws Exception
-	{
-		Transformation transformation = new Transformation()
-		{
-			@Override
-			public Class<? extends ATransformationFunction> transformFunction()
-			{
-				return Function.class;
-			}
+	 public static class Function
+		  extends ATransformationFunction
+	 {
+		  @Override
+		  public String transform(String extractedValue, String[] parameters)
+		  {
+				return extractedValue + "!";
+		  }
 
-			@Override
-			public String[] parameters()
-			{
-				return new String[]{};
-			}
+	 }
 
-			@Override
-			public Class<? extends Annotation> annotationType()
-			{
-				return Transformation.class;
-			}
-		};
-		
-		Transformer transformer = new Transformer(transformation);
-		String transformValue = transformer.transformValue("Value");
-		assertEquals("Value!", transformValue);
-	}
-	
+	 /**
+	  * Test of transformValue method, of class Transformer.
+	  */
+	 @Test
+	 public void testTransformValue()
+		  throws Exception
+	 {
+		  Transformation transformation = new Transformation()
+		  {
+				@Override
+				public Class<? extends ATransformationFunction> transformFunction()
+				{
+					 return Function.class;
+				}
+
+				@Override
+				public String[] parameters()
+				{
+					 return new String[]
+					 {
+					 };
+				}
+
+				@Override
+				public Class<? extends Annotation> annotationType()
+				{
+					 return Transformation.class;
+				}
+
+		  };
+
+		  Transformer transformer = new Transformer(transformation);
+		  String transformValue = transformer.transformValue("Value");
+		  assertEquals("Value!", transformValue);
+	 }
+
 }

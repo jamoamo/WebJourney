@@ -31,16 +31,17 @@ import io.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
  */
 public class ValidEntityExtractCurrentUrl
 {
-	@ExtractCurrentUrl()
-	private String currentUrl;
+	 @ExtractCurrentUrl()
+	 private String currentUrl;
 
-	public String getCurrentUrl()
-	{
-		return currentUrl;
-	}
+	 public String getCurrentUrl()
+	 {
+		  return currentUrl;
+	 }
 
-	public void setCurrentUrl(String currentUrl)
-	{
-		this.currentUrl = currentUrl;
-	}
+	 public void setCurrentUrl(String currentUrl)
+	 {
+		  this.currentUrl = currentUrl;
+	 }
+
 }

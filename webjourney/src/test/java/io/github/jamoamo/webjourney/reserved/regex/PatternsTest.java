@@ -33,23 +33,24 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class PatternsTest
 {
-	
-	public PatternsTest()
-	{
-	}
 
-	/**
-	 * Test of getPattern method, of class Patterns.
-	 */
-	@Test
-	public void testGetPattern_samePattern() throws Exception
-	{
-		Pattern pattern = Patterns.getPattern("Test.*Value");
-		Pattern repeatPattern = Patterns.getPattern("Test.*Value");
-		
-		assertEquals("Test.*Value", pattern.pattern());
-		assertEquals("Test.*Value", repeatPattern.pattern());
-		assertSame(pattern, repeatPattern);
-	}
-	
+	 public PatternsTest()
+	 {
+	 }
+
+	 /**
+	  * Test of getPattern method, of class Patterns.
+	  */
+	 @Test
+	 public void testGetPattern_samePattern()
+		  throws Exception
+	 {
+		  Pattern pattern = Patterns.getPattern("Test.*Value");
+		  Pattern repeatPattern = Patterns.getPattern("Test.*Value");
+
+		  assertEquals("Test.*Value", pattern.pattern());
+		  assertEquals("Test.*Value", repeatPattern.pattern());
+		  assertSame(pattern, repeatPattern);
+	 }
+
 }

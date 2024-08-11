@@ -33,63 +33,71 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Amoore
  */
-class EntityFieldEvaluator implements IEntityFieldEvaluator
+class EntityFieldEvaluator
+	 implements IEntityFieldEvaluator
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EntityFieldEvaluator.class);
-	
-	private final List<IExtractor> extractors;
-	private final IConverter converter;
-	private final ITransformer transformer;
-	
-	EntityFieldEvaluator(List<IExtractor> extractors, ITransformer transformer, IConverter converter)
-	{
-		this.extractors = extractors;
-		this.transformer = transformer;
-		this.converter = converter;
-	}
+	 private static final Logger LOGGER = LoggerFactory.getLogger(EntityFieldEvaluator.class);
 
-	@Override
-	public Object evaluate(IValueReader browser, 
-								  List<IEntityCreationListener> listeners)
-		throws XEntityEvaluationException
-	{
-		Object extractedValue = extractValue(browser);
-		
-		Object transformedValue = extractedValue;
-		if(this.transformer != null)
-		{
-			transformedValue = this.transformer.transformValue(extractedValue);
-		}
+	 private final List<IExtractor> extractors;
+	 private final IConverter converter;
+	 private final ITransformer transformer;
 
-		Object convertedValue = this.converter.convertValue(transformedValue, browser, new ArrayList<>());
-		return convertedValue;
-	}
+	 EntityFieldEvaluator(List<IExtractor> extractors, ITransformer transformer, IConverter converter)
+	 {
+		  this.extractors = extractors;
+		  this.transformer = transformer;
+		  this.converter = converter;
+	 }
 
-	private Object extractValue(IValueReader browser) throws XExtractionException
-	{
-		List<IExtractor> matchingExtractors = new ArrayList<>();
-		for(IExtractor extractor : this.extractors)
-		{
-			if(extractor.getCondition().evaluate(browser))
-			{
-				matchingExtractors.add(extractor);
-			}
-		}
-		
-		Object extractedValue = null;
-		if(matchingExtractors.isEmpty())
-		{
-			LOGGER.warn("No extractors apply. Defaulting to null.");
-			return null;
-		}
-		else if(matchingExtractors.size() > 1)
-		{
-			throw new RuntimeException("More than one Extractor applies.");
-		}
-		else
-		{
-			extractedValue = matchingExtractors.get(0).extractRawValue(browser);
-		}
-		return extractedValue;
-	}
+	 @Override
+	 public Object evaluate(IValueReader browser, List<IEntityCreationListener> listeners,
+		  EntityCreationContext entityCreationContext)
+		  throws XEntityEvaluationException
+	 {
+		  Object extractedValue = extractValue(browser, entityCreationContext);
+
+		  Object transformedValue = extractedValue;
+		  if(this.transformer != null)
+		  {
+				transformedValue = this.transformer.transformValue(extractedValue);
+		  }
+
+		  Object convertedValue = this.converter.convertValue(
+				transformedValue, browser, 
+				new ArrayList<>(), 
+				entityCreationContext);
+		  return convertedValue;
+	 }
+
+	 private Object extractValue(IValueReader browser, EntityCreationContext entityCreationContext)
+		  throws XExtractionException
+	 {
+		  List<IExtractor> matchingExtractors = new ArrayList<>();
+		  for(IExtractor extractor : this.extractors)
+		  {
+				if(extractor.getCondition()
+					 .evaluate(browser, entityCreationContext))
+				{
+					 matchingExtractors.add(extractor);
+				}
+		  }
+
+		  Object extractedValue = null;
+		  if(matchingExtractors.isEmpty())
+		  {
+				LOGGER.warn("No extractors apply. Defaulting to null.");
+				return null;
+		  }
+		  else if(matchingExtractors.size() > 1)
+		  {
+				throw new RuntimeException("More than one Extractor applies.");
+		  }
+		  else
+		  {
+				extractedValue = matchingExtractors.get(0)
+					 .extractRawValue(browser, entityCreationContext);
+		  }
+		  return extractedValue;
+	 }
+
 }

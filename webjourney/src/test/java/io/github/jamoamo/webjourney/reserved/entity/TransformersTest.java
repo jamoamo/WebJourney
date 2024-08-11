@@ -36,188 +36,254 @@ import org.mockito.Mockito;
  */
 public class TransformersTest
 {
-	
-	public TransformersTest()
-	{
-	}
 
-	/**
-	 * Test of getTransformerForField method, of class Transformers.
-	 */
-	@Test
-	public void testGetTransformerForField_transformation_string_regexValue() throws Exception
-	{
-		RegexGroup regex = Mockito.mock(RegexGroup.class);
-		
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.getRegexExtractGroup()).thenReturn(regex);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> String.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(CombinedTransformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_transformation_collection_notMapped_RegexValue() throws Exception
-	{
-		RegexGroup regex = Mockito.mock(RegexGroup.class);
-		
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.getRegexExtractGroup()).thenReturn(regex);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.FALSE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> List.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(CollectionTransformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_transformation_collection_notMapped_noRegexValue() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.FALSE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> List.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(CollectionTransformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_transfomation_collection_Mapped_RegexValue() throws Exception
-	{
-		RegexGroup regex = Mockito.mock(RegexGroup.class);
-		
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.getRegexExtractGroup()).thenReturn(regex);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.TRUE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> List.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(CombinedTransformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_transfomation_collection_Mapped_noRegexValue() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.TRUE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> List.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(Transformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_transfomation_string_noRegexValue() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.FALSE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> String.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(Transformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_noTransfomation_collection_notMapped_RegexValue() throws Exception
-	{
-		RegexGroup regex = Mockito.mock(RegexGroup.class);
-		
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.getRegexExtractGroup()).thenReturn(regex);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.FALSE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> List.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(CollectionTransformer.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_noTransfomation_collection_Mapped_RegexValue() throws Exception
-	{
-		RegexGroup regex = Mockito.mock(RegexGroup.class);
-		
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.getRegexExtractGroup()).thenReturn(regex);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.TRUE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> List.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(RegexTransformation.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_noTransfomation_string_RegexValue() throws Exception
-	{
-		RegexGroup regex = Mockito.mock(RegexGroup.class);
-		
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.TRUE);
-		Mockito.when(annotations.getRegexExtractGroup()).thenReturn(regex);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.FALSE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> String.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertInstanceOf(RegexTransformation.class, transformerForField);
-	}
-	
-	@Test
-	public void testGetTransformerForField_noTransfomation_string_noRegexValue() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.hasTransformation()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasRegexExtract()).thenReturn(Boolean.FALSE);
-		Mockito.when(annotations.hasMappedCollection()).thenReturn(Boolean.FALSE);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		Mockito.when(defn.getFieldType()).then(im -> String.class);
-		
-		ITransformer transformerForField = Transformers.getTransformerForField(defn);
-		assertNull(transformerForField);
-	}
+	 public TransformersTest()
+	 {
+	 }
+
+	 /**
+	  * Test of getTransformerForField method, of class Transformers.
+	  */
+	 @Test
+	 public void testGetTransformerForField_transformation_string_regexValue()
+		  throws Exception
+	 {
+		  RegexGroup regex = Mockito.mock(RegexGroup.class);
+
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.getRegexExtractGroup())
+				.thenReturn(regex);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> String.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(CombinedTransformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_transformation_collection_notMapped_RegexValue()
+		  throws Exception
+	 {
+		  RegexGroup regex = Mockito.mock(RegexGroup.class);
+
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.getRegexExtractGroup())
+				.thenReturn(regex);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.FALSE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> List.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(CollectionTransformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_transformation_collection_notMapped_noRegexValue()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.FALSE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> List.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(CollectionTransformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_transfomation_collection_Mapped_RegexValue()
+		  throws Exception
+	 {
+		  RegexGroup regex = Mockito.mock(RegexGroup.class);
+
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.getRegexExtractGroup())
+				.thenReturn(regex);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.TRUE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> List.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(CombinedTransformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_transfomation_collection_Mapped_noRegexValue()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.TRUE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> List.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(Transformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_transfomation_string_noRegexValue()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.FALSE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> String.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(Transformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_noTransfomation_collection_notMapped_RegexValue()
+		  throws Exception
+	 {
+		  RegexGroup regex = Mockito.mock(RegexGroup.class);
+
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.getRegexExtractGroup())
+				.thenReturn(regex);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.FALSE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> List.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(CollectionTransformer.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_noTransfomation_collection_Mapped_RegexValue()
+		  throws Exception
+	 {
+		  RegexGroup regex = Mockito.mock(RegexGroup.class);
+
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.getRegexExtractGroup())
+				.thenReturn(regex);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.TRUE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> List.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(RegexTransformation.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_noTransfomation_string_RegexValue()
+		  throws Exception
+	 {
+		  RegexGroup regex = Mockito.mock(RegexGroup.class);
+
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.TRUE);
+		  Mockito.when(annotations.getRegexExtractGroup())
+				.thenReturn(regex);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.FALSE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> String.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertInstanceOf(RegexTransformation.class, transformerForField);
+	 }
+
+	 @Test
+	 public void testGetTransformerForField_noTransfomation_string_noRegexValue()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.hasTransformation())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasRegexExtract())
+				.thenReturn(Boolean.FALSE);
+		  Mockito.when(annotations.hasMappedCollection())
+				.thenReturn(Boolean.FALSE);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+		  Mockito.when(defn.getFieldType())
+				.then(im -> String.class);
+
+		  ITransformer transformerForField = Transformers.getTransformerForField(defn);
+		  assertNull(transformerForField);
+	 }
+
 }

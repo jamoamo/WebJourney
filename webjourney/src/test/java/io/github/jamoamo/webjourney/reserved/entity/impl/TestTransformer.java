@@ -29,14 +29,16 @@ import io.github.jamoamo.webjourney.api.transform.ATransformationFunction;
  *
  * @author James Amoore
  */
-public class TestTransformer extends ATransformationFunction
+public class TestTransformer
+	 extends ATransformationFunction
 {
-	@Override
-	public String transform(String mappedValue, String[] parameters)
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append(mappedValue);
-		return builder.reverse().toString();
-	}
+	 @Override
+	 public String transform(String mappedValue, String[] parameters)
+	 {
+		  StringBuilder builder = new StringBuilder();
+		  builder.append(mappedValue);
+		  return builder.reverse()
+				.toString();
+	 }
 
 }

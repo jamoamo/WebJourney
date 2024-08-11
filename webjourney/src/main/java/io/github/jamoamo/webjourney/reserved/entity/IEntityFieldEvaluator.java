@@ -32,6 +32,8 @@ import java.util.List;
  */
 interface IEntityFieldEvaluator
 {
-	Object evaluate(IValueReader browser, 
-						 List<IEntityCreationListener> listeners) throws XEntityEvaluationException;
+	 Object evaluate(IValueReader browser, List<IEntityCreationListener> listeners,
+		  EntityCreationContext entityCreationContext)
+		  throws XEntityEvaluationException;
+
 }

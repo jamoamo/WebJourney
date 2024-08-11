@@ -29,16 +29,16 @@ package io.github.jamoamo.webjourney.reserved.entity.impl;
  */
 public class StringWrapper
 {
-	private final String value;
-	public StringWrapper(String string)
-	{
-		this.value = string;
-	}
+	 private final String value;
 
-	public String getValue()
-	{
-		return value;
-	}
-	
-	
+	 public StringWrapper(String string)
+	 {
+		  this.value = string;
+	 }
+
+	 public String getValue()
+	 {
+		  return value;
+	 }
+
 }

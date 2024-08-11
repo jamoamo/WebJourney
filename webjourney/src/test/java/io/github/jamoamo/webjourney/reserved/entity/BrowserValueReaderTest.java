@@ -46,235 +46,280 @@ import org.mockito.stubbing.Answer;
  */
 public class BrowserValueReaderTest
 {
-	/**
-	 * Test of getCurrentUrl method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testGetCurrentUrl() throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		mockBrowser.getActiveWindow();
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		String currentUrl = reader.getCurrentUrl();
-		assertEquals("https://current.url", currentUrl);
-	}
+	 /**
+	  * Test of getCurrentUrl method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testGetCurrentUrl()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentUrl())
+				.thenReturn("https://current.url");
 
-	/**
-	 * Test of getElementText method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testGetElementText() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getElementText()).thenReturn("Element Value");
-		
-		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElement(eq("//div"), anyBoolean())).thenReturn(element);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		String text = reader.getElementText("//div", false);
-		assertEquals("Element Value", text);
-	}
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
 
-	/**
-	 * Test of getElement method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testGetElement() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getElementText()).thenReturn("Element Value");
-		
-		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElement(eq("//div"), anyBoolean())).thenReturn(element);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		AElement elementResult = reader.getElement("//div", false);
-		assertSame(element, elementResult);
-	}
+		  mockBrowser.getActiveWindow();
 
-	/**
-	 * Test of getAttribute method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testGetAttribute() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getElementText()).thenReturn("Element Value");
-		Mockito.when(element.getAttribute("attr")).thenReturn("Attribute Value");
-		
-		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElement(eq("//div"), anyBoolean())).thenReturn(element);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		String attribute = reader.getAttribute("//div", "attr");
-		assertSame("Attribute Value", attribute);
-	}
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  String currentUrl = reader.getCurrentUrl();
+		  assertEquals("https://current.url", currentUrl);
+	 }
 
-	/**
-	 * Test of navigateTo method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testNavigateTo() throws Exception
-	{
-		IWebPage page = Mockito.mock(IWebPage.class);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		URL url = new URL("https://navigate.url");
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		reader.navigateTo(url);
-		
-		verify(window).navigateToUrl(url);
-	}
+	 /**
+	  * Test of getElementText method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testGetElementText()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.getElementText())
+				.thenReturn("Element Value");
 
-	/**
-	 * Test of navigateBack method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testNavigateBack() throws Exception
-	{
-		IWebPage page = Mockito.mock(IWebPage.class);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		reader.navigateBack();
-		
-		verify(window).navigateBack();
-	}
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  Mockito.when(page.getElement(eq("//div"), anyBoolean()))
+				.thenReturn(element);
 
-	/**
-	 * Test of getElements method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testGetElements() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		
-		Answer<List<AElement>> answer = new Answer<List<AElement>>()
-		{
-			@Override
-			public List<AElement> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return Collections.singletonList(element);
-			}
-		};
-		
-		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElements("//div")).thenAnswer(answer);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		List<? extends AElement> elements = reader.getElements("//div");
-		
-		assertEquals(1, elements.size());
-	}
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
 
-	/**
-	 * Test of getElementTexts method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testGetElementTexts() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.getElementText()).thenReturn("Text");
-		
-		Answer<List<AElement>> answer = new Answer<List<AElement>>()
-		{
-			@Override
-			public List<AElement> answer(InvocationOnMock iom)
-					  throws Throwable
-			{
-				return Collections.singletonList(element);
-			}
-		};
-		
-		IWebPage page = Mockito.mock(IWebPage.class);
-		Mockito.when(page.getElements("//div")).thenAnswer(answer);
-		
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		List<String> elementTexts = reader.getElementTexts("//div");
-		
-		assertEquals(1, elementTexts.size());
-		assertEquals("Text", elementTexts.get(0));
-	}
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
 
-	/**
-	 * Test of openNewWindow method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testOpenNewWindow() throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		reader.openNewWindow();
-		
-		verify(mockBrowser).openNewWindow();
-	}
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  String text = reader.getElementText("//div", false);
+		  assertEquals("Element Value", text);
+	 }
 
-	/**
-	 * Test of closeWindow method, of class BrowserValueReader.
-	 */
-	@Test
-	public void testCloseWindow() throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		
-		IBrowser mockBrowser = Mockito.mock(IBrowser.class);
-		Mockito.when(mockBrowser.getActiveWindow()).thenReturn(window);
-		
-		BrowserValueReader reader = new BrowserValueReader(mockBrowser);
-		reader.closeWindow();
-		
-		verify(window).close();
-	}
+	 /**
+	  * Test of getElement method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testGetElement()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.getElementText())
+				.thenReturn("Element Value");
+
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  Mockito.when(page.getElement(eq("//div"), anyBoolean()))
+				.thenReturn(element);
+
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  AElement elementResult = reader.getElement("//div", false);
+		  assertSame(element, elementResult);
+	 }
+
+	 /**
+	  * Test of getAttribute method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testGetAttribute()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.getElementText())
+				.thenReturn("Element Value");
+		  Mockito.when(element.getAttribute("attr"))
+				.thenReturn("Attribute Value");
+
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  Mockito.when(page.getElement(eq("//div"), anyBoolean()))
+				.thenReturn(element);
+
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  String attribute = reader.getAttribute("//div", "attr");
+		  assertSame("Attribute Value", attribute);
+	 }
+
+	 /**
+	  * Test of navigateTo method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testNavigateTo()
+		  throws Exception
+	 {
+		  IWebPage page = Mockito.mock(IWebPage.class);
+
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  URL url = new URL("https://navigate.url");
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  reader.navigateTo(url);
+
+		  verify(window)
+				.navigateToUrl(url);
+	 }
+
+	 /**
+	  * Test of navigateBack method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testNavigateBack()
+		  throws Exception
+	 {
+		  IWebPage page = Mockito.mock(IWebPage.class);
+
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  reader.navigateBack();
+
+		  verify(window)
+				.navigateBack();
+	 }
+
+	 /**
+	  * Test of getElements method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testGetElements()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+
+		  Answer<List<AElement>> answer = new Answer<List<AElement>>()
+		  {
+				@Override
+				public List<AElement> answer(InvocationOnMock iom)
+					 throws Throwable
+				{
+					 return Collections.singletonList(element);
+				}
+
+		  };
+
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  Mockito.when(page.getElements("//div"))
+				.thenAnswer(answer);
+
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  List<? extends AElement> elements = reader.getElements("//div");
+
+		  assertEquals(1, elements.size());
+	 }
+
+	 /**
+	  * Test of getElementTexts method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testGetElementTexts()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.getElementText())
+				.thenReturn("Text");
+
+		  Answer<List<AElement>> answer = new Answer<List<AElement>>()
+		  {
+				@Override
+				public List<AElement> answer(InvocationOnMock iom)
+					 throws Throwable
+				{
+					 return Collections.singletonList(element);
+				}
+
+		  };
+
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  Mockito.when(page.getElements("//div"))
+				.thenAnswer(answer);
+
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  List<String> elementTexts = reader.getElementTexts("//div");
+
+		  assertEquals(1, elementTexts.size());
+		  assertEquals("Text", elementTexts.get(0));
+	 }
+
+	 /**
+	  * Test of openNewWindow method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testOpenNewWindow()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  reader.openNewWindow();
+
+		  verify(mockBrowser)
+				.openNewWindow();
+	 }
+
+	 /**
+	  * Test of closeWindow method, of class BrowserValueReader.
+	  */
+	 @Test
+	 public void testCloseWindow()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+
+		  IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		  Mockito.when(mockBrowser.getActiveWindow())
+				.thenReturn(window);
+
+		  BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+		  reader.closeWindow();
+
+		  verify(window)
+				.close();
+	 }
+
 }

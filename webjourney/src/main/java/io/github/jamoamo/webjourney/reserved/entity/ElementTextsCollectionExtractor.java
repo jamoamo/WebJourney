@@ -29,33 +29,36 @@ import java.util.List;
  *
  * @author James Amoore
  */
-class ElementTextsCollectionExtractor implements IExtractor<List<String>>
+class ElementTextsCollectionExtractor
+	 implements IExtractor<List<String>>
 {
-	private final String path;
-	private final ICondition condition;
-	
-	ElementTextsCollectionExtractor(String path, ICondition condition)
-	{
-		this.path = path;
-		this.condition = condition;
-	}
+	 private final String path;
+	 private final ICondition condition;
 
-	@Override
-	public List<String> extractRawValue(IValueReader reader) throws XExtractionException
-	{
-		try
-		{
-			return reader.getElementTexts(this.path);
-		}
-		catch(XValueReaderException ex)
-		{
-			throw new XExtractionException(ex);
-		}
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return this.condition;
-	}
+	 ElementTextsCollectionExtractor(String path, ICondition condition)
+	 {
+		  this.path = path;
+		  this.condition = condition;
+	 }
+
+	 @Override
+	 public List<String> extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		  throws XExtractionException
+	 {
+		  try
+		  {
+				return reader.getElementTexts(this.path);
+		  }
+		  catch(XValueReaderException ex)
+		  {
+				throw new XExtractionException(ex);
+		  }
+	 }
+
+	 @Override
+	 public ICondition getCondition()
+	 {
+		  return this.condition;
+	 }
+
 }

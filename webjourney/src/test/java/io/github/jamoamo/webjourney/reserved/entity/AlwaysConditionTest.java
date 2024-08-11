@@ -32,19 +32,19 @@ import org.junit.jupiter.api.Test;
  */
 public class AlwaysConditionTest
 {
-	
-	public AlwaysConditionTest()
-	{
-	}
 
-	/**
-	 * Test of evaluate method, of class AlwaysCondition.
-	 */
-	@Test
-	public void testEvaluate()
-	{
-		AlwaysCondition condition = new AlwaysCondition();
-		Assertions.assertTrue(condition.evaluate(null));
-	}
-	
+	 public AlwaysConditionTest()
+	 {
+	 }
+
+	 /**
+	  * Test of evaluate method, of class AlwaysCondition.
+	  */
+	 @Test
+	 public void testEvaluate()
+	 {
+		  AlwaysCondition condition = new AlwaysCondition();
+		  Assertions.assertTrue(condition.evaluate(null, null));
+	 }
+
 }

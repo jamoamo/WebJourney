@@ -27,10 +27,12 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-class ElementExtractor extends AElementExtractor
+class ElementExtractor
+	 extends AElementExtractor
 {
-	ElementExtractor(String elementXPath, boolean optional)
-	{
-		super(elementXPath, optional);
-	}
+	 ElementExtractor(String elementXPath, boolean optional)
+	 {
+		  super(elementXPath, optional);
+	 }
+
 }

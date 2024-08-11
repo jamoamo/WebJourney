@@ -47,14 +47,15 @@ class Converter
 	 @Override
 	 public Object convertValue(Object source,
 		  IValueReader reader,
-		  List<IEntityCreationListener> listeners)
+		  List<IEntityCreationListener> listeners,
+		  EntityCreationContext context)
 		  throws XConversionException
 	 {
 		  if(source == null)
 		  {
 				return null;
 		  }
-		  
+
 		  AConverter valueConverter = InstanceCreator.getInstance()
 				.createInstance(this.conversion.mapper());
 		  try

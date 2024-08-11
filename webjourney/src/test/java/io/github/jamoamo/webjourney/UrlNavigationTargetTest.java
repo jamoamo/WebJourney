@@ -37,26 +37,29 @@ import org.mockito.Mockito;
  */
 public class UrlNavigationTargetTest
 {
-	
-	public UrlNavigationTargetTest()
-	{
-	}
 
-	/**
-	 * Test of navigate method, of class UrlNavigationTarget.
-	 */
-	@Test
-	public void testNavigate() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		URL googleURL = new URL("https://www.google.com");
-		UrlNavigationTarget target = new UrlNavigationTarget(googleURL);
-		target.navigate(browser);
-		ArgumentCaptor<URL> urlArg = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(window, Mockito.times(1)).navigateToUrl(urlArg.capture());
-		assertEquals(googleURL, urlArg.getValue());
-	}
-	
+	 public UrlNavigationTargetTest()
+	 {
+	 }
+
+	 /**
+	  * Test of navigate method, of class UrlNavigationTarget.
+	  */
+	 @Test
+	 public void testNavigate()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  URL googleURL = new URL("https://www.google.com");
+		  UrlNavigationTarget target = new UrlNavigationTarget(googleURL);
+		  target.navigate(browser);
+		  ArgumentCaptor<URL> urlArg = ArgumentCaptor.forClass(URL.class);
+		  Mockito.verify(window, Mockito.times(1))
+				.navigateToUrl(urlArg.capture());
+		  assertEquals(googleURL, urlArg.getValue());
+	 }
+
 }

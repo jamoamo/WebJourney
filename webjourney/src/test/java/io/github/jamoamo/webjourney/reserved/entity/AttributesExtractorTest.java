@@ -38,36 +38,40 @@ import org.mockito.stubbing.Answer;
  */
 public class AttributesExtractorTest
 {
-	
-	public AttributesExtractorTest()
-	{
-	}
 
-	/**
-	 * Test of extractRawValue method, of class AttributesExtractor.
-	 */
-	@Test
-	public void testExtractRawValue() throws Exception
-	{
-		Answer<List<String>> answer = (InvocationOnMock iom) -> Collections.singletonList("Value");
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getAttributes("//div", "attr")).then(answer);
-		
-		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
-		List<String> extractRawValue = extractor.extractRawValue(reader);
-		assertEquals(1, extractRawValue.size());
-		assertEquals("Value", extractRawValue.get(0));
-	}
+	 public AttributesExtractorTest()
+	 {
+	 }
 
-	/**
-	 * Test of getCondition method, of class AttributesExtractor.
-	 */
-	@Test
-	public void testGetCondition() throws Exception
-	{
-		AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
-		assertTrue(extractor.getCondition().evaluate(null));
-	}
-	
+	 /**
+	  * Test of extractRawValue method, of class AttributesExtractor.
+	  */
+	 @Test
+	 public void testExtractRawValue()
+		  throws Exception
+	 {
+		  Answer<List<String>> answer = (InvocationOnMock iom) -> Collections.singletonList("Value");
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getAttributes("//div", "attr"))
+				.then(answer);
+
+		  AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
+		  List<String> extractRawValue = extractor.extractRawValue(reader, null);
+		  assertEquals(1, extractRawValue.size());
+		  assertEquals("Value", extractRawValue.get(0));
+	 }
+
+	 /**
+	  * Test of getCondition method, of class AttributesExtractor.
+	  */
+	 @Test
+	 public void testGetCondition()
+		  throws Exception
+	 {
+		  AttributesExtractor extractor = new AttributesExtractor("//div", "attr", new AlwaysCondition(), false);
+		  assertTrue(extractor.getCondition()
+				.evaluate(null, null));
+	 }
+
 }

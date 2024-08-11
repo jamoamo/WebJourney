@@ -34,66 +34,75 @@ import java.util.List;
  */
 public class ValidRegexMatchConditionalExtractValue
 {
-	@ConditionalExtractValue.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-		regexPattern = "Attribute.*",
-		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
-	)
-	private String singleCondition;
-	
-	@ConditionalExtractValue.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-		regexPattern = "String.*",
-		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
-	)
-	@ConditionalExtractValue.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-		regexPattern = "Attribute.*",
-		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
-	)
-	private String multipleConditions;
-	
-	@ConditionalExtractValue.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-		regexPattern = "String.*",
-		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
-	)
-	@ConditionalExtractValue.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-		regexPattern = "Attribute.*",
-		thenExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
-	)
-	private List<String> collection;
+	 @ConditionalExtractValue.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexPattern = "Attribute.*",
+		  thenExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
+	 )
+	 private String singleCondition;
 
-	public String getSingleCondition()
-	{
-		return singleCondition;
-	}
+	 @ConditionalExtractValue.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexPattern = "String.*",
+		  thenExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
+	 )
+	 @ConditionalExtractValue.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexPattern = "Attribute.*",
+		  thenExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
+	 )
+	 private String multipleConditions;
 
-	public void setSingleCondition(String singleCondition)
-	{
-		this.singleCondition = singleCondition;
-	}
+	 @ConditionalExtractValue.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexPattern = "String.*",
+		  thenExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
+	 )
+	 @ConditionalExtractValue.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexPattern = "Attribute.*",
+		  thenExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
+	 )
+	 private List<String> collection;
 
-	public String getMultipleConditions()
-	{
-		return multipleConditions;
-	}
+	 public String getSingleCondition()
+	 {
+		  return singleCondition;
+	 }
 
-	public void setMultipleConditions(String multipleConditions)
-	{
-		this.multipleConditions = multipleConditions;
-	}
+	 public void setSingleCondition(String singleCondition)
+	 {
+		  this.singleCondition = singleCondition;
+	 }
 
-	public List<String> getCollection()
-	{
-		return collection;
-	}
+	 public String getMultipleConditions()
+	 {
+		  return multipleConditions;
+	 }
 
-	public void setCollection(List<String> collection)
-	{
-		this.collection = collection;
-	}
-	
-	
+	 public void setMultipleConditions(String multipleConditions)
+	 {
+		  this.multipleConditions = multipleConditions;
+	 }
+
+	 public List<String> getCollection()
+	 {
+		  return collection;
+	 }
+
+	 public void setCollection(List<String> collection)
+	 {
+		  this.collection = collection;
+	 }
+
 }

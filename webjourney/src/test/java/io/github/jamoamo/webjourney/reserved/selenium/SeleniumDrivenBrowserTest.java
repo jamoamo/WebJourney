@@ -43,82 +43,95 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  */
 public class SeleniumDrivenBrowserTest
 {
-	private static RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
-	private static TargetLocator targetLocatorMock = Mockito.mock(TargetLocator.class);
-	
-	@BeforeAll
-	public static void setup()
-	{
-		Timeouts timeoutsMock = Mockito.mock(Timeouts.class);
-		
-		Options optionsMock = Mockito.mock(Options.class);
-		Mockito.when(optionsMock.timeouts()).thenReturn(timeoutsMock);
-		
-		Mockito.when(driverMock.manage()).thenReturn(optionsMock);
-		Mockito.when(driverMock.switchTo()).thenReturn(targetLocatorMock);
-		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1");
-	}
+	 private static RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
+	 private static TargetLocator targetLocatorMock = Mockito.mock(TargetLocator.class);
 
-	/**
-	 * Test of getActiveWindow method, of class SeleniumDrivenBrowser.
-	 */
-	@Test
-	public void testGetActiveWindow() throws Exception
-	{
-		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1", "Window2");
-		
-		SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
-		seleniumBrowser.openNewWindow();
-		IBrowserWindow activeWindow = seleniumBrowser.getActiveWindow();
-		assertNotNull(activeWindow);
-		assertEquals("Window2", activeWindow.getName());
-		assertTrue(((SeleniumWindow)activeWindow).isActive());
-	}
+	 @BeforeAll
+	 public static void setup()
+	 {
+		  Timeouts timeoutsMock = Mockito.mock(Timeouts.class);
 
-	/**
-	 * Test of switchToWindow method, of class SeleniumDrivenBrowser.
-	 */
-	@Test 
-	public void testSwitchToWindow() throws Exception
-	{
-		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1", "Window2");
-		
-		SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
-		seleniumBrowser.openNewWindow();
-		IBrowserWindow switchedWindow = seleniumBrowser.switchToWindow("Window1");
-		assertNotNull(switchedWindow);
-		assertEquals("Window1", switchedWindow.getName());
-			
-		Mockito.verify(targetLocatorMock).window(any());
-	}
+		  Options optionsMock = Mockito.mock(Options.class);
+		  Mockito.when(optionsMock.timeouts())
+				.thenReturn(timeoutsMock);
 
-	/**
-	 * Test of openNewWindow method, of class SeleniumDrivenBrowser.
-	 */
-	@Test
-	public void testOpenNewWindow() throws Exception
-	{
-		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1", "Window2");
-		
-		SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
-		IBrowserWindow switchedWindow = seleniumBrowser.openNewWindow();
-		assertNotNull(switchedWindow);
-		assertEquals("Window2", switchedWindow.getName());
-		assertTrue(((SeleniumWindow)switchedWindow).isActive());
-	}
+		  Mockito.when(driverMock.manage())
+				.thenReturn(optionsMock);
+		  Mockito.when(driverMock.switchTo())
+				.thenReturn(targetLocatorMock);
+		  Mockito.when(driverMock.getWindowHandle())
+				.thenReturn("Window1");
+	 }
 
-	/**
-	 * Test of exit method, of class SeleniumDrivenBrowser.
-	 */
-	@Test
-	public void testExit()
-	{
-		Mockito.when(driverMock.getWindowHandle()).thenReturn("Window1");
-		
-		SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
-		seleniumBrowser.exit();
-		
-		verify(driverMock).quit();
-	}
-	
+	 /**
+	  * Test of getActiveWindow method, of class SeleniumDrivenBrowser.
+	  */
+	 @Test
+	 public void testGetActiveWindow()
+		  throws Exception
+	 {
+		  Mockito.when(driverMock.getWindowHandle())
+				.thenReturn("Window1", "Window2");
+
+		  SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
+		  seleniumBrowser.openNewWindow();
+		  IBrowserWindow activeWindow = seleniumBrowser.getActiveWindow();
+		  assertNotNull(activeWindow);
+		  assertEquals("Window2", activeWindow.getName());
+		  assertTrue(((SeleniumWindow) activeWindow).isActive());
+	 }
+
+	 /**
+	  * Test of switchToWindow method, of class SeleniumDrivenBrowser.
+	  */
+	 @Test
+	 public void testSwitchToWindow()
+		  throws Exception
+	 {
+		  Mockito.when(driverMock.getWindowHandle())
+				.thenReturn("Window1", "Window2");
+
+		  SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
+		  seleniumBrowser.openNewWindow();
+		  IBrowserWindow switchedWindow = seleniumBrowser.switchToWindow("Window1");
+		  assertNotNull(switchedWindow);
+		  assertEquals("Window1", switchedWindow.getName());
+
+		  Mockito.verify(targetLocatorMock)
+				.window(any());
+	 }
+
+	 /**
+	  * Test of openNewWindow method, of class SeleniumDrivenBrowser.
+	  */
+	 @Test
+	 public void testOpenNewWindow()
+		  throws Exception
+	 {
+		  Mockito.when(driverMock.getWindowHandle())
+				.thenReturn("Window1", "Window2");
+
+		  SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
+		  IBrowserWindow switchedWindow = seleniumBrowser.openNewWindow();
+		  assertNotNull(switchedWindow);
+		  assertEquals("Window2", switchedWindow.getName());
+		  assertTrue(((SeleniumWindow) switchedWindow).isActive());
+	 }
+
+	 /**
+	  * Test of exit method, of class SeleniumDrivenBrowser.
+	  */
+	 @Test
+	 public void testExit()
+	 {
+		  Mockito.when(driverMock.getWindowHandle())
+				.thenReturn("Window1");
+
+		  SeleniumDrivenBrowser seleniumBrowser = new SeleniumDrivenBrowser(driverMock);
+		  seleniumBrowser.exit();
+
+		  verify(driverMock)
+				.quit();
+	 }
+
 }

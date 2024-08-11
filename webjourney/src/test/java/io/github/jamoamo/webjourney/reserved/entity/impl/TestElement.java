@@ -35,164 +35,174 @@ import org.apache.commons.lang3.function.Failable;
  *
  * @author James Amoore
  */
-public class TestElement extends AElement
+public class TestElement
+	 extends AElement
 {
-	private final String text;
-	private final AElement[] subElements;
-	private final String elementName;
-	private final Map<String, String> attributes;
+	 private final String text;
+	 private final AElement[] subElements;
+	 private final String elementName;
+	 private final Map<String, String> attributes;
 
-	public TestElement(String text)
-	{
-		this.elementName = "";
-		this.attributes = new TreeMap<>();
-		this.text = text;
-		this.subElements = new AElement[]
-		{
-		};
-	}
+	 public TestElement(String text)
+	 {
+		  this.elementName = "";
+		  this.attributes = new TreeMap<>();
+		  this.text = text;
+		  this.subElements = new AElement[]
+		  {
+		  };
+	 }
 
-	public TestElement(String elementName, Map<String, String> attributes, String text)
-	{
-		this.elementName = elementName;
-		this.attributes = attributes;
-		this.text = text;
-		this.subElements = new AElement[]
-		{
-		};
-	}
+	 public TestElement(String elementName, Map<String, String> attributes, String text)
+	 {
+		  this.elementName = elementName;
+		  this.attributes = attributes;
+		  this.text = text;
+		  this.subElements = new AElement[]
+		  {
+		  };
+	 }
 
-	public TestElement(String text, AElement[] subElements)
-	{
-		this.elementName = "";
-		this.attributes = new TreeMap<>();
-		this.text = text;
-		this.subElements = subElements;
-	}
+	 public TestElement(String text, AElement[] subElements)
+	 {
+		  this.elementName = "";
+		  this.attributes = new TreeMap<>();
+		  this.text = text;
+		  this.subElements = subElements;
+	 }
 
-	@Override
-	public String getElementText()
-	{
-		return text;
-	}
-	
-	@Override
-	public AElement findElement(String path, boolean optional)
-	{
-		 return this.findElement(path);
-	}
+	 @Override
+	 public String getElementText()
+	 {
+		  return text;
+	 }
 
-	@Override
-	public AElement findElement(String path)
-	{
-		if(!path.startsWith("//"))
-		{
-			return null;
-		}
+	 @Override
+	 public AElement findElement(String path, boolean optional)
+	 {
+		  return this.findElement(path);
+	 }
 
-		path = path.substring(2);
+	 @Override
+	 public AElement findElement(String path)
+	 {
+		  if(!path.startsWith("//"))
+		  {
+				return null;
+		  }
 
-		if(!path.startsWith("div"))
-		{
-			return null;
-		}
+		  path = path.substring(2);
 
-		path = path.substring(3);
+		  if(!path.startsWith("div"))
+		  {
+				return null;
+		  }
 
-		if(!path.startsWith("[") && !path.endsWith("]"))
-		{
-			return null;
-		}
+		  path = path.substring(3);
 
-		path = path.substring(1, path.length() - 1);
+		  if(!path.startsWith("[") && !path.endsWith("]"))
+		  {
+				return null;
+		  }
 
-		if(!path.startsWith("@id"))
-		{
-			return null;
-		}
+		  path = path.substring(1, path.length() - 1);
 
-		String id = path.substring(5, path.length() - 1);
+		  if(!path.startsWith("@id"))
+		  {
+				return null;
+		  }
 
-		Optional<AElement> findFirst =
-				  Failable.stream(Arrays.stream(subElements))
-					  .filter(element -> element.getAttribute("id").equals(id)).stream().findFirst();
+		  String id = path.substring(5, path.length() - 1);
 
-		return findFirst.orElse(null);
-	}
+		  Optional<AElement> findFirst =
+				Failable.stream(Arrays.stream(subElements))
+					 .filter(element -> element.getAttribute("id")
+						  .equals(id))
+					 .stream()
+					 .findFirst();
 
-	@Override
-	public List<? extends AElement> findElements(String path)
-	{
-		if(!path.startsWith("//"))
-		{
-			return null;
-		}
+		  return findFirst.orElse(null);
+	 }
 
-		path = path.substring(2);
+	 @Override
+	 public List<? extends AElement> findElements(String path)
+	 {
+		  if(!path.startsWith("//"))
+		  {
+				return null;
+		  }
 
-		if(!path.startsWith("div"))
-		{
-			return null;
-		}
+		  path = path.substring(2);
 
-		path = path.substring(3);
+		  if(!path.startsWith("div"))
+		  {
+				return null;
+		  }
 
-		if(!path.startsWith("[") && !path.endsWith("]"))
-		{
-			return null;
-		}
+		  path = path.substring(3);
 
-		path = path.substring(1, path.length() - 1);
+		  if(!path.startsWith("[") && !path.endsWith("]"))
+		  {
+				return null;
+		  }
 
-		if(!path.startsWith("@id"))
-		{
-			return null;
-		}
+		  path = path.substring(1, path.length() - 1);
 
-		String id = path.substring(4, path.length() - 1);
+		  if(!path.startsWith("@id"))
+		  {
+				return null;
+		  }
 
-		List<AElement> list =
-				  Failable.stream(Arrays.stream(subElements))
-					  .filter(element -> element.getAttribute("id").equals(id)).stream().toList();
+		  String id = path.substring(4, path.length() - 1);
 
-		return list;
-	}
+		  List<AElement> list =
+				Failable.stream(Arrays.stream(subElements))
+					 .filter(element -> element.getAttribute("id")
+						  .equals(id))
+					 .stream()
+					 .toList();
 
-	@Override
-	public String getAttribute(String attribute)
-	{
-		return attributes.get(attribute);
-	}
+		  return list;
+	 }
 
-	@Override
-	public void click()
-	{
-		
-	}
+	 @Override
+	 public String getAttribute(String attribute)
+	 {
+		  return attributes.get(attribute);
+	 }
 
-	@Override
-	public void enterText(String text)
-	{
-		
-	}
+	 @Override
+	 public void click()
+	 {
 
-	@Override
-	public List<? extends AElement> getChildrenByTag(String childElementType)
-	{
-		return Failable.stream(Arrays.stream(this.subElements))
-			.filter(elem -> elem.getTag().equals(childElementType))
-			.stream().toList();
-	}
+	 }
 
-	@Override
-	public String getTag()
-	{
-		return this.elementName;
-	}
+	 @Override
+	 public void enterText(String text)
+	 {
 
-	@Override
-	public boolean exists()
-	{
-		return true;
-	}
+	 }
+
+	 @Override
+	 public List<? extends AElement> getChildrenByTag(String childElementType)
+	 {
+		  return Failable.stream(Arrays.stream(this.subElements))
+				.filter(elem -> elem.getTag()
+					 .equals(childElementType))
+				.stream()
+				.toList();
+	 }
+
+	 @Override
+	 public String getTag()
+	 {
+		  return this.elementName;
+	 }
+
+	 @Override
+	 public boolean exists()
+	 {
+		  return true;
+	 }
+
 }

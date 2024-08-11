@@ -33,33 +33,38 @@ import org.mockito.Mockito;
  */
 public class ElementTextExtractorTest
 {
-	
-	public ElementTextExtractorTest()
-	{
-	}
 
-	/**
-	 * Test of extractRawValue method, of class ElementTextExtractor.
-	 */
-	@Test
-	public void testExtractRawValue() throws Exception
-	{
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElementText("//div", false)).thenReturn("Text");
-		
-		ElementTextExtractor extractor = new ElementTextExtractor("//div");
-		String extractRawValue = extractor.extractRawValue(reader);
-		assertEquals("Text", extractRawValue);
-	}
-	
-	@Test
-	public void testExtractRawValue_optional() throws Exception
-	{
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElementText("//div", false)).thenReturn("Text");
-		
-		ElementTextExtractor extractor = new ElementTextExtractor("//div", new AlwaysCondition(), true);
-		String extractRawValue = extractor.extractRawValue(reader);
-		assertNull(extractRawValue);
-	}
+	 public ElementTextExtractorTest()
+	 {
+	 }
+
+	 /**
+	  * Test of extractRawValue method, of class ElementTextExtractor.
+	  */
+	 @Test
+	 public void testExtractRawValue()
+		  throws Exception
+	 {
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElementText("//div", false))
+				.thenReturn("Text");
+
+		  ElementTextExtractor extractor = new ElementTextExtractor("//div");
+		  String extractRawValue = extractor.extractRawValue(reader, null);
+		  assertEquals("Text", extractRawValue);
+	 }
+
+	 @Test
+	 public void testExtractRawValue_optional()
+		  throws Exception
+	 {
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElementText("//div", false))
+				.thenReturn("Text");
+
+		  ElementTextExtractor extractor = new ElementTextExtractor("//div", new AlwaysCondition(), true);
+		  String extractRawValue = extractor.extractRawValue(reader, null);
+		  assertNull(extractRawValue);
+	 }
+
 }

@@ -35,37 +35,42 @@ import org.mockito.Mockito;
  */
 public class RepeatedActionTest
 {
-	
-	public RepeatedActionTest()
-	{
-	}
 
-	/**
-	 * Test of executeAction method, of class RepeatedAction.
-	 */
-	@Test
-	public void testConstructor_nullrepeater()
-	{
-		RuntimeException assertThrows =
-				  assertThrows(RuntimeException.class, () -> new RepeatedAction<>(null, new SubJourney(new ArrayList<>())));
-		assertEquals("repeater cannot be null", assertThrows.getMessage());
-	}
-	
-	/**
-	 * Test of executeAction method, of class RepeatedAction.
-	 */
-	@Test
-	public void testConstructor_nullsubjourney()
-	{
-		RuntimeException assertThrows =
-				  assertThrows(RuntimeException.class, () -> new RepeatedAction<>(context -> new ArrayList<Integer>(0), null));
-		assertEquals("Sub Journey cannot be null", assertThrows.getMessage());
-	}
-	
-	public void testExecuteAction()
-	{
-		RepeatedAction<Integer> action =new RepeatedAction<>(context -> Arrays.asList(new Integer[]{1,2,3,4,5}), null);
-		IJourneyContext context = Mockito.mock(IJourneyContext.class);
-		action.executeAction(context);
-	}
+	 public RepeatedActionTest()
+	 {
+	 }
+
+	 /**
+	  * Test of executeAction method, of class RepeatedAction.
+	  */
+	 @Test
+	 public void testConstructor_nullrepeater()
+	 {
+		  RuntimeException assertThrows =
+				assertThrows(RuntimeException.class, () -> new RepeatedAction<>(null, new SubJourney(new ArrayList<>())));
+		  assertEquals("repeater cannot be null", assertThrows.getMessage());
+	 }
+
+	 /**
+	  * Test of executeAction method, of class RepeatedAction.
+	  */
+	 @Test
+	 public void testConstructor_nullsubjourney()
+	 {
+		  RuntimeException assertThrows =
+				assertThrows(RuntimeException.class, () -> new RepeatedAction<>(context -> new ArrayList<Integer>(0),
+					 null));
+		  assertEquals("Sub Journey cannot be null", assertThrows.getMessage());
+	 }
+
+	 public void testExecuteAction()
+	 {
+		  RepeatedAction<Integer> action = new RepeatedAction<>(context -> Arrays.asList(new Integer[]
+		  {
+				1, 2, 3, 4, 5
+		  }), null);
+		  IJourneyContext context = Mockito.mock(IJourneyContext.class);
+		  action.executeAction(context);
+	 }
+
 }
