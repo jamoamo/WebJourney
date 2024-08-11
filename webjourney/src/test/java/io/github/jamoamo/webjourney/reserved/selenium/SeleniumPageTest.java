@@ -40,56 +40,67 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  */
 public class SeleniumPageTest
 {
-	private RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
+	 private RemoteWebDriver driverMock = Mockito.mock(RemoteWebDriver.class);
 
-	/**
-	 * Test of getElement method, of class SeleniumPage.
-	 */
-	@Test
-	public void testGetElement() throws XElementDoesntExistException
-	{
-		WebElement elem = Mockito.mock(WebElement.class);
-		Mockito.when(elem.getText()).thenReturn("Elem Text");
-		
-		Mockito.when(driverMock.findElement(By.xpath("//div"))).thenReturn(elem);
-		SeleniumPage page = new SeleniumPage(driverMock);
-		
-		AElement element = page.getElement("//div");
-		assertEquals("Elem Text", element.getElementText());
-	}
+	 /**
+	  * Test of getElement method, of class SeleniumPage.
+	  */
+	 @Test
+	 public void testGetElement()
+		  throws XElementDoesntExistException
+	 {
+		  WebElement elem = Mockito.mock(WebElement.class);
+		  Mockito.when(elem.getText())
+				.thenReturn("Elem Text");
 
-	/**
-	 * Test of getElements method, of class SeleniumPage.
-	 */
-	@Test
-	public void testGetElements() throws XElementDoesntExistException
-	{
-		WebElement elem = Mockito.mock(WebElement.class);
-		Mockito.when(elem.getText()).thenReturn("Elem Text");
-		
-		Mockito.when(driverMock.findElements(By.xpath("//div"))).thenReturn(Collections.singletonList(elem));
-		SeleniumPage page = new SeleniumPage(driverMock);
-		
-		List<? extends AElement> elements = page.getElements("//div");
-		assertEquals(1, elements.size());
-		assertEquals("Elem Text", elements.get(0).getElementText());
-	}
+		  Mockito.when(driverMock.findElement(By.xpath("//div")))
+				.thenReturn(elem);
+		  SeleniumPage page = new SeleniumPage(driverMock);
 
-	/**
-	 * Test of getElementsByTag method, of class SeleniumPage.
-	 */
-	@Test
-	public void testGetElementsByTag() throws XElementDoesntExistException
-	{
-		WebElement elem = Mockito.mock(WebElement.class);
-		Mockito.when(elem.getText()).thenReturn("Elem Text");
-		
-		Mockito.when(driverMock.findElements(By.tagName("div"))).thenReturn(Collections.singletonList(elem));
-		SeleniumPage page = new SeleniumPage(driverMock);
-		
-		List<? extends AElement> elements = page.getElementsByTag("div");
-		assertEquals(1, elements.size());
-		assertEquals("Elem Text", elements.get(0).getElementText());
-	}
-	
+		  AElement element = page.getElement("//div");
+		  assertEquals("Elem Text", element.getElementText());
+	 }
+
+	 /**
+	  * Test of getElements method, of class SeleniumPage.
+	  */
+	 @Test
+	 public void testGetElements()
+		  throws XElementDoesntExistException
+	 {
+		  WebElement elem = Mockito.mock(WebElement.class);
+		  Mockito.when(elem.getText())
+				.thenReturn("Elem Text");
+
+		  Mockito.when(driverMock.findElements(By.xpath("//div")))
+				.thenReturn(Collections.singletonList(elem));
+		  SeleniumPage page = new SeleniumPage(driverMock);
+
+		  List<? extends AElement> elements = page.getElements("//div");
+		  assertEquals(1, elements.size());
+		  assertEquals("Elem Text", elements.get(0)
+				.getElementText());
+	 }
+
+	 /**
+	  * Test of getElementsByTag method, of class SeleniumPage.
+	  */
+	 @Test
+	 public void testGetElementsByTag()
+		  throws XElementDoesntExistException
+	 {
+		  WebElement elem = Mockito.mock(WebElement.class);
+		  Mockito.when(elem.getText())
+				.thenReturn("Elem Text");
+
+		  Mockito.when(driverMock.findElements(By.tagName("div")))
+				.thenReturn(Collections.singletonList(elem));
+		  SeleniumPage page = new SeleniumPage(driverMock);
+
+		  List<? extends AElement> elements = page.getElementsByTag("div");
+		  assertEquals(1, elements.size());
+		  assertEquals("Elem Text", elements.get(0)
+				.getElementText());
+	 }
+
 }

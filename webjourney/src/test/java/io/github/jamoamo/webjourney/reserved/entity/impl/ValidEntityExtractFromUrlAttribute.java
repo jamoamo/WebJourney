@@ -38,49 +38,49 @@ import java.util.List;
  */
 public class ValidEntityExtractFromUrlAttribute
 {
-	@ExtractFromUrl(urlXpath = XPATH_URL_DATA, attribute = "href")
-	private UrlEntity urlEntity;
-	
-	@ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA, attribute = "href")
-	private List<ValidEntityExtractFromUrl.UrlEntity> urlEntities;
-	
-	public static class UrlEntity
-	{
-		@ExtractValue(path = XPATH_STRING_DATA)
-		@Conversion(mapper = TestMapper.class)
-		@Transformation(transformFunction = TestTransformer.class)
-		private String stringData;
+	 @ExtractFromUrl(urlXpath = XPATH_URL_DATA, attribute = "href")
+	 private UrlEntity urlEntity;
 
-		public String getStringData()
-		{
-			return stringData;
-		}
+	 @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA, attribute = "href")
+	 private List<ValidEntityExtractFromUrl.UrlEntity> urlEntities;
 
-		public void setStringData(String stringData)
-		{
-			this.stringData = stringData;
-		}
-	}
+	 public static class UrlEntity
+	 {
+		  @ExtractValue(path = XPATH_STRING_DATA)
+		  @Conversion(mapper = TestMapper.class)
+		  @Transformation(transformFunction = TestTransformer.class)
+		  private String stringData;
 
-	public UrlEntity getUrlEntity()
-	{
-		return urlEntity;
-	}
+		  public String getStringData()
+		  {
+				return stringData;
+		  }
 
-	public void setUrlEntity(UrlEntity urlEntity)
-	{
-		this.urlEntity = urlEntity;
-	}
+		  public void setStringData(String stringData)
+		  {
+				this.stringData = stringData;
+		  }
 
-	public List<ValidEntityExtractFromUrl.UrlEntity> getUrlEntities()
-	{
-		return urlEntities;
-	}
+	 }
 
-	public void setUrlEntities(List<ValidEntityExtractFromUrl.UrlEntity> urlEntities)
-	{
-		this.urlEntities = urlEntities;
-	}
-	
-	
+	 public UrlEntity getUrlEntity()
+	 {
+		  return urlEntity;
+	 }
+
+	 public void setUrlEntity(UrlEntity urlEntity)
+	 {
+		  this.urlEntity = urlEntity;
+	 }
+
+	 public List<ValidEntityExtractFromUrl.UrlEntity> getUrlEntities()
+	 {
+		  return urlEntities;
+	 }
+
+	 public void setUrlEntities(List<ValidEntityExtractFromUrl.UrlEntity> urlEntities)
+	 {
+		  this.urlEntities = urlEntities;
+	 }
+
 }

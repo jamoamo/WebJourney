@@ -27,45 +27,48 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-class ElementTextExtractor implements IExtractor<String>
+class ElementTextExtractor
+	 implements IExtractor<String>
 {
-	private final String xPath;
-	private final ICondition condition;
-	private final boolean optional;
-	
-	ElementTextExtractor(String xPath)
-	{
-		this(xPath, new AlwaysCondition(), false);
-	}
-	
-	ElementTextExtractor(String xPath, ICondition condition, boolean optional)
-	{
-		this.xPath = xPath;
-		this.condition = condition;
-		this.optional = optional;
-	}
-	
-	boolean isOptional()
-	{
-		 return this.optional;
-	}
+	 private final String xPath;
+	 private final ICondition condition;
+	 private final boolean optional;
 
-	@Override
-	public String extractRawValue(IValueReader reader) throws XExtractionException
-	{
-		try
-		{
-			return reader.getElementText(this.xPath, this.optional);
-		}
-		catch(XValueReaderException ex)
-		{
-			throw new XExtractionException(ex);
-		}
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return this.condition;
-	}
+	 ElementTextExtractor(String xPath)
+	 {
+		  this(xPath, new AlwaysCondition(), false);
+	 }
+
+	 ElementTextExtractor(String xPath, ICondition condition, boolean optional)
+	 {
+		  this.xPath = xPath;
+		  this.condition = condition;
+		  this.optional = optional;
+	 }
+
+	 boolean isOptional()
+	 {
+		  return this.optional;
+	 }
+
+	 @Override
+	 public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		  throws XExtractionException
+	 {
+		  try
+		  {
+				return reader.getElementText(this.xPath, this.optional);
+		  }
+		  catch(XValueReaderException ex)
+		  {
+				throw new XExtractionException(ex);
+		  }
+	 }
+
+	 @Override
+	 public ICondition getCondition()
+	 {
+		  return this.condition;
+	 }
+
 }

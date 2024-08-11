@@ -36,89 +36,110 @@ import org.mockito.Mockito;
  */
 public class EntityFieldEvaluatorTest
 {
-	public static class BooleanCondition implements ICondition
-	{
-		private final boolean value;
-		public BooleanCondition(boolean value)
-		{
-			this.value = value;
-		}
+	 public static class BooleanCondition
+		  implements ICondition
+	 {
+		  private final boolean value;
 
-		@Override
-		public boolean evaluate(IValueReader reader)
-		{
-			return value;
-		}
-	}
+		  public BooleanCondition(boolean value)
+		  {
+				this.value = value;
+		  }
 
-	/**
-	 * Test of evaluate method, of class EntityFieldEvaluator.
-	 */
-	@Test
-	public void testEvaluate() throws Exception
-	{
-		IValueReader browser = Mockito.mock(IValueReader.class);
-		
-		IExtractor extractor = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor.extractRawValue(browser)).thenReturn("Value");
-		Mockito.when(extractor.getCondition()).thenReturn(new BooleanCondition(true));
-		
-		ITransformer transformer = Mockito.mock(ITransformer.class);
-		Mockito.when(transformer.transformValue(Mockito.any())).thenReturn("TheValue");
-		
-		IConverter converter = Mockito.mock(IConverter.class);
-		Mockito.when(converter.convertValue(any(), any(), any())).thenReturn("SomeValue");
-		
-		EntityFieldEvaluator evaluator = new EntityFieldEvaluator(Collections.singletonList(extractor), transformer, converter);
-		Object evaluate = evaluator.evaluate(browser, new ArrayList<>());
-		
-		assertEquals("SomeValue", evaluate);
-	}
-	
-	@Test
-	public void testEvaluate_nullTransformer() throws Exception
-	{
-		IValueReader browser = Mockito.mock(IValueReader.class);
-		
-		IExtractor extractor = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor.extractRawValue(browser)).thenReturn("Value");
-		Mockito.when(extractor.getCondition()).thenReturn(new BooleanCondition(true));
-		
-		IConverter converter = Mockito.mock(IConverter.class);
-		Mockito.when(converter.convertValue(any(), any(), any())).thenReturn("SomeValue");
-		
-		EntityFieldEvaluator evaluator = new EntityFieldEvaluator(Collections.singletonList(extractor), null, converter);
-		Object evaluate = evaluator.evaluate(browser, new ArrayList<>());
-		
-		assertEquals("SomeValue", evaluate);
-	}
-	
-	@Test
-	public void testEvaluate_multipleExtractors_oneConditionMatch() throws Exception
-	{
-		IValueReader browser = Mockito.mock(IValueReader.class);
-		
-		IExtractor extractor1 = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor1.extractRawValue(browser)).thenReturn("Value");
-		Mockito.when(extractor1.getCondition()).thenReturn(new BooleanCondition(true));
-		
-		IExtractor extractor2 = Mockito.mock(IExtractor.class);
-		Mockito.when(extractor2.extractRawValue(browser)).thenReturn("Value2");
-		Mockito.when(extractor2.getCondition()).thenReturn(new BooleanCondition(false));
-		
-		ArrayList<IExtractor> list = new ArrayList<>();
-		list.add(extractor1);
-		list.add(extractor2);
-		
-		ITransformer transformer = Mockito.mock(ITransformer.class);
-		Mockito.when(transformer.transformValue("Value")).thenReturn("TheValue");
-		
-		IConverter converter = Mockito.mock(IConverter.class);
-		Mockito.when(converter.convertValue(any(), any(), any())).thenReturn("SomeValue");
-		
-		EntityFieldEvaluator evaluator = new EntityFieldEvaluator(list, transformer, converter);
-		Object evaluate = evaluator.evaluate(browser, new ArrayList<>());
-		
-		assertEquals("SomeValue", evaluate);
-	}
+		  @Override
+		  public boolean evaluate(IValueReader reader, EntityCreationContext entityCreationContext)
+		  {
+				return value;
+		  }
+
+	 }
+
+	 /**
+	  * Test of evaluate method, of class EntityFieldEvaluator.
+	  */
+	 @Test
+	 public void testEvaluate()
+		  throws Exception
+	 {
+		  IValueReader browser = Mockito.mock(IValueReader.class);
+
+		  IExtractor extractor = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor.extractRawValue(any(), any()))
+				.thenReturn("Value");
+		  Mockito.when(extractor.getCondition())
+				.thenReturn(new BooleanCondition(true));
+
+		  ITransformer transformer = Mockito.mock(ITransformer.class);
+		  Mockito.when(transformer.transformValue(Mockito.any()))
+				.thenReturn("TheValue");
+
+		  IConverter converter = Mockito.mock(IConverter.class);
+		  Mockito.when(converter.convertValue(any(), any(), any(), any()))
+				.thenReturn("SomeValue");
+
+		  EntityFieldEvaluator evaluator = new EntityFieldEvaluator(Collections.singletonList(extractor), transformer,
+				converter);
+		  Object evaluate = evaluator.evaluate(browser, new ArrayList<>(), null);
+
+		  assertEquals("SomeValue", evaluate);
+	 }
+
+	 @Test
+	 public void testEvaluate_nullTransformer()
+		  throws Exception
+	 {
+		  IValueReader browser = Mockito.mock(IValueReader.class);
+
+		  IExtractor extractor = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor.extractRawValue(any(), any()))
+				.thenReturn("Value");
+		  Mockito.when(extractor.getCondition())
+				.thenReturn(new BooleanCondition(true));
+
+		  IConverter converter = Mockito.mock(IConverter.class);
+		  Mockito.when(converter.convertValue(any(), any(), any(), any()))
+				.thenReturn("SomeValue");
+
+		  EntityFieldEvaluator evaluator = new EntityFieldEvaluator(Collections.singletonList(extractor), null, converter);
+		  Object evaluate = evaluator.evaluate(browser, new ArrayList<>(), null);
+
+		  assertEquals("SomeValue", evaluate);
+	 }
+
+	 @Test
+	 public void testEvaluate_multipleExtractors_oneConditionMatch()
+		  throws Exception
+	 {
+		  IValueReader browser = Mockito.mock(IValueReader.class);
+
+		  IExtractor extractor1 = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor1.extractRawValue(any(), any()))
+				.thenReturn("Value");
+		  Mockito.when(extractor1.getCondition())
+				.thenReturn(new BooleanCondition(true));
+
+		  IExtractor extractor2 = Mockito.mock(IExtractor.class);
+		  Mockito.when(extractor2.extractRawValue(any(), any()))
+				.thenReturn("Value2");
+		  Mockito.when(extractor2.getCondition())
+				.thenReturn(new BooleanCondition(false));
+
+		  ArrayList<IExtractor> list = new ArrayList<>();
+		  list.add(extractor1);
+		  list.add(extractor2);
+
+		  ITransformer transformer = Mockito.mock(ITransformer.class);
+		  Mockito.when(transformer.transformValue("Value"))
+				.thenReturn("TheValue");
+
+		  IConverter converter = Mockito.mock(IConverter.class);
+		  Mockito.when(converter.convertValue(any(), any(), any(), any()))
+				.thenReturn("SomeValue");
+
+		  EntityFieldEvaluator evaluator = new EntityFieldEvaluator(list, transformer, converter);
+		  Object evaluate = evaluator.evaluate(browser, new ArrayList<>(), null);
+
+		  assertEquals("SomeValue", evaluate);
+	 }
+
 }

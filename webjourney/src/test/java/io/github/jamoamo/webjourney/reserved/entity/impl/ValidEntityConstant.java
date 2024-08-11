@@ -31,18 +31,17 @@ import io.github.jamoamo.webjourney.annotation.Constant;
  */
 public class ValidEntityConstant
 {
-	@Constant("A Value")
-	private String constant;
+	 @Constant("A Value")
+	 private String constant;
 
-	public String getConstant()
-	{
-		return constant;
-	}
+	 public String getConstant()
+	 {
+		  return constant;
+	 }
 
-	public void setConstant(String constant)
-	{
-		this.constant = constant;
-	}
-	
-	
+	 public void setConstant(String constant)
+	 {
+		  this.constant = constant;
+	 }
+
 }

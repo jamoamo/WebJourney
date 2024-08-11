@@ -34,57 +34,69 @@ import org.mockito.Mockito;
  */
 public class ConvertersTest
 {
-	
-	public ConvertersTest()
-	{
-	}
 
-	/**
-	 * Test of getConverterForField method, of class Converters.
-	 */
-	@Test
-	public void testGetMapperForField_String_noConverter() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.getConversion()).thenReturn(null);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getFieldType()).then(in -> String.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		
-		IConverter mapperForField = Converters.getConverterForField(defn);
-		
-		assertInstanceOf(ValueConverter.class, mapperForField);
-	}
-	
-	@Test
-	public void testGetMapperForField_Integer_noConverter() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.getConversion()).thenReturn(null);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getFieldType()).then(in -> Integer.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		
-		IConverter mapperForField = Converters.getConverterForField(defn);
-		
-		assertInstanceOf(ValueConverter.class, mapperForField);
-	}
-	
-	@Test
-	public void testGetMapperForField_Double_noConverter() throws Exception
-	{
-		EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
-		Mockito.when(annotations.getConversion()).thenReturn(null);
-		
-		EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(defn.getFieldType()).then(in -> Double.class);
-		Mockito.when(defn.getAnnotations()).thenReturn(annotations);
-		
-		IConverter mapperForField = Converters.getConverterForField(defn);
-		
-		assertInstanceOf(ValueConverter.class, mapperForField);
-	}
-	
+	 public ConvertersTest()
+	 {
+	 }
+
+	 /**
+	  * Test of getConverterForField method, of class Converters.
+	  */
+	 @Test
+	 public void testGetMapperForField_String_noConverter()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.getConversion())
+				.thenReturn(null);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getFieldType())
+				.then(in -> String.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+
+		  IConverter mapperForField = Converters.getConverterForField(defn);
+
+		  assertInstanceOf(ValueConverter.class, mapperForField);
+	 }
+
+	 @Test
+	 public void testGetMapperForField_Integer_noConverter()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.getConversion())
+				.thenReturn(null);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getFieldType())
+				.then(in -> Integer.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+
+		  IConverter mapperForField = Converters.getConverterForField(defn);
+
+		  assertInstanceOf(ValueConverter.class, mapperForField);
+	 }
+
+	 @Test
+	 public void testGetMapperForField_Double_noConverter()
+		  throws Exception
+	 {
+		  EntityAnnotations annotations = Mockito.mock(EntityAnnotations.class);
+		  Mockito.when(annotations.getConversion())
+				.thenReturn(null);
+
+		  EntityFieldDefn defn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(defn.getFieldType())
+				.then(in -> Double.class);
+		  Mockito.when(defn.getAnnotations())
+				.thenReturn(annotations);
+
+		  IConverter mapperForField = Converters.getConverterForField(defn);
+
+		  assertInstanceOf(ValueConverter.class, mapperForField);
+	 }
+
 }

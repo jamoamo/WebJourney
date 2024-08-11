@@ -33,60 +33,61 @@ import org.junit.jupiter.api.Test;
  */
 public class NavigationTargetTest
 {
-	
-	public NavigationTargetTest()
-	{
-	}
 
-	/**
-	 * Test of toUrl method, of class NavigationTarget.
-	 */
-	@Test
-	public void testToUrl_URL() throws Exception
-	{
-		ANavigationTarget target = NavigationTarget.toUrl(new URL("http://www.google.com"));
-		Assertions.assertTrue(target instanceof UrlNavigationTarget);
-	}
+	 public NavigationTargetTest()
+	 {
+	 }
 
-	/**
-	 * Test of toUrl method, of class NavigationTarget.
-	 */
-	@Test
-	public void testToUrl_String()
-			  throws Exception
-	{
-		ANavigationTarget target = NavigationTarget.toUrl("http://www.google.com");
-		Assertions.assertTrue(target instanceof UrlNavigationTarget);
-	}
+	 /**
+	  * Test of toUrl method, of class NavigationTarget.
+	  */
+	 @Test
+	 public void testToUrl_URL()
+		  throws Exception
+	 {
+		  ANavigationTarget target = NavigationTarget.toUrl(new URL("http://www.google.com"));
+		  Assertions.assertTrue(target instanceof UrlNavigationTarget);
+	 }
 
-	/**
-	 * Test of back method, of class NavigationTarget.
-	 */
-	@Test
-	public void testBack()
-	{
-		ANavigationTarget target = NavigationTarget.back();
-		Assertions.assertTrue(target instanceof BackNavigationTarget);
-	}
+	 /**
+	  * Test of toUrl method, of class NavigationTarget.
+	  */
+	 @Test
+	 public void testToUrl_String()
+		  throws Exception
+	 {
+		  ANavigationTarget target = NavigationTarget.toUrl("http://www.google.com");
+		  Assertions.assertTrue(target instanceof UrlNavigationTarget);
+	 }
 
-	/**
-	 * Test of forward method, of class NavigationTarget.
-	 */
-	@Test
-	public void testForward()
-	{
-		ANavigationTarget target = NavigationTarget.forward();
-		Assertions.assertTrue(target instanceof ForwardNavigationTarget);
-	}
+	 /**
+	  * Test of back method, of class NavigationTarget.
+	  */
+	 @Test
+	 public void testBack()
+	 {
+		  ANavigationTarget target = NavigationTarget.back();
+		  Assertions.assertTrue(target instanceof BackNavigationTarget);
+	 }
 
-	/**
-	 * Test of refresh method, of class NavigationTarget.
-	 */
-	@Test
-	public void testRefresh()
-	{
-		ANavigationTarget target = NavigationTarget.refresh();
-		Assertions.assertTrue(target instanceof RefreshNavigationTarget);
-	}
-	
+	 /**
+	  * Test of forward method, of class NavigationTarget.
+	  */
+	 @Test
+	 public void testForward()
+	 {
+		  ANavigationTarget target = NavigationTarget.forward();
+		  Assertions.assertTrue(target instanceof ForwardNavigationTarget);
+	 }
+
+	 /**
+	  * Test of refresh method, of class NavigationTarget.
+	  */
+	 @Test
+	 public void testRefresh()
+	 {
+		  ANavigationTarget target = NavigationTarget.refresh();
+		  Assertions.assertTrue(target instanceof RefreshNavigationTarget);
+	 }
+
 }

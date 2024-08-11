@@ -37,26 +37,28 @@ import org.mockito.stubbing.Answer;
  */
 public class ElementTextsCollectionExtractorTest
 {
-	
-	public ElementTextsCollectionExtractorTest()
-	{
-	}
 
-	/**
-	 * Test of extractRawValue method, of class ElementTextsCollectionExtractor.
-	 */
-	@Test
-	public void testextractRawValue() throws Exception
-	{
-		Answer<List<String>> answer = (InvocationOnMock iom) -> Collections.singletonList("Text");
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElementTexts("//div")).then(answer);
-		
-		ElementTextsCollectionExtractor extractor = new ElementTextsCollectionExtractor("//div", new AlwaysCondition());
-		List<String> extractRawValue = extractor.extractRawValue(reader);
-		assertEquals(1, extractRawValue.size());
-		assertEquals("Text", extractRawValue.get(0));
-	}
-	
+	 public ElementTextsCollectionExtractorTest()
+	 {
+	 }
+
+	 /**
+	  * Test of extractRawValue method, of class ElementTextsCollectionExtractor.
+	  */
+	 @Test
+	 public void testextractRawValue()
+		  throws Exception
+	 {
+		  Answer<List<String>> answer = (InvocationOnMock iom) -> Collections.singletonList("Text");
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElementTexts("//div"))
+				.then(answer);
+
+		  ElementTextsCollectionExtractor extractor = new ElementTextsCollectionExtractor("//div", new AlwaysCondition());
+		  List<String> extractRawValue = extractor.extractRawValue(reader, null);
+		  assertEquals(1, extractRawValue.size());
+		  assertEquals("Text", extractRawValue.get(0));
+	 }
+
 }

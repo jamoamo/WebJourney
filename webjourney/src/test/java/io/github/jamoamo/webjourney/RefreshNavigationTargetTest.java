@@ -34,24 +34,27 @@ import org.mockito.Mockito;
  */
 public class RefreshNavigationTargetTest
 {
-	
-	public RefreshNavigationTargetTest()
-	{
-	}
 
-	/**
-	 * Test of navigate method, of class RefreshNavigationTarget.
-	 */
-	@Test
-	public void testNavigate() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		RefreshNavigationTarget target = new RefreshNavigationTarget();
-		target.navigate(browser);
-		Mockito.verify(window, Mockito.times(1)).refreshCurrentPage();
-	}
-	
+	 public RefreshNavigationTargetTest()
+	 {
+	 }
+
+	 /**
+	  * Test of navigate method, of class RefreshNavigationTarget.
+	  */
+	 @Test
+	 public void testNavigate()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  RefreshNavigationTarget target = new RefreshNavigationTarget();
+		  target.navigate(browser);
+		  Mockito.verify(window, Mockito.times(1))
+				.refreshCurrentPage();
+	 }
+
 }

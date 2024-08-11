@@ -32,47 +32,51 @@ import java.util.List;
  *
  * @author James Amoore
  */
-class EntitiesFromElementConverter implements IConverter<List<AElement>, List<Object>>
+class EntitiesFromElementConverter
+	 implements IConverter<List<AElement>, List<Object>>
 {
-	private final EntityDefn defn;
-	
-	EntitiesFromElementConverter(Class<?> connectionType) throws XEntityFieldDefinitionException
-	{
-		try
-		{
-			this.defn = new EntityDefn(connectionType);
-		}
-		catch(XEntityDefinitionException e)
-		{
-			throw new XEntityFieldDefinitionException(e);
-		}
-	}
+	 private final EntityDefn defn;
 
-	@Override
-	public List<Object> convertValue(List<AElement> source, 
-												IValueReader reader, 
-												List<IEntityCreationListener> listeners)
-		throws XConversionException
-	{
-		if (source == null)
-		{
-			return null;
-		}
-		
-		List<Object> result = new ArrayList<>(source.size());
-		for(AElement elems : source)
-		{
-			try
-			{
-				EntityCreator entityCreator = new EntityCreator(this.defn, elems, listeners);
-				result.add(entityCreator.createNewEntity(reader.getBrowser()));
-			}
-			catch(XEntityFieldScrapeException ex)
-			{
-				throw new XConversionException(ex);
-			}
-		}
-		return result;
-	}
-	
+	 EntitiesFromElementConverter(Class<?> connectionType)
+		  throws XEntityFieldDefinitionException
+	 {
+		  try
+		  {
+				this.defn = new EntityDefn(connectionType);
+		  }
+		  catch(XEntityDefinitionException e)
+		  {
+				throw new XEntityFieldDefinitionException(e);
+		  }
+	 }
+
+	 @Override
+	 public List<Object> convertValue(List<AElement> source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> listeners,
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return null;
+		  }
+
+		  List<Object> result = new ArrayList<>(source.size());
+		  for(AElement elems : source)
+		  {
+				try
+				{
+					 context.processCollectionItem();
+					 EntityCreator entityCreator = new EntityCreator(this.defn, elems, listeners);
+					 result.add(entityCreator.createNewEntity(reader.getBrowser(), context));
+				}
+				catch(XEntityFieldScrapeException ex)
+				{
+					 throw new XConversionException(ex);
+				}
+		  }
+		  return result;
+	 }
+
 }

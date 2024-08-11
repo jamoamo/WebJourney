@@ -31,16 +31,17 @@ import io.github.jamoamo.webjourney.annotation.ExtractValue;
  */
 public class Entity
 {
-	@ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
-	private String testName;
-	
-	public String getTestName()
-	{
-		return testName;
-	}
+	 @ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
+	 private String testName;
 
-	public void setTestName(String testName)
-	{
-		this.testName = testName;
-	}
+	 public String getTestName()
+	 {
+		  return testName;
+	 }
+
+	 public void setTestName(String testName)
+	 {
+		  this.testName = testName;
+	 }
+
 }

@@ -33,31 +33,36 @@ import io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest;
  */
 public class ValidEntityExtractValueAttribute
 {
-	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
-	private String attribute;
-	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-							 regexes = {"(?<group>\\w+)\\sValue"},
-							 groupName = "group",
-							 defaultValue = "none")
-	private String regexAttribute;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
+	 private String attribute;
+	 @RegexExtractValue(extractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexes =
+		  {
+				"(?<group>\\w+)\\sValue"
+		  },
+		  groupName = "group",
+		  defaultValue = "none")
+	 private String regexAttribute;
 
-	public String getAttribute()
-	{
-		return attribute;
-	}
+	 public String getAttribute()
+	 {
+		  return attribute;
+	 }
 
-	public void setAttribute(String attribute)
-	{
-		this.attribute = attribute;
-	}
+	 public void setAttribute(String attribute)
+	 {
+		  this.attribute = attribute;
+	 }
 
-	public String getRegexAttribute()
-	{
-		return regexAttribute;
-	}
+	 public String getRegexAttribute()
+	 {
+		  return regexAttribute;
+	 }
 
-	public void setRegexAttribute(String regexAttribute)
-	{
-		this.regexAttribute = regexAttribute;
-	}
+	 public void setRegexAttribute(String regexAttribute)
+	 {
+		  this.regexAttribute = regexAttribute;
+	 }
+
 }

@@ -39,61 +39,67 @@ import org.mockito.stubbing.Answer;
  */
 public class EntityFromElementConverterTest
 {
-	public static class Entity
-	{
-		private List<SubEntity> subEntities;
+	 public static class Entity
+	 {
+		  private List<SubEntity> subEntities;
 
-		public List<SubEntity> getSubEntities()
-		{
-			return subEntities;
-		}
+		  public List<SubEntity> getSubEntities()
+		  {
+				return subEntities;
+		  }
 
-		public void setSubEntities(List<SubEntity> subEntities)
-		{
-			this.subEntities = subEntities;
-		}
-	}
-	
-	public static class SubEntity
-	{
-		@Constant("Value")
-		private String field;
+		  public void setSubEntities(List<SubEntity> subEntities)
+		  {
+				this.subEntities = subEntities;
+		  }
 
-		public String getField()
-		{
-			return field;
-		}
+	 }
 
-		public void setField(String field)
-		{
-			this.field = field;
-		}
-	}
+	 public static class SubEntity
+	 {
+		  @Constant("Value")
+		  private String field;
 
-	/**
-	 * Test of convertValue method, of class EntityFromElementConverter.
-	 */
-	@Test
-	public void testConvertValue() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(element.exists()).thenReturn(Boolean.TRUE);
-		
-		EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
-		
-		Answer<Class<?>> answer = (InvocationOnMock iom) -> SubEntity.class;
-		
-		Mockito.when(fieldDefn.getFieldType()).then(answer);
-		
-		Mockito.when(fieldDefn.getField()).thenReturn(Entity.class.getDeclaredField("subEntities"));
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		
-		EntityFromElementConverter converter = new EntityFromElementConverter(fieldDefn);
-		Object convertValue = converter.convertValue(element, reader, new ArrayList<>());
-		
-		assertInstanceOf(SubEntity.class, convertValue);
-		assertEquals("Value", ((SubEntity)convertValue).getField());
-	}
-	
+		  public String getField()
+		  {
+				return field;
+		  }
+
+		  public void setField(String field)
+		  {
+				this.field = field;
+		  }
+
+	 }
+
+	 /**
+	  * Test of convertValue method, of class EntityFromElementConverter.
+	  */
+	 @Test
+	 public void testConvertValue()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(element.exists())
+				.thenReturn(Boolean.TRUE);
+
+		  EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
+
+		  Answer<Class<?>> answer = (InvocationOnMock iom) -> SubEntity.class;
+
+		  Mockito.when(fieldDefn.getFieldType())
+				.then(answer);
+
+		  Mockito.when(fieldDefn.getField())
+				.thenReturn(Entity.class.getDeclaredField("subEntities"));
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+
+		  EntityFromElementConverter converter = new EntityFromElementConverter(fieldDefn);
+		  Object convertValue = converter.convertValue(element, reader, new ArrayList<>(), null);
+
+		  assertInstanceOf(SubEntity.class, convertValue);
+		  assertEquals("Value", ((SubEntity) convertValue).getField());
+	 }
+
 }

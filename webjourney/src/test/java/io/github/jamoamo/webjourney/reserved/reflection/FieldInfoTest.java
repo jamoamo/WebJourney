@@ -34,73 +34,80 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class FieldInfoTest
 {
-	private class FieldTest
-	{
-		private String string;
-		
-		private List<String> strings;
-	}
-	
-	public FieldInfoTest()
-	{
-	}
+	 private class FieldTest
+	 {
+		  private String string;
 
-	/**
-	 * Test of getFieldGenericType method, of class FieldInfo.
-	 */
-	@Test
-	public void testGetFieldGenericType_hasNoGeneric() throws Exception
-	{
-		Class cls = FieldTest.class;
-		Field field = cls.getDeclaredField("string");
-		FieldInfo info = FieldInfo.forField(field);
-		assertNull(info.getFieldGenericType());
-	}
-	
-	@Test
-	public void testGetFieldGenericType_hasGeneric() throws Exception
-	{
-		Class cls = FieldTest.class;
-		Field field = cls.getDeclaredField("strings");
-		FieldInfo info = FieldInfo.forField(field);
-		
-		assertEquals(String.class, info.getFieldGenericType());
-	}
+		  private List<String> strings;
+	 }
 
-	/**
-	 * Test of getFieldGenericTypeInfo method, of class FieldInfo.
-	 */
-	@Test
-	public void testGetFieldGenericTypeInfo_hasNoGeneric() throws Exception
-	{
-		Class cls = FieldTest.class;
-		Field field = cls.getDeclaredField("string");
-		FieldInfo info = FieldInfo.forField(field);
-		
-		assertNull(info.getFieldGenericTypeInfo());
-	}
-	
-	@Test
-	public void testGetFieldGenericTypeInfo_hasGeneric() throws Exception
-	{
-		Class cls = FieldTest.class;
-		Field field = cls.getDeclaredField("strings");
-		FieldInfo info = FieldInfo.forField(field);
-		
-		assertEquals(String.class, info.getFieldGenericTypeInfo().getType());
-	}
+	 public FieldInfoTest()
+	 {
+	 }
 
-	/**
-	 * Test of getFieldTypeInfo method, of class FieldInfo.
-	 */
-	@Test
-	public void testGetFieldTypeInfo() throws Exception
-	{
-		Class cls = FieldTest.class;
-		Field field = cls.getDeclaredField("string");
-		FieldInfo info = FieldInfo.forField(field);
-		
-		assertEquals(String.class, info.getFieldTypeInfo().getType());
-	}
-	
+	 /**
+	  * Test of getFieldGenericType method, of class FieldInfo.
+	  */
+	 @Test
+	 public void testGetFieldGenericType_hasNoGeneric()
+		  throws Exception
+	 {
+		  Class cls = FieldTest.class;
+		  Field field = cls.getDeclaredField("string");
+		  FieldInfo info = FieldInfo.forField(field);
+		  assertNull(info.getFieldGenericType());
+	 }
+
+	 @Test
+	 public void testGetFieldGenericType_hasGeneric()
+		  throws Exception
+	 {
+		  Class cls = FieldTest.class;
+		  Field field = cls.getDeclaredField("strings");
+		  FieldInfo info = FieldInfo.forField(field);
+
+		  assertEquals(String.class, info.getFieldGenericType());
+	 }
+
+	 /**
+	  * Test of getFieldGenericTypeInfo method, of class FieldInfo.
+	  */
+	 @Test
+	 public void testGetFieldGenericTypeInfo_hasNoGeneric()
+		  throws Exception
+	 {
+		  Class cls = FieldTest.class;
+		  Field field = cls.getDeclaredField("string");
+		  FieldInfo info = FieldInfo.forField(field);
+
+		  assertNull(info.getFieldGenericTypeInfo());
+	 }
+
+	 @Test
+	 public void testGetFieldGenericTypeInfo_hasGeneric()
+		  throws Exception
+	 {
+		  Class cls = FieldTest.class;
+		  Field field = cls.getDeclaredField("strings");
+		  FieldInfo info = FieldInfo.forField(field);
+
+		  assertEquals(String.class, info.getFieldGenericTypeInfo()
+				.getType());
+	 }
+
+	 /**
+	  * Test of getFieldTypeInfo method, of class FieldInfo.
+	  */
+	 @Test
+	 public void testGetFieldTypeInfo()
+		  throws Exception
+	 {
+		  Class cls = FieldTest.class;
+		  Field field = cls.getDeclaredField("string");
+		  FieldInfo info = FieldInfo.forField(field);
+
+		  assertEquals(String.class, info.getFieldTypeInfo()
+				.getType());
+	 }
+
 }

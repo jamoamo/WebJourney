@@ -27,10 +27,12 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-class ElementListExtractor extends AElementsExtractor
+class ElementListExtractor
+	 extends AElementsExtractor
 {
-	ElementListExtractor(String xPath, ICondition condition)
-	{
-		super(xPath, condition);
-	}
+	 ElementListExtractor(String xPath, ICondition condition)
+	 {
+		  super(xPath, condition);
+	 }
+
 }

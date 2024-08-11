@@ -37,36 +37,35 @@ import io.github.jamoamo.webjourney.annotation.Conversion;
  */
 public class ValidEntityExtractValueTransformerMapper
 {
-	@ExtractValue(path = XPATH_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	@Conversion(mapper = TestMapper.class)
-	private String stringData;
-	
-	@ExtractValue(path = XPATH_SEPARATED_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	@Conversion(mapper = StringSplitMapper.class)
-	@MappedCollection()
-	private List<String> stringListData;
+	 @ExtractValue(path = XPATH_STRING_DATA)
+	 @Transformation(transformFunction = TestTransformer.class)
+	 @Conversion(mapper = TestMapper.class)
+	 private String stringData;
 
-	public String getStringData()
-	{
-		return stringData;
-	}
+	 @ExtractValue(path = XPATH_SEPARATED_STRING_DATA)
+	 @Transformation(transformFunction = TestTransformer.class)
+	 @Conversion(mapper = StringSplitMapper.class)
+	 @MappedCollection()
+	 private List<String> stringListData;
 
-	public void setStringData(String stringData)
-	{
-		this.stringData = stringData;
-	}
+	 public String getStringData()
+	 {
+		  return stringData;
+	 }
 
-	public List<String> getStringListData()
-	{
-		return stringListData;
-	}
+	 public void setStringData(String stringData)
+	 {
+		  this.stringData = stringData;
+	 }
 
-	public void setStringListData(List<String> stringListData)
-	{
-		this.stringListData = stringListData;
-	}
-	
-	
+	 public List<String> getStringListData()
+	 {
+		  return stringListData;
+	 }
+
+	 public void setStringListData(List<String> stringListData)
+	 {
+		  this.stringListData = stringListData;
+	 }
+
 }

@@ -35,33 +35,38 @@ import static io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest.XPA
  */
 public class ValidEntityExtractValueTransformer
 {
-	@ExtractValue(path = XPATH_STRING_DATA)
-	@Transformation(transformFunction = TestTransformer.class)
-	private String stringData;
-		
-	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA), 
-							 regexes = {"(?<group>\\w+)\\sData"}, groupName = "group")
-	@Transformation(transformFunction = TestTransformer.class)
-	private String regexStringData;
+	 @ExtractValue(path = XPATH_STRING_DATA)
+	 @Transformation(transformFunction = TestTransformer.class)
+	 private String stringData;
 
-	public String getStringData()
-	{
-		return stringData;
-	}
+	 @RegexExtractValue(extractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexes =
+		  {
+				"(?<group>\\w+)\\sData"
+		  }, groupName = "group")
+	 @Transformation(transformFunction = TestTransformer.class)
+	 private String regexStringData;
 
-	public void setStringData(String stringData)
-	{
-		this.stringData = stringData;
-	}
-		
-	public String getRegexStringData()
-	{
-		return regexStringData;
-	}
+	 public String getStringData()
+	 {
+		  return stringData;
+	 }
 
-	public void setRegexStringData(String regexStringData)
-	{
-		this.regexStringData = regexStringData;
-	
-	}
+	 public void setStringData(String stringData)
+	 {
+		  this.stringData = stringData;
+	 }
+
+	 public String getRegexStringData()
+	 {
+		  return regexStringData;
+	 }
+
+	 public void setRegexStringData(String regexStringData)
+	 {
+		  this.regexStringData = regexStringData;
+
+	 }
+
 }

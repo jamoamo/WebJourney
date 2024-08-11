@@ -34,20 +34,19 @@ import io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest;
  */
 public class ValidEntityExtractValueAttributeTransformerMapper
 {
-	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
-	@Conversion(mapper = TestMapper.class)
-	@Transformation(transformFunction = TestTransformer.class)
-	private String attribute;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
+	 @Conversion(mapper = TestMapper.class)
+	 @Transformation(transformFunction = TestTransformer.class)
+	 private String attribute;
 
-	public String getAttribute()
-	{
-		return attribute;
-	}
+	 public String getAttribute()
+	 {
+		  return attribute;
+	 }
 
-	public void setAttribute(String attribute)
-	{
-		this.attribute = attribute;
-	}
-	
-	
+	 public void setAttribute(String attribute)
+	 {
+		  this.attribute = attribute;
+	 }
+
 }

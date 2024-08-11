@@ -36,46 +36,47 @@ import io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest;
  */
 public class ValidEntityExtractValueMapper
 {
-	@ExtractValue(path = XPATH_STRING_DATA)
-	@Conversion(mapper = TestMapper.class)
-	private String stringData;
-	
-	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
-	@Conversion(mapper = WrapperMapper.class)
-	private List<StringWrapper> wrappers;
-	
-	@ExtractValue(path = EntityCreatorTest.XPATH_SEPARATED_STRING_DATA)
-	@Conversion(mapper = StringSplitMapper.class)
-	@MappedCollection
-	private List<String> splitStrings;
+	 @ExtractValue(path = XPATH_STRING_DATA)
+	 @Conversion(mapper = TestMapper.class)
+	 private String stringData;
 
-	public String getStringData()
-	{
-		return stringData;
-	}
+	 @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
+	 @Conversion(mapper = WrapperMapper.class)
+	 private List<StringWrapper> wrappers;
 
-	public void setStringData(String stringData)
-	{
-		this.stringData = stringData;
-	}
+	 @ExtractValue(path = EntityCreatorTest.XPATH_SEPARATED_STRING_DATA)
+	 @Conversion(mapper = StringSplitMapper.class)
+	 @MappedCollection
+	 private List<String> splitStrings;
 
-	public List<StringWrapper> getWrappers()
-	{
-		return wrappers;
-	}
+	 public String getStringData()
+	 {
+		  return stringData;
+	 }
 
-	public void setWrappers(List<StringWrapper> wrappers)
-	{
-		this.wrappers = wrappers;
-	}
+	 public void setStringData(String stringData)
+	 {
+		  this.stringData = stringData;
+	 }
 
-	public List<String> getSplitStrings()
-	{
-		return splitStrings;
-	}
+	 public List<StringWrapper> getWrappers()
+	 {
+		  return wrappers;
+	 }
 
-	public void setSplitStrings(List<String> splitStrings)
-	{
-		this.splitStrings = splitStrings;
-	}
+	 public void setWrappers(List<StringWrapper> wrappers)
+	 {
+		  this.wrappers = wrappers;
+	 }
+
+	 public List<String> getSplitStrings()
+	 {
+		  return splitStrings;
+	 }
+
+	 public void setSplitStrings(List<String> splitStrings)
+	 {
+		  this.splitStrings = splitStrings;
+	 }
+
 }

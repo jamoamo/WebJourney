@@ -33,21 +33,24 @@ import org.mockito.Mockito;
  */
 public class CurrentUrlExtractorTest
 {
-	
-	public CurrentUrlExtractorTest()
-	{
-	}
 
-	/**
-	 * Test of extractRawValue method, of class CurrentUrlExtractor.
-	 */
-	@Test
-	public void testExtractRawValue() throws Exception
-	{
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getCurrentUrl()).thenReturn("https://new.url");
-		CurrentUrlExtractor extractor = new CurrentUrlExtractor();
-		String extractRawValue = extractor.extractRawValue(reader);
-		assertEquals("https://new.url", extractRawValue);
-	}
+	 public CurrentUrlExtractorTest()
+	 {
+	 }
+
+	 /**
+	  * Test of extractRawValue method, of class CurrentUrlExtractor.
+	  */
+	 @Test
+	 public void testExtractRawValue()
+		  throws Exception
+	 {
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getCurrentUrl())
+				.thenReturn("https://new.url");
+		  CurrentUrlExtractor extractor = new CurrentUrlExtractor();
+		  String extractRawValue = extractor.extractRawValue(reader, null);
+		  assertEquals("https://new.url", extractRawValue);
+	 }
+
 }

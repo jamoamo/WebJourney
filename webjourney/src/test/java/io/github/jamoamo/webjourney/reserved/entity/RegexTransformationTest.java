@@ -34,24 +34,26 @@ import org.mockito.Mockito;
  */
 public class RegexTransformationTest
 {
-	
-	public RegexTransformationTest()
-	{
-	}
 
-	/**
-	 * Test of transformValue method, of class RegexTransformation.
-	 */
-	@Test
-	public void testTransformValue() throws Exception
-	{
-		RegexGroup group = Mockito.mock(RegexGroup.class);
-		Mockito.when(group.findGroupValue("String value")).thenReturn("String");
-		
-		RegexTransformation transformation = new RegexTransformation(group);
-		String transformValue = transformation.transformValue("String value");
-		
-		assertEquals("String", transformValue);
-	}
-	
+	 public RegexTransformationTest()
+	 {
+	 }
+
+	 /**
+	  * Test of transformValue method, of class RegexTransformation.
+	  */
+	 @Test
+	 public void testTransformValue()
+		  throws Exception
+	 {
+		  RegexGroup group = Mockito.mock(RegexGroup.class);
+		  Mockito.when(group.findGroupValue("String value"))
+				.thenReturn("String");
+
+		  RegexTransformation transformation = new RegexTransformation(group);
+		  String transformValue = transformation.transformValue("String value");
+
+		  assertEquals("String", transformValue);
+	 }
+
 }

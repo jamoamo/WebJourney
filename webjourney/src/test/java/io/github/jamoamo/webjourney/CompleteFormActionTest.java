@@ -38,61 +38,73 @@ import org.mockito.Mockito;
  */
 public class CompleteFormActionTest
 {
-	
-	public CompleteFormActionTest()
-	{
-	}
 
-	@Test
-	public void testExecuteAction_noSubmit() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		IWebPage page = Mockito.mock(IWebPage.class);
-		AElement element = Mockito.mock(AElement.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		Mockito.when(page.getElement("//input[@name='match']")).thenReturn(element);
-		JourneyContext context = new JourneyContext();
-		context.setBrowser(browser);
-		
-		CompleteFormAction action = new CompleteFormAction(new InputForm(1));
-		ActionResult result = action.executeAction(context);
-		assertEquals(ActionResult.SUCCESS, result);
-		
-		ArgumentCaptor<String> valueArg = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(element, Mockito.times(1)).enterText(valueArg.capture());
-		
-		assertEquals("t1", valueArg.getValue());
-	}
-	
-	@Test
-	public void testExecuteAction_submit() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		IWebPage page = Mockito.mock(IWebPage.class);
-		AElement element = Mockito.mock(AElement.class);
-		AElement buttonElement = Mockito.mock(AElement.class);
-		Mockito.when(window.getCurrentPage()).thenReturn(page);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		Mockito.when(page.getElement("//input[@name='match']")).thenReturn(element);
-		Mockito.when(page.getElement("//form[@name='scorecard_oracle_form']//table//tbody//input[@type='submit']"))
-			.thenReturn(buttonElement);
-		
-		JourneyContext context = new JourneyContext();
-		context.setBrowser(browser);
-		
-		CompleteFormAction action = new CompleteFormAction(new InputForm(1));
-		action.setSubmitAfterwards();
-		
-		ActionResult result = action.executeAction(context);
-		assertEquals(ActionResult.SUCCESS, result);
-		
-		ArgumentCaptor<String> valueArg = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(element, Mockito.times(1)).enterText(valueArg.capture());
-		Mockito.verify(buttonElement).click();
-		
-		assertEquals("t1", valueArg.getValue());
-	}
+	 public CompleteFormActionTest()
+	 {
+	 }
+
+	 @Test
+	 public void testExecuteAction_noSubmit()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  AElement element = Mockito.mock(AElement.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  Mockito.when(page.getElement("//input[@name='match']"))
+				.thenReturn(element);
+		  JourneyContext context = new JourneyContext();
+		  context.setBrowser(browser);
+
+		  CompleteFormAction action = new CompleteFormAction(new InputForm(1));
+		  ActionResult result = action.executeAction(context);
+		  assertEquals(ActionResult.SUCCESS, result);
+
+		  ArgumentCaptor<String> valueArg = ArgumentCaptor.forClass(String.class);
+		  Mockito.verify(element, Mockito.times(1))
+				.enterText(valueArg.capture());
+
+		  assertEquals("t1", valueArg.getValue());
+	 }
+
+	 @Test
+	 public void testExecuteAction_submit()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  IWebPage page = Mockito.mock(IWebPage.class);
+		  AElement element = Mockito.mock(AElement.class);
+		  AElement buttonElement = Mockito.mock(AElement.class);
+		  Mockito.when(window.getCurrentPage())
+				.thenReturn(page);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+		  Mockito.when(page.getElement("//input[@name='match']"))
+				.thenReturn(element);
+		  Mockito.when(page.getElement("//form[@name='scorecard_oracle_form']//table//tbody//input[@type='submit']"))
+				.thenReturn(buttonElement);
+
+		  JourneyContext context = new JourneyContext();
+		  context.setBrowser(browser);
+
+		  CompleteFormAction action = new CompleteFormAction(new InputForm(1));
+		  action.setSubmitAfterwards();
+
+		  ActionResult result = action.executeAction(context);
+		  assertEquals(ActionResult.SUCCESS, result);
+
+		  ArgumentCaptor<String> valueArg = ArgumentCaptor.forClass(String.class);
+		  Mockito.verify(element, Mockito.times(1))
+				.enterText(valueArg.capture());
+		  Mockito.verify(buttonElement)
+				.click();
+
+		  assertEquals("t1", valueArg.getValue());
+	 }
+
 }

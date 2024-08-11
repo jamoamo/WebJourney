@@ -34,8 +34,10 @@ import java.util.List;
  */
 interface IConverter<S, T>
 {
-	T convertValue(S source, 
-						IValueReader reader, 
-						List<IEntityCreationListener> entityCreationListeners) 
-		throws XConversionException;
+	 T convertValue(S source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> entityCreationListeners,
+		  EntityCreationContext context)
+		  throws XConversionException;
+
 }

@@ -33,27 +33,31 @@ import java.util.List;
  * @author James Amoore
  * @param <T> mapper type
  */
-class ValueConverter<T> implements IConverter<String, T>
+class ValueConverter<T>
+	 implements IConverter<String, T>
 {
-	private final AConverter<T> converter;
-	ValueConverter(AConverter<T> converter)
-	{
-		this.converter = converter;
-	}
+	 private final AConverter<T> converter;
 
-	@Override
-	public T convertValue(String source, 
-								 IValueReader reader, 
-								 List<IEntityCreationListener> listeners) 
-		throws XConversionException
-	{
-		try
-		{
-			return this.converter.mapValue(source);
-		}
-		catch(XValueMappingException e)
-		{
-			throw new XConversionException(e);
-		}
-	}
+	 ValueConverter(AConverter<T> converter)
+	 {
+		  this.converter = converter;
+	 }
+
+	 @Override
+	 public T convertValue(String source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> listeners,
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  try
+		  {
+				return this.converter.mapValue(source);
+		  }
+		  catch(XValueMappingException e)
+		  {
+				throw new XConversionException(e);
+		  }
+	 }
+
 }

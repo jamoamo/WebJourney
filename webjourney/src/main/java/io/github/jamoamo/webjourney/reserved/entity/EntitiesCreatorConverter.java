@@ -37,64 +37,70 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Amoore
  */
-class EntitiesCreatorConverter implements IConverter<List<String>, List<Object>>
+class EntitiesCreatorConverter
+	 implements IConverter<List<String>, List<Object>>
 {
-	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
-	private final EntityCreator entityCreator;
+	 private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
+	 private final EntityCreator entityCreator;
 
-	EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
-		throws XEntityFieldDefinitionException
-	{
-		try
-		{
-			EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField()).getFieldGenericType());
-			this.entityCreator = new EntityCreator(defn, true, null);
-		}
-		catch(XEntityDefinitionException e)
-		{
-			throw new XEntityFieldDefinitionException(e);
-		}
-	}
+	 EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
+		  throws XEntityFieldDefinitionException
+	 {
+		  try
+		  {
+				EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField())
+					 .getFieldGenericType());
+				this.entityCreator = new EntityCreator(defn, true, null);
+		  }
+		  catch(XEntityDefinitionException e)
+		  {
+				throw new XEntityFieldDefinitionException(e);
+		  }
+	 }
 
-	@Override
-	public List<Object> convertValue(List<String> source, IValueReader reader, List<IEntityCreationListener> listeners)
-		throws XConversionException
-	{
-		if(source == null)
-		{
-			return null;
-		}
-		List<Object> objects = new ArrayList<>();
-		for(String s : source)
-		{
-			objects.add(createEntity(s, reader));
-		}
+	 @Override
+	 public List<Object> convertValue(List<String> source, 
+		  IValueReader reader, 
+		  List<IEntityCreationListener> listeners,
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return null;
+		  }
+		  List<Object> objects = new ArrayList<>();
+		  for(String s : source)
+		  {
+				context.processCollectionItem();
+				objects.add(createEntity(s, reader, context));
+		  }
 
-		return objects;
-	}
+		  return objects;
+	 }
 
-	private Object createEntity(String source, IValueReader reader)
-		throws XConversionException
-	{
-		if(source == null)
-		{
-			return null;
-		}
-		try
-		{
-			URI uri = new URI(source);
-			reader.navigateTo(uri.toURL());
+	 private Object createEntity(String source, IValueReader reader, EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return null;
+		  }
+		  try
+		  {
+				URI uri = new URI(source);
+				reader.navigateTo(uri.toURL());
 
-			Object instance = this.entityCreator.createNewEntity(reader.getBrowser());
+				Object instance = this.entityCreator.createNewEntity(reader.getBrowser(), context);
 
-			reader.navigateBack();
-			return instance;
-		}
-		catch(MalformedURLException | URISyntaxException | IllegalArgumentException | XValueReaderException |
-				XEntityFieldScrapeException ex)
-		{
-			throw new XConversionException(ex);
-		}
-	}
+				reader.navigateBack();
+				return instance;
+		  }
+		  catch(MalformedURLException | URISyntaxException | IllegalArgumentException | XValueReaderException
+				| XEntityFieldScrapeException ex)
+		  {
+				throw new XConversionException(ex);
+		  }
+	 }
 
 }

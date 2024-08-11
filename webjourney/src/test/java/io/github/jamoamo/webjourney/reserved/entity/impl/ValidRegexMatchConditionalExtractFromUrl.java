@@ -35,77 +35,85 @@ import java.util.List;
  */
 public class ValidRegexMatchConditionalExtractFromUrl
 {
-	@ConditionalExtractFromUrl.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
-		regexPattern = "String.*",
-		thenExtractFromUrl = @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_DATA, attribute = "href")
-	)
-	private UrlEntity singleCondition;
-	
-	@ConditionalExtractFromUrl.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
-		regexPattern = "Attribute.*",
-		thenExtractFromUrl = @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_DATA, attribute = "href")
-	)
-	@ConditionalExtractFromUrl.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
-		regexPattern = "String.*",
-		thenExtractFromUrl = @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_DATA)
-	)
-	private UrlEntity multipleConditions;
-	
-	@ConditionalExtractFromUrl.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
-		regexPattern = "String.*",
-		thenExtractFromUrl = @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA, attribute = "href")
-	)
-	private List<UrlEntity> collection;
-	
-	public static class UrlEntity
-	{
-		@ExtractValue(path = EntityCreatorTest.XPATH_DIFF_STRING_DATA)
-		private String stringData;
+	 @ConditionalExtractFromUrl.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexPattern = "String.*",
+		  thenExtractFromUrl =
+		  @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_DATA, attribute = "href")
+	 )
+	 private UrlEntity singleCondition;
 
-		public String getStringData()
-		{
-			return stringData;
-		}
+	 @ConditionalExtractFromUrl.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexPattern = "Attribute.*",
+		  thenExtractFromUrl =
+		  @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_DATA, attribute = "href")
+	 )
+	 @ConditionalExtractFromUrl.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexPattern = "String.*",
+		  thenExtractFromUrl =
+		  @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_DATA)
+	 )
+	 private UrlEntity multipleConditions;
 
-		public void setStringData(String stringData)
-		{
-			this.stringData = stringData;
-		}
-	}
-	
-	public UrlEntity getSingleCondition()
-	{
-		return singleCondition;
-	}
+	 @ConditionalExtractFromUrl.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexPattern = "String.*",
+		  thenExtractFromUrl =
+		  @ExtractFromUrl(urlXpath = EntityCreatorTest.XPATH_URL_LIST_DATA, attribute = "href")
+	 )
+	 private List<UrlEntity> collection;
 
-	public void setSingleCondition(UrlEntity urlEntity)
-	{
-		this.singleCondition = urlEntity;
-	}
-	
-	public UrlEntity getMultipleConditions()
-	{
-		return multipleConditions;
-	}
+	 public static class UrlEntity
+	 {
+		  @ExtractValue(path = EntityCreatorTest.XPATH_DIFF_STRING_DATA)
+		  private String stringData;
 
-	public void setMultipleConditions(UrlEntity urlEntity)
-	{
-		this.multipleConditions = urlEntity;
-	}
+		  public String getStringData()
+		  {
+				return stringData;
+		  }
 
-	public List<UrlEntity> getCollection()
-	{
-		return collection;
-	}
+		  public void setStringData(String stringData)
+		  {
+				this.stringData = stringData;
+		  }
 
-	public void setCollection(List<UrlEntity> collection)
-	{
-		this.collection = collection;
-	}
-	
-	
+	 }
+
+	 public UrlEntity getSingleCondition()
+	 {
+		  return singleCondition;
+	 }
+
+	 public void setSingleCondition(UrlEntity urlEntity)
+	 {
+		  this.singleCondition = urlEntity;
+	 }
+
+	 public UrlEntity getMultipleConditions()
+	 {
+		  return multipleConditions;
+	 }
+
+	 public void setMultipleConditions(UrlEntity urlEntity)
+	 {
+		  this.multipleConditions = urlEntity;
+	 }
+
+	 public List<UrlEntity> getCollection()
+	 {
+		  return collection;
+	 }
+
+	 public void setCollection(List<UrlEntity> collection)
+	 {
+		  this.collection = collection;
+	 }
+
 }

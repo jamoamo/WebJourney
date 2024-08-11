@@ -35,53 +35,53 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Amoore
  */
-class EntityCreatorConverter implements IConverter<String, Object>
+class EntityCreatorConverter
+	 implements IConverter<String, Object>
 {
-	private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
-	private final EntityCreator entityCreator;
-	
-	EntityCreatorConverter(EntityFieldDefn fieldDefn) throws XEntityFieldDefinitionException
-	{
-		try
-		{
-			EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
-			this.entityCreator = new EntityCreator(defn, true, null);
-		}
-		catch(XEntityDefinitionException e)
-		{
-			throw new XEntityFieldDefinitionException(e);
-		}
-	}
+	 private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
+	 private final EntityCreator entityCreator;
 
-	@Override
-	public Object convertValue(String source, 
-										IValueReader reader, 
-										List<IEntityCreationListener> listeners) 
-		throws XConversionException
-	{
-		if(source == null)
-		{
-			return null;
-		}
-		
-		try
-		{
-			URI uri = new URI(source);
-			reader.navigateTo(uri.toURL());
-			
-			Object instance = this.entityCreator.createNewEntity(reader.getBrowser());
+	 EntityCreatorConverter(EntityFieldDefn fieldDefn)
+		  throws XEntityFieldDefinitionException
+	 {
+		  try
+		  {
+				EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
+				this.entityCreator = new EntityCreator(defn, true, null);
+		  }
+		  catch(XEntityDefinitionException e)
+		  {
+				throw new XEntityFieldDefinitionException(e);
+		  }
+	 }
 
-			reader.navigateBack();
-			return instance;
-		}
-		catch(MalformedURLException | 
-			URISyntaxException | 
-			IllegalArgumentException | 
-			XValueReaderException | 
-			XEntityFieldScrapeException ex)
-		{
-			throw new XConversionException(ex);
-		}
-	}
-	
+	 @Override
+	 public Object convertValue(String source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> listeners,
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return null;
+		  }
+
+		  try
+		  {
+				URI uri = new URI(source);
+				reader.navigateTo(uri.toURL());
+
+				Object instance = this.entityCreator.createNewEntity(reader.getBrowser(), context);
+
+				reader.navigateBack();
+				return instance;
+		  }
+		  catch(MalformedURLException | URISyntaxException | IllegalArgumentException | XValueReaderException
+				| XEntityFieldScrapeException ex)
+		  {
+				throw new XConversionException(ex);
+		  }
+	 }
+
 }

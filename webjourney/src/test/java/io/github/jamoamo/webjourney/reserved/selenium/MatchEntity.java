@@ -34,112 +34,116 @@ import java.util.List;
  */
 public class MatchEntity
 {
-	@ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
-	private String testName;
-	
-	@ExtractFromUrl(urlXpath = "//div[@id='columnLeft']/table[1]/tbody/tr/td[text()=\"Venue\"]/following-sibling::td[1]/a", attribute = "href")
-	private Ground ground;
-	@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr[1]/td[2]/b[1]/font[1]/center[1]/a")
-	private List<Team> teams;
-	
-	public static class Team
-	{
-		@ExtractValue(path = ".", attribute = "href")
-		private String url;
+	 @ExtractValue(path = "//div[@id='columnLeft']/table/tbody/tr[2]/td[2]")
+	 private String testName;
 
-		@ExtractValue(path = ".")
-		private String name;
+	 @ExtractFromUrl(urlXpath =
+		  "//div[@id='columnLeft']/table[1]/tbody/tr/td[text()=\"Venue\"]/following-sibling::td[1]/a", attribute = "href")
+	 private Ground ground;
+	 @ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr[1]/td[2]/b[1]/font[1]/center[1]/a")
+	 private List<Team> teams;
 
-		public String getUrl()
-		{
-			return url;
-		}
+	 public static class Team
+	 {
+		  @ExtractValue(path = ".", attribute = "href")
+		  private String url;
 
-		public String getName()
-		{
-			return name;
-		}
+		  @ExtractValue(path = ".")
+		  private String name;
 
-		public void setUrl(String url)
-		{
-			this.url = url;
-		}
+		  public String getUrl()
+		  {
+				return url;
+		  }
 
-		public void setName(String name)
-		{
-			this.name = name;
-		} 
-	}
-	
-	public static class Ground
-	{
-		@ExtractCurrentUrl
-		private String id;
-		@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Ground Name:\"]/following-sibling::td[1]")
-		private String groundName;
-		@ExtractValue(path = "//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Country:\"]/following-sibling::td[1]")
-		private String country;
+		  public String getName()
+		  {
+				return name;
+		  }
 
-		public String getGroundName()
-		{
-			return groundName;
-		}
+		  public void setUrl(String url)
+		  {
+				this.url = url;
+		  }
 
-		public void setGroundName(String groundName)
-		{
-			this.groundName = groundName;
-		}
+		  public void setName(String name)
+		  {
+				this.name = name;
+		  }
 
-		public String getCountry()
-		{
-			return country;
-		}
+	 }
 
-		public void setCountry(String country)
-		{
-			this.country = country;
-		}
+	 public static class Ground
+	 {
+		  @ExtractCurrentUrl
+		  private String id;
+		  @ExtractValue(path =
+				"//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Ground Name:\"]/following-sibling::td[1]")
+		  private String groundName;
+		  @ExtractValue(path =
+				"//div[@id='columnLeft']/table[1]/tbody/tr/td[string()=\"Country:\"]/following-sibling::td[1]")
+		  private String country;
 
-		public String getId()
-		{
-			return id;
-		}
+		  public String getGroundName()
+		  {
+				return groundName;
+		  }
 
-		public void setId(String id)
-		{
-			this.id = id;
-		}
-	}
+		  public void setGroundName(String groundName)
+		  {
+				this.groundName = groundName;
+		  }
 
-	public String getTestName()
-	{
-		return testName;
-	}
+		  public String getCountry()
+		  {
+				return country;
+		  }
 
-	public void setTestName(String testName)
-	{
-		this.testName = testName;
-	}
+		  public void setCountry(String country)
+		  {
+				this.country = country;
+		  }
 
-	public Ground getGround()
-	{
-		return ground;
-	}
+		  public String getId()
+		  {
+				return id;
+		  }
 
-	public void setGround(Ground ground)
-	{
-		this.ground = ground;
-	}
+		  public void setId(String id)
+		  {
+				this.id = id;
+		  }
 
-	public List<Team> getTeams()
-	{
-		return teams;
-	}
+	 }
 
-	public void setTeams(List<Team> teams)
-	{
-		this.teams = teams;
-	}
-	
-	
+	 public String getTestName()
+	 {
+		  return testName;
+	 }
+
+	 public void setTestName(String testName)
+	 {
+		  this.testName = testName;
+	 }
+
+	 public Ground getGround()
+	 {
+		  return ground;
+	 }
+
+	 public void setGround(Ground ground)
+	 {
+		  this.ground = ground;
+	 }
+
+	 public List<Team> getTeams()
+	 {
+		  return teams;
+	 }
+
+	 public void setTeams(List<Team> teams)
+	 {
+		  this.teams = teams;
+	 }
+
 }

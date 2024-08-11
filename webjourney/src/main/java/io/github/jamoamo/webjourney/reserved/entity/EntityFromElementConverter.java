@@ -31,40 +31,45 @@ import java.util.List;
  *
  * @author James Amoore
  */
-class EntityFromElementConverter implements IConverter<AElement, Object>
+class EntityFromElementConverter
+	 implements IConverter<AElement, Object>
 {
-	private final EntityDefn defn;
+	 private final EntityDefn defn;
 
-	EntityFromElementConverter(EntityFieldDefn fieldDefn)
-		throws XEntityFieldDefinitionException
-	{
-		try
-		{
-			this.defn = new EntityDefn(fieldDefn.getFieldType());
-		}
-		catch(XEntityDefinitionException e)
-		{
-			throw new XEntityFieldDefinitionException(e);
-		}
-	}
+	 EntityFromElementConverter(EntityFieldDefn fieldDefn)
+		  throws XEntityFieldDefinitionException
+	 {
+		  try
+		  {
+				this.defn = new EntityDefn(fieldDefn.getFieldType());
+		  }
+		  catch(XEntityDefinitionException e)
+		  {
+				throw new XEntityFieldDefinitionException(e);
+		  }
+	 }
 
-	@Override
-	public Object convertValue(AElement source, IValueReader reader, List<IEntityCreationListener> listeners)
-		throws XConversionException
-	{
-		if(source == null || !source.exists())
-		{
-			return null;
-		}
+	 @Override
+	 public Object convertValue(AElement source, 
+		  IValueReader reader, 
+		  List<IEntityCreationListener> listeners, 
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null || !source.exists())
+		  {
+				return null;
+		  }
 
-		try
-		{
-			EntityCreator entityCreator = new EntityCreator(this.defn, source, listeners);
-			return entityCreator.createNewEntity(reader.getBrowser());
-		}
-		catch(XEntityFieldScrapeException ex)
-		{
-			throw new XConversionException(ex);
-		}
-	}
+		  try
+		  {
+				EntityCreator entityCreator = new EntityCreator(this.defn, source, listeners);
+				return entityCreator.createNewEntity(reader.getBrowser(), context);
+		  }
+		  catch(XEntityFieldScrapeException ex)
+		  {
+				throw new XConversionException(ex);
+		  }
+	 }
+
 }

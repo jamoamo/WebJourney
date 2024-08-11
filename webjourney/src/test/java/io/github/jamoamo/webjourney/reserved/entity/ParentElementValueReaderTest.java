@@ -46,262 +46,298 @@ import org.mockito.stubbing.Answer;
 public class ParentElementValueReaderTest
 {
 
-	public ParentElementValueReaderTest()
-	{
-	}
+	 public ParentElementValueReaderTest()
+	 {
+	 }
 
-	/**
-	 * Test of getCurrentUrl method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetCurrentUrl() throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
+	 /**
+	  * Test of getCurrentUrl method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetCurrentUrl()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentUrl())
+				.thenReturn("https://current.url");
 
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
 
-		AElement parentElement = Mockito.mock(AElement.class);
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		String currentUrl = reader.getCurrentUrl();
-		assertEquals("https://current.url", currentUrl);
-	}
+		  String currentUrl = reader.getCurrentUrl();
+		  assertEquals("https://current.url", currentUrl);
+	 }
 
-	/**
-	 * Test of getElementText method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetElementText() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+	 /**
+	  * Test of getElementText method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetElementText()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		AElement childElement = Mockito.mock(AElement.class);
-		Mockito.when(childElement.getElementText()).thenReturn("Text");
+		  AElement childElement = Mockito.mock(AElement.class);
+		  Mockito.when(childElement.getElementText())
+				.thenReturn("Text");
 
-		AElement parentElement = Mockito.mock(AElement.class);
-		Mockito.when(parentElement.findElement("xpath")).thenReturn(childElement);
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.findElement("xpath"))
+				.thenReturn(childElement);
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		String text = reader.getElementText("xpath", false);
-		assertEquals("Text", text);
-	}
-	
-	@Test
-	public void testGetElementText_optional_exception() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+		  String text = reader.getElementText("xpath", false);
+		  assertEquals("Text", text);
+	 }
 
-		AElement parentElement = Mockito.mock(AElement.class);
-		Mockito.when(parentElement.findElement("xpath")).thenThrow(new XElementDoesntExistException());
+	 @Test
+	 public void testGetElementText_optional_exception()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.findElement("xpath"))
+				.thenThrow(new XElementDoesntExistException());
 
-		String text = reader.getElementText("xpath", true);
-		assertNull(text);
-	}
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-	/**
-	 * Test of getElement method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetElement() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+		  String text = reader.getElementText("xpath", true);
+		  assertNull(text);
+	 }
 
-		AElement childElement = Mockito.mock(AElement.class);
-		Mockito.when(childElement.getElementText()).thenReturn("Text");
+	 /**
+	  * Test of getElement method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetElement()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		AElement parentElement = Mockito.mock(AElement.class);
-		Mockito.when(parentElement.findElement("xpath")).thenReturn(childElement);
+		  AElement childElement = Mockito.mock(AElement.class);
+		  Mockito.when(childElement.getElementText())
+				.thenReturn("Text");
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.findElement("xpath"))
+				.thenReturn(childElement);
 
-		AElement result = reader.getElement("xpath", false);
-		assertSame(childElement, result);
-	}
-	
-	@Test
-	public void testGetElement_optional_exception() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		AElement parentElement = Mockito.mock(AElement.class);
-		Mockito.when(parentElement.findElement("xpath")).thenThrow(new XElementDoesntExistException());
+		  AElement result = reader.getElement("xpath", false);
+		  assertSame(childElement, result);
+	 }
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+	 @Test
+	 public void testGetElement_optional_exception()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		AElement result = reader.getElement("xpath", true);
-		assertNull(result);
-	}
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.findElement("xpath"))
+				.thenThrow(new XElementDoesntExistException());
 
-	/**
-	 * Test of getAttribute method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetAttribute() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		AElement childElement = Mockito.mock(AElement.class);
-		Mockito.when(childElement.getElementText()).thenReturn("Text");
-		Mockito.when(childElement.getAttribute("attr")).thenReturn("attrVal");
+		  AElement result = reader.getElement("xpath", true);
+		  assertNull(result);
+	 }
 
-		AElement parentElement = Mockito.mock(AElement.class);
-		Mockito.when(parentElement.findElement("xpath")).thenReturn(childElement);
+	 /**
+	  * Test of getAttribute method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetAttribute()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  AElement childElement = Mockito.mock(AElement.class);
+		  Mockito.when(childElement.getElementText())
+				.thenReturn("Text");
+		  Mockito.when(childElement.getAttribute("attr"))
+				.thenReturn("attrVal");
 
-		String result = reader.getAttribute("xpath", "attr");
-		assertEquals("attrVal", result);
-	}
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.findElement("xpath"))
+				.thenReturn(childElement);
 
-	/**
-	 * Test of navigateTo method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testNavigateTo()
-		throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		  String result = reader.getAttribute("xpath", "attr");
+		  assertEquals("attrVal", result);
+	 }
 
-		AElement parentElement = Mockito.mock(AElement.class);
+	 /**
+	  * Test of navigateTo method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testNavigateTo()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentUrl())
+				.thenReturn("https://current.url");
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
 
-		reader.navigateTo(new URL("https://new.url"));
+		  AElement parentElement = Mockito.mock(AElement.class);
 
-		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
-		Mockito.verify(window).navigateToUrl(urlCaptor.capture());
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		assertEquals("https://new.url", urlCaptor.getValue().toString());
-	}
+		  reader.navigateTo(new URL("https://new.url"));
 
-	/**
-	 * Test of navigateBack method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testNavigateBack()
-		throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		Mockito.when(window.getCurrentUrl()).thenReturn("https://current.url");
+		  ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
+		  Mockito.verify(window)
+				.navigateToUrl(urlCaptor.capture());
 
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
+		  assertEquals("https://new.url", urlCaptor.getValue()
+				.toString());
+	 }
 
-		AElement parentElement = Mockito.mock(AElement.class);
+	 /**
+	  * Test of navigateBack method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testNavigateBack()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+		  Mockito.when(window.getCurrentUrl())
+				.thenReturn("https://current.url");
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
 
-		reader.navigateBack();
+		  AElement parentElement = Mockito.mock(AElement.class);
 
-		Mockito.verify(window).navigateBack();
-	}
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-	/**
-	 * Test of getElements method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetElements() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+		  reader.navigateBack();
 
-		AElement childElement = Mockito.mock(AElement.class);
-		Mockito.when(childElement.getElementText()).thenReturn("Text");
+		  Mockito.verify(window)
+				.navigateBack();
+	 }
 
-		AElement parentElement = Mockito.mock(AElement.class);
+	 /**
+	  * Test of getElements method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetElements()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		Answer<List<AElement>> answer = (InvocationOnMock invocation) -> Collections.singletonList(childElement);
-		
-		Mockito.when(parentElement.findElements("xpath")).then(answer);
+		  AElement childElement = Mockito.mock(AElement.class);
+		  Mockito.when(childElement.getElementText())
+				.thenReturn("Text");
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  AElement parentElement = Mockito.mock(AElement.class);
 
-		List<? extends AElement> result = reader.getElements("xpath");
-		assertEquals(1, result.size());
-		assertSame(childElement, result.get(0));
-	}
+		  Answer<List<AElement>> answer = (InvocationOnMock invocation) -> Collections.singletonList(childElement);
 
-	/**
-	 * Test of getElementTexts method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetElementTexts() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
+		  Mockito.when(parentElement.findElements("xpath"))
+				.then(answer);
 
-		AElement childElement = Mockito.mock(AElement.class);
-		Mockito.when(childElement.getElementText()).thenReturn("Text");
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-		AElement parentElement = Mockito.mock(AElement.class);
+		  List<? extends AElement> result = reader.getElements("xpath");
+		  assertEquals(1, result.size());
+		  assertSame(childElement, result.get(0));
+	 }
 
-		Answer<List<AElement>> answer = (InvocationOnMock invocation) -> Collections.singletonList(childElement);
-		
-		Mockito.when(parentElement.findElements("xpath")).then(answer);
+	 /**
+	  * Test of getElementTexts method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetElementTexts()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  AElement childElement = Mockito.mock(AElement.class);
+		  Mockito.when(childElement.getElementText())
+				.thenReturn("Text");
 
-		List<? extends AElement> result = reader.getElements("xpath");
-		assertEquals(1, result.size());
-		assertSame(childElement, result.get(0));
-	}
+		  AElement parentElement = Mockito.mock(AElement.class);
 
-	/**
-	 * Test of getBrowser method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testGetBrowser() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		AElement parentElement = Mockito.mock(AElement.class);
+		  Answer<List<AElement>> answer = (InvocationOnMock invocation) -> Collections.singletonList(childElement);
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+		  Mockito.when(parentElement.findElements("xpath"))
+				.then(answer);
 
-		IBrowser result = reader.getBrowser();
-		assertSame(browser, result);
-	}
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-	/**
-	 * Test of openNewWindow method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testOpenNewWindow() throws Exception
-	{
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		AElement parentElement = Mockito.mock(AElement.class);
+		  List<? extends AElement> result = reader.getElements("xpath");
+		  assertEquals(1, result.size());
+		  assertSame(childElement, result.get(0));
+	 }
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+	 /**
+	  * Test of getBrowser method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetBrowser()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  AElement parentElement = Mockito.mock(AElement.class);
 
-		reader.openNewWindow();
-		
-		Mockito.verify(browser).openNewWindow();
-	}
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
 
-	/**
-	 * Test of closeWindow method, of class ParentElementValueReader.
-	 */
-	@Test
-	public void testCloseWindow() throws Exception
-	{
-		IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
-		
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		Mockito.when(browser.getActiveWindow()).thenReturn(window);
-		
-		AElement parentElement = Mockito.mock(AElement.class);
+		  IBrowser result = reader.getBrowser();
+		  assertSame(browser, result);
+	 }
 
-		ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+	 /**
+	  * Test of openNewWindow method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testOpenNewWindow()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  AElement parentElement = Mockito.mock(AElement.class);
 
-		reader.closeWindow();
-		
-		Mockito.verify(window).close();
-	}
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  reader.openNewWindow();
+
+		  Mockito.verify(browser)
+				.openNewWindow();
+	 }
+
+	 /**
+	  * Test of closeWindow method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testCloseWindow()
+		  throws Exception
+	 {
+		  IBrowserWindow window = Mockito.mock(IBrowserWindow.class);
+
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+		  Mockito.when(browser.getActiveWindow())
+				.thenReturn(window);
+
+		  AElement parentElement = Mockito.mock(AElement.class);
+
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  reader.closeWindow();
+
+		  Mockito.verify(window)
+				.close();
+	 }
 
 }

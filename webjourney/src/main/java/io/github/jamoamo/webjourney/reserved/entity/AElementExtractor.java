@@ -30,48 +30,53 @@ import org.openqa.selenium.NoSuchElementException;
  *
  * @author James Amoore
  */
-abstract class AElementExtractor implements IExtractor<AElement>
+abstract class AElementExtractor
+	 implements IExtractor<AElement>
 {
-	private final String xPath;
-	private ICondition condition;
-	private final boolean optional;
-	
-	AElementExtractor(String elementXPath, boolean optional)
-	{
-		this(elementXPath, new AlwaysCondition(), optional);
-	}
-	
-	AElementExtractor(String elementXPath, ICondition condition, boolean optional)
-	{
-		this.xPath = elementXPath;
-		this.condition = condition;
-		this.optional = optional;
-	}
+	 private final String xPath;
+	 private ICondition condition;
+	 private final boolean optional;
 
-	@Override
-	public AElement extractRawValue(IValueReader reader) throws XExtractionException
-	{
-		try
-		{
-			return reader.getElement(this.xPath, false);
-		}
-		catch(NoSuchElementException ex)
-		{
-			if(this.optional)
-			{
-				return null;
-			}
-			throw new XExtractionException(ex);
-		}
-		catch(XValueReaderException ex)
-		{
-			throw new XExtractionException(ex);
-		}
-	}
+	 AElementExtractor(String elementXPath, boolean optional)
+	 {
+		  this(elementXPath, new AlwaysCondition(), optional);
+	 }
 
-	@Override
-	public ICondition getCondition()
-	{
-		return this.condition;
-	}
+	 AElementExtractor(String elementXPath, ICondition condition, boolean optional)
+	 {
+		  this.xPath = elementXPath;
+		  this.condition = condition;
+		  this.optional = optional;
+	 }
+
+	 @Override
+	 public AElement extractRawValue(
+		  IValueReader reader,
+		  EntityCreationContext entityCreationContext)
+		  throws XExtractionException
+	 {
+		  try
+		  {
+				return reader.getElement(this.xPath, false);
+		  }
+		  catch(NoSuchElementException ex)
+		  {
+				if(this.optional)
+				{
+					 return null;
+				}
+				throw new XExtractionException(ex);
+		  }
+		  catch(XValueReaderException ex)
+		  {
+				throw new XExtractionException(ex);
+		  }
+	 }
+
+	 @Override
+	 public ICondition getCondition()
+	 {
+		  return this.condition;
+	 }
+
 }

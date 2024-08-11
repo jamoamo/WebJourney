@@ -23,29 +23,31 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-
 /**
  *
  * @author James Amoore
  */
-class CurrentUrlExtractor implements IExtractor<String>
+class CurrentUrlExtractor
+	 implements IExtractor<String>
 {
-	@Override
-	public String extractRawValue(IValueReader reader) throws XExtractionException
-	{
-		try
-		{
-			return reader.getCurrentUrl();
-		}
-		catch(XValueReaderException ex)
-		{
-			throw new XExtractionException(ex);
-		}
-	}
-	
-	@Override
-	public ICondition getCondition()
-	{
-		return new AlwaysCondition();
-	}
+	 @Override
+	 public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		  throws XExtractionException
+	 {
+		  try
+		  {
+				return reader.getCurrentUrl();
+		  }
+		  catch(XValueReaderException ex)
+		  {
+				throw new XExtractionException(ex);
+		  }
+	 }
+
+	 @Override
+	 public ICondition getCondition()
+	 {
+		  return new AlwaysCondition();
+	 }
+
 }

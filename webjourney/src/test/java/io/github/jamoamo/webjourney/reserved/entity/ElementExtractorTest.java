@@ -34,17 +34,19 @@ import org.mockito.Mockito;
  */
 public class ElementExtractorTest
 {
-	@Test
-	public void testextractRawValue() throws Exception
-	{
-		AElement element = Mockito.mock(AElement.class);
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElement("//div", false)).thenReturn(element);
-		
-		ElementExtractor extractor = new ElementExtractor("//div", false);
-		AElement extractRawValue = extractor.extractRawValue(reader);
-		assertSame(element, extractRawValue);
-	}
-	
+	 @Test
+	 public void testextractRawValue()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElement("//div", false))
+				.thenReturn(element);
+
+		  ElementExtractor extractor = new ElementExtractor("//div", false);
+		  AElement extractRawValue = extractor.extractRawValue(reader, null);
+		  assertSame(element, extractRawValue);
+	 }
+
 }

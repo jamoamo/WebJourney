@@ -34,26 +34,27 @@ import io.github.jamoamo.webjourney.annotation.form.TextField;
 @Form(submit = "//form[@name='scorecard_oracle_form']//table//tbody//input[@type='submit']")
 public class InputForm
 {
-	@TextField(xPath = "//input[@name='match']")
-	private String matchId;
-	
-	@Button(xPath = "//a[@data-cc-event='click:dismiss']")
-	private Object dismissBannerButton;
-	
-	private Object notAnnotatedField;
-	
-	public InputForm(Integer testId)
-	{
-		this.matchId = "t" + testId;
-	}
+	 @TextField(xPath = "//input[@name='match']")
+	 private String matchId;
 
-	public String getMatchId()
-	{
-		return matchId;
-	}
+	 @Button(xPath = "//a[@data-cc-event='click:dismiss']")
+	 private Object dismissBannerButton;
 
-	public void setMatchId(String matchId)
-	{
-		this.matchId = matchId;
-	}
+	 private Object notAnnotatedField;
+
+	 public InputForm(Integer testId)
+	 {
+		  this.matchId = "t" + testId;
+	 }
+
+	 public String getMatchId()
+	 {
+		  return matchId;
+	 }
+
+	 public void setMatchId(String matchId)
+	 {
+		  this.matchId = matchId;
+	 }
+
 }

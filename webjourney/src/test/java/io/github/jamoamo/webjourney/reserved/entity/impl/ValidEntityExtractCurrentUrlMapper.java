@@ -32,19 +32,18 @@ import io.github.jamoamo.webjourney.annotation.Conversion;
  */
 public class ValidEntityExtractCurrentUrlMapper
 {
-	@ExtractCurrentUrl()
-	@Conversion(mapper = TestMapper.class)
-	private String currentUrl;
+	 @ExtractCurrentUrl()
+	 @Conversion(mapper = TestMapper.class)
+	 private String currentUrl;
 
-	public String getCurrentUrl()
-	{
-		return currentUrl;
-	}
+	 public String getCurrentUrl()
+	 {
+		  return currentUrl;
+	 }
 
-	public void setCurrentUrl(String currentUrl)
-	{
-		this.currentUrl = currentUrl;
-	}
-	
-	
+	 public void setCurrentUrl(String currentUrl)
+	 {
+		  this.currentUrl = currentUrl;
+	 }
+
 }

@@ -35,23 +35,25 @@ import org.mockito.Mockito;
  */
 public class ValueMapperTest
 {
-	
-	public ValueMapperTest()
-	{
-	}
 
-	/**
-	 * Test of convertValue method, of class ValueConverter.
-	 */
-	@Test
-	public void testConvertValue() throws Exception
-	{
-		AConverter converter = Mockito.mock(AConverter.class);
-		Mockito.when(converter.mapValue("Value")).thenReturn("Some Value");
-		
-		ValueConverter mapper = new ValueConverter(converter);
-		Object convertValue = mapper.convertValue("Value", null, new ArrayList<>());
-		assertEquals("Some Value", convertValue);
-	}
-	
+	 public ValueMapperTest()
+	 {
+	 }
+
+	 /**
+	  * Test of convertValue method, of class ValueConverter.
+	  */
+	 @Test
+	 public void testConvertValue()
+		  throws Exception
+	 {
+		  AConverter converter = Mockito.mock(AConverter.class);
+		  Mockito.when(converter.mapValue("Value"))
+				.thenReturn("Some Value");
+
+		  ValueConverter mapper = new ValueConverter(converter);
+		  Object convertValue = mapper.convertValue("Value", null, new ArrayList<>(), null);
+		  assertEquals("Some Value", convertValue);
+	 }
+
 }

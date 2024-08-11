@@ -38,57 +38,63 @@ import org.mockito.Mockito;
  */
 public class EntitiesCreatorConverterTest
 {
-	
-	public static class Entity
-	{
-		private List<SubEntity> subEntities;
 
-		public List<SubEntity> getSubEntities()
-		{
-			return subEntities;
-		}
+	 public static class Entity
+	 {
+		  private List<SubEntity> subEntities;
 
-		public void setSubEntities(List<SubEntity> subEntities)
-		{
-			this.subEntities = subEntities;
-		}
-	}
-	
-	public static class SubEntity
-	{
-		@Constant("Value")
-		private String field;
+		  public List<SubEntity> getSubEntities()
+		  {
+				return subEntities;
+		  }
 
-		public String getField()
-		{
-			return field;
-		}
+		  public void setSubEntities(List<SubEntity> subEntities)
+		  {
+				this.subEntities = subEntities;
+		  }
 
-		public void setField(String field)
-		{
-			this.field = field;
-		}
-	}
+	 }
 
-	/**
-	 * Test of convertValue method, of class EntitiesCreatorConverter.
-	 */
-	@Test
-	public void testConvertValue() throws Exception
-	{
-		EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
-		Mockito.when(fieldDefn.getField()).thenReturn(Entity.class.getDeclaredField("subEntities"));
-		
-		IValueReader reader = Mockito.mock(IValueReader.class);
-		Mockito.when(reader.getElementText("https://some.url", false)).thenReturn("Value");
-		
-		EntitiesCreatorConverter converter = new EntitiesCreatorConverter(fieldDefn);
-		List<Object> convertValue = 
-			converter.convertValue(Collections.singletonList("https://some.url"), reader, new ArrayList<>());
-		
-		assertEquals(1, convertValue.size());
-		assertInstanceOf(SubEntity.class, convertValue.get(0));
-		assertEquals("Value", ((SubEntity)convertValue.get(0)).getField());
-	}
-	
+	 public static class SubEntity
+	 {
+		  @Constant("Value")
+		  private String field;
+
+		  public String getField()
+		  {
+				return field;
+		  }
+
+		  public void setField(String field)
+		  {
+				this.field = field;
+		  }
+
+	 }
+
+	 /**
+	  * Test of convertValue method, of class EntitiesCreatorConverter.
+	  */
+	 @Test
+	 public void testConvertValue()
+		  throws Exception
+	 {
+		  EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(fieldDefn.getField())
+				.thenReturn(Entity.class.getDeclaredField("subEntities"));
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElementText("https://some.url", false))
+				.thenReturn("Value");
+
+		  EntitiesCreatorConverter converter = new EntitiesCreatorConverter(fieldDefn);
+		  List<Object> convertValue =
+				converter.convertValue(Collections.singletonList("https://some.url"), reader, new ArrayList<>(), 
+					 new EntityCreationContext(null));
+
+		  assertEquals(1, convertValue.size());
+		  assertInstanceOf(SubEntity.class, convertValue.get(0));
+		  assertEquals("Value", ((SubEntity) convertValue.get(0)).getField());
+	 }
+
 }

@@ -34,34 +34,39 @@ import io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest;
  */
 public class ValidEntityExtractValueAttributeTransformer
 {
-	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
-	@Transformation(transformFunction = TestTransformer.class)
-	private String attribute;
-	
-	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
-							 regexes = {"(?<group>\\w+)\\sValue"},
-							 groupName = "group",
-							 defaultValue = "none")
-	@Transformation(transformFunction = TestTransformer.class)
-	private String regexAttribute;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr")
+	 @Transformation(transformFunction = TestTransformer.class)
+	 private String attribute;
 
-	public String getAttribute()
-	{
-		return attribute;
-	}
+	 @RegexExtractValue(extractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA, attribute = "attr"),
+		  regexes =
+		  {
+				"(?<group>\\w+)\\sValue"
+		  },
+		  groupName = "group",
+		  defaultValue = "none")
+	 @Transformation(transformFunction = TestTransformer.class)
+	 private String regexAttribute;
 
-	public void setAttribute(String attribute)
-	{
-		this.attribute = attribute;
-	}
+	 public String getAttribute()
+	 {
+		  return attribute;
+	 }
 
-	public String getRegexAttribute()
-	{
-		return regexAttribute;
-	}
+	 public void setAttribute(String attribute)
+	 {
+		  this.attribute = attribute;
+	 }
 
-	public void setRegexAttribute(String regexAttribute)
-	{
-		this.regexAttribute = regexAttribute;
-	}
+	 public String getRegexAttribute()
+	 {
+		  return regexAttribute;
+	 }
+
+	 public void setRegexAttribute(String regexAttribute)
+	 {
+		  this.regexAttribute = regexAttribute;
+	 }
+
 }

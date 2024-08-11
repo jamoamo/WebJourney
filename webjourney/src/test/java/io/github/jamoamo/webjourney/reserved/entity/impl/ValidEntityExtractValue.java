@@ -34,193 +34,205 @@ import java.util.List;
  */
 public class ValidEntityExtractValue
 {
-	private String noAnnotation;
-	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
-	private String stringData;
-	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA), 
-							 regexes = {"(?<group>\\w+)\\sData"}, groupName = "group")
-	private String regexStringData;
-	
-	@ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
-	private int intData;
-	@ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA)
-	private double doubleData;
-	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA), 
-							 regexes = {"(?<group>\\d+)(.\\d+)?"}, groupName = "group", defaultValue = "0")
-	private Integer regexIntegerData;
-	@ExtractValue(path = EntityCreatorTest.XPATH_SUB_DATA)
-	private SubEntity subData;
-	@ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
-	private List<String> stringListData;
-	@ExtractValue(path = EntityCreatorTest.XPATH_INTEGER_LIST_DATA)
-	private List<Integer> integerListData;
-	@ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_LIST_DATA)
-	private List<Double> doubleListData;
-	@RegexExtractValue(extractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA), 
-							 regexes = {"Item(?<group>\\d+)"}, groupName = "group")
-	private List<Integer> regexIntegerListData;
-	@ExtractValue(path = EntityCreatorTest.XPATH_SUB_LIST_DATA)
-	private List<SubEntity> subs;
-	
-	public static class SubEntity
-	{
-		@ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
-		private String stringData;
-		@ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
-		private int intData;
-		@ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA)
-		private double doubleData;
+	 private String noAnnotation;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
+	 private String stringData;
+	 @RegexExtractValue(extractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexes =
+		  {
+				"(?<group>\\w+)\\sData"
+		  }, groupName = "group")
+	 private String regexStringData;
 
-		public String getStringData()
-		{
-			return stringData;
-		}
+	 @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
+	 private int intData;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA)
+	 private double doubleData;
+	 @RegexExtractValue(extractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA),
+		  regexes =
+		  {
+				"(?<group>\\d+)(.\\d+)?"
+		  }, groupName = "group", defaultValue = "0")
+	 private Integer regexIntegerData;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_SUB_DATA)
+	 private SubEntity subData;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA)
+	 private List<String> stringListData;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_INTEGER_LIST_DATA)
+	 private List<Integer> integerListData;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_LIST_DATA)
+	 private List<Double> doubleListData;
+	 @RegexExtractValue(extractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_LIST_DATA),
+		  regexes =
+		  {
+				"Item(?<group>\\d+)"
+		  }, groupName = "group")
+	 private List<Integer> regexIntegerListData;
+	 @ExtractValue(path = EntityCreatorTest.XPATH_SUB_LIST_DATA)
+	 private List<SubEntity> subs;
 
-		public void setStringData(String stringData)
-		{
-			this.stringData = stringData;
-		}
+	 public static class SubEntity
+	 {
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA)
+		  private String stringData;
+		  @ExtractValue(path = EntityCreatorTest.XPATH_INT_DATA)
+		  private int intData;
+		  @ExtractValue(path = EntityCreatorTest.XPATH_DOUBLE_DATA)
+		  private double doubleData;
 
-		public int getIntData()
-		{
-			return intData;
-		}
+		  public String getStringData()
+		  {
+				return stringData;
+		  }
 
-		public void setIntData(int intData)
-		{
-			this.intData = intData;
-		}
+		  public void setStringData(String stringData)
+		  {
+				this.stringData = stringData;
+		  }
 
-		public double getDoubleData()
-		{
-			return doubleData;
-		}
+		  public int getIntData()
+		  {
+				return intData;
+		  }
 
-		public void setDoubleData(double doubleData)
-		{
-			this.doubleData = doubleData;
-		}
-		
-		
-	}
+		  public void setIntData(int intData)
+		  {
+				this.intData = intData;
+		  }
 
-	public String getNoAnnotation()
-	{
-		return noAnnotation;
-	}
+		  public double getDoubleData()
+		  {
+				return doubleData;
+		  }
 
-	public void setNoAnnotation(String noAnnotation)
-	{
-		this.noAnnotation = noAnnotation;
-	}
+		  public void setDoubleData(double doubleData)
+		  {
+				this.doubleData = doubleData;
+		  }
 
-	public String getRegexStringData()
-	{
-		return regexStringData;
-	}
+	 }
 
-	public void setRegexStringData(String regexStringData)
-	{
-		this.regexStringData = regexStringData;
-	}
+	 public String getNoAnnotation()
+	 {
+		  return noAnnotation;
+	 }
 
-	public Integer getRegexIntegerData()
-	{
-		return regexIntegerData;
-	}
+	 public void setNoAnnotation(String noAnnotation)
+	 {
+		  this.noAnnotation = noAnnotation;
+	 }
 
-	public void setRegexIntegerData(Integer regexIntegerData)
-	{
-		this.regexIntegerData = regexIntegerData;
-	}
+	 public String getRegexStringData()
+	 {
+		  return regexStringData;
+	 }
 
-	public List<Integer> getRegexIntegerListData()
-	{
-		return regexIntegerListData;
-	}
+	 public void setRegexStringData(String regexStringData)
+	 {
+		  this.regexStringData = regexStringData;
+	 }
 
-	public void setRegexIntegerListData(List<Integer> regexIntegerListData)
-	{
-		this.regexIntegerListData = regexIntegerListData;
-	}
+	 public Integer getRegexIntegerData()
+	 {
+		  return regexIntegerData;
+	 }
 
-	public String getStringData()
-	{
-		return stringData;
-	}
+	 public void setRegexIntegerData(Integer regexIntegerData)
+	 {
+		  this.regexIntegerData = regexIntegerData;
+	 }
 
-	public void setStringData(String stringData)
-	{
-		this.stringData = stringData;
-	}
+	 public List<Integer> getRegexIntegerListData()
+	 {
+		  return regexIntegerListData;
+	 }
 
-	public int getIntData()
-	{
-		return intData;
-	}
+	 public void setRegexIntegerListData(List<Integer> regexIntegerListData)
+	 {
+		  this.regexIntegerListData = regexIntegerListData;
+	 }
 
-	public void setIntData(int intData)
-	{
-		this.intData = intData;
-	}
+	 public String getStringData()
+	 {
+		  return stringData;
+	 }
 
-	public double getDoubleData()
-	{
-		return doubleData;
-	}
+	 public void setStringData(String stringData)
+	 {
+		  this.stringData = stringData;
+	 }
 
-	public void setDoubleData(double doubleData)
-	{
-		this.doubleData = doubleData;
-	}
+	 public int getIntData()
+	 {
+		  return intData;
+	 }
 
-	public SubEntity getSubData()
-	{
-		return subData;
-	}
+	 public void setIntData(int intData)
+	 {
+		  this.intData = intData;
+	 }
 
-	public void setSubData(SubEntity subData)
-	{
-		this.subData = subData;
-	}
+	 public double getDoubleData()
+	 {
+		  return doubleData;
+	 }
 
-	public List<String> getStringListData()
-	{
-		return stringListData;
-	}
+	 public void setDoubleData(double doubleData)
+	 {
+		  this.doubleData = doubleData;
+	 }
 
-	public void setStringListData(List<String> stringListData)
-	{
-		this.stringListData = stringListData;
-	}
+	 public SubEntity getSubData()
+	 {
+		  return subData;
+	 }
 
-	public List<Integer> getIntegerListData()
-	{
-		return integerListData;
-	}
+	 public void setSubData(SubEntity subData)
+	 {
+		  this.subData = subData;
+	 }
 
-	public void setIntegerListData(List<Integer> integerListData)
-	{
-		this.integerListData = integerListData;
-	}
+	 public List<String> getStringListData()
+	 {
+		  return stringListData;
+	 }
 
-	public List<Double> getDoubleListData()
-	{
-		return doubleListData;
-	}
+	 public void setStringListData(List<String> stringListData)
+	 {
+		  this.stringListData = stringListData;
+	 }
 
-	public void setDoubleListData(List<Double> doubleListData)
-	{
-		this.doubleListData = doubleListData;
-	}
+	 public List<Integer> getIntegerListData()
+	 {
+		  return integerListData;
+	 }
 
-	public List<SubEntity> getSubs()
-	{
-		return subs;
-	}
+	 public void setIntegerListData(List<Integer> integerListData)
+	 {
+		  this.integerListData = integerListData;
+	 }
 
-	public void setSubs(List<SubEntity> subs)
-	{
-		this.subs = subs;
-	}
+	 public List<Double> getDoubleListData()
+	 {
+		  return doubleListData;
+	 }
+
+	 public void setDoubleListData(List<Double> doubleListData)
+	 {
+		  this.doubleListData = doubleListData;
+	 }
+
+	 public List<SubEntity> getSubs()
+	 {
+		  return subs;
+	 }
+
+	 public void setSubs(List<SubEntity> subs)
+	 {
+		  this.subs = subs;
+	 }
+
 }

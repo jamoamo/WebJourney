@@ -37,33 +37,38 @@ import org.mockito.Mockito;
  */
 public class CollectionConverterTest
 {
-	
-	public CollectionConverterTest()
-	{
-	}
 
-	/**
-	 * Test of convertValue method, of class CollectionTypeConverter.
-	 */
-	@Test
-	public void testConvertValue() throws Exception 
-	{
-		AConverter<Integer> converterMock = Mockito.mock(AConverter.class);
-		Mockito.when(converterMock.mapValue("2")).thenReturn(2);
-		Mockito.when(converterMock.mapValue("5")).thenReturn(5);
-		Mockito.when(converterMock.mapValue("11")).thenReturn(11);
-		
-		CollectionTypeConverter<Integer> converter = new CollectionTypeConverter<>(converterMock);
-		List<String> source = new ArrayList<>();
-		source.add("2");
-		source.add("5");
-		source.add("11");
-		Collection<Integer> convertValue = converter.convertValue(source, null, new ArrayList<>());
-		
-		assertEquals(3, convertValue.size());
-		assertTrue(convertValue.contains(2));
-		assertTrue(convertValue.contains(5));
-		assertTrue(convertValue.contains(11));
-	}
-	
+	 public CollectionConverterTest()
+	 {
+	 }
+
+	 /**
+	  * Test of convertValue method, of class CollectionTypeConverter.
+	  */
+	 @Test
+	 public void testConvertValue()
+		  throws Exception
+	 {
+		  AConverter<Integer> converterMock = Mockito.mock(AConverter.class);
+		  Mockito.when(converterMock.mapValue("2"))
+				.thenReturn(2);
+		  Mockito.when(converterMock.mapValue("5"))
+				.thenReturn(5);
+		  Mockito.when(converterMock.mapValue("11"))
+				.thenReturn(11);
+
+		  CollectionTypeConverter<Integer> converter = new CollectionTypeConverter<>(converterMock);
+		  List<String> source = new ArrayList<>();
+		  source.add("2");
+		  source.add("5");
+		  source.add("11");
+		  Collection<Integer> convertValue = converter.convertValue(source, null, new ArrayList<>(), 
+				new EntityCreationContext(null));
+
+		  assertEquals(3, convertValue.size());
+		  assertTrue(convertValue.contains(2));
+		  assertTrue(convertValue.contains(5));
+		  assertTrue(convertValue.contains(11));
+	 }
+
 }

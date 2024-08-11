@@ -34,20 +34,23 @@ import io.github.jamoamo.webjourney.reserved.entity.EntityCreatorTest;
  */
 public class ValidEntityRegexMatchConditionalConstant
 {
-	@ConditionalConstant.RegexMatch(
-		ifExtractValue = @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
-		regexPattern = "String.*",
-		thenConstant = @Constant("Constant Value")
-	)
-	private String constant;
+	 @ConditionalConstant.RegexMatch(
+		  ifExtractValue =
+		  @ExtractValue(path = EntityCreatorTest.XPATH_STRING_DATA),
+		  regexPattern = "String.*",
+		  thenConstant =
+		  @Constant("Constant Value")
+	 )
+	 private String constant;
 
-	public String getConstant()
-	{
-		return constant;
-	}
+	 public String getConstant()
+	 {
+		  return constant;
+	 }
 
-	public void setConstant(String constant)
-	{
-		this.constant = constant;
-	}
+	 public void setConstant(String constant)
+	 {
+		  this.constant = constant;
+	 }
+
 }

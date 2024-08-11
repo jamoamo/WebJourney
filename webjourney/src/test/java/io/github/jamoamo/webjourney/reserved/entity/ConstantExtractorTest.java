@@ -32,25 +32,27 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ConstantExtractorTest
 {
-	/**
-	 * Test of extractRawValue method, of class ConstantExtractor.
-	 */
-	@Test
-	public void testExtractRawValue()
-	{
-		ConstantExtractor extractor = new ConstantExtractor("Constant", new AlwaysCondition());
-		String extractRawValue = extractor.extractRawValue(null);
-		assertEquals("Constant", extractRawValue);
-	}
+	 /**
+	  * Test of extractRawValue method, of class ConstantExtractor.
+	  */
+	 @Test
+	 public void testExtractRawValue()
+	 {
+		  ConstantExtractor extractor = new ConstantExtractor("Constant", new AlwaysCondition());
+		  String extractRawValue = extractor.extractRawValue(null, null);
+		  assertEquals("Constant", extractRawValue);
+	 }
 
-	/**
-	 * Test of getCondition method, of class ConstantExtractor.
-	 */
-	@Test
-	public void testGetCondition() throws Exception
-	{
-		ConstantExtractor extractor = new ConstantExtractor("Constant", new AlwaysCondition());
-		assertTrue(extractor.getCondition().evaluate(null));
-	}
-	
+	 /**
+	  * Test of getCondition method, of class ConstantExtractor.
+	  */
+	 @Test
+	 public void testGetCondition()
+		  throws Exception
+	 {
+		  ConstantExtractor extractor = new ConstantExtractor("Constant", new AlwaysCondition());
+		  assertTrue(extractor.getCondition()
+				.evaluate(null, null));
+	 }
+
 }
