@@ -27,11 +27,18 @@ import io.github.jamoamo.webjourney.reserved.selenium.SeleniumWindow;
 import io.github.jamoamo.webjourney.reserved.selenium.SeleniumDrivenBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeAll;
+
 import static org.mockito.ArgumentMatchers.any;
+
 import org.mockito.Mockito;
+import org.openqa.selenium.Capabilities;
+
 import static org.mockito.Mockito.verify;
+
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebDriver.Timeouts;
@@ -54,6 +61,10 @@ public class SeleniumDrivenBrowserTest
 		  Options optionsMock = Mockito.mock(Options.class);
 		  Mockito.when(optionsMock.timeouts())
 				.thenReturn(timeoutsMock);
+		  
+		  Capabilities capabilitiesMock = Mockito.mock(Capabilities.class);
+		  Mockito.when(capabilitiesMock.getBrowserVersion()).thenReturn("v1.0.1");
+		  Mockito.when(capabilitiesMock.getBrowserName()).thenReturn("Test Browser");
 
 		  Mockito.when(driverMock.manage())
 				.thenReturn(optionsMock);
@@ -61,6 +72,8 @@ public class SeleniumDrivenBrowserTest
 				.thenReturn(targetLocatorMock);
 		  Mockito.when(driverMock.getWindowHandle())
 				.thenReturn("Window1");
+		  Mockito.when(driverMock.getCapabilities())
+				.thenReturn(capabilitiesMock);
 	 }
 
 	 /**
