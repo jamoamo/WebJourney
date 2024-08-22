@@ -4,7 +4,7 @@
     
     <groupId>io.github.jamoamo</groupId>
     <artifactId>webjourney</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7-SNAPSHOT</version>
     
     <name>Web Journey</name>
     <description>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>io.github.jamoamo</groupId>
         <artifactId>webjourney-parent</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6-SNAPSHOT</version>
     </parent>
     
     <properties>
