@@ -37,18 +37,25 @@ import org.slf4j.LoggerFactory;
  */
 class SeleniumDrivenBrowser implements IBrowser
 {
-	private final static int DEFAULT_TIMEOUT = 10;
-
-	private final Logger logger = LoggerFactory.getLogger(SeleniumDrivenBrowser.class);
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumDrivenBrowser.class);
+	private static final int DEFAULT_TIMEOUT = 10;
 
 	private final RemoteWebDriver driver;
 	private final SeleniumWindowManager windowManager;
+	
+	private final String browserName;
+	private final String browserVersion;
 
 	SeleniumDrivenBrowser(RemoteWebDriver driver)
 	{
 		this.driver = driver;
 		this.windowManager = new SeleniumWindowManager(this.driver);
 		this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(DEFAULT_TIMEOUT));
+		this.browserName = this.driver.getCapabilities().getBrowserName();
+		this.browserVersion = this.driver.getCapabilities().getBrowserVersion();
+		
+		LOGGER.info(String.format("Using browser %s version %s", this.browserName, this.browserVersion));
 	}
 
 	@Override
@@ -60,20 +67,30 @@ class SeleniumDrivenBrowser implements IBrowser
 	@Override
 	public IBrowserWindow switchToWindow(String windowName)
 	{
-		this.logger.info(String.format("Switch to window [%s].", windowName));
+		LOGGER.info(String.format("Switch to window [%s].", windowName));
 		return this.windowManager.switchToWindow(windowName);
 	}
 
 	@Override
 	public IBrowserWindow openNewWindow()
 	{
-		this.logger.info(String.format("Openning new window."));
+		LOGGER.info(String.format("Openning new window."));
 		return this.windowManager.openNewWindow();
 	}
 
 	@Override
+	@SuppressWarnings("MagicNumber")
 	public void exit()
 	{
+		LOGGER.info("Closing browser.");
+		if("chrome".equals(this.browserName))
+		{
+		  int majorVersion = Integer.parseInt(this.browserVersion.split("[.]")[0]);
+		  if(majorVersion <= 127 && majorVersion >= 123)
+		  {
+				this.driver.close();
+		  }
+		}
 		this.driver.quit();
 	}
 }
