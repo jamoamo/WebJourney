@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.reserved.entity;
+package io.github.jamoamo.webjourney.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *
+ * Extract the current index of a collection.
  * @author James Amoore
  */
-class XExtractionException
-	 extends XEntityEvaluationException
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface ExtractCollectionIndex
 {
-	private static final String EXCEPTION_MESSAGE = "There was an error during Extraction.";
-	
-	XExtractionException(Exception ex)
-	{
-		super(EXCEPTION_MESSAGE, ex);
-	}
-	
-	XExtractionException(String errorMessage)
-	{
-		super(EXCEPTION_MESSAGE + " " + errorMessage);
-	}
+	/**
+	 * Optional. Is the index zero-based? If not the index is assumed to be one-based.
+	 * @return {code true} if the index is zero-based.
+	 */ 
+	boolean zeroBased() default true;
 }

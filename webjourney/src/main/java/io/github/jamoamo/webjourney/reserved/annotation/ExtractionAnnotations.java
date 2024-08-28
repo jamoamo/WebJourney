@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+import io.github.jamoamo.webjourney.annotation.ExtractCollectionIndex;
 
 /**
  *
@@ -58,6 +59,7 @@ public final class ExtractionAnnotations
 		ALWAYS_EXTRACT_ANNOTATIONS.add(RegexExtractValue.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(RegexExtractCurrentUrl.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(Constant.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractCollectionIndex.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractValue.RegexMatch.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractValue.RegexMatches.class);
 		CONDITIONALLY_EXTRACT_ANNOTATIONS.add(ConditionalExtractFromUrl.RegexMatch.class);

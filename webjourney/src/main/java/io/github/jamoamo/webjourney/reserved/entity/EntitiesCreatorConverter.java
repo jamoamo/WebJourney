@@ -70,12 +70,13 @@ class EntitiesCreatorConverter
 				return null;
 		  }
 		  List<Object> objects = new ArrayList<>();
+		  context.startCollection();
 		  for(String s : source)
 		  {
 				context.processCollectionItem();
 				objects.add(createEntity(s, reader, context));
 		  }
-
+		  context.endCollection();
 		  return objects;
 	 }
 

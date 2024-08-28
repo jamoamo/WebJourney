@@ -60,6 +60,7 @@ public final class EntityCreationContext
 
 	 private EntityDefn baseEntity;
 	 private Stack<EntityBreadcrumb> entityBreadCrumbs;
+	 private Integer existingIndex = null;
 
 	 EntityCreationContext(EntityDefn entityDefn)
 	 {
@@ -70,6 +71,14 @@ public final class EntityCreationContext
 	 protected void processField(EntityFieldDefn entityFieldDefn)
 	 {
 		  this.entityBreadCrumbs.push(new EntityBreadcrumb(entityFieldDefn.getFieldName()));
+	 }
+	 
+	 /**
+	  * Starts the processing of a collection.
+	  */
+	 public void startCollection()
+	 {
+		  this.existingIndex = -1;
 	 }
 
 	 /**
@@ -86,6 +95,24 @@ public final class EntityCreationContext
 				new EntityBreadcrumb(existingItem.fieldName, existingItem.collectionIndex == null ? 0 :
 					 existingItem.collectionIndex + 1);
 		  this.entityBreadCrumbs.push(newItem);
+		  this.existingIndex++;
+	 }
+	 
+	 /**
+	  * Ends the existing collection processing.
+	  */
+	 public void endCollection()
+	 {
+		  this.existingIndex = null;
+	 }
+	 
+	 /**
+	  * Gets the index of the existing collection item.
+	  * @return the existing index.
+	  */
+	 public Integer getExistingIndex()
+	 {
+		  return this.existingIndex;
 	 }
 
 	 protected void fieldProcessComplete()
