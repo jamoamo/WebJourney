@@ -24,11 +24,14 @@
 package io.github.jamoamo.webjourney.reserved.entity.impl;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
+import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.function.Failable;
 
 /**
@@ -39,7 +42,7 @@ public class TestElement
 	 extends AElement
 {
 	 private final String text;
-	 private final AElement[] subElements;
+	 private AElement[] subElements;
 	 private final String elementName;
 	 private final Map<String, String> attributes;
 
@@ -67,6 +70,14 @@ public class TestElement
 	 {
 		  this.elementName = "";
 		  this.attributes = new TreeMap<>();
+		  this.text = text;
+		  this.subElements = subElements;
+	 }
+	 
+	 public TestElement(String elementName, Map<String, String> attributes, AElement[] subElements, String text)
+	 {
+		  this.elementName = elementName;
+		  this.attributes = attributes;
 		  this.text = text;
 		  this.subElements = subElements;
 	 }
@@ -116,8 +127,7 @@ public class TestElement
 
 		  Optional<AElement> findFirst =
 				Failable.stream(Arrays.stream(subElements))
-					 .filter(element -> element.getAttribute("id")
-						  .equals(id))
+					 .filter(element -> elementMatch(element, id))
 					 .stream()
 					 .findFirst();
 
@@ -153,17 +163,22 @@ public class TestElement
 				return null;
 		  }
 
-		  String id = path.substring(4, path.length() - 1);
+		  String id = path.substring(5, path.length() - 1);
 
 		  List<AElement> list =
 				Failable.stream(Arrays.stream(subElements))
-					 .filter(element -> element.getAttribute("id")
-						  .equals(id))
-					 .stream()
-					 .toList();
+					 .filter(element -> elementMatch(element, id))
+					 .collect(Collectors.toList());
 
 		  return list;
 	 }
+
+	public boolean elementMatch(AElement element, String id)
+		 throws XElementDoesntExistException
+	{
+		return element.getAttribute("id") != null && element.getAttribute("id")
+			 .equals(id);
+	}
 
 	 @Override
 	 public String getAttribute(String attribute)
@@ -203,6 +218,18 @@ public class TestElement
 	 public boolean exists()
 	 {
 		  return true;
+	 }
+	 
+	 public void addElement(AElement element)
+	 {
+		 AElement[] newArr = Arrays.copyOf(subElements, subElements.length + 1);
+		 newArr[newArr.length - 1] = element;
+		 subElements = newArr;
+	 }
+	 
+	 public Stream<TestElement> streamSubElements()
+	 {
+		 return Arrays.stream(subElements).map(e -> (TestElement)e);
 	 }
 
 }
