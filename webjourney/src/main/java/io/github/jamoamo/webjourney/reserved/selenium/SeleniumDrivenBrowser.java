@@ -86,7 +86,7 @@ class SeleniumDrivenBrowser implements IBrowser
 		if("chrome".equals(this.browserName))
 		{
 		  int majorVersion = Integer.parseInt(this.browserVersion.split("[.]")[0]);
-		  if(majorVersion <= 127 && majorVersion >= 123)
+		  if(majorVersion <= 128 && majorVersion >= 123)
 		  {
 				this.driver.close();
 		  }
