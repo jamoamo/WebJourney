@@ -63,6 +63,7 @@ class EntitiesFromElementConverter
 		  }
 
 		  List<Object> result = new ArrayList<>(source.size());
+		  context.startCollection();
 		  for(AElement elems : source)
 		  {
 				try
@@ -76,6 +77,7 @@ class EntitiesFromElementConverter
 					 throw new XConversionException(ex);
 				}
 		  }
+		  context.endCollection();
 		  return result;
 	 }
 

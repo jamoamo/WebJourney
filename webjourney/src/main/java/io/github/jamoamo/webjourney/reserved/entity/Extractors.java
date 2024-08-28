@@ -37,6 +37,7 @@ import io.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import java.lang.annotation.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.github.jamoamo.webjourney.annotation.ExtractCollectionIndex;
 
 /**
  *
@@ -60,7 +61,8 @@ public final class Extractors
 	  * @param hasConverter                whether a converter is present
 	  *
 	  * @return the extractor
-	  */	 
+	  */
+	 @SuppressWarnings("CyclomaticComplexity")	 
 	 public static IExtractor getExtractorForAnnotation(
 		  Annotation annotation,
 		  FieldInfo fieldInfo,
@@ -72,10 +74,14 @@ public final class Extractors
 				LOGGER.debug("Using ConstantExtractor with value = " + constant.value());
 				return new ConstantExtractor(constant.value(), new AlwaysCondition());
 		  }
-		  if(annotation instanceof ExtractCurrentUrl)
+		  else if(annotation instanceof ExtractCurrentUrl)
 		  {
 				LOGGER.debug("Finding Extractor for current url.");
 				return getCurrentUrlExtractor();
+		  }
+		  else if(annotation instanceof ExtractCollectionIndex extractor)
+		  {
+				return new CollectionIndexExtractor(extractor.zeroBased() ? 0 : 1);
 		  }
 		  else if(annotation instanceof ExtractFromUrl extractor)
 		  {

@@ -47,23 +47,30 @@ import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
+import io.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCollectionIndex;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
+
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -748,6 +755,23 @@ public class EntityCreatorTest
 				.createNewEntity(browser);
 
 		  assertEquals("Constant Value", createNewEntity.getConstant());
+	 }
+	 
+	 @Test
+	 public void testCreateNewEntity_ExtractCollectionIndex()
+		  throws Exception
+	 {
+		  Mockito.clearInvocations(browser);
+		  EntityDefn defn = new EntityDefn(ValidEntityExtractCollectionIndex.class);
+		  EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
+
+		  ValidEntityExtractCollectionIndex createNewEntity = (ValidEntityExtractCollectionIndex) creator
+				.createNewEntity(browser);
+
+		  assertEquals(3, createNewEntity.getSubEntities().size());
+		  assertEquals(0, createNewEntity.getSubEntities().get(0).getIndex());
+		  assertEquals(1, createNewEntity.getSubEntities().get(1).getIndex());
+		  assertEquals(2, createNewEntity.getSubEntities().get(2).getIndex());
 	 }
 
 }

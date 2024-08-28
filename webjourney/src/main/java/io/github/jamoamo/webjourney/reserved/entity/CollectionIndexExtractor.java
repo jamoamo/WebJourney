@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,56 +23,45 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
-import io.github.jamoamo.webjourney.api.mapper.AConverter;
-import io.github.jamoamo.webjourney.api.mapper.XValueMappingException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
- *
+ * Extractor that extracts the current index of a collection being processed.
  * @author James Amoore
- * @param <T> The mapper type
  */
-class CollectionTypeConverter<T>
-	 implements IConverter<Collection<String>, Collection<T>>
+public final class CollectionIndexExtractor implements IExtractor<String>
 {
-	 private final AConverter<T> mapping;
-
-	 CollectionTypeConverter(AConverter<T> mapping)
+	 private final int baseIndex;
+	 
+	 CollectionIndexExtractor(int baseIndex)
 	 {
-		  this.mapping = mapping;
+		  this.baseIndex = baseIndex;
 	 }
 
+	 /**
+	  * Extract the index.
+	  * @param reader unused. the reader to read a value.
+	  * @param entityCreationContext the current context
+	  * @return the current index.
+	  * @throws XExtractionException if a collection is not being processed.
+	  */
 	 @Override
-	 public Collection<T> convertValue(Collection<String> source,
-		  IValueReader reader,
-		  List<IEntityCreationListener> listeners,
-		  EntityCreationContext context)
-		  throws XConversionException
+	 public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		  throws XExtractionException
 	 {
-		  if(source == null)
+		  if(entityCreationContext.getExistingIndex() == null)
 		  {
-				return null;
+				throw new XExtractionException("Can't use index when not part of a collection.");
 		  }
-		  List<T> mappedCollection = new ArrayList<>(source.size());
-		  context.startCollection();
-		  for(String value : source)
-		  {
-				try
-				{
-					 context.processCollectionItem();
-					 T mapValue = this.mapping.mapValue(value);
-					 mappedCollection.add(mapValue);
-				}
-				catch(XValueMappingException ex)
-				{
-					 throw new XConversionException(ex);
-				}
-		  }
-		  context.endCollection();
-		  return mappedCollection;
+		  
+		  return Integer.toString(entityCreationContext.getExistingIndex() + this.baseIndex);
 	 }
 
+	 /**
+	  * @return an AlwaysCondition instance.
+	  */
+	 @Override
+	 public ICondition getCondition()
+	 {
+		  return new AlwaysCondition();
+	 }
+	 
 }
