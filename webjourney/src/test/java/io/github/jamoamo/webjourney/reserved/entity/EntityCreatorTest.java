@@ -48,6 +48,7 @@ import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
 import io.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCollectionIndex;
+import io.github.jamoamo.webjourney.reserved.entity.impl.ValidEntityExtractCollectionIndexMultiLayer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -211,7 +212,7 @@ public class EntityCreatorTest
 
 		  when(webPage.getElements(XPATH_DOUBLE_LIST_DATA))
 				.thenAnswer(doubleAnswer);
-
+		  
 		  List<TestElement> subElements = new ArrayList<>();
 		  subElements.add(new TestElement(
 				"",
@@ -240,6 +241,17 @@ public class EntityCreatorTest
 					 new TestElement("div", Collections.singletonMap("id", "double-data"), "125.93")
 				}
 		  ));
+		  
+		  TestElement subElementedSubElement = new TestElement("div", Collections.singletonMap("id", "sub-list-data"), 
+				subElements.toArray(AElement[]::new), "");
+		  subElementedSubElement.addElement(subElementedSubElement);
+		  
+		  subElements.stream().forEach(e -> {
+			  e.addElement(subElementedSubElement);
+			  e.addElement(subElementedSubElement);
+			  e.addElement(subElementedSubElement);
+		  });
+		  
 
 		  Answer<List<TestElement>> subAnswer = new Answer<List<TestElement>>()
 		  {
@@ -772,6 +784,36 @@ public class EntityCreatorTest
 		  assertEquals(0, createNewEntity.getSubEntities().get(0).getIndex());
 		  assertEquals(1, createNewEntity.getSubEntities().get(1).getIndex());
 		  assertEquals(2, createNewEntity.getSubEntities().get(2).getIndex());
+	 }
+	 
+	 @Test
+	 public void testCreateNewEntity_ExtractCollectionIndex_MultiLayer()
+		  throws Exception
+	 {
+		  Mockito.clearInvocations(browser);
+		  EntityDefn defn = new EntityDefn(ValidEntityExtractCollectionIndexMultiLayer.class);
+		  EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
+
+		  ValidEntityExtractCollectionIndexMultiLayer createNewEntity = 
+				(ValidEntityExtractCollectionIndexMultiLayer) creator
+				.createNewEntity(browser);
+
+		  assertEquals(3, createNewEntity.getSubEntities().size());
+		  assertEquals(0, createNewEntity.getSubEntities().get(0).getIndex());
+		  assertEquals(3, createNewEntity.getSubEntities().get(0).getSubs().size());
+		  assertEquals(1, createNewEntity.getSubEntities().get(0).getSubs().get(0).getIndex());
+		  assertEquals(2, createNewEntity.getSubEntities().get(0).getSubs().get(1).getIndex());
+		  assertEquals(3, createNewEntity.getSubEntities().get(0).getSubs().get(2).getIndex());
+		  assertEquals(1, createNewEntity.getSubEntities().get(1).getIndex());
+		  assertEquals(3, createNewEntity.getSubEntities().get(1).getSubs().size());
+		  assertEquals(1, createNewEntity.getSubEntities().get(1).getSubs().get(0).getIndex());
+		  assertEquals(2, createNewEntity.getSubEntities().get(1).getSubs().get(1).getIndex());
+		  assertEquals(3, createNewEntity.getSubEntities().get(1).getSubs().get(2).getIndex());
+		  assertEquals(2, createNewEntity.getSubEntities().get(2).getIndex());
+		  assertEquals(3, createNewEntity.getSubEntities().get(2).getSubs().size());
+		  assertEquals(1, createNewEntity.getSubEntities().get(2).getSubs().get(0).getIndex());
+		  assertEquals(2, createNewEntity.getSubEntities().get(2).getSubs().get(1).getIndex());
+		  assertEquals(3, createNewEntity.getSubEntities().get(2).getSubs().get(2).getIndex());
 	 }
 
 }
