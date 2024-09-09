@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.annotation.form.Element;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;

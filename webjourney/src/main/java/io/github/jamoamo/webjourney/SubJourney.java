@@ -23,6 +23,10 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.AWebAction;
+import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.IJourney;
+import io.github.jamoamo.webjourney.api.IWebJourneyPath;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Amoore
  */
-class SubJourney
+class SubJourney implements IJourney
 {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WebTraveller.class);
 	private final List<AWebAction> actions;
@@ -41,6 +45,12 @@ class SubJourney
 		this.actions = actions;
 	}
 
+	SubJourney(IWebJourneyPath path)
+	{
+		this.actions = path.getActions();
+	}
+
+	@Override
 	public void doJourney(IJourneyContext context)
 			  throws JourneyException
 	{

@@ -23,6 +23,10 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.AWebAction;
+import io.github.jamoamo.webjourney.api.IJourney;
+import io.github.jamoamo.webjourney.api.IJourneyContext;
+
 
 /**
  *
@@ -31,11 +35,11 @@ package io.github.jamoamo.webjourney;
  */
 class RepeatedAction<T> extends AWebAction
 {
-	private final SubJourney subJourney;
+	private final IJourney subJourney;
 	private final IRepeatable<T> repeater;
 
 	RepeatedAction(IRepeatable<T> repeater,
-								 SubJourney subJourney)
+								 IJourney subJourney)
 	{
 		if(repeater == null)
 		{

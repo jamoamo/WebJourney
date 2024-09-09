@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,50 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
-
-import io.github.jamoamo.webjourney.api.IJourneyObserver;
-import io.github.jamoamo.webjourney.api.web.IBrowser;
-import java.util.List;
+package io.github.jamoamo.webjourney.api;
 
 /**
- * The context of a specific browser journey.
+ * A series of actions performed.
+ * 
  * @author James Amoore
  */
-public interface IJourneyContext
+public interface IJourney
 {
-	
 	/**
-	 * Get the browser for the current journey.
-	 * @return the browser.
+	 * Perform the journey.
+	 * @param context context of the journey.
 	 */
-	IBrowser getBrowser();
-	
-	/**
-	 * Sets an input value for the journey.
-	 * 
-	 * @param inputType The type of Input
-	 * @param inputValue The value for the input
-	 */
-	void setJourneyInput(String inputType, Object inputValue);
-	
-	/**
-	 * Gets an input value for the journey.
-	 * 
-	 * @param inputType The type of Input
-	 * @return the input value.
-	 */
-	Object getJourneyInput(String inputType);
-	
-	/**
-	 * Gets all the observers of the journey.
-	 * @return the journey observers.
-	 */
-	List<IJourneyObserver> getJourneyObservers();
-	
-	/**
-	 * Sets all the observers of the journey.
-	 * @param observers The journey observers
-	 */
-	void setJourneyObservers(List<IJourneyObserver> observers);
+	void doJourney(IJourneyContext context);
 }

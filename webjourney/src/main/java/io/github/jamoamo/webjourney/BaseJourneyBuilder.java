@@ -23,8 +23,13 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.PageConsumerException;
+import io.github.jamoamo.webjourney.api.IJourney;
+import io.github.jamoamo.webjourney.api.IJourneyBuilder;
+import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.function.Function;
 import org.apache.commons.lang3.function.FailableConsumer;
 
 /**
@@ -32,7 +37,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
  *
  * @author James Amoore
  */
-public class BaseJourneyBuilder
+public class BaseJourneyBuilder implements IJourneyBuilder
 {
 	private final JourneyBuild build;
 
@@ -58,6 +63,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public BaseJourneyBuilder navigateTo(URL url)
 	{
 		this.build.addAction(new NavigateAction(NavigationTarget.toUrl(url)));
@@ -73,6 +79,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @throws java.net.MalformedURLException if the url is malformed
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder navigateTo(String url)
 			  throws MalformedURLException
 	{
@@ -85,6 +92,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder navigateBack()
 	{
 		this.build.addAction(new NavigateAction(NavigationTarget.back()));
@@ -96,6 +104,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder navigateForward()
 	{
 		this.build.addAction(new NavigateAction(NavigationTarget.forward()));
@@ -107,6 +116,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder refreshPage()
 	{
 		this.build.addAction(new NavigateAction(NavigationTarget.refresh()));
@@ -121,6 +131,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder completeForm(Object formObject)
 	{
 		this.build.addAction(new CompleteFormAction(formObject));
@@ -136,6 +147,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder completeFormAndSubmit(Object pageObject)
 	{
 		CompleteFormAction action = new CompleteFormAction(pageObject);
@@ -155,6 +167,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public <T> BaseJourneyBuilder consumePage(Class<T> pageClass,
 															FailableConsumer<T, ? extends PageConsumerException> pageConsumer)
 	{
@@ -171,6 +184,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public BaseJourneyBuilder clickButton(Object pageObject, String buttonName)
 	{
 		ClickButtonAction action = new ClickButtonAction(pageObject, buttonName);
@@ -186,6 +200,7 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public BaseJourneyBuilder clickButton(Class pageClass, String buttonName)
 	{
 		ClickButtonAction action = new ClickButtonAction(pageClass, buttonName);
@@ -205,11 +220,12 @@ public class BaseJourneyBuilder
 	 *
 	 * @return the current builder
 	 */
+	@Override
 	public BaseJourneyBuilder forEachChildElement(
 			  final Class pageClass,
 			  final String elementName,
 			  String childElementType,
-			  SubJourney subJourney)
+			  IJourney subJourney)
 	{
 		RepeatedAction action = new RepeatedAction(
 				  new RepeatForChildElement(pageClass, elementName, childElementType), subJourney);
@@ -232,8 +248,41 @@ public class BaseJourneyBuilder
 	 *
 	 * @return a built WebJourney instance.
 	 */
-	public WebJourney build()
+	@Override
+	public IJourney build()
 	{
-		return this.build.getJourney();
+		SubJourney subJourney = new SubJourney(this.build.getJourney());
+		return subJourney;
+	}
+
+	/**
+	 * Follow specific journey paths if the condition evaluates to true.
+	 * 
+	 * @param conditionFunction the condition to evaluate.
+	 * @param ifTrue a function to create the path if the condition evaluates to true.
+	 * @return this journey builder
+	 */
+	@Override
+	public IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
+		 Function<IJourneyBuilder, IJourney> ifTrue)
+	{
+		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue));
+		return this;
+	}
+
+	/**
+	 * Follow specific journey paths if the condition evaluates to true.
+	 * 
+	 * @param conditionFunction the condition to evaluate.
+	 * @param ifTrue a function to create the path if the condition evaluates to true.
+	 * @param ifFalse a function to create the path if the condition evaluates to false.
+	 * @return this journey builder
+	 */
+	@Override
+	public IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
+		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse)
+	{
+		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue, ifFalse));
+		return this;
 	}
 }

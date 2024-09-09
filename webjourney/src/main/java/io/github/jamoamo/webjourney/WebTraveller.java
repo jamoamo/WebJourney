@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.web.DefaultBrowserOptions;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
@@ -55,7 +56,7 @@ public class WebTraveller
 	 * Travel the provided journey.
 	 * @param journey the journey to travel.
 	 */
-	public void travelJourney(WebJourney journey)
+	public void travelJourney(IJourney journey)
 	{
 		MDC.put(LOGGER_CONTEXT_JOURNEY_LABEL, UUID.randomUUID().toString());
 		this.logger.info("Starting Journey.");
@@ -66,8 +67,7 @@ public class WebTraveller
 		context.setJourneyObservers(this.travelOptions.getJourneyObservers());
 		try
 		{
-			SubJourney subJourney = new SubJourney(journey.getActions());
-			subJourney.doJourney(context);
+			journey.doJourney(context);
 		}
 		catch(JourneyException ex)
 		{

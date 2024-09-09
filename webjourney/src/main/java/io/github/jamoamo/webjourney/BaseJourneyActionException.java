@@ -23,6 +23,8 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.AWebAction;
+
 /**
  * Base exception for errors that occur during journey actions.
  * @author James Amoore

@@ -27,8 +27,8 @@ import io.github.jamoamo.webjourney.LoginForm;
 import io.github.jamoamo.webjourney.InputForm;
 import io.github.jamoamo.webjourney.JourneyBuilder;
 import io.github.jamoamo.webjourney.TravelOptions;
-import io.github.jamoamo.webjourney.WebJourney;
 import io.github.jamoamo.webjourney.WebTraveller;
+import io.github.jamoamo.webjourney.api.IJourney;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ public class CricketArchiveIT
 	 {
 		  LoginForm loginForm = new LoginForm("amoore.james@gmail.com", "J8a7m1e0s7ca");
 
-		  WebJourney journey = JourneyBuilder.path()
+		  IJourney journey = JourneyBuilder.path()
 				.navigateTo("https://my.cricketarchive.com")
 				.completeFormAndSubmit(loginForm)
 				.navigateTo("https://cricketarchive.com/cgi-bin/ask_the_scorecard_oracle.cgi")

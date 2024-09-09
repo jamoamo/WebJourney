@@ -21,20 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
+package io.github.jamoamo.webjourney.api;
+
+import io.github.jamoamo.webjourney.api.web.IBrowser;
+import java.util.List;
 
 /**
- * Exception that is thrown by a PageConsumer in the ConsumePageAction.
+ * The context of a specific browser journey.
  * @author James Amoore
  */
-public class PageConsumerException extends Exception
+public interface IJourneyContext
 {
+	
 	/**
-	 * Create a new exception with an exception message.
-	 * @param message The exception message
+	 * Get the browser for the current journey.
+	 * @return the browser.
 	 */
-	public PageConsumerException(String message)
-	{
-		super(message);
-	}
+	IBrowser getBrowser();
+	
+	/**
+	 * Sets an input value for the journey.
+	 * 
+	 * @param inputType The type of Input
+	 * @param inputValue The value for the input
+	 */
+	void setJourneyInput(String inputType, Object inputValue);
+	
+	/**
+	 * Gets an input value for the journey.
+	 * 
+	 * @param inputType The type of Input
+	 * @return the input value.
+	 */
+	Object getJourneyInput(String inputType);
+	
+	/**
+	 * Gets all the observers of the journey.
+	 * @return the journey observers.
+	 */
+	List<IJourneyObserver> getJourneyObservers();
+	
+	/**
+	 * Sets all the observers of the journey.
+	 * @param observers The journey observers
+	 */
+	void setJourneyObservers(List<IJourneyObserver> observers);
 }

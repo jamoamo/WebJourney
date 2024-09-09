@@ -21,29 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
-
-import io.github.jamoamo.webjourney.api.AWebAction;
-import java.util.Collections;
-import java.util.List;
-import io.github.jamoamo.webjourney.api.IWebJourneyPath;
+package io.github.jamoamo.webjourney.api;
 
 /**
- *
+ * Exception that is thrown by a PageConsumer in the ConsumePageAction.
  * @author James Amoore
  */
-public final class WebJourney implements IWebJourneyPath
+public class PageConsumerException extends Exception
 {
-	private final List<AWebAction> journeyActions;
-	
-	protected WebJourney(List<AWebAction> journeyActions)
+	/**
+	 * Create a new exception with an exception message.
+	 * @param message The exception message
+	 */
+	public PageConsumerException(String message)
 	{
-		this.journeyActions = journeyActions;
-	}
-	
-	@Override
-	public List<AWebAction> getActions()
-	{
-		return Collections.unmodifiableList(this.journeyActions);
+		super(message);
 	}
 }
