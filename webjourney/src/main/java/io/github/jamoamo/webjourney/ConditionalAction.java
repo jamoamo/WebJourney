@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,71 +24,65 @@
 package io.github.jamoamo.webjourney;
 
 import io.github.jamoamo.webjourney.api.AWebAction;
+import io.github.jamoamo.webjourney.api.IJourney;
+import io.github.jamoamo.webjourney.api.IJourneyBuilder;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
-import io.github.jamoamo.webjourney.annotation.form.Button;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
-import io.github.jamoamo.webjourney.api.web.XWebException;
-import java.lang.reflect.Field;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.slf4j.MDC;
+import java.util.function.Function;
 
 /**
  *
  * @author James Amoore
  */
-class ClickButtonAction extends AWebAction
+class ConditionalAction extends AWebAction
 {
-	private final Class pageClass;
-	private final String buttonName;
+	private final Function<IBrowser, Boolean> conditionFunction;
+	private final Function<IJourneyBuilder, IJourney> functionIfTrue;
+	private final Function<IJourneyBuilder, IJourney> functionIfFalse;
 	
-	ClickButtonAction(Object pageObject, String buttonName)
+	ConditionalAction(Function<IBrowser, Boolean> conditionFunction,
+										Function<IJourneyBuilder, IJourney> ifTrue)
 	{
-		this.pageClass = pageObject.getClass();
-		this.buttonName = buttonName;
+		this.conditionFunction = conditionFunction;
+		this.functionIfTrue = ifTrue;
+		this.functionIfFalse = null;
 	}
 	
-	ClickButtonAction(Class pageClass, String buttonName)
+	ConditionalAction(Function<IBrowser, Boolean> conditionFunction,
+										Function<IJourneyBuilder, IJourney> ifTrue, 
+										Function<IJourneyBuilder, IJourney> ifFalse)
 	{
-		this.pageClass = pageClass;
-		this.buttonName = buttonName;
+		this.conditionFunction = conditionFunction;
+		this.functionIfTrue = ifTrue;
+		this.functionIfFalse = ifFalse;
 	}
 	
 	@Override
 	protected ActionResult executeActionImpl(IJourneyContext context)
+		 throws BaseJourneyActionException
 	{
-		IBrowser browser = context.getBrowser();
-		Field buttonField = FieldUtils.getField(this.pageClass, this.buttonName, true);
-		if(buttonField == null)
+		if(this.conditionFunction.apply(context.getBrowser()))
 		{
-			return ActionResult.FAILURE;
+			BaseJourneyBuilder builder = JourneyBuilder.path();
+			IJourney journey = this.functionIfTrue.apply(builder);
+			journey.doJourney(context);
 		}
-		
-		Button ef = buttonField.getAnnotation(Button.class);
-		if(ef == null)
+		else
 		{
-			return ActionResult.FAILURE;
+			if(this.functionIfFalse != null)
+			{
+				BaseJourneyBuilder builder = JourneyBuilder.path();
+				IJourney journey = this.functionIfFalse.apply(builder);
+				journey.doJourney(context);
+			}
 		}
-		
-		try
-		{
-			browser.getActiveWindow().getCurrentPage().getElement(ef.xPath()).click();
-			
-			return ActionResult.SUCCESS;
-		}
-		catch(XWebException ex)
-		{
-			throw new JourneyException(ex);
-		}
-		finally
-		{
-			MDC.popByKey("Journey.Action");
-		}
-		
+		return ActionResult.SUCCESS;
 	}
 
 	@Override
 	protected String getActionName()
 	{
-		return "Click Buttton";
+		return "Conditional";
 	}
+	
 }

@@ -23,6 +23,8 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.IJourneyContext;
+
 /**
  * Provides a collection of items to be iterated over to repeat actions.
  * @author James Amoore

@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.IActionOptionsJourneyBuilder;
 import java.util.concurrent.TimeUnit;
 
 
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @author James Amoore
  */
 @SuppressWarnings("abstractClassName")
-public class ActionOptionsJourneyBuilder extends BaseJourneyBuilder
+public class ActionOptionsJourneyBuilder extends BaseJourneyBuilder implements IActionOptionsJourneyBuilder
 {
 	/**
 	 * Creates a new instance.
@@ -47,6 +48,7 @@ public class ActionOptionsJourneyBuilder extends BaseJourneyBuilder
 	 * @param waitTimeSeconds The number of seconds to wait before the action is executed.
 	 * @return this builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder withPreActionWait(int waitTimeSeconds)
 	{
 		this.getBuild().getLastAction().setPreActionWait(TimeUnit.SECONDS.toMillis(waitTimeSeconds));
@@ -58,6 +60,7 @@ public class ActionOptionsJourneyBuilder extends BaseJourneyBuilder
 	 * @param waitTimeSeconds The number of seconds to wait before the action is executed.
 	 * @return this builder
 	 */
+	@Override
 	public ActionOptionsJourneyBuilder withPostActionWait(int waitTimeSeconds)
 	{
 		this.getBuild().getLastAction().setPostActionWait(TimeUnit.SECONDS.toMillis(waitTimeSeconds));

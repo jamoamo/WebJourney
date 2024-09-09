@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.util.ArrayList;

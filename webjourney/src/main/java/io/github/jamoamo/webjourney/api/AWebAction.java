@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
+package io.github.jamoamo.webjourney.api;
 
+import io.github.jamoamo.webjourney.ActionResult;
+import io.github.jamoamo.webjourney.BaseJourneyActionException;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.MDC;
 
@@ -42,7 +44,13 @@ public abstract class AWebAction
 	
 	protected abstract String getActionName();
 	
-	protected final ActionResult executeAction(IJourneyContext context)
+	/**
+	 * Executes the action.
+	 * @param context the journey context
+	 * @return the result of the action.
+	 * @throws BaseJourneyActionException id something goes wrong.
+	 */
+	public final ActionResult executeAction(IJourneyContext context)
 			  throws BaseJourneyActionException
 	{
 		MDC.put(ACTION_LOG_LABEL, getActionName());
@@ -61,7 +69,7 @@ public abstract class AWebAction
 	 * Sets the wait to be performed prior to the action being performed.
 	 * @param preActionWait The wait time in milliseconds.
 	 */
-	protected void setPreActionWait(long preActionWait)
+	public void setPreActionWait(long preActionWait)
 	{
 		this.preActionWait = preActionWait;
 	}
@@ -70,7 +78,7 @@ public abstract class AWebAction
 	 * Sets the wait to be performed after the action has been performed.
 	 * @param postActionWait The wait time in milliseconds.
 	 */
-	protected void setPostActionWait(long postActionWait)
+	public void setPostActionWait(long postActionWait)
 	{
 		this.postActionWait = postActionWait;
 	}
