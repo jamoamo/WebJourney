@@ -23,23 +23,20 @@
  */
 package io.github.jamoamo.webjourney.api;
 
-import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
-
 /**
- * An observer of a journey. Gets notified of events occurring in the journey.
+ * An item that can be included in the journey breadcrumb.
+ * 
  * @author James Amoore
  */
-public interface IJourneyObserver extends IEntityCreationListener
+public interface ICrumb
 {
 	/**
-	 * notifies the observer that an action has started.
-	 * @param action the action that started.
+	 * @return The name of the crumb.
 	 */
-	void actionStarted(AWebAction action);
+	String getCrumbName();
 	
 	/**
-	 * notifies the observer that an action has ended.
-	 * @param action the action that ended.
+	 * @return The category crumb.
 	 */
-	void actionEnded(AWebAction action);
+	String getCrumbType();
 }

@@ -27,6 +27,12 @@ import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.web.DefaultBrowserOptions;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
+import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
+import io.github.jamoamo.webjourney.api.ITravelOptions;
+import io.github.jamoamo.webjourney.reserved.BreadcrumbPrinter;
+import io.github.jamoamo.webjourney.reserved.JourneyBreadcrumb;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,13 +47,13 @@ public class WebTraveller
 	private static final String LOGGER_CONTEXT_JOURNEY_LABEL = "label.WebJourney.id";
 	private final Logger logger = LoggerFactory.getLogger(WebTraveller.class);
 	
-	private final TravelOptions travelOptions;
+	private final ITravelOptions travelOptions;
 	
 	/**
 	 * Creates a new WebTraveller with the provided TravelOptions.
 	 * @param options the options for the traveller.
 	 */
-	public WebTraveller(TravelOptions options)
+	public WebTraveller(ITravelOptions options)
 	{
 		this.travelOptions = options;
 	}
@@ -63,6 +69,8 @@ public class WebTraveller
 		IPreferredBrowserStrategy browserStrategy = this.travelOptions.getPreferredBrowserStrategy();
 		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions());
 		JourneyContext context = new JourneyContext();
+		IJourneyBreadcrumb breadcrumb = new JourneyBreadcrumb();
+		context.setJourneyBreadcrumb(breadcrumb);
 		context.setBrowser(browser);
 		context.setJourneyObservers(this.travelOptions.getJourneyObservers());
 		try
@@ -71,7 +79,8 @@ public class WebTraveller
 		}
 		catch(JourneyException ex)
 		{
-			this.logger.error("Can't complete journey: ", ex);
+			String breadcrumbString = getBreadcrumb(ex);
+			this.logger.error("Can't complete journey (" + breadcrumbString + ": " + ex.getMessage());
 			throw ex;
 		}
 		finally
@@ -79,5 +88,24 @@ public class WebTraveller
 			browser.exit();
 			MDC.remove(LOGGER_CONTEXT_JOURNEY_LABEL);
 		}
+	}
+
+	private String getBreadcrumb(JourneyException ex)
+	{
+		String breadcrumbString = "<unknown context>";
+		if(ex.getBreadcrumb() != null)
+		{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			try
+			{
+				new BreadcrumbPrinter().printBreadCrumb(stream, ex.getBreadcrumb());
+				breadcrumbString = stream.toString();
+			}
+			catch(IOException e)
+			{
+				//ignore exception.
+			}
+		}
+		return breadcrumbString;
 	}
 }

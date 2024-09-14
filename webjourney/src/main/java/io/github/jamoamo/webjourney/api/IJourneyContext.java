@@ -66,4 +66,10 @@ public interface IJourneyContext
 	 * @param observers The journey observers
 	 */
 	void setJourneyObservers(List<IJourneyObserver> observers);
+	
+	/**
+	 * Gets the breadcrumb of the current journey.
+	 * @return the breadcrumb.
+	 */
+	IJourneyBreadcrumb getJourneyBreadcrumb();
 }

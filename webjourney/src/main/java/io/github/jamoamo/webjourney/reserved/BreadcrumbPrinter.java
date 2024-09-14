@@ -21,25 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.api;
+package io.github.jamoamo.webjourney.reserved;
 
-import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.stream.Collectors;
 
 /**
- * An observer of a journey. Gets notified of events occurring in the journey.
+ * Prints the breadcrumb.
  * @author James Amoore
  */
-public interface IJourneyObserver extends IEntityCreationListener
+public final class BreadcrumbPrinter
 {
 	/**
-	 * notifies the observer that an action has started.
-	 * @param action the action that started.
+	 * Prints the breadcrumb to the output stream. Each crumb in the stream is separated by " -> ".
+	 * 
+	 * @param stream The stream to output the breadcrumb to.
+	 * @param breadcrumb the breadcrumb.
+	 * @throws IOException if there is an error writing to the output stream.
 	 */
-	void actionStarted(AWebAction action);
-	
-	/**
-	 * notifies the observer that an action has ended.
-	 * @param action the action that ended.
-	 */
-	void actionEnded(AWebAction action);
+	public void printBreadCrumb(final OutputStream stream, final IJourneyBreadcrumb breadcrumb)
+		 throws IOException
+	{
+		String crumbString = breadcrumb.getCrumbStream()
+			 .map(crumb -> String.format("(%s) %s", crumb.getCrumbType(), crumb.getCrumbName()))
+			 .collect(Collectors.joining(" -> "));
+		stream.write(crumbString.getBytes());
+	}
 }

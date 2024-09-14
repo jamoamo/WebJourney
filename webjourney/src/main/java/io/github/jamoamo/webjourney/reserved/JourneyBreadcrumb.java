@@ -21,25 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.api;
+package io.github.jamoamo.webjourney.reserved;
 
-import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import io.github.jamoamo.webjourney.api.ICrumb;
+import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
+import java.util.Stack;
+import java.util.stream.Stream;
 
 /**
- * An observer of a journey. Gets notified of events occurring in the journey.
+ * A Journey breadcrumb.
+ * 
  * @author James Amoore
  */
-public interface IJourneyObserver extends IEntityCreationListener
+public class JourneyBreadcrumb implements IJourneyBreadcrumb
 {
-	/**
-	 * notifies the observer that an action has started.
-	 * @param action the action that started.
-	 */
-	void actionStarted(AWebAction action);
+	private final Stack<ICrumb> breadcrumbs = new Stack<>();
 	
 	/**
-	 * notifies the observer that an action has ended.
-	 * @param action the action that ended.
+	 * Adds a crumb to the breadcrumb.
+	 * @param crumb the crumb to add
 	 */
-	void actionEnded(AWebAction action);
+	@Override
+	public void pushCrumb(ICrumb crumb)
+	{
+		this.breadcrumbs.push(crumb);
+	}
+
+	/**
+	 * Removes the last crumb from the breadcrumb.
+	 */
+	@Override
+	public void popCrumb()
+	{
+		if(this.breadcrumbs.isEmpty())
+		{
+			throw new BreadcrumbException("Can't remove crumb. There are no crumbs.");
+		}
+		this.breadcrumbs.pop();
+	}
+
+	/**
+	 * Returns the crumbs in a stream.
+	 * @return the crumb stream
+	 */
+	@Override
+	public Stream<ICrumb> getCrumbStream()
+	{
+		return this.breadcrumbs.stream();
+	}
 }

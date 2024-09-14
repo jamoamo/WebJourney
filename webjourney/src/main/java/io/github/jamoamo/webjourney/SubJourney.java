@@ -27,6 +27,7 @@ import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.IWebJourneyPath;
+import io.github.jamoamo.webjourney.api.ICrumb;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Amoore
  */
-class SubJourney implements IJourney
+class SubJourney implements IJourney, ICrumb
 {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WebTraveller.class);
 	private final List<AWebAction> actions;
@@ -51,26 +52,32 @@ class SubJourney implements IJourney
 	}
 
 	@Override
-	public void doJourney(IJourneyContext context)
+	public void doJourney(final IJourneyContext context)
 			  throws JourneyException
 	{
-		this.actions.forEach(action ->
+		context.getJourneyBreadcrumb().pushCrumb(this);
+		this.actions.stream().sequential().forEach(action ->
 		{
 			processAction(action, context);
 		});
+		context.getJourneyBreadcrumb().popCrumb();
 	}
 
 	private void processAction(AWebAction action, IJourneyContext context)
 			  throws JourneyException
 	{
+		context.getJourneyObservers().forEach(observer -> observer.actionStarted(action));
+		context.getJourneyBreadcrumb().pushCrumb(action);
 		waitFor(action.getPreActionWaitTime());
-		
+
 		ActionResult result = action.executeAction(context);
 		if(result == ActionResult.FAILURE)
 		{
-			throw new JourneyException("Action failed: " + action.getClass());
+			throw new JourneyException("Action failed: " + action.getClass(), context.getJourneyBreadcrumb());
 		}
 		waitFor(action.getPostActionWaitTime());
+		context.getJourneyBreadcrumb().popCrumb();
+		context.getJourneyObservers().forEach(observer -> observer.actionEnded(action));
 	}
 
 	private void waitFor(long timeMillis)
@@ -83,5 +90,17 @@ class SubJourney implements IJourney
 		{
 			LOGGER.info("Wait Interrupted");
 		}
+	}
+
+	@Override
+	public String getCrumbName()
+	{
+		return "SubJourney";
+	}
+
+	@Override
+	public String getCrumbType()
+	{
+		return "Journey";
 	}
 }

@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.api;
 
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
+import java.util.List;
 
 /**
  *
@@ -36,11 +37,23 @@ public interface ITravelOptions
 	 * @param strategy the strategy to use to create the preferred browser.
 	 */
 	void setPreferredBrowserStrategy(IPreferredBrowserStrategy strategy);
+
+	/**
+	 * Returns the preferred browser strategy.
+	 * @return the preferred browser strategy.
+	 */
+	IPreferredBrowserStrategy getPreferredBrowserStrategy();
 	
 	/**
 	 * Adds an observer to the journey.
 	 * @param observer the observer to add.
 	 */
 	void addObserver(IJourneyObserver observer);
+
+	/**
+	 * Retrieves the journey observers.
+	 * @return the journey observers
+	 */
+	List<IJourneyObserver> getJourneyObservers();
 	
 }
