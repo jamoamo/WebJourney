@@ -57,7 +57,8 @@ public final class TravelOptions implements ITravelOptions
 	 * Returns the preferred browser strategy.
 	 * @return the preferred browser strategy.
 	 */
-	protected IPreferredBrowserStrategy getPreferredBrowserStrategy()
+	@Override
+	public IPreferredBrowserStrategy getPreferredBrowserStrategy()
 	{
 		return this.preferredBrowserStrategy;
 	}

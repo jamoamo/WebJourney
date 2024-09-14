@@ -32,9 +32,9 @@ import org.slf4j.MDC;
  * Abstract class for actions that can be performed on a web journey.
  * @author James Amoore
  */
-public abstract class AWebAction
+public abstract class AWebAction implements ICrumb
 {
-	private static final String ACTION_LOG_LABEL = "labels.WebJourney.Action";
+	private static final String ACTION_LOG_LABEL = "WebJourney.Action";
 	private static final int DEFAULT_WAIT_SEC = 1;
 	private long preActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	private long postActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
@@ -42,6 +42,10 @@ public abstract class AWebAction
 	protected abstract ActionResult executeActionImpl(IJourneyContext context)
 		throws BaseJourneyActionException;
 	
+	/**
+	 * An identifier for the action. Will show in the journey breadcrumb.
+	 * @return the action's name.
+	 */
 	protected abstract String getActionName();
 	
 	/**
@@ -99,5 +103,17 @@ public abstract class AWebAction
 	public long getPostActionWaitTime()
 	{
 		return this.postActionWait;
+	}
+
+	@Override
+	public final String getCrumbType()
+	{
+		return "Action";
+	}
+
+	@Override
+	public final String getCrumbName()
+	{
+		return getActionName();
 	}
 }

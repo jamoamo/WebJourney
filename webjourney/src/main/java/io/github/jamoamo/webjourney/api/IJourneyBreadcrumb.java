@@ -23,23 +23,29 @@
  */
 package io.github.jamoamo.webjourney.api;
 
-import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import java.util.stream.Stream;
 
 /**
- * An observer of a journey. Gets notified of events occurring in the journey.
+ * A series of steps that have been performed in the journey.
+ * 
  * @author James Amoore
  */
-public interface IJourneyObserver extends IEntityCreationListener
+public interface IJourneyBreadcrumb
 {
 	/**
-	 * notifies the observer that an action has started.
-	 * @param action the action that started.
+	 * Adds a crumb to the breadcrumb.
+	 * @param crumb the crumb to add
 	 */
-	void actionStarted(AWebAction action);
+	void pushCrumb(ICrumb crumb);
 	
 	/**
-	 * notifies the observer that an action has ended.
-	 * @param action the action that ended.
+	 * Removes the last crumb from the breadcrumb.
 	 */
-	void actionEnded(AWebAction action);
+	void popCrumb();
+	
+	/**
+	 * Returns the crumbs in a stream.
+	 * @return the crumb stream
+	 */
+	Stream<ICrumb> getCrumbStream();
 }

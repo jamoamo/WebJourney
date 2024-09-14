@@ -31,6 +31,7 @@ import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import io.github.jamoamo.webjourney.api.web.XNavigationError;
 import io.github.jamoamo.webjourney.api.web.XWebException;
+import io.github.jamoamo.webjourney.reserved.JourneyBreadcrumb;
 import java.net.URL;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
@@ -63,6 +64,7 @@ public class ConditionalActionTest
 		
 		IJourneyContext context = Mockito.mock(IJourneyContext.class);
 		Mockito.when(context.getBrowser()).thenReturn(mockBrowser);
+		Mockito.when(context.getJourneyBreadcrumb()).thenReturn(new JourneyBreadcrumb());
 		
 		Function<IBrowser, Boolean> conditionFunction = (browser) -> true;
 		
@@ -98,6 +100,7 @@ public class ConditionalActionTest
 		
 		IJourneyContext context = Mockito.mock(IJourneyContext.class);
 		Mockito.when(context.getBrowser()).thenReturn(mockBrowser);
+		Mockito.when(context.getJourneyBreadcrumb()).thenReturn(new JourneyBreadcrumb());
 		
 		Function<IBrowser, Boolean> conditionFunction = (browser) -> false;
 		
@@ -132,6 +135,7 @@ public class ConditionalActionTest
 		
 		IJourneyContext context = Mockito.mock(IJourneyContext.class);
 		Mockito.when(context.getBrowser()).thenReturn(mockBrowser);
+		Mockito.when(context.getJourneyBreadcrumb()).thenReturn(new JourneyBreadcrumb());
 		
 		Function<IBrowser, Boolean> conditionFunction = (browser) -> true;
 		
@@ -179,7 +183,8 @@ public class ConditionalActionTest
 		
 		IJourneyContext context = Mockito.mock(IJourneyContext.class);
 		Mockito.when(context.getBrowser()).thenReturn(mockBrowser);
-		
+		Mockito.when(context.getJourneyBreadcrumb()).thenReturn(new JourneyBreadcrumb());
+
 		Function<IBrowser, Boolean> conditionFunction = (browser) -> false;
 		
 		Function<IJourneyBuilder, IJourney> ifTrue = (builder) -> {

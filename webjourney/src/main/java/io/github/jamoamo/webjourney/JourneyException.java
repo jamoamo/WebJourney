@@ -23,14 +23,36 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
 import lombok.experimental.StandardException;
 
 /**
- *
+ * An exception that occurs in the journey.
+ * 
  * @author James Amoore
  */
 @StandardException
-class JourneyException extends RuntimeException
+@SuppressWarnings("MutableException")
+public class JourneyException extends RuntimeException
 {
+	private IJourneyBreadcrumb breadcrumb;
 	
+	/**
+	 * Constructor.
+	 * @param journeyError the journey message.
+	 * @param breadcrumb the current journey breadcrumb.
+	 */
+	public JourneyException(String journeyError, IJourneyBreadcrumb breadcrumb)
+	{
+		super(journeyError);
+		this.breadcrumb = breadcrumb;
+	}
+	
+	/**
+	 * @return the breadcrumb.
+	 */
+	public IJourneyBreadcrumb getBreadcrumb()
+	{
+		return this.breadcrumb;
+	}
 }

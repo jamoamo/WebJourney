@@ -21,25 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.api;
-
-import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+package io.github.jamoamo.webjourney.reserved;
 
 /**
- * An observer of a journey. Gets notified of events occurring in the journey.
+ * An exception occurs accessing the breadcrumb.
  * @author James Amoore
  */
-public interface IJourneyObserver extends IEntityCreationListener
+public class BreadcrumbException extends RuntimeException
 {
 	/**
-	 * notifies the observer that an action has started.
-	 * @param action the action that started.
+	 * Constructor.
+	 * @param errorMessage the error message
 	 */
-	void actionStarted(AWebAction action);
-	
-	/**
-	 * notifies the observer that an action has ended.
-	 * @param action the action that ended.
-	 */
-	void actionEnded(AWebAction action);
+	public BreadcrumbException(String errorMessage)
+	{
+		super(errorMessage);
+	}
 }
