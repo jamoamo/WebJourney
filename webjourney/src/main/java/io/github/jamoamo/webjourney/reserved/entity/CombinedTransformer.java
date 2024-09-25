@@ -41,7 +41,7 @@ class CombinedTransformer implements ITransformer<String>
 		String transformedValue = value;
 		for(ITransformer transformer : this.transformers)
 		{
-			transformedValue = transformer.transformValue(transformedValue).toString();
+			transformedValue = transformer.transformValue(transformedValue) == null ? null : transformer.transformValue(transformedValue).toString();
 		}
 		return transformedValue;
 	}
