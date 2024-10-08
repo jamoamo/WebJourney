@@ -26,6 +26,7 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.PageConsumerException;
 import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.IJourneyBuilder;
+import io.github.jamoamo.webjourney.api.JourneyBuilderException;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -78,14 +79,21 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 *
 	 * @return the current builder
 	 *
-	 * @throws java.net.MalformedURLException if the url is malformed
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder navigateTo(String url)
-			  throws MalformedURLException
+			  throws JourneyBuilderException
 	{
-		this.build.addAction(new NavigateAction(NavigationTarget.toUrl(url)));
-		return new ActionOptionsJourneyBuilder(this.build);
+		try
+		{
+			this.build.addAction(new NavigateAction(NavigationTarget.toUrl(url)));
+			return new ActionOptionsJourneyBuilder(this.build);
+		}
+		catch(MalformedURLException ex)
+		{
+			throw new JourneyBuilderException(ex);
+		}
 	}
 
 	/**
@@ -264,7 +272,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @return this journey builder
 	 */
 	@Override
-	public IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
+	public BaseJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
 		 Function<IJourneyBuilder, IJourney> ifTrue)
 	{
 		this.build.addAction(new ConditionalAction(b -> conditionFunction.apply(b), builder -> ifTrue.apply(builder)));
@@ -280,7 +288,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @return this journey builder
 	 */
 	@Override
-	public IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
+	public BaseJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
 		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse)
 	{
 		this.build.addAction(new ConditionalAction(b -> conditionFunction.apply(b), 
@@ -297,8 +305,9 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @return this journey builder
 	 */
 	@Override
-	public IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction,
-		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue)
+	public BaseJourneyBuilder conditionalJourney(
+		 FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction,
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue)
 	{
 		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue));
 		return this;
@@ -313,9 +322,10 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @return this journey builder
 	 */
 	@Override
-	public IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction,
-		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue, 
-		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifFalse)
+	public BaseJourneyBuilder conditionalJourney(
+		 FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction,
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue, 
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifFalse)
 	{
 		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue, ifFalse));
 		return this;
