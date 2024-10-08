@@ -36,21 +36,21 @@ import org.apache.commons.lang3.function.FailableFunction;
  */
 class ConditionalAction extends AWebAction
 {
-	private final FailableFunction<IBrowser, Boolean, ? extends Exception> conditionFunction;
-	private final FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> functionIfTrue;
-	private final FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> functionIfFalse;
+	private final FailableFunction<IBrowser, Boolean, ? extends JourneyException> conditionFunction;
+	private final FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> functionIfTrue;
+	private final FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> functionIfFalse;
 	
-	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends Exception> conditionFunction,
-										FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> ifTrue)
+	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends JourneyException> conditionFunction,
+										FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifTrue)
 	{
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;
 		this.functionIfFalse = null;
 	}
 	
-	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends Exception> conditionFunction,
-										FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> ifTrue, 
-										FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> ifFalse)
+	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends JourneyException> conditionFunction,
+										FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifTrue, 
+										FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifFalse)
 	{
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;

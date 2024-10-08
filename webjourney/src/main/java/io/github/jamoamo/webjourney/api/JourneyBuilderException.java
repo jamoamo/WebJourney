@@ -21,25 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.api.transform;
+package io.github.jamoamo.webjourney.api;
+
+import io.github.jamoamo.webjourney.JourneyException;
 
 /**
- * Transformation function to transform a blank string to a null value.
+ * Exception for errors that occur when building the journey.
  * @author James Amoore
  */
-public class BlankStringToNullFunction
-	 extends ATransformationFunction
+public class JourneyBuilderException extends JourneyException
 {
 	/**
-	 * Transform a blank value to null. if not null, the extracted value is returned.
-	 * @param extractedValue The value to transform.
-	 * @param parameters the function parameters. This function does not support any parameters.
-	 * @return the transformed value.
+	 * Constructor.
+	 * 
+	 * @param ex the cause
 	 */
-	@Override
-	public String transform(String extractedValue, String[] parameters)
+	public JourneyBuilderException(Exception ex)
 	{
-		return extractedValue.isBlank() ? null : extractedValue.trim();
+		super(ex);
 	}
-	
 }

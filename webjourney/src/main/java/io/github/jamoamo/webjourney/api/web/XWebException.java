@@ -23,11 +23,13 @@
  */
 package io.github.jamoamo.webjourney.api.web;
 
+import io.github.jamoamo.webjourney.JourneyException;
+
 /**
  *
  * @author James Amoore
  */
-public class XWebException extends Exception
+public class XWebException extends JourneyException
 {
 	/**
 	 * Creates a new Navigation related Error.

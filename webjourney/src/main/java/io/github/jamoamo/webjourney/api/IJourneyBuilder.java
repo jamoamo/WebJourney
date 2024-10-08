@@ -4,8 +4,8 @@
  */
 package io.github.jamoamo.webjourney.api;
 
+import io.github.jamoamo.webjourney.JourneyException;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.function.Function;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -21,8 +21,9 @@ public interface IJourneyBuilder
 	 * Builds an instance of WebJourney.
 	 *
 	 * @return a built WebJourney instance.
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IJourney build();
+	IJourney build() throws JourneyBuilderException;
 	
 	/**
 	 * Conditionally follow a sub journey.
@@ -30,9 +31,10 @@ public interface IJourneyBuilder
 	 * @param conditionFunction a function indicating if the sub journey should be followed.
 	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
 	 * @return this journey builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction, 
-		 Function<IJourneyBuilder, IJourney> ifTrue);
+		 Function<IJourneyBuilder, IJourney> ifTrue) throws JourneyException;
 	
 	/**
 	 * Conditionally follow a sub journey.
@@ -41,9 +43,11 @@ public interface IJourneyBuilder
 	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
 	 * @param ifFalse a function providing the sub journey to follow if the condition is false.
 	 * @return this journey builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction, 
-		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse);
+		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse) 
+		 throws JourneyBuilderException;
 	
 	/**
 	 * Conditionally follow a sub journey.
@@ -51,9 +55,10 @@ public interface IJourneyBuilder
 	 * @param conditionFunction a function indicating if the sub journey should be followed.
 	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
 	 * @return this journey builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction, 
-		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue);
+	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction, 
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue) throws JourneyBuilderException;
 	
 	/**
 	 * Conditionally follow a sub journey.
@@ -62,10 +67,11 @@ public interface IJourneyBuilder
 	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
 	 * @param ifFalse a function providing the sub journey to follow if the condition is false.
 	 * @return this journey builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction, 
-		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue, 
-		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifFalse);
+	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction, 
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue, 
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifFalse) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to click a button on the page.
@@ -74,8 +80,9 @@ public interface IJourneyBuilder
 	 * @param buttonName The name of the button in the page representation that should be clicked.
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IJourneyBuilder clickButton(Object pageObject, String buttonName);
+	IJourneyBuilder clickButton(Object pageObject, String buttonName) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to click a button on the page.
@@ -84,8 +91,9 @@ public interface IJourneyBuilder
 	 * @param buttonName The name of the button in the page representation that should be clicked.
 	 *
 	 * @return the current builder
-	 */
-	IJourneyBuilder clickButton(Class pageClass, String buttonName);
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 */ 
+	IJourneyBuilder clickButton(Class pageClass, String buttonName) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to complete a form on the page using the provided object. It is expected that the object is
@@ -94,8 +102,9 @@ public interface IJourneyBuilder
 	 * @param formObject The object to complete the form using
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IActionOptionsJourneyBuilder completeForm(Object formObject);
+	IActionOptionsJourneyBuilder completeForm(Object formObject) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to complete a form on the page and submit it using the provided object.
@@ -105,8 +114,9 @@ public interface IJourneyBuilder
 	 * @param pageObject The object to complete the form using
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IActionOptionsJourneyBuilder completeFormAndSubmit(Object pageObject);
+	IActionOptionsJourneyBuilder completeFormAndSubmit(Object pageObject) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to consume the page described by the provided page class and consume the resultant object using
@@ -118,9 +128,10 @@ public interface IJourneyBuilder
 	 * @param pageConsumer The consumer that will receive the created page object.
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	<T> IJourneyBuilder consumePage(Class<T> pageClass,
-		 FailableConsumer<T, ? extends PageConsumerException> pageConsumer);
+		 FailableConsumer<T, ? extends PageConsumerException> pageConsumer) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to click a button on the page.
@@ -133,23 +144,26 @@ public interface IJourneyBuilder
 	 * @param subJourney       The sub journey to repeat
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	IJourneyBuilder forEachChildElement(Class pageClass, String elementName, String childElementType,
-		 IJourney subJourney);
+		 IJourney subJourney) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to navigate to the previous page in the browsers history.
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IActionOptionsJourneyBuilder navigateBack();
+	IActionOptionsJourneyBuilder navigateBack() throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to navigate to the next page in the browsers history.
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IActionOptionsJourneyBuilder navigateForward();
+	IActionOptionsJourneyBuilder navigateForward() throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to the journey that navigates to the provided url.
@@ -157,8 +171,9 @@ public interface IJourneyBuilder
 	 * @param url The url to navigate to.
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IJourneyBuilder navigateTo(URL url);
+	IJourneyBuilder navigateTo(URL url) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to the journey that navigates to the provided url.
@@ -166,17 +181,17 @@ public interface IJourneyBuilder
 	 * @param url The url to navigate to.
 	 *
 	 * @return the current builder
-	 *
-	 * @throws java.net.MalformedURLException if the url is malformed
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	IActionOptionsJourneyBuilder navigateTo(String url)
-		 throws MalformedURLException;
+		 throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to refresh the current page.
 	 *
 	 * @return the current builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IActionOptionsJourneyBuilder refreshPage();
+	IActionOptionsJourneyBuilder refreshPage() throws JourneyBuilderException;
 	
 }
