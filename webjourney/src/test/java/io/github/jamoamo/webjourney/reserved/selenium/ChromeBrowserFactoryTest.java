@@ -35,21 +35,32 @@ import org.mockito.Mockito;
  */
 public class ChromeBrowserFactoryTest
 {
-	 /**
-	  * Test of createBrowser method, of class ChromeBrowserFactory.
-	  */
-	 @Test
-	 public void testCreateBrowser()
-	 {
-		  IBrowserOptions options = Mockito.mock(IBrowserOptions.class);
-		  Mockito.when(options.isHeadless())
-				.thenReturn(Boolean.TRUE);
-		  Mockito.when(options.acceptUnexpectedAlerts())
-				.thenReturn(Boolean.TRUE);
+	/**
+	 * Test of createBrowser method, of class ChromeBrowserFactory.
+	 */
+	@Test
+	public void testCreateBrowser()
+	{
+		IBrowserOptions options = Mockito.mock(IBrowserOptions.class);
+		Mockito.when(options.isHeadless())
+			 .thenReturn(Boolean.TRUE);
+		Mockito.when(options.acceptUnexpectedAlerts())
+			 .thenReturn(Boolean.TRUE);
 
-		  ChromeBrowserFactory factory = new ChromeBrowserFactory();
-		  IBrowser browser = factory.createBrowser(options);
-		  Assertions.assertInstanceOf(SeleniumDrivenBrowser.class, browser);
-	 }
+		IBrowser browser = null;
+		try
+		{
+			ChromeBrowserFactory factory = new ChromeBrowserFactory();
+			browser = factory.createBrowser(options);
+			Assertions.assertInstanceOf(SeleniumDrivenBrowser.class, browser);
+		}
+		finally
+		{
+			if(browser != null)
+			{
+				browser.exit();
+			}
+		}
+	}
 
 }

@@ -80,7 +80,7 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(conditionFunction, ifTrue);
+		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), b -> ifTrue.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -116,7 +116,7 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(conditionFunction, ifTrue);
+		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), b -> ifTrue.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -163,7 +163,9 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(conditionFunction, ifTrue, ifFalse);
+		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), 
+			 b -> ifTrue.apply(b), 
+			 b -> ifFalse.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -211,7 +213,9 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(conditionFunction, ifTrue, ifFalse);
+		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), 
+			 b -> ifTrue.apply(b), 
+			 b -> ifFalse.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);

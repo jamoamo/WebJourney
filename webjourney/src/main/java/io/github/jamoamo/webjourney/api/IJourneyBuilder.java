@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.function.Function;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableFunction;
 
 /**
  *
@@ -43,6 +44,28 @@ public interface IJourneyBuilder
 	 */
 	IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction, 
 		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse);
+	
+	/**
+	 * Conditionally follow a sub journey.
+	 * 
+	 * @param conditionFunction a function indicating if the sub journey should be followed.
+	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
+	 * @return this journey builder
+	 */
+	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction, 
+		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue);
+	
+	/**
+	 * Conditionally follow a sub journey.
+	 * 
+	 * @param conditionFunction a function indicating if the sub journey should be followed.
+	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
+	 * @param ifFalse a function providing the sub journey to follow if the condition is false.
+	 * @return this journey builder
+	 */
+	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction, 
+		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue, 
+		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifFalse);
 
 	/**
 	 * Adds an action to click a button on the page.
