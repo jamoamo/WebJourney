@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.function.Function;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableFunction;
 
 /**
  * Base builder for building a journey.
@@ -254,7 +255,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 		SubJourney subJourney = new SubJourney(this.build.getJourney());
 		return subJourney;
 	}
-
+	
 	/**
 	 * Follow specific journey paths if the condition evaluates to true.
 	 * 
@@ -266,7 +267,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	public IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
 		 Function<IJourneyBuilder, IJourney> ifTrue)
 	{
-		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue));
+		this.build.addAction(new ConditionalAction(b -> conditionFunction.apply(b), builder -> ifTrue.apply(builder)));
 		return this;
 	}
 
@@ -281,6 +282,40 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	@Override
 	public IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
 		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse)
+	{
+		this.build.addAction(new ConditionalAction(b -> conditionFunction.apply(b), 
+			 builder -> ifTrue.apply(builder), 
+			 builder -> ifFalse.apply(builder)));
+		return this;
+	}
+
+	/**
+	 * Follow specific journey paths if the condition evaluates to true.
+	 * 
+	 * @param conditionFunction the condition to evaluate.
+	 * @param ifTrue a function to create the path if the condition evaluates to true.
+	 * @return this journey builder
+	 */
+	@Override
+	public IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction,
+		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue)
+	{
+		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue));
+		return this;
+	}
+
+	/**
+	 * Follow specific journey paths if the condition evaluates to true.
+	 * 
+	 * @param conditionFunction the condition to evaluate.
+	 * @param ifTrue a function to create the path if the condition evaluates to true.
+	 * @param ifFalse a function to create the path if the condition evaluates to false.
+	 * @return this journey builder
+	 */
+	@Override
+	public IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, Exception> conditionFunction,
+		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifTrue, 
+		 FailableFunction<IJourneyBuilder, IJourney, Exception> ifFalse)
 	{
 		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue, ifFalse));
 		return this;

@@ -28,7 +28,7 @@ import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.IJourneyBuilder;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
-import java.util.function.Function;
+import org.apache.commons.lang3.function.FailableFunction;
 
 /**
  *
@@ -36,21 +36,21 @@ import java.util.function.Function;
  */
 class ConditionalAction extends AWebAction
 {
-	private final Function<IBrowser, Boolean> conditionFunction;
-	private final Function<IJourneyBuilder, IJourney> functionIfTrue;
-	private final Function<IJourneyBuilder, IJourney> functionIfFalse;
+	private final FailableFunction<IBrowser, Boolean, ? extends Exception> conditionFunction;
+	private final FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> functionIfTrue;
+	private final FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> functionIfFalse;
 	
-	ConditionalAction(Function<IBrowser, Boolean> conditionFunction,
-										Function<IJourneyBuilder, IJourney> ifTrue)
+	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends Exception> conditionFunction,
+										FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> ifTrue)
 	{
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;
 		this.functionIfFalse = null;
 	}
 	
-	ConditionalAction(Function<IBrowser, Boolean> conditionFunction,
-										Function<IJourneyBuilder, IJourney> ifTrue, 
-										Function<IJourneyBuilder, IJourney> ifFalse)
+	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends Exception> conditionFunction,
+										FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> ifTrue, 
+										FailableFunction<IJourneyBuilder, IJourney, ? extends Exception> ifFalse)
 	{
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;
@@ -58,25 +58,33 @@ class ConditionalAction extends AWebAction
 	}
 	
 	@Override
+	@SuppressWarnings("IllegalCatch")
 	protected ActionResult executeActionImpl(IJourneyContext context)
 		 throws BaseJourneyActionException
 	{
-		if(this.conditionFunction.apply(context.getBrowser()))
+		try
 		{
-			BaseJourneyBuilder builder = JourneyBuilder.path();
-			IJourney journey = this.functionIfTrue.apply(builder);
-			journey.doJourney(context);
-		}
-		else
-		{
-			if(this.functionIfFalse != null)
+			if(this.conditionFunction.apply(context.getBrowser()))
 			{
 				BaseJourneyBuilder builder = JourneyBuilder.path();
-				IJourney journey = this.functionIfFalse.apply(builder);
+				IJourney journey = this.functionIfTrue.apply(builder);
 				journey.doJourney(context);
 			}
+			else
+			{
+				if(this.functionIfFalse != null)
+				{
+					BaseJourneyBuilder builder = JourneyBuilder.path();
+					IJourney journey = this.functionIfFalse.apply(builder);
+					journey.doJourney(context);
+				}
+			}
+			return ActionResult.SUCCESS;
 		}
-		return ActionResult.SUCCESS;
+		catch(Exception t)
+		{
+			throw new BaseJourneyActionException("Exception executing conditional action", this, t);
+		}
 	}
 
 	@Override
