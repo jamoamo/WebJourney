@@ -1,3 +1,5 @@
+![webjourney maven](https://img.shields.io/maven-central/v/io.github.jamoamo/webjourney)
+![webjourney-test maven](https://img.shields.io/maven-central/v/io.github.jamoamo/webjourney-test)
 # Web Journey
 
 ## Overview
