@@ -30,6 +30,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DoubleConverter;
+import org.apache.commons.beanutils.converters.IntegerConverter;
+import org.apache.commons.beanutils.converters.LongConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -225,6 +229,9 @@ public final class EntityCreator<T>
 				Object value = scrapeValue(defn, reader);
 				LOGGER.debug("Set field value: " + defn.getFieldName() + " = " + (value == null ? "(null)" : value
 					 .toString()));
+				ConvertUtils.register(new IntegerConverter(null), Integer.class);
+				ConvertUtils.register(new LongConverter(null), Long.class);
+				ConvertUtils.register(new DoubleConverter(null), Double.class);
 				BeanUtils.setProperty(instance, defn.getFieldName(), value);
 		  }
 		  catch(IllegalAccessException | InvocationTargetException ex)

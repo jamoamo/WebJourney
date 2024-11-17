@@ -25,8 +25,8 @@ package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.mapper.AConverter;
 import io.github.jamoamo.webjourney.api.mapper.DateConverter;
-import io.github.jamoamo.webjourney.api.mapper.DoubleMapper;
-import io.github.jamoamo.webjourney.api.mapper.IntegerMapper;
+import io.github.jamoamo.webjourney.api.mapper.DoubleConverter;
+import io.github.jamoamo.webjourney.api.mapper.IntegerConverter;
 import io.github.jamoamo.webjourney.api.mapper.StringMapper;
 import io.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import io.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
@@ -108,11 +108,11 @@ final class Converters
 		}
 		else if(info.isInteger())
 		{
-			mapper = new IntegerMapper();
+			mapper = new IntegerConverter(info.isPrimitive());
 		}
 		else if(info.isDouble())
 		{
-			mapper = new DoubleMapper();
+			mapper = new DoubleConverter(info.isPrimitive());
 		}
 		else if(info.isDateType())
 		{
