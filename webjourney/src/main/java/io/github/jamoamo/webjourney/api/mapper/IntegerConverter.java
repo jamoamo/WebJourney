@@ -28,9 +28,28 @@ package io.github.jamoamo.webjourney.api.mapper;
  *
  * @author James Amoore
  */
-public class IntegerMapper
+public class IntegerConverter
 		  extends AConverter<Integer>
 {
+	private boolean primitiveInt;
+	
+	/**
+	 * Constructor.
+	 */
+	public IntegerConverter()
+	{
+		this.primitiveInt = true;
+	}
+	
+	/**
+	 * Constructor.
+	 * @param isPrimitive Should the result be treated as a primitive. i.e. should it allow nulls.
+	 */
+	public IntegerConverter(boolean isPrimitive)
+	{
+		this.primitiveInt = isPrimitive;
+	}
+	
 	/**
 	 * Maps the value to an Integer.
 	 *
@@ -46,7 +65,14 @@ public class IntegerMapper
 	{
 		if(value == null || value.isEmpty() || value.isBlank())
 		{
-			return 0;
+			if(this.primitiveInt)
+			{
+				return 0;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		try

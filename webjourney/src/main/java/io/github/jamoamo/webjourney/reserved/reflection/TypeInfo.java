@@ -176,6 +176,15 @@ public final class TypeInfo
 		return this.theClass == LocalDate.class;
 	}
 	
+	/**
+	 * Indicates if the type is a primitive type.
+	 * @return true if the type is primitive.
+	 */
+	public boolean isPrimitive()
+	{
+		return this.theClass.isPrimitive();
+	}
+	
 	private static Set<Class<?>> getAllExtendedOrImplementedInterfacesRecursively(Class<?> clazz) 
 	{
 		Set<Class<?>> res = new HashSet<>();

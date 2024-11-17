@@ -282,5 +282,53 @@ public class TypeInfoTest
 		  TypeInfo info = TypeInfo.forClass(String.class);
 		  assertFalse(info.isDateType());
 	 }
+	 
+	 @Test
+	 public void testIsPrimitive_Integer()
+	 {
+		 TypeInfo info = TypeInfo.forClass(Integer.class);
+		 assertFalse(info.isPrimitive());
+	 }
+	 
+	 @Test
+	 public void testIsPrimitive_int()
+	 {
+		 TypeInfo info = TypeInfo.forClass(int.class);
+		 assertTrue(info.isPrimitive());
+	 }
+	 
+	 @Test
+	 public void testIsPrimitive_Double()
+	 {
+		 TypeInfo info = TypeInfo.forClass(Double.class);
+		 assertFalse(info.isPrimitive());
+	 }
+	 
+	 @Test
+	 public void testIsPrimitive_double()
+	 {
+		 TypeInfo info = TypeInfo.forClass(double.class);
+		 assertTrue(info.isPrimitive());
+	 }
+	 
+	 @Test
+	 public void testIsPrimitive_Boolean()
+	 {
+		 TypeInfo info = TypeInfo.forClass(Boolean.class);
+		 assertFalse(info.isPrimitive());
+	 }
+	 
+	 @Test
+	 public void testIsPrimitive_boolean()
+	 {
+		 TypeInfo info = TypeInfo.forClass(boolean.class);
+		 assertTrue(info.isPrimitive());
+	 }
 
+	 @Test
+	 public void testIsPrimitive_String()
+	 {
+		 TypeInfo info = TypeInfo.forClass(String.class);
+		 assertFalse(info.isPrimitive());
+	 }
 }

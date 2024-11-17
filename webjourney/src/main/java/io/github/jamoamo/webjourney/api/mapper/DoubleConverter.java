@@ -28,9 +28,28 @@ package io.github.jamoamo.webjourney.api.mapper;
  *
  * @author James Amoore
  */
-public class DoubleMapper
+public class DoubleConverter
 	 extends AConverter<Double>
 {
+	private final boolean isPrimitive;
+	
+	/**
+	 * Constructor.
+	 */
+	public DoubleConverter()
+	{
+		this.isPrimitive = true;
+	}
+	
+	/**
+	 * Constructor.
+	 * @param isPrimitive Should the result be treated as a primitive. i.e. should it allow nulls.
+	 */
+	public DoubleConverter(boolean isPrimitive)
+	{
+		this.isPrimitive = isPrimitive;
+	}
+	
 	/**
 	 * Maps the value to a double.
 	 *
@@ -46,6 +65,10 @@ public class DoubleMapper
 	{
 		if(value == null || value.isEmpty() || value.isBlank())
 		{
+			if(!this.isPrimitive)
+			{
+				return null;
+			}
 			return 0.0;
 		}
 
