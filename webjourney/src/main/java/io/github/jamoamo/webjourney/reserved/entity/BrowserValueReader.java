@@ -210,5 +210,12 @@ class BrowserValueReader implements IValueReader
 			throw new XValueReaderException(ex);
 		}
 	}
+
+	@Override
+	public String getWindowTitle()
+			  throws XValueReaderException
+	{
+		return this.browser.getActiveWindow().getTitle();
+	}
 	
 }

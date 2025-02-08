@@ -123,4 +123,11 @@ public interface IValueReader
 	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
 	void closeWindow() throws XValueReaderException;
+	
+	/**
+	 * Gets the title of the current window.
+	 * @return the title of the current window.
+	 * @throws XValueReaderException if an error occurs
+	 */
+	String getWindowTitle() throws XValueReaderException;
 }

@@ -63,4 +63,10 @@ public interface IBrowserWindow extends IWebNavigator
 	 * @throws io.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
 	String getName() throws XWebException;
+
+	/**
+	 * Return the window title.
+	 * @return the title of the window
+	 */
+	String getTitle();
 }

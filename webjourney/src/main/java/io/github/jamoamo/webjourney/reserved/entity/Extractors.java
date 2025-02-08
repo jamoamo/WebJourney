@@ -38,6 +38,7 @@ import java.lang.annotation.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.github.jamoamo.webjourney.annotation.ExtractCollectionIndex;
+import io.github.jamoamo.webjourney.annotation.ExtractFromWindowTitle;
 
 /**
  *
@@ -73,6 +74,11 @@ public final class Extractors
 		  {
 				LOGGER.debug("Using ConstantExtractor with value = " + constant.value());
 				return new ConstantExtractor(constant.value(), new AlwaysCondition());
+		  }
+		  else if(annotation instanceof ExtractFromWindowTitle)
+		  {
+			  LOGGER.debug("using WindowTitleExtractor");
+			  return new WindowTitleExtractor();
 		  }
 		  else if(annotation instanceof ExtractCurrentUrl)
 		  {
