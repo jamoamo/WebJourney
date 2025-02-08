@@ -183,4 +183,10 @@ final class SeleniumWindow implements IBrowserWindow
 			LOGGER.error("Could not take screenshot.", ioe);
 		}
 	}
+
+	@Override
+	public String getTitle()
+	{
+		return this.webDriver.getTitle();
+	}
 }
