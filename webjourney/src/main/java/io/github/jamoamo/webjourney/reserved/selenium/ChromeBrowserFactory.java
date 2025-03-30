@@ -26,9 +26,14 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 import io.github.jamoamo.webjourney.api.web.IBrowserFactory;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
+import java.util.Map;
+import org.openqa.selenium.BuildInfo;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Browser factory to create a chrome browser.
@@ -37,6 +42,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
  */
 public final class ChromeBrowserFactory implements IBrowserFactory
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChromeBrowserFactory.class);
 	/**
 	 * Creates a new Chrome browser.
 	 *
@@ -48,12 +54,45 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 	public IBrowser createBrowser(IBrowserOptions browserOptions)
 	{
 		ChromeOptions options =
-			new ChromeOptions();
+			createChromeOptions(browserOptions);
+		
+		logSeleniumBuildInfo();
+		
+		ChromeDriver driver = new ChromeDriver(options);
+		
+		logDriverInfo(driver);
+		
+		return new SeleniumDrivenBrowser(driver);
+	}
+
+	protected ChromeOptions createChromeOptions(IBrowserOptions browserOptions)
+	{
+		ChromeOptions options =
+				  new ChromeOptions();
 		options = options.addArguments("--no-sandbox", "--remote-allow-origins=*", "--disable-dev-shm-usage");
 		options = setHeadless(browserOptions, options);
 		options = setUnexpectedAlertBehaviour(browserOptions, options);
+		return options;
+	}
 
-		return new SeleniumDrivenBrowser(new ChromeDriver(options));
+	private void logDriverInfo(ChromeDriver driver)
+	{
+		Capabilities capabilities = driver.getCapabilities();
+		Map<String, String> chromeInfo = (Map<String, String>)capabilities.getCapability("chrome");
+		LOGGER.info(String.format(
+				  "Started Selenium driver: browserName[%s], browserVersion[%s], driverVersion[%s], dataDir[%s]",
+				  capabilities.getBrowserName(),
+				  capabilities.getBrowserVersion(),
+				  chromeInfo.get("chromedriverVersion"),
+				  chromeInfo.get("userDataDir")));
+	}
+
+	private void logSeleniumBuildInfo()
+	{
+		BuildInfo info = new BuildInfo();
+		LOGGER.info(String.format(
+				  "Selenium build info: %s",
+				  info.toString()));
 	}
 
 	private ChromeOptions setUnexpectedAlertBehaviour(IBrowserOptions browserOptions, ChromeOptions options)
