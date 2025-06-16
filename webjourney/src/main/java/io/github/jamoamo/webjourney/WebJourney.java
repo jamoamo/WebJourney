@@ -29,18 +29,38 @@ import java.util.List;
 import io.github.jamoamo.webjourney.api.IWebJourneyPath;
 
 /**
- *
+ * Represents a defined sequence of web actions that form a journey.
+ * 
+ * <p>A {@code WebJourney} is an immutable object that encapsulates a series of
+ * {@link io.github.jamoamo.webjourney.api.AWebAction}s to be executed by a
+ * {@link WebTraveller}. It provides the structure for navigating and interacting
+ * with web pages.</p>
+ * 
  * @author James Amoore
+ * @see IWebJourneyPath
+ * @see WebTraveller
+ * @see io.github.jamoamo.webjourney.api.AWebAction
+ * @since 1.0.0
  */
 public final class WebJourney implements IWebJourneyPath
 {
 	private final List<AWebAction> journeyActions;
 	
+	/**
+	 * Constructs a new WebJourney with the given list of actions.
+	 * @param journeyActions The list of actions that comprise this journey.
+	 * @since 1.0.0
+	 */
 	protected WebJourney(List<AWebAction> journeyActions)
 	{
 		this.journeyActions = journeyActions;
 	}
 	
+	/**
+	 * Returns an unmodifiable list of actions in this journey.
+	 * @return An unmodifiable list of {@link io.github.jamoamo.webjourney.api.AWebAction}s.
+	 * @since 1.0.0
+	 */
 	@Override
 	public List<AWebAction> getActions()
 	{

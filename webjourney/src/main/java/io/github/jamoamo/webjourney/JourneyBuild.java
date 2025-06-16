@@ -55,7 +55,7 @@ class JourneyBuild
 		return this.journeyActions.get(this.journeyActions.size() - 1);
 	}
 	
-	protected WebJourney getJourney()
+	protected WebJourney buildJourney()
 	{
 		return new WebJourney(this.journeyActions);
 	}

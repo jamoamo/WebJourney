@@ -39,8 +39,34 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 /**
- * A traveller of web journeys.
+ * A traveller of web journeys that executes predefined sequences of web actions.
+ * 
+ * <p>The WebTraveller is the main entry point for executing web automation journeys.
+ * It manages browser lifecycle, handles errors, and provides logging throughout
+ * the journey execution process.</p>
+ * 
+ * <h2>Basic Usage:</h2>
+ * <pre>{@code
+ * // Create travel options
+ * TravelOptions options = TravelOptions.builder()
+ *     .withBrowser(BrowserType.CHROME)
+ *     .withHeadless(true)
+ *     .build();
+ * 
+ * // Create traveller and execute journey
+ * WebTraveller traveller = new WebTraveller(options);
+ * IJourney journey = JourneyBuilder.start()
+ *     .navigateTo("https://example.com")
+ *     .clickButton("#login-btn")
+ *     .build();
+ * 
+ * traveller.travelJourney(journey);
+ * }</pre>
+ * 
  * @author James Amoore
+ * @see IJourney
+ * @see TravelOptions
+ * @since 1.0.0
  */
 public class WebTraveller
 {
@@ -52,6 +78,7 @@ public class WebTraveller
 	/**
 	 * Creates a new WebTraveller with the provided TravelOptions.
 	 * @param options the options for the traveller.
+	 * @since 1.0.0
 	 */
 	public WebTraveller(ITravelOptions options)
 	{
@@ -61,6 +88,8 @@ public class WebTraveller
 	/**
 	 * Travel the provided journey.
 	 * @param journey the journey to travel.
+	 * @throws JourneyException if an error occurs during the journey.
+	 * @since 1.0.0
 	 */
 	public void travelJourney(IJourney journey)
 	{

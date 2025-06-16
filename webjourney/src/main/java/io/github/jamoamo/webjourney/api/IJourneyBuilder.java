@@ -12,8 +12,13 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 
 /**
- *
+ * Defines the contract for building web journeys. This interface provides a fluent API for defining
+ * web automation sequences including navigation, form completion, page consumption, and conditional logic.
+ * 
  * @author James Amoore
+ * @see IJourney
+ * @see IActionOptionsJourneyBuilder
+ * @since 1.0.0
  */
 public interface IJourneyBuilder
 {
@@ -22,6 +27,7 @@ public interface IJourneyBuilder
 	 *
 	 * @return a built WebJourney instance.
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	IJourney build() throws JourneyBuilderException;
 	
@@ -32,6 +38,7 @@ public interface IJourneyBuilder
 	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
 	 * @return this journey builder
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction, 
 		 Function<IJourneyBuilder, IJourney> ifTrue) throws JourneyException;
@@ -44,6 +51,7 @@ public interface IJourneyBuilder
 	 * @param ifFalse a function providing the sub journey to follow if the condition is false.
 	 * @return this journey builder
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	IJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction, 
 		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse) 
@@ -56,6 +64,7 @@ public interface IJourneyBuilder
 	 * @param ifTrue a function providing the sub journey to follow if the condition is true.
 	 * @return this journey builder
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction, 
 		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue) throws JourneyBuilderException;
@@ -68,6 +77,7 @@ public interface IJourneyBuilder
 	 * @param ifFalse a function providing the sub journey to follow if the condition is false.
 	 * @return this journey builder
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction, 
 		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue, 
@@ -81,6 +91,7 @@ public interface IJourneyBuilder
 	 *
 	 * @return the current builder
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	IJourneyBuilder clickButton(Object pageObject, String buttonName) throws JourneyBuilderException;
 

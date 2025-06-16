@@ -29,8 +29,12 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.MDC;
 
 /**
- * Abstract class for actions that can be performed on a web journey.
+ * Abstract class for actions that can be performed on a web journey. Defines the common structure
+ * and lifecycle for all web actions within a journey.
  * @author James Amoore
+ * @see IJourney
+ * @see IJourneyBuilder
+ * @since 1.0.0
  */
 public abstract class AWebAction implements ICrumb
 {
@@ -39,20 +43,31 @@ public abstract class AWebAction implements ICrumb
 	private long preActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	private long postActionWait = TimeUnit.SECONDS.toMillis(DEFAULT_WAIT_SEC);
 	
+	/**
+	 * Executes the specific implementation of the web action.
+	 * Subclasses must provide their own implementation of this method.
+	 * @param context The journey context, providing access to the browser and other journey-specific information.
+	 * @return The result of the action execution.
+	 * @throws BaseJourneyActionException if an error occurs during the execution of the action.
+	 * @since 1.0.0
+	 */
 	protected abstract ActionResult executeActionImpl(IJourneyContext context)
 		throws BaseJourneyActionException;
 	
 	/**
-	 * An identifier for the action. Will show in the journey breadcrumb.
-	 * @return the action's name.
+	 * An identifier for the action. This name will be displayed in the journey breadcrumb.
+	 * @return The action's descriptive name.
+	 * @since 1.0.0
 	 */
 	protected abstract String getActionName();
 	
 	/**
-	 * Executes the action.
-	 * @param context the journey context
-	 * @return the result of the action.
-	 * @throws BaseJourneyActionException id something goes wrong.
+	 * Executes the action within the given journey context. This method handles logging and error wrapping,
+	 * delegating the core action logic to {@link #executeActionImpl(IJourneyContext)}.
+	 * @param context The journey context, providing access to the browser and other journey-specific information.
+	 * @return The result of the action execution.
+	 * @throws BaseJourneyActionException if something goes wrong during the action execution.
+	 * @since 1.0.0
 	 */
 	public final ActionResult executeAction(IJourneyContext context)
 			  throws BaseJourneyActionException
@@ -70,8 +85,9 @@ public abstract class AWebAction implements ICrumb
 	}
 
 	/**
-	 * Sets the wait to be performed prior to the action being performed.
+	 * Sets the duration to wait in milliseconds before executing this action.
 	 * @param preActionWait The wait time in milliseconds.
+	 * @since 1.0.0
 	 */
 	public void setPreActionWait(long preActionWait)
 	{
@@ -79,8 +95,9 @@ public abstract class AWebAction implements ICrumb
 	}
 	
 	/**
-	 * Sets the wait to be performed after the action has been performed.
+	 * Sets the duration to wait in milliseconds after executing this action.
 	 * @param postActionWait The wait time in milliseconds.
+	 * @since 1.0.0
 	 */
 	public void setPostActionWait(long postActionWait)
 	{
@@ -88,8 +105,9 @@ public abstract class AWebAction implements ICrumb
 	}
 	
 	/**
-	 * Retrieves the wait time to be performed prior to the action being performed.
-	 * @return the wait time, in milliseconds.
+	 * Retrieves the configured wait time in milliseconds to be performed prior to the action being executed.
+	 * @return The wait time, in milliseconds.
+	 * @since 1.0.0
 	 */
 	public long getPreActionWaitTime()
 	{
@@ -97,8 +115,9 @@ public abstract class AWebAction implements ICrumb
 	}
 	
 	/**
-	 * Retrieves the wait time to be performed after the action has been performed.
-	 * @return the wait time, in milliseconds.
+	 * Retrieves the configured wait time in milliseconds to be performed after the action has been executed.
+	 * @return The wait time, in milliseconds.
+	 * @since 1.0.0
 	 */
 	public long getPostActionWaitTime()
 	{
