@@ -56,16 +56,7 @@ WebJourney is a Java library for automating web interactions through the concept
 
 ### Phase 2: Code Quality and Testing (3-4 weeks)
 
-#### 2.1 Code Quality Infrastructure
-- **Priority:** High
-- **Effort:** 2 weeks
-- **Deliverables:**
-  - Enhanced SpotBugs configuration with custom rules
-  - PMD and Checkstyle integration with enforcement
-  - JaCoCo code coverage reporting (target: 80%+)
-  - SonarQube integration for continuous quality monitoring
-  - Dependency vulnerability scanning
-  - Code formatting automation (Spotless plugin)
+#### 2.1 Not going to do.
 
 #### 2.2 Testing Framework Enhancement
 - **Priority:** High
