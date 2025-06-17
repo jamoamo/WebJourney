@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Form Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; }
+        input, textarea, select { width: 300px; padding: 8px; }
+        button { padding: 10px 20px; margin: 10px 5px 0 0; }
+        .result { margin-top: 20px; padding: 15px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Simple Form Test</h1>
+    <a href="../index.html">← Back to Main</a>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" data-testid="first-name-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" data-testid="last-name-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" data-testid="email-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="1" max="120" data-testid="age-input">
+        </div>
+        
+        <div class="form-group">
+            <label for="country">Country:</label>
+            <select id="country" name="country" data-testid="country-select">
+                <option value="">Select Country</option>
+                <option value="us">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="ca">Canada</option>
+                <option value="au">Australia</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="comments">Comments:</label>
+            <textarea id="comments" name="comments" rows="4" data-testid="comments-textarea"></textarea>
+        </div>
+        
+        <button type="submit" data-testid="submit-button">Submit Form</button>
+        <button type="reset" data-testid="reset-button">Reset</button>
+    </form>
+    
+    <div id="result" class="result" style="display: none;">
+        <h3>Form Submitted Successfully!</h3>
+        <p id="resultMessage" data-testid="result-message"></p>
+    </div>
+    
+    <script>
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            document.getElementById('resultMessage').textContent = 
+                `Hello ${data.firstName} ${data.lastName}! Your form has been processed.`;
+            document.getElementById('result').style.display = 'block';
+        });
+    </script>
+</body>
+</html> 
