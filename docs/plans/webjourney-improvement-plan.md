@@ -45,15 +45,6 @@ WebJourney is a Java library for automating web interactions through the concept
     - [x] Contributing guidelines
     - [x] Migration guide for version upgrades
 
-#### 1.2 Developer Tools Enhancement
-- **Priority:** High
-- **Effort:** 1 week
-- **Deliverables:**
-    - [ ] IDE plugins/snippets for common patterns
-    - [ ] Maven archetype for quick project setup
-    - [ ] Docker containers for development environment
-    - [ ] VS Code/IntelliJ extensions for WebJourney DSL
-
 ### Phase 2: Code Quality and Testing (3-4 weeks)
 
 #### 2.1 Not going to do.
@@ -64,10 +55,9 @@ WebJourney is a Java library for automating web interactions through the concept
 - **Deliverables:**
     - [x] Integration test suite with TestContainers
     - [ ] Performance testing framework with JMeter integration
-    - [ ] Property-based testing with QuickTheories
-    - [ ] Mutation testing with PIT
+    - [x] Property-based testing with QuickTheories
+    - [x] Mutation testing with PIT
     - [ ] Browser compatibility test matrix
-    - [ ] Load testing scenarios for concurrent journeys
 
 ### Phase 3: CI/CD and Release Management (2-3 weeks)
 

@@ -106,4 +106,13 @@ public abstract class WebJourneyTestContainerBase
     {
         return getBaseUrl() + "/" + pagePath;
     }
+    
+    /**
+     * Get the dynamically mapped port of the Nginx container.
+     * @return The mapped port.
+     */
+    protected int getNginxPort()
+    {
+        return nginxContainer.getMappedPort(NGINX_PORT);
+    }
 } 

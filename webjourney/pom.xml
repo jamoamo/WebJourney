@@ -177,6 +177,26 @@
             <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- Maven Invoker for running JMeter tests -->
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-shared-utils</artifactId>
+            <version>3.4.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- jqwik for property-based testing -->
+        <dependency>
+            <groupId>net.jqwik</groupId>
+            <artifactId>jqwik</artifactId>
+            <version>1.9.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
     <build>
@@ -303,6 +323,55 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- JMeter Maven Plugin for Performance Testing -->
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>configuration</id>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <testFilesDirectory>${project.basedir}/src/test/jmeter</testFilesDirectory>
+                    <resultsDirectory>${project.build.directory}/jmeter-results</resultsDirectory>
+                    <testResultsTimestamp>false</testResultsTimestamp>
+                    <propertiesJmeter>
+                        <log_level.jmeter>INFO</log_level.jmeter>
+                    </propertiesJmeter>
+                </configuration>
+            </plugin>
+            <!-- PIT Mutation Testing Plugin -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.16.0</version>
+                <configuration>
+                    <targetClasses>
+                        <param>io.github.jamoamo.webjourney.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>io.github.jamoamo.webjourney.*</param>
+                    </targetTests>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.2.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
