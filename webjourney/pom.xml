@@ -331,25 +331,71 @@
                 <version>3.8.0</version>
                 <executions>
                     <execution>
+                        <id>configuration</id>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>jmeter-tests</id>
                         <goals>
                             <goal>jmeter</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>configuration</id>
+                        <id>jmeter-check-results</id>
                         <goals>
-                            <goal>configure</goal>
+                            <goal>results</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <testFilesDirectory>${project.basedir}/src/test/jmeter</testFilesDirectory>
+                    <testFilesDirectory>${project.basedir}/src/test/jmeter/performance-tests</testFilesDirectory>
                     <resultsDirectory>${project.build.directory}/jmeter-results</resultsDirectory>
-                    <testResultsTimestamp>false</testResultsTimestamp>
+                    <reportDirectory>${project.build.directory}/jmeter-reports</reportDirectory>
+                    <testResultsTimestamp>true</testResultsTimestamp>
+                    <generateReports>true</generateReports>
                     <propertiesJmeter>
                         <log_level.jmeter>INFO</log_level.jmeter>
+                        <sample_variables>journey_name,action_type,page_load_time</sample_variables>
+                        <jmeter.save.saveservice.output_format>xml</jmeter.save.saveservice.output_format>
+                        <jmeter.save.saveservice.response_data>false</jmeter.save.saveservice.response_data>
+                        <jmeter.save.saveservice.samplerData>false</jmeter.save.saveservice.samplerData>
+                        <jmeter.save.saveservice.response_headers>false</jmeter.save.saveservice.response_headers>
+                        <jmeter.save.saveservice.request_headers>false</jmeter.save.saveservice.request_headers>
+                        <jmeter.save.saveservice.encoding>false</jmeter.save.saveservice.encoding>
+                        <jmeter.save.saveservice.url>true</jmeter.save.saveservice.url>
+                        <jmeter.save.saveservice.filename>false</jmeter.save.saveservice.filename>
+                        <jmeter.save.saveservice.hostname>true</jmeter.save.saveservice.hostname>
+                        <jmeter.save.saveservice.thread_name>true</jmeter.save.saveservice.thread_name>
+                        <jmeter.save.saveservice.time>true</jmeter.save.saveservice.time>
+                        <jmeter.save.saveservice.label>true</jmeter.save.saveservice.label>
+                        <jmeter.save.saveservice.latency>true</jmeter.save.saveservice.latency>
+                        <jmeter.save.saveservice.response_code>true</jmeter.save.saveservice.response_code>
+                        <jmeter.save.saveservice.response_message>true</jmeter.save.saveservice.response_message>
+                        <jmeter.save.saveservice.successful>true</jmeter.save.saveservice.successful>
+                        <jmeter.save.saveservice.thread_counts>true</jmeter.save.saveservice.thread_counts>
+                        <jmeter.save.saveservice.bytes>true</jmeter.save.saveservice.bytes>
+                        <jmeter.save.saveservice.sent_bytes>true</jmeter.save.saveservice.sent_bytes>
+                        <jmeter.save.saveservice.url>true</jmeter.save.saveservice.url>
+                        <jmeter.save.saveservice.filename>false</jmeter.save.saveservice.filename>
+                        <jmeter.save.saveservice.hostname>true</jmeter.save.saveservice.hostname>
+                        <jmeter.save.saveservice.thread_name>true</jmeter.save.saveservice.thread_name>
+                        <jmeter.save.saveservice.time>true</jmeter.save.saveservice.time>
+                        <jmeter.save.saveservice.connect_time>true</jmeter.save.saveservice.connect_time>
                     </propertiesJmeter>
+                    <propertiesUser>
+                        <webjourney.test.baseurl>http://localhost:${test.server.port}</webjourney.test.baseurl>
+                        <webjourney.threads>10</webjourney.threads>
+                        <webjourney.rampup>60</webjourney.rampup>
+                        <webjourney.duration>300</webjourney.duration>
+                        <webjourney.stress.threads>50</webjourney.stress.threads>
+                        <webjourney.stress.rampup>120</webjourney.stress.rampup>
+                        <webjourney.stress.duration>600</webjourney.stress.duration>
+                        <webjourney.browser.threads>5</webjourney.browser.threads>
+                        <webjourney.browser.rampup>30</webjourney.browser.rampup>
+                        <webjourney.browser.duration>300</webjourney.browser.duration>
+                    </propertiesUser>
                 </configuration>
             </plugin>
             <!-- PIT Mutation Testing Plugin -->

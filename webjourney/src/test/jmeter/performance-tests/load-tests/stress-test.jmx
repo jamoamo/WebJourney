@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="WebJourney Stress Test" enabled="true">
+      <stringProp name="TestPlan.comments">Stress test for WebJourney with high concurrent load</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="BASE_URL" elementType="Argument">
+            <stringProp name="Argument.name">BASE_URL</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.test.baseurl,http://localhost:80)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="STRESS_THREADS" elementType="Argument">
+            <stringProp name="Argument.name">STRESS_THREADS</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.stress.threads,50)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="STRESS_RAMP_UP" elementType="Argument">
+            <stringProp name="Argument.name">STRESS_RAMP_UP</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.stress.rampup,120)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="STRESS_DURATION" elementType="Argument">
+            <stringProp name="Argument.name">STRESS_DURATION</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.stress.duration,600)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Stress Test Users" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${STRESS_THREADS}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${STRESS_RAMP_UP}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${STRESS_DURATION}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <!-- Stress Test Scenario: Rapid Page Navigation -->
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Rapid Navigation Transaction" enabled="true">
+          <boolProp name="TransactionController.includeTimers">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Homepage Load" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/index.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">3000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">8000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Navigation Page 1" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/navigation/multi-page.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">3000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">8000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Navigation Page 2" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/navigation/page2.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">3000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">8000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Form Page Load" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/forms/simple-form.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">3000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">8000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+
+        <!-- Minimal Think Time for Stress Testing -->
+        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Random Think Time" enabled="true">
+          <stringProp name="ConstantTimer.delay">100</stringProp>
+          <stringProp name="RandomTimer.range">300</stringProp>
+        </UniformRandomTimer>
+        <hashTree/>
+
+        <!-- Critical Response Time Assertions -->
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Time Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="53">5000</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.custom_message">Response time exceeded 5 seconds</stringProp>
+          <stringProp name="Assertion.test_field">Assertion.response_time</stringProp>
+          <boolProp name="Assertion.assume_success">false</boolProp>
+          <intProp name="Assertion.test_type">6</intProp>
+        </ResponseAssertion>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan> 
