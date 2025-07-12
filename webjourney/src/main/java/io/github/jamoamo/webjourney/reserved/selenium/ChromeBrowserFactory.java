@@ -29,7 +29,6 @@ import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
 import java.util.Map;
 import org.openqa.selenium.BuildInfo;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
@@ -67,12 +66,9 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 
 	protected ChromeOptions createChromeOptions(IBrowserOptions browserOptions)
 	{
-		ChromeOptions options =
-				  new ChromeOptions();
-		options = options.addArguments("--no-sandbox", "--remote-allow-origins=*", "--disable-dev-shm-usage");
-		options = setHeadless(browserOptions, options);
-		options = setUnexpectedAlertBehaviour(browserOptions, options);
-		return options;
+		IChromeOptionsStrategy strategy = ChromeOptionsStrategyFactory.createStrategy();
+		LOGGER.debug("Using Chrome options strategy: {}", strategy.getTargetOperatingSystem());
+		return strategy.configureChromeOptions(browserOptions);
 	}
 
 	private void logDriverInfo(ChromeDriver driver)
@@ -95,25 +91,5 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 				  info.toString()));
 	}
 
-	private ChromeOptions setUnexpectedAlertBehaviour(IBrowserOptions browserOptions, ChromeOptions options)
-	{
-		if(browserOptions.acceptUnexpectedAlerts())
-		{
-			options = (ChromeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
-		}
-		else
-		{
-			options = (ChromeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
-		}
-		return options;
-	}
 
-	private ChromeOptions setHeadless(IBrowserOptions browserOptions, ChromeOptions options)
-	{
-		if(browserOptions.isHeadless())
-		{
-			options = options.addArguments("--headless=new");
-		}
-		return options;
-	}
 }
