@@ -54,7 +54,7 @@ WebJourney is a Java library for automating web interactions through the concept
 - **Effort:** 2 weeks
 - **Deliverables:**
     - [x] Integration test suite with TestContainers
-    - [ ] Performance testing framework with JMeter integration
+    - [x] Performance testing framework with JMeter integration
     - [x] Property-based testing with QuickTheories
     - [x] Mutation testing with PIT
     - [ ] Browser compatibility test matrix
