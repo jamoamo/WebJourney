@@ -80,7 +80,7 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), b -> ifTrue.apply(b));
+		ConditionalAction instance = new ConditionalAction((Function<IBrowser, Boolean>) b -> conditionFunction.apply(b), (Function<IJourneyBuilder, IJourney>) b -> ifTrue.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -116,7 +116,7 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), b -> ifTrue.apply(b));
+		ConditionalAction instance = new ConditionalAction((Function<IBrowser, Boolean>) b -> conditionFunction.apply(b), (Function<IJourneyBuilder, IJourney>) b -> ifTrue.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -163,9 +163,9 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), 
-			 b -> ifTrue.apply(b), 
-			 b -> ifFalse.apply(b));
+		ConditionalAction instance = new ConditionalAction((Function<IBrowser, Boolean>) b -> conditionFunction.apply(b), 
+			 (Function<IJourneyBuilder, IJourney>) b -> ifTrue.apply(b), 
+			 (Function<IJourneyBuilder, IJourney>) b -> ifFalse.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -213,9 +213,9 @@ public class ConditionalActionTest
 			return null;
 		};
 		
-		ConditionalAction instance = new ConditionalAction(b -> conditionFunction.apply(b), 
-			 b -> ifTrue.apply(b), 
-			 b -> ifFalse.apply(b));
+		ConditionalAction instance = new ConditionalAction((Function<IBrowser, Boolean>) b -> conditionFunction.apply(b), 
+			 (Function<IJourneyBuilder, IJourney>) b -> ifTrue.apply(b), 
+			 (Function<IJourneyBuilder, IJourney>) b -> ifFalse.apply(b));
 		ActionResult result = instance.executeActionImpl(context);
 		
 		ArgumentCaptor<URL> urlCaptor = ArgumentCaptor.forClass(URL.class);
@@ -231,7 +231,9 @@ public class ConditionalActionTest
 	@Test
 	public void testGetActionName()
 	{
-		ConditionalAction instance = new ConditionalAction(null, null, null);
+		ConditionalAction instance = new ConditionalAction((org.apache.commons.lang3.function.FailableFunction<io.github.jamoamo.webjourney.api.web.IBrowser, Boolean, io.github.jamoamo.webjourney.JourneyException>) null, 
+			(org.apache.commons.lang3.function.FailableFunction<io.github.jamoamo.webjourney.api.IJourneyBuilder, io.github.jamoamo.webjourney.api.IJourney, io.github.jamoamo.webjourney.JourneyException>) null, 
+			(org.apache.commons.lang3.function.FailableFunction<io.github.jamoamo.webjourney.api.IJourneyBuilder, io.github.jamoamo.webjourney.api.IJourney, io.github.jamoamo.webjourney.JourneyException>) null);
 		String expResult = "Conditional";
 		String result = instance.getActionName();
 		assertEquals(expResult, result);

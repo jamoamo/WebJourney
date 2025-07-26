@@ -26,26 +26,33 @@ package io.github.jamoamo.webjourney.api;
 import java.util.stream.Stream;
 
 /**
- * A series of steps that have been performed in the journey.
+ * Represents a series of steps (crumbs) that have been performed during a web journey.
+ * This interface provides mechanisms to track the execution path of a journey, useful for debugging and logging.
  * 
  * @author James Amoore
+ * @see ICrumb
+ * @since 1.0.0
  */
 public interface IJourneyBreadcrumb
 {
 	/**
-	 * Adds a crumb to the breadcrumb.
-	 * @param crumb the crumb to add
+	 * Adds a new crumb to the end of the breadcrumb trail, marking a step in the journey.
+	 * @param crumb The {@link ICrumb} to add to the breadcrumb.
+	 * @since 1.0.0
 	 */
 	void pushCrumb(ICrumb crumb);
 	
 	/**
-	 * Removes the last crumb from the breadcrumb.
+	 * Removes the most recently added crumb from the breadcrumb trail.
+	 * This is typically called when an action or step in the journey completes.
+	 * @since 1.0.0
 	 */
 	void popCrumb();
 	
 	/**
-	 * Returns the crumbs in a stream.
-	 * @return the crumb stream
+	 * Returns a stream of all crumbs currently in the breadcrumb trail, in order of their addition.
+	 * @return A {@link Stream} of {@link ICrumb} objects representing the journey's path.
+	 * @since 1.0.0
 	 */
 	Stream<ICrumb> getCrumbStream();
 }

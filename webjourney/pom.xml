@@ -4,7 +4,7 @@
     
     <groupId>io.github.jamoamo</groupId>
     <artifactId>webjourney</artifactId>
-    <version>0.3.4-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     
     <name>Web Journey</name>
     <description>
@@ -152,6 +152,51 @@
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
         </dependency>
+        <!-- TestContainers dependencies for integration testing -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.19.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>nginx</artifactId>
+            <version>1.19.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>selenium</artifactId>
+            <version>1.19.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Maven Invoker for running JMeter tests -->
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-shared-utils</artifactId>
+            <version>3.4.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- jqwik for property-based testing -->
+        <dependency>
+            <groupId>net.jqwik</groupId>
+            <artifactId>jqwik</artifactId>
+            <version>1.9.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
     <build>
@@ -236,6 +281,29 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -255,6 +323,123 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- JMeter Maven Plugin for Performance Testing -->
+            <!-- 
+                NOTE: JMeter tests are currently DISABLED because they require a running test server
+                but the plugin executes standalone without test server setup. The JMeter tests expect
+                a web server at http://localhost:80 serving the test HTML files from 
+                src/test/resources/integration-test-sites/, but no such server is started.
+                
+                To re-enable these tests, you need to:
+                1. Set up a test server (e.g., using TestContainers) before JMeter execution
+                2. Configure the base URL property to point to the running test server
+                3. Uncomment the executions below and remove the <skip>true</skip> configuration
+                
+                The integration tests (PerformanceTestIT) work correctly because they use
+                WebJourneyTestContainerBase which starts an Nginx container automatically.
+                
+                CURRENTLY DISABLED - NO EXECUTIONS BOUND TO LIFECYCLE
+            -->
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>3.8.0</version>
+                <!-- 
+                    JMeter executions are commented out to prevent them from running during build.
+                    Uncomment the executions below when test server integration is complete.
+                -->
+                <!--
+                <executions>
+                    <execution>
+                        <id>configuration</id>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jmeter-check-results</id>
+                        <goals>
+                            <goal>results</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                -->
+                <configuration>
+                    <testFilesDirectory>${project.basedir}/src/test/jmeter/performance-tests</testFilesDirectory>
+                    <resultsDirectory>${project.build.directory}/jmeter-results</resultsDirectory>
+                    <reportDirectory>${project.build.directory}/jmeter-reports</reportDirectory>
+                    <testResultsTimestamp>true</testResultsTimestamp>
+                    <generateReports>true</generateReports>
+                    <propertiesJmeter>
+                        <log_level.jmeter>INFO</log_level.jmeter>
+                        <sample_variables>journey_name,action_type,page_load_time</sample_variables>
+                        <jmeter.save.saveservice.output_format>xml</jmeter.save.saveservice.output_format>
+                        <jmeter.save.saveservice.response_data>false</jmeter.save.saveservice.response_data>
+                        <jmeter.save.saveservice.samplerData>false</jmeter.save.saveservice.samplerData>
+                        <jmeter.save.saveservice.response_headers>false</jmeter.save.saveservice.response_headers>
+                        <jmeter.save.saveservice.request_headers>false</jmeter.save.saveservice.request_headers>
+                        <jmeter.save.saveservice.encoding>false</jmeter.save.saveservice.encoding>
+                        <jmeter.save.saveservice.url>true</jmeter.save.saveservice.url>
+                        <jmeter.save.saveservice.filename>false</jmeter.save.saveservice.filename>
+                        <jmeter.save.saveservice.hostname>true</jmeter.save.saveservice.hostname>
+                        <jmeter.save.saveservice.thread_name>true</jmeter.save.saveservice.thread_name>
+                        <jmeter.save.saveservice.time>true</jmeter.save.saveservice.time>
+                        <jmeter.save.saveservice.label>true</jmeter.save.saveservice.label>
+                        <jmeter.save.saveservice.latency>true</jmeter.save.saveservice.latency>
+                        <jmeter.save.saveservice.response_code>true</jmeter.save.saveservice.response_code>
+                        <jmeter.save.saveservice.response_message>true</jmeter.save.saveservice.response_message>
+                        <jmeter.save.saveservice.successful>true</jmeter.save.saveservice.successful>
+                        <jmeter.save.saveservice.thread_counts>true</jmeter.save.saveservice.thread_counts>
+                        <jmeter.save.saveservice.bytes>true</jmeter.save.saveservice.bytes>
+                        <jmeter.save.saveservice.sent_bytes>true</jmeter.save.saveservice.sent_bytes>
+                        <jmeter.save.saveservice.url>true</jmeter.save.saveservice.url>
+                        <jmeter.save.saveservice.filename>false</jmeter.save.saveservice.filename>
+                        <jmeter.save.saveservice.hostname>true</jmeter.save.saveservice.hostname>
+                        <jmeter.save.saveservice.thread_name>true</jmeter.save.saveservice.thread_name>
+                        <jmeter.save.saveservice.time>true</jmeter.save.saveservice.time>
+                        <jmeter.save.saveservice.connect_time>true</jmeter.save.saveservice.connect_time>
+                    </propertiesJmeter>
+                    <propertiesUser>
+                        <webjourney.test.baseurl>http://localhost:${test.server.port}</webjourney.test.baseurl>
+                        <webjourney.threads>10</webjourney.threads>
+                        <webjourney.rampup>60</webjourney.rampup>
+                        <webjourney.duration>300</webjourney.duration>
+                        <webjourney.stress.threads>50</webjourney.stress.threads>
+                        <webjourney.stress.rampup>120</webjourney.stress.rampup>
+                        <webjourney.stress.duration>600</webjourney.stress.duration>
+                        <webjourney.browser.threads>5</webjourney.browser.threads>
+                        <webjourney.browser.rampup>30</webjourney.browser.rampup>
+                        <webjourney.browser.duration>300</webjourney.browser.duration>
+                    </propertiesUser>
+                </configuration>
+            </plugin>
+            <!-- PIT Mutation Testing Plugin -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.16.0</version>
+                <configuration>
+                    <targetClasses>
+                        <param>io.github.jamoamo.webjourney.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>io.github.jamoamo.webjourney.*</param>
+                    </targetTests>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.2.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

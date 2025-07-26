@@ -23,16 +23,25 @@
  */
 package io.github.jamoamo.webjourney.api;
 
+import io.github.jamoamo.webjourney.JourneyException;
+
 /**
- * A series of actions performed.
+ * Represents a series of actions that define a web journey. This is the core interface
+ * for executing a predefined sequence of web interactions.
  * 
  * @author James Amoore
+ * @see IJourneyBuilder
+ * @see IJourneyContext
+ * @since 1.0.0
  */
 public interface IJourney
 {
 	/**
-	 * Perform the journey.
-	 * @param context context of the journey.
+	 * Executes the defined journey, performing all encapsulated web actions.
+	 * @param context The journey context, providing access to the browser and other journey-specific information.
+	 * @throws JourneyException if an error occurs during any part of the journey execution.
+	 * @since 1.0.0
 	 */
-	void doJourney(IJourneyContext context);
+	void doJourney(IJourneyContext context)
+			  throws JourneyException;
 }

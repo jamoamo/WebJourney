@@ -35,24 +35,43 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 
 /**
- * Base builder for building a journey.
+ * Base builder for building a journey. Provides a fluent API for defining web actions
+ * and constructing a {@link IJourney}.
  *
  * @author James Amoore
+ * @see IJourneyBuilder
+ * @see IJourney
+ * @see WebTraveller
+ * @since 1.0.0
  */
 public class BaseJourneyBuilder implements IJourneyBuilder
 {
 	private final JourneyBuild build;
 
+	/**
+	 * Constructs a new BaseJourneyBuilder.
+	 * @since 1.0.0
+	 */
 	BaseJourneyBuilder()
 	{
 		this.build = new JourneyBuild();
 	}
 
+	/**
+	 * Constructs a new BaseJourneyBuilder with an existing WebJourney.
+	 * @param journey The existing web journey.
+	 * @since 1.0.0
+	 */
 	BaseJourneyBuilder(WebJourney journey)
 	{
 		this.build = new JourneyBuild(journey);
 	}
 
+	/**
+	 * Constructs a new BaseJourneyBuilder with an existing JourneyBuild.
+	 * @param build The existing journey build state.
+	 * @since 1.0.0
+	 */
 	BaseJourneyBuilder(JourneyBuild build)
 	{
 		this.build = build;
@@ -64,6 +83,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param url The url to navigate to.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder navigateTo(URL url)
@@ -80,6 +100,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @return the current builder
 	 *
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 * @since 1.0.0
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder navigateTo(String url)
@@ -100,6 +121,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * Adds an action to navigate to the previous page in the browsers history.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder navigateBack()
@@ -112,6 +134,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * Adds an action to navigate to the next page in the browsers history.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder navigateForward()
@@ -124,6 +147,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * Adds an action to refresh the current page.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder refreshPage()
@@ -139,6 +163,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param formObject The object to complete the form using
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder completeForm(Object formObject)
@@ -155,6 +180,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param pageObject The object to complete the form using
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public ActionOptionsJourneyBuilder completeFormAndSubmit(Object pageObject)
@@ -175,6 +201,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param pageConsumer The consumer that will receive the created page object.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public <T> BaseJourneyBuilder consumePage(Class<T> pageClass,
@@ -192,6 +219,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param buttonName The name of the button in the page representation that should be clicked.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder clickButton(Object pageObject, String buttonName)
@@ -208,6 +236,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param buttonName The name of the button in the page representation that should be clicked.
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder clickButton(Class pageClass, String buttonName)
@@ -228,6 +257,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * @param subJourney       The sub journey to repeat
 	 *
 	 * @return the current builder
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder forEachChildElement(
@@ -246,6 +276,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 * Retrieves the state of the journey build in progress.
 	 *
 	 * @return the in-progress journey build state.
+	 * @since 1.0.0
 	 */
 	protected JourneyBuild getBuild()
 	{
@@ -253,56 +284,66 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	}
 
 	/**
-	 * Builds an instance of WebJourney.
+	 * Builds the journey defined by this builder.
 	 *
-	 * @return a built WebJourney instance.
+	 * @return A new {@link IJourney} instance.
+	 * @since 1.0.0
 	 */
 	@Override
 	public IJourney build()
 	{
-		SubJourney subJourney = new SubJourney(this.build.getJourney());
+		SubJourney subJourney = new SubJourney(this.build.buildJourney());
 		return subJourney;
 	}
-	
+
 	/**
-	 * Follow specific journey paths if the condition evaluates to true.
-	 * 
-	 * @param conditionFunction the condition to evaluate.
-	 * @param ifTrue a function to create the path if the condition evaluates to true.
-	 * @return this journey builder
+	 * Adds a conditional journey to the current journey. The `ifTrue` journey is executed
+	 * if the condition function returns true.
+	 *
+	 * @param conditionFunction A function that takes an {@link IBrowser} and returns a boolean.
+	 *                          If true, the `ifTrue` journey is executed.
+	 * @param ifTrue            A function that builds the journey to be executed if the condition is true.
+	 * @return The current builder instance.
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
 		 Function<IJourneyBuilder, IJourney> ifTrue)
 	{
-		this.build.addAction(new ConditionalAction(b -> conditionFunction.apply(b), builder -> ifTrue.apply(builder)));
+		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue));
 		return this;
 	}
 
 	/**
-	 * Follow specific journey paths if the condition evaluates to true.
-	 * 
-	 * @param conditionFunction the condition to evaluate.
-	 * @param ifTrue a function to create the path if the condition evaluates to true.
-	 * @param ifFalse a function to create the path if the condition evaluates to false.
-	 * @return this journey builder
+	 * Adds a conditional journey to the current journey with an alternative path. The `ifTrue` journey is executed
+	 * if the condition function returns true, otherwise the `ifFalse` journey is executed.
+	 *
+	 * @param conditionFunction A function that takes an {@link IBrowser} and returns a boolean.
+	 *                          If true, the `ifTrue` journey is executed.
+	 * @param ifTrue            A function that builds the journey to be executed if the condition is true.
+	 * @param ifFalse           A function that builds the journey to be executed if the condition is false.
+	 * @return The current builder instance.
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder conditionalJourney(Function<IBrowser, Boolean> conditionFunction,
 		 Function<IJourneyBuilder, IJourney> ifTrue, Function<IJourneyBuilder, IJourney> ifFalse)
 	{
-		this.build.addAction(new ConditionalAction(b -> conditionFunction.apply(b), 
-			 builder -> ifTrue.apply(builder), 
-			 builder -> ifFalse.apply(builder)));
+		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue, ifFalse));
 		return this;
 	}
 
 	/**
-	 * Follow specific journey paths if the condition evaluates to true.
-	 * 
-	 * @param conditionFunction the condition to evaluate.
-	 * @param ifTrue a function to create the path if the condition evaluates to true.
-	 * @return this journey builder
+	 * Adds a conditional journey to the current journey. The `ifTrue` journey is executed
+	 * if the condition function returns true. This version handles exceptions thrown by the condition 
+	 * or journey functions.
+	 *
+	 * @param conditionFunction A failable function that takes an {@link IBrowser} and returns a boolean.
+	 *                          If true, the `ifTrue` journey is executed.
+	 * @param ifTrue            A failable function that builds the journey to be executed if the condition is true.
+	 * @return The current builder instance.
+	 * @throws JourneyException if an error occurs during the condition evaluation or journey execution.
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder conditionalJourney(
@@ -314,12 +355,17 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	}
 
 	/**
-	 * Follow specific journey paths if the condition evaluates to true.
-	 * 
-	 * @param conditionFunction the condition to evaluate.
-	 * @param ifTrue a function to create the path if the condition evaluates to true.
-	 * @param ifFalse a function to create the path if the condition evaluates to false.
-	 * @return this journey builder
+	 * Adds a conditional journey to the current journey with an alternative path. The `ifTrue` journey is executed
+	 * if the condition function returns true, otherwise the `ifFalse` journey is executed. This version handles
+	 * exceptions thrown by the condition or journey functions.
+	 *
+	 * @param conditionFunction A failable function that takes an {@link IBrowser} and returns a boolean.
+	 *                          If true, the `ifTrue` journey is executed.
+	 * @param ifTrue            A failable function that builds the journey to be executed if the condition is true.
+	 * @param ifFalse           A failable function that builds the journey to be executed if the condition is false.
+	 * @return The current builder instance.
+	 * @throws JourneyException if an error occurs during the condition evaluation or journey execution.
+	 * @since 1.0.0
 	 */
 	@Override
 	public BaseJourneyBuilder conditionalJourney(

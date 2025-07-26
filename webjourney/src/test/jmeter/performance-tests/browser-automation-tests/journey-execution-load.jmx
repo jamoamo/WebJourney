@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="WebJourney Browser Automation Load Test" enabled="true">
+      <stringProp name="TestPlan.comments">Load test for WebJourney browser automation scenarios</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="BASE_URL" elementType="Argument">
+            <stringProp name="Argument.name">BASE_URL</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.test.baseurl,http://localhost:80)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="BROWSER_THREADS" elementType="Argument">
+            <stringProp name="Argument.name">BROWSER_THREADS</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.browser.threads,5)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="BROWSER_RAMP_UP" elementType="Argument">
+            <stringProp name="Argument.name">BROWSER_RAMP_UP</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.browser.rampup,30)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="BROWSER_DURATION" elementType="Argument">
+            <stringProp name="Argument.name">BROWSER_DURATION</stringProp>
+            <stringProp name="Argument.value">${__P(webjourney.browser.duration,300)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Browser Automation Users" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${BROWSER_THREADS}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${BROWSER_RAMP_UP}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${BROWSER_DURATION}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <!-- Simulated Browser Journey Scenario -->
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Complete Journey Simulation" enabled="true">
+          <boolProp name="TransactionController.includeTimers">false</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
+        </TransactionController>
+        <hashTree>
+          <!-- Step 1: Navigate to homepage (simulating browser startup) -->
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Journey Start - Homepage" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/index.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">10000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">15000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <!-- Simulate page load time -->
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Page Load Simulation" enabled="true">
+              <stringProp name="ConstantTimer.delay">2000</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+          </hashTree>
+
+          <!-- Step 2: Navigate to form page (simulating user interaction) -->
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Journey Navigation - Form Page" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/forms/simple-form.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">8000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">12000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <!-- Simulate form interaction delay -->
+            <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Form Interaction Delay" enabled="true">
+              <stringProp name="ConstantTimer.delay">3000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </UniformRandomTimer>
+            <hashTree/>
+          </hashTree>
+
+          <!-- Step 3: Simulate form submission -->
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Journey Action - Form Submit" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="firstName" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.name">firstName</stringProp>
+                  <stringProp name="Argument.value">LoadTest${__threadNum}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="lastName" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.name">lastName</stringProp>
+                  <stringProp name="Argument.value">User${__threadNum}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="email" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.name">email</stringProp>
+                  <stringProp name="Argument.value">loadtest${__threadNum}@example.com</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="age" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.name">age</stringProp>
+                  <stringProp name="Argument.value">${__Random(18,65)}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/forms/submit</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">8000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">12000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <!-- Simulate processing time -->
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Processing Time" enabled="true">
+              <stringProp name="ConstantTimer.delay">1500</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+          </hashTree>
+
+          <!-- Step 4: Multi-page navigation sequence -->
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Journey Navigation - Multi-page 1" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/navigation/multi-page.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">8000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">12000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Journey Navigation - Multi-page 2" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__regexReplace(${BASE_URL},^https?://([^:/]+).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__regexReplace(${BASE_URL},^https?://[^:/]+:?([0-9]*).*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${__regexReplace(${BASE_URL},^(https?)://.*,$1$)}</stringProp>
+            <stringProp name="HTTPSampler.path">/navigation/page2.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">8000</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">12000</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+
+        <!-- Browser session think time -->
+        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Browser Session Think Time" enabled="true">
+          <stringProp name="ConstantTimer.delay">5000</stringProp>
+          <stringProp name="RandomTimer.range">3000</stringProp>
+        </UniformRandomTimer>
+        <hashTree/>
+
+        <!-- Performance monitoring assertions -->
+        <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Browser Performance Assertion" enabled="true">
+          <collectionProp name="Asserion.test_strings">
+            <stringProp name="49586">10000</stringProp>
+          </collectionProp>
+          <stringProp name="Assertion.custom_message">Browser automation response time exceeded 10 seconds</stringProp>
+          <stringProp name="Assertion.test_field">Assertion.response_time</stringProp>
+          <boolProp name="Assertion.assume_success">false</boolProp>
+          <intProp name="Assertion.test_type">6</intProp>
+        </ResponseAssertion>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan> 

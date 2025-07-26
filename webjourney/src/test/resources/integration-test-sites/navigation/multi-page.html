@@ -1,0 +1,47 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Page Navigation Test - Page 1</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .navigation { margin: 20px 0; }
+        .page-content { padding: 20px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Multi-Page Navigation Test</h1>
+    <p data-testid="page-indicator">This is Page 1 of 3</p>
+    
+    <div class="navigation">
+        <a href="../index.html">← Back to Main</a> |
+        <a href="page2.html" data-testid="next-page-link">Next Page →</a>
+    </div>
+    
+    <div class="page-content">
+        <h2>Page 1 Content</h2>
+        <p data-testid="page-content">This is the first page in a multi-page navigation sequence.</p>
+        <ul>
+            <li data-testid="nav-item-1">Navigation Test Item 1</li>
+            <li data-testid="nav-item-2">Navigation Test Item 2</li>
+        </ul>
+        
+        <form id="pageForm">
+            <label for="pageInput">Enter some data for page transition:</label>
+            <input type="text" id="pageInput" name="pageData" data-testid="page-input">
+            <button type="button" onclick="navigateWithData()" data-testid="navigate-button">
+                Continue to Page 2
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        function navigateWithData() {
+            const input = document.getElementById('pageInput').value;
+            const encodedData = encodeURIComponent(input);
+            window.location.href = `page2.html?data=${encodedData}`;
+        }
+    </script>
+</body>
+</html> 

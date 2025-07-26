@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Page Navigation Test - Page 2</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .navigation { margin: 20px 0; }
+        .page-content { padding: 20px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Multi-Page Navigation Test</h1>
+    <p data-testid="page-indicator">This is Page 2 of 3</p>
+    
+    <div class="navigation">
+        <a href="multi-page.html" data-testid="prev-page-link">← Previous Page</a> |
+        <a href="page3.html" data-testid="next-page-link">Next Page →</a>
+    </div>
+    
+    <div class="page-content">
+        <h2>Page 2 Content</h2>
+        <p data-testid="page-content">This is the second page. Data from previous page:</p>
+        <div id="receivedData" data-testid="received-data"></div>
+        
+        <button onclick="history.back()" data-testid="back-button">Go Back</button>
+        <button onclick="window.location.href='page3.html'" data-testid="forward-button">Go Forward</button>
+    </div>
+    
+    <script>
+        // Display data passed from previous page
+        const urlParams = new URLSearchParams(window.location.search);
+        const data = urlParams.get('data');
+        if (data) {
+            document.getElementById('receivedData').textContent = `Received: ${data}`;
+        } else {
+            document.getElementById('receivedData').textContent = 'No data received';
+        }
+    </script>
+</body>
+</html> 

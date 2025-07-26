@@ -27,49 +27,61 @@ import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.util.List;
 
 /**
- * The context of a specific browser journey.
+ * Represents the context of a specific browser journey, providing access to the browser instance,
+ * journey-specific inputs, observers, and breadcrumb trail.
+ * 
  * @author James Amoore
+ * @see IBrowser
+ * @see IJourneyObserver
+ * @see IJourneyBreadcrumb
+ * @since 1.0.0
  */
 public interface IJourneyContext
 {
 	
 	/**
-	 * Get the browser for the current journey.
-	 * @return the browser.
+	 * Returns the browser instance associated with the current journey.
+	 * @return The {@link IBrowser} instance for interacting with the web page.
+	 * @since 1.0.0
 	 */
 	IBrowser getBrowser();
 	
 	/**
-	 * Sets an input value for the journey.
+	 * Sets an input value for the journey. This allows sharing data across different actions within the journey.
 	 * 
-	 * @param inputType The type of Input
-	 * @param inputValue The value for the input
+	 * @param inputType The type identifier for the input.
+	 * @param inputValue The value to be stored for this input type.
+	 * @since 1.0.0
 	 */
 	void setJourneyInput(String inputType, Object inputValue);
 	
 	/**
-	 * Gets an input value for the journey.
+	 * Retrieves an input value for the journey based on the input type.
 	 * 
-	 * @param inputType The type of Input
-	 * @return the input value.
+	 * @param inputType The type identifier for the input.
+	 * @return The stored input value, or null if no value has been set for this type.
+	 * @since 1.0.0
 	 */
 	Object getJourneyInput(String inputType);
 	
 	/**
-	 * Gets all the observers of the journey.
-	 * @return the journey observers.
+	 * Returns all the observers registered for this journey. Observers can monitor journey execution.
+	 * @return A list of {@link IJourneyObserver} instances.
+	 * @since 1.0.0
 	 */
 	List<IJourneyObserver> getJourneyObservers();
 	
 	/**
-	 * Sets all the observers of the journey.
-	 * @param observers The journey observers
+	 * Sets the observers for this journey. These observers will monitor journey execution.
+	 * @param observers The list of {@link IJourneyObserver} instances to set.
+	 * @since 1.0.0
 	 */
 	void setJourneyObservers(List<IJourneyObserver> observers);
 	
 	/**
-	 * Gets the breadcrumb of the current journey.
-	 * @return the breadcrumb.
+	 * Returns the breadcrumb trail for the current journey, providing a trace of executed actions.
+	 * @return The {@link IJourneyBreadcrumb} instance tracking the journey's path.
+	 * @since 1.0.0
 	 */
 	IJourneyBreadcrumb getJourneyBreadcrumb();
 }

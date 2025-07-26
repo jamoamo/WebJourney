@@ -24,19 +24,26 @@
 package io.github.jamoamo.webjourney.api;
 
 /**
- * An item that can be included in the journey breadcrumb.
+ * Represents an item that can be included in the journey breadcrumb. This interface is used
+ * to provide clear, traceable steps throughout a web journey's execution, aiding in debugging and monitoring.
  * 
  * @author James Amoore
+ * @see IJourneyBreadcrumb
+ * @since 1.0.0
  */
 public interface ICrumb
 {
 	/**
+	 * Returns the descriptive name of this crumb. This name provides specific details about the action or state.
 	 * @return The name of the crumb.
+	 * @since 1.0.0
 	 */
 	String getCrumbName();
 	
 	/**
+	 * Returns the category or type of this crumb. This categorizes the crumb (e.g., "Action", "Page").
 	 * @return The category crumb.
+	 * @since 1.0.0
 	 */
 	String getCrumbType();
 }

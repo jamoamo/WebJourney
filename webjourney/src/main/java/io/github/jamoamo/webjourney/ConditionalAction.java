@@ -29,6 +29,7 @@ import io.github.jamoamo.webjourney.api.IJourneyBuilder;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import org.apache.commons.lang3.function.FailableFunction;
+import java.util.function.Function;
 
 /**
  *
@@ -55,6 +56,23 @@ class ConditionalAction extends AWebAction
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;
 		this.functionIfFalse = ifFalse;
+	}
+	
+	ConditionalAction(Function<IBrowser, Boolean> conditionFunction,
+										Function<IJourneyBuilder, IJourney> ifTrue)
+	{
+		this.conditionFunction = conditionFunction::apply;
+		this.functionIfTrue = ifTrue::apply;
+		this.functionIfFalse = null;
+	}
+	
+	ConditionalAction(Function<IBrowser, Boolean> conditionFunction,
+										Function<IJourneyBuilder, IJourney> ifTrue, 
+										Function<IJourneyBuilder, IJourney> ifFalse)
+	{
+		this.conditionFunction = conditionFunction::apply;
+		this.functionIfTrue = ifTrue::apply;
+		this.functionIfFalse = ifFalse::apply;
 	}
 	
 	@Override

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Page Navigation Test - Page 3</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .navigation { margin: 20px 0; }
+        .page-content { padding: 20px; border: 1px solid #ddd; }
+        .completion { background: #d4edda; padding: 15px; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <h1>Multi-Page Navigation Test</h1>
+    <p data-testid="page-indicator">This is Page 3 of 3 (Final Page)</p>
+    
+    <div class="navigation">
+        <a href="page2.html" data-testid="prev-page-link">← Previous Page</a> |
+        <a href="../index.html">Back to Main</a>
+    </div>
+    
+    <div class="page-content">
+        <div class="completion">
+            <h2>Navigation Test Complete!</h2>
+            <p data-testid="completion-message">You have successfully navigated through all three pages.</p>
+            <p data-testid="page-content">This demonstrates WebJourney's multi-page navigation capabilities.</p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="window.location.href='multi-page.html'" data-testid="restart-button">
+                Restart Navigation Test
+            </button>
+        </div>
+    </div>
+</body>
+</html> 
