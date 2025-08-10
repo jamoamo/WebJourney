@@ -41,7 +41,7 @@ class ConditionalAction extends AWebAction
 	private final FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> functionIfFalse;
 	
 	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends JourneyException> conditionFunction,
-										FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifTrue)
+			FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifTrue)
 	{
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;
@@ -49,8 +49,8 @@ class ConditionalAction extends AWebAction
 	}
 	
 	ConditionalAction(FailableFunction<IBrowser, Boolean, ? extends JourneyException> conditionFunction,
-										FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifTrue, 
-										FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifFalse)
+			FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifTrue, 
+			FailableFunction<IJourneyBuilder, IJourney, ? extends JourneyException> ifFalse)
 	{
 		this.conditionFunction = conditionFunction;
 		this.functionIfTrue = ifTrue;
