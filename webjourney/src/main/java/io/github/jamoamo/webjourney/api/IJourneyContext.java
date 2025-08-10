@@ -24,6 +24,8 @@
 package io.github.jamoamo.webjourney.api;
 
 import io.github.jamoamo.webjourney.api.web.IBrowser;
+import io.github.jamoamo.webjourney.api.web.IJourneyBrowserArguments;
+
 import java.util.List;
 
 /**
@@ -72,4 +74,10 @@ public interface IJourneyContext
 	 * @return the breadcrumb.
 	 */
 	IJourneyBreadcrumb getJourneyBreadcrumb();
+
+	/**
+	 * Gets the browser arguments for the current journey.
+	 * @return the browser arguments.
+	 */
+	IJourneyBrowserArguments getBrowserArguments();
 }

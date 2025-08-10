@@ -26,7 +26,10 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
+import io.github.jamoamo.webjourney.api.web.DefaultJourneyBrowserArguments;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
+import io.github.jamoamo.webjourney.api.web.IJourneyBrowserArguments;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,6 +46,7 @@ class JourneyContext implements IJourneyContext
 	private IJourneyBreadcrumb breadcrumb;
 	private final Map<String, Object> inputs = new HashMap<>(2);
 	private final List<IJourneyObserver> journeyObservers = new ArrayList<>();
+	private final IJourneyBrowserArguments browserArguments = new DefaultJourneyBrowserArguments();
 	
 	void setBrowser(IBrowser browser)
 	{
@@ -88,5 +92,11 @@ class JourneyContext implements IJourneyContext
 	public void setJourneyBreadcrumb(IJourneyBreadcrumb breadcrumb)
 	{
 		this.breadcrumb = breadcrumb;
+	}
+
+	@Override
+	public IJourneyBrowserArguments getBrowserArguments()
+	{
+		return this.browserArguments;
 	}
 }
