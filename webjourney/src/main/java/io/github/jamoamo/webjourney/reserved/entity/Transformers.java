@@ -66,7 +66,7 @@ final class Transformers
 	}
 
 	private static ITransformer getTransformerForTransformation(EntityAnnotations annotations, TypeInfo typeInfo,
-																					EntityFieldDefn defn) throws XRegexException
+		EntityFieldDefn defn) throws XRegexException
 	{
 		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection())
 		{

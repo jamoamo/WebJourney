@@ -22,8 +22,8 @@
     <module name="TreeWalker">
         <!-- Match brace style used in main module: newline before { -->
         <module name="LeftCurly">
-            <property name="option" value="nl"/>
-            <property name="tokens" value="CLASS_DEF, CTOR_DEF, METHOD_DEF, LAMBDA, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ENUM_CONSTANT_DEF"/>
+             <property name="option" value="nl"/>
+             <property name="tokens" value="CLASS_DEF, CTOR_DEF, METHOD_DEF, LAMBDA, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ENUM_CONSTANT_DEF"/>
         </module>
         <module name="RightCurly">
             <property name="option" value="alone"/>
@@ -42,5 +42,6 @@
     <!-- Do not fail on trailing spaces via RegexpSingleline -->
     <!-- (omit RegexpSingleline module) -->
 </module>
+
 
 

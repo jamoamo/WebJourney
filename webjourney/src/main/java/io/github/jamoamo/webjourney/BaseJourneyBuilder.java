@@ -178,7 +178,7 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	 */
 	@Override
 	public <T> BaseJourneyBuilder consumePage(Class<T> pageClass,
-															FailableConsumer<T, ? extends PageConsumerException> pageConsumer)
+			FailableConsumer<T, ? extends PageConsumerException> pageConsumer)
 	{
 		ConsumePageAction<T> action = new ConsumePageAction<>(pageClass, pageConsumer);
 		this.build.addAction(action);
