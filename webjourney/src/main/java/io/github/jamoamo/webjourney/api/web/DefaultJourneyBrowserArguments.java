@@ -60,6 +60,11 @@ public final class DefaultJourneyBrowserArguments implements IJourneyBrowserArgu
 	@Override
 	public List<String> snapshotForBrowser(StandardBrowser browserType)
 	{
-		return Collections.unmodifiableList(this.browserArguments.get(browserType));
+		List<String> args = this.browserArguments.get(browserType);
+		if(args == null)
+		{
+			return Collections.emptyList();
+		}
+		return Collections.unmodifiableList(args);
 	}
 }
