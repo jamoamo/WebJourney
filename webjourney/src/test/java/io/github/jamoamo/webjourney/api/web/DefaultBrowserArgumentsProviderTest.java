@@ -198,6 +198,9 @@ class DefaultBrowserArgumentsProviderTest
         AsyncConfiguration config = new AsyncConfiguration(
             List.of("--user-data-dir=/tmp"), 
             List.of(),
+            List.of(), // firefox args
+            List.of(), // edge args
+            true, // enable extra args
             "reject", // validation mode
             List.of("--user-data-dir"), // deny list
             List.of(), // redaction extra keys
@@ -221,6 +224,9 @@ class DefaultBrowserArgumentsProviderTest
         AsyncConfiguration config = new AsyncConfiguration(
             List.of("--headless", "--user-data-dir=/tmp"), 
             List.of(),
+            List.of(), // firefox args
+            List.of(), // edge args
+            true, // enable extra args
             "warn", // validation mode - should drop denied args
             List.of("--user-data-dir"), // deny list
             List.of(), // redaction extra keys  
@@ -285,6 +291,9 @@ class DefaultBrowserArgumentsProviderTest
         AsyncConfiguration config = new AsyncConfiguration(
             List.of("--headless", "--disable-web-security", "--window-size=1024,768"), 
             List.of(),
+            List.of(), // firefox args
+            List.of(), // edge args
+            true, // enable extra args
             "warn", // warn mode to continue with valid args
             List.of("--disable-web-security"), // deny this one
             List.of(), 
@@ -310,6 +319,9 @@ class DefaultBrowserArgumentsProviderTest
         AsyncConfiguration config = new AsyncConfiguration(
             List.of("--custom-dangerous=value", "--safe-arg=ok"), 
             List.of(),
+            List.of(), // firefox args
+            List.of(), // edge args
+            true, // enable extra args
             "reject", 
             List.of("--custom-dangerous"), // custom deny list
             List.of(), 

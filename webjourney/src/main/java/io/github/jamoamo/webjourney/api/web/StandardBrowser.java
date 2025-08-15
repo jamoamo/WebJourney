@@ -24,6 +24,8 @@
 package io.github.jamoamo.webjourney.api.web;
 
 import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.FirefoxBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.EdgeBrowserFactory;
 
 /**
  * Standard Browsers that are supported.
@@ -32,8 +34,8 @@ import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
 public enum StandardBrowser
 {
 	CHROME(new ChromeBrowserFactory()),
-	FIREFOX(null),
-	EDGE(null),
+	FIREFOX(new FirefoxBrowserFactory()),
+	EDGE(new EdgeBrowserFactory()),
 	CHROMIUM(null),
 	OPERA(null),
 	SAFARI(null);

@@ -23,6 +23,8 @@
  */
 package io.github.jamoamo.webjourney.api.web;
 
+import io.github.jamoamo.webjourney.api.IJourneyContext;
+
 /**
  *	Uses the supplied browser as the preferred browser to use.
  * @author James Amoore
@@ -57,6 +59,18 @@ public final class PreferredBrowserStrategy implements IPreferredBrowserStrategy
 	public IBrowser getPreferredBrowser(IBrowserOptions options)
 	{
 		return this.browserFactory.createBrowser(options);
+	}
+	
+	/**
+	 * return the browser instance that should be used with journey context.
+	 * @param options Options for the browser.
+	 * @param journeyContext The journey context containing browser arguments.
+	 * @return the browser to use.
+	 */
+	@Override
+	public IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext)
+	{
+		return this.browserFactory.createBrowser(options, journeyContext);
 	}
 	
 }

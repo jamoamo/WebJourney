@@ -7,6 +7,11 @@ public final class ConfiguationKeys
 {
 	public static final String GLOBAL_ARGUMENTS = "browser.args";
 	public static final String CHROME_ARGUMENTS = "browser.chrome.args";
+	public static final String FIREFOX_ARGUMENTS = "browser.firefox.args";
+	public static final String EDGE_ARGUMENTS = "browser.edge.args";
+	
+	// Feature flag
+	public static final String ENABLE_EXTRA_ARGS = "browser.enableExtraArgs";
 	
 	// Validation configuration
 	public static final String VALIDATION_MODE = "browser.args.validation.mode";

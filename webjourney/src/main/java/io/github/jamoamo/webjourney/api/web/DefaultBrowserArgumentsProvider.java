@@ -77,12 +77,26 @@ public class DefaultBrowserArgumentsProvider implements IBrowserArgumentsProvide
 		List<String> perBrowserJourney = BrowserArgParser.normalize(journeyContext.getBrowserArguments().snapshotForBrowser(browserType));
 		List<String> globalJourney = BrowserArgParser.normalize(journeyContext.getBrowserArguments().snapshotGlobal());
 
-		// Environment variables (Chrome only for now). Use spec-compliant keys.
+		// Environment variables. Use spec-compliant keys.
       List<String> envGlobalArgs = BrowserArgParser.parse(this.getenv.apply(ConfigurationEnvironmentKeys.BROWSER_ARGS));
 		List<String> envBrowserArgs = new ArrayList<>();
-		if (browserType == StandardBrowser.CHROME)
+		switch (browserType)
 		{
-         envBrowserArgs.addAll(BrowserArgParser.parse(this.getenv.apply(ConfigurationEnvironmentKeys.CHROME_ARGS)));
+			case CHROME:
+				envBrowserArgs.addAll(BrowserArgParser.parse(this.getenv.apply(ConfigurationEnvironmentKeys.CHROME_ARGS)));
+				break;
+			case FIREFOX:
+				envBrowserArgs.addAll(BrowserArgParser.parse(this.getenv.apply(ConfigurationEnvironmentKeys.FIREFOX_ARGS)));
+				break;
+			case EDGE:
+				envBrowserArgs.addAll(BrowserArgParser.parse(this.getenv.apply(ConfigurationEnvironmentKeys.EDGE_ARGS)));
+				break;
+			case CHROMIUM:
+			case SAFARI:
+			case OPERA:
+			default:
+				// No environment variable support for these browsers yet
+				break;
 		}
 
 		// Configuration lists from AsyncConfiguration
@@ -155,6 +169,10 @@ public class DefaultBrowserArgumentsProvider implements IBrowserArgumentsProvide
 		{
 			case CHROME:
 				return this.configuration.getChromeArguments();
+			case FIREFOX:
+				return this.configuration.getFirefoxArguments();
+			case EDGE:
+				return this.configuration.getEdgeArguments();
 			default:
 				return List.of(); // Other browsers not yet supported in configuration
 		}
