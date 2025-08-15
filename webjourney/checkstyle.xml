@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <!-- Keep output readable and focused -->
+    <property name="severity" value="warning"/>
+    <property name="charset" value="UTF-8"/>
+
+    <!-- Allow tabs (the codebase uses tabs) by not enabling FileTabCharacter -->
+
+    <!-- Do not require package-info.java for every package -->
+    <!-- (omit JavadocPackage module) -->
+
+    <!-- Line length more lenient than Sun checks -->
+    <module name="LineLength">
+        <property name="max" value="140"/>
+        <property name="ignorePattern" value="^package .*|^import .*"/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Match brace style used in main module: newline before { -->
+        <module name="LeftCurly">
+             <property name="option" value="nl"/>
+             <property name="tokens" value="CLASS_DEF, CTOR_DEF, METHOD_DEF, LAMBDA, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ENUM_CONSTANT_DEF"/>
+        </module>
+        <module name="RightCurly">
+            <property name="option" value="alone"/>
+        </module>
+
+        <!-- Do not force final parameters for methods/constructors -->
+        <!-- (omit FinalParameters module) -->
+
+        <!-- Do not enforce variable Javadocs for private fields in test helpers -->
+        <!-- (omit JavadocVariable module) -->
+
+        <!-- HiddenField often conflicts with builder/test patterns; disable -->
+        <!-- (omit HiddenField module) -->
+    </module>
+
+    <!-- Do not fail on trailing spaces via RegexpSingleline -->
+    <!-- (omit RegexpSingleline module) -->
+</module>
+
+
+
