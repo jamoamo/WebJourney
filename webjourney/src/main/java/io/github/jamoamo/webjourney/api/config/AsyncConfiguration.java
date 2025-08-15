@@ -10,6 +10,10 @@ public final class AsyncConfiguration
 {	
 	private final List<String> globalArguments;
 	private final List<String> chromeArguments;
+	private final String validationMode;
+	private final List<String> denyList;
+	private final List<String> redactionExtraKeys;
+	private final String logLevel;
 
 	/**
 	 * Creates a new AsyncConfiguration.
@@ -19,8 +23,47 @@ public final class AsyncConfiguration
 	 */
 	public AsyncConfiguration(List<String> globalArguments, List<String> chromeArguments)
 	{
+		this(globalArguments, chromeArguments, "reject", getDefaultDenyList(), Collections.emptyList(), "DEBUG");
+	}
+
+	/**
+	 * Creates a new AsyncConfiguration with full configuration options.
+	 * 
+	 * @param globalArguments The global arguments to use for all browsers.
+	 * @param chromeArguments The arguments to use for all chrome browsers.
+	 * @param validationMode The validation mode for browser arguments (reject or warn).
+	 * @param denyList The list of denied browser argument keys.
+	 * @param redactionExtraKeys Additional keys to redact beyond defaults.
+	 * @param logLevel The log level for browser arguments logging.
+	 */
+	public AsyncConfiguration(List<String> globalArguments, List<String> chromeArguments, 
+							  String validationMode, List<String> denyList, 
+							  List<String> redactionExtraKeys, String logLevel)
+	{
 		this.globalArguments = List.copyOf(globalArguments == null ? Collections.emptyList() : globalArguments);
 		this.chromeArguments = List.copyOf(chromeArguments == null ? Collections.emptyList() : chromeArguments);
+		this.validationMode = validationMode != null ? validationMode : "reject";
+		this.denyList = List.copyOf(denyList == null || denyList.isEmpty() ? getDefaultDenyList() : denyList);
+		this.redactionExtraKeys = List.copyOf(redactionExtraKeys == null ? Collections.emptyList() : redactionExtraKeys);
+		this.logLevel = logLevel != null ? logLevel : "DEBUG";
+	}
+
+	/**
+	 * Gets the default deny-list for browser arguments.
+	 * 
+	 * @return the default deny-list
+	 */
+	private static List<String> getDefaultDenyList()
+	{
+		return List.of(
+			"--user-data-dir",
+			"--remote-debugging-port", 
+			"--remote-debugging-address",
+			"--disable-web-security",
+			"--proxy-bypass-list",
+			"--disable-extensions-except",
+			"--load-extension"
+		);
 	}
 
 	/**
@@ -41,5 +84,45 @@ public final class AsyncConfiguration
 	public List<String> getChromeArguments()
 	{
 		return this.chromeArguments;
+	}
+
+	/**
+	 * Gets the validation mode for browser arguments.
+	 * 
+	 * @return The validation mode (reject or warn).
+	 */
+	public String getValidationMode()
+	{
+		return this.validationMode;
+	}
+
+	/**
+	 * Gets the deny-list of browser argument keys.
+	 * 
+	 * @return The deny-list of keys.
+	 */
+	public List<String> getDenyList()
+	{
+		return this.denyList;
+	}
+
+	/**
+	 * Gets the additional redaction keys beyond defaults.
+	 * 
+	 * @return The additional redaction keys.
+	 */
+	public List<String> getRedactionExtraKeys()
+	{
+		return this.redactionExtraKeys;
+	}
+
+	/**
+	 * Gets the log level for browser arguments logging.
+	 * 
+	 * @return The log level.
+	 */
+	public String getLogLevel()
+	{
+		return this.logLevel;
 	}
 }

@@ -27,7 +27,11 @@ public final class AsyncConfigurationLoader
 	{
 		return new AsyncConfiguration(
 				splitList(props.getProperty(ConfiguationKeys.GLOBAL_ARGUMENTS)),
-				splitList(props.getProperty(ConfiguationKeys.CHROME_ARGUMENTS)));
+				splitList(props.getProperty(ConfiguationKeys.CHROME_ARGUMENTS)),
+				props.getProperty(ConfiguationKeys.VALIDATION_MODE),
+				splitList(props.getProperty(ConfiguationKeys.DENY_LIST)),
+				splitList(props.getProperty(ConfiguationKeys.REDACTION_EXTRA_KEYS)),
+				props.getProperty(ConfiguationKeys.LOG_LEVEL));
 	}
 
 	/**

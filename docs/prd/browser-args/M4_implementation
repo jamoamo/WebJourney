@@ -1,0 +1,109 @@
+### Objective
+Implement Milestone 4 (Validation, Sanitization, Logging) for browser arguments, building on the provider and provenance work completed in M3.2.
+
+### Scope Summary
+- Deny-list validation with configurable failure mode (reject or warn)
+- Sensitive value redaction for safe logging
+- Observability: log resolved arguments with provenance at a configurable level, ensuring redaction
+
+### Current State Snapshot (relevant types)
+- `DefaultBrowserArgumentsProvider` composes sources, merges, and builds provenance (`ProvenancedArgument`, `BrowserArgumentSource`).
+- `BrowserArgParser` parses/normalizes tokens.
+- `BrowserArgumentsMerge.canonicalKey(String)` exists and is used for provenance; reuse it for deny-list keying.
+- No validation, redaction, or provider-side logging implemented yet.
+
+### Design and Components
+1) Deny-list validation
+- Add `BrowserArgumentsValidator` (new class) with:
+  - `ValidationMode` enum: `REJECT`, `WARN`.
+  - `BrowserArgumentsValidator(Set<String> deniedCanonicalKeys, ValidationMode mode)`.
+  - `ValidationResult validate(List<String> tokens)` returns:
+    - `List<String> allowed` (tokens not denied),
+    - `List<String> violations` (original tokens triggering deny),
+    - `boolean hasViolations()`.
+  - Canonicalization rule: compute key via `BrowserArgumentsMerge.canonicalKey(token.trim())` and match against `deniedCanonicalKeys`.
+  - Behavior:
+    - `REJECT`: throw `IllegalArgumentException` with clear message including offending keys and guidance.
+    - `WARN`: return `allowed` without the offending tokens; log a warning listing dropped tokens.
+- Default deny-list (initial set; extendable via config):
+  - `--user-data-dir`, `--remote-debugging-port`, `--remote-debugging-address`, `--disable-web-security`, `--proxy-bypass-list`, `--disable-extensions-except`, `--load-extension`.
+- Configuration surface (backed by existing config system added in M1):
+  - `browser.args.validation.mode` = `reject|warn` (default: `reject`).
+  - `browser.args.denyList` = list of strings; normalized to canonical keys at load.
+
+2) Sensitive value redaction
+- Add `BrowserArgumentsRedactor` (new class) with:
+  - `String redactToken(String token)` and `List<String> redact(List<String> tokens)`.
+  - Redaction rules:
+    - URL credentials: redact `scheme://user:pass@` → `scheme://***:***@` (preserve host/port/path).
+    - Key-value sensitive pairs: if canonical key in set {`--proxy-server`, `--proxy-auth`, `--password`, `--token`, `--auth`, `--authorization`} and token contains `=value`, replace value with `***`.
+    - Generic `user:pass@` in any token: replace with `***:***@`.
+  - Ensure idempotency (double redaction should not further modify tokens).
+- Optional config surface:
+  - `browser.args.redaction.extraKeys` = list of additional canonical keys to redact values for.
+
+3) Observability/logging with provenance
+- Logging location: in `DefaultBrowserArgumentsProvider.resolve(...)` after merge + validation and before return.
+- Logging content:
+  - `Resolved args (redacted):` list of redacted tokens in order.
+  - `Provenance:` per canonical key, its source from `BrowserArgumentSource`.
+- Log level control:
+  - `browser.args.logLevel` (string: `TRACE|DEBUG|INFO|WARN|ERROR`) default `DEBUG`.
+  - If level name invalid, default to `DEBUG`.
+- Implementation details:
+  - Integrate `org.slf4j.Logger`/`LoggerFactory`.
+  - Build a map `key -> source` already computed; reuse it for provenance logging.
+  - Apply redaction only to displayed values. Do not mutate the returned `ResolvedBrowserArguments`.
+
+### Integration Plan (edits)
+- Create `io.github.jamoamo.webjourney.api.web.BrowserArgumentsValidator` and `BrowserArgumentsRedactor`.
+- Extend `DefaultBrowserArgumentsProvider`:
+  - Inject configuration (minimal surface): add optional constructor params or getters from `journeyContext.getConfiguration()` if available.
+  - Build `denyList` and `validationMode` from config; construct `BrowserArgumentsValidator` once per provider instance.
+  - After `merged` computed and `keyToSource` built:
+    1. Run `validator.validate(merged)`.
+    2. If `REJECT` and violations exist: throw with message including canonical keys and original tokens.
+    3. If `WARN`: drop violating tokens (use `allowed`) and update `merged` accordingly; adjust provenance by removing dropped keys.
+  - Logging: compute `redacted = BrowserArgumentsRedactor.redact(merged)` and log both redacted args and provenance at configured level.
+  - Return `ResolvedBrowserArguments(merged, provenance)` unchanged (non-redacted) for downstream use.
+- Add config keys to the configuration layer introduced in M1:
+  - Properties/YAML keys described above; default values if missing.
+
+### Exceptions and Messages
+- REJECT mode message example:
+  - "Denied browser arguments detected: [--user-data-dir, --remote-debugging-port]. Configure `browser.args.validation.mode=warn` to drop instead, or remove/override via config."
+- WARN mode log example:
+  - "Dropping denied browser arguments (mode=warn): [--user-data-dir]"
+
+### Testing Plan
+- Unit tests for `BrowserArgumentsValidator`:
+  - Key-only and key=value tokens for denied keys are caught.
+  - Mixed-case/whitespace normalized via `BrowserArgParser.normalize` before validate.
+  - REJECT throws with clear list; WARN drops and returns remaining tokens.
+- Unit tests for `BrowserArgumentsRedactor`:
+  - URL with credentials redacted; idempotency; tokens for sensitive keys have values redacted.
+  - Ensure keys not in the sensitive set are not redacted.
+- Provider integration tests (`DefaultBrowserArgumentsProviderTest`):
+  - Happy path with no denied tokens: logs contain redacted tokens, provenance correct.
+  - Denied tokens in per-journey and env: precedence respected; REJECT vs WARN behavior.
+  - Snapshot-style assertion for log output (using SLF4J test appender) ensures redaction applied.
+
+### Acceptance Mapping
+- M4.1 (Deny-list validation): `BrowserArgumentsValidator`, config keys, tests → acceptance met.
+- M4.2 (Sensitive value redaction): `BrowserArgumentsRedactor`, tests, logs show redacted values → acceptance met.
+- M4.3 (Observability/logging): provider-level logging with provenance and redaction at configurable level → acceptance met.
+
+### Effort Estimate
+- Validator: 1 day (incl. config wiring and tests)
+- Redactor: 1 day (incl. tests)
+- Logging integration + tests: 0.5–1 day
+
+### Risks and Mitigations
+- Over/under redaction: start with conservative rules; allow extension via `browser.args.redaction.extraKeys`.
+- Deny-list false positives due to canonicalization: rely on `BrowserArgumentsMerge.canonicalKey` used across the system for consistency.
+- Logging overhead: gate at log level check; avoid string building when disabled.
+
+### Rollout
+- Default behavior: validation mode `reject`, logging level `DEBUG`.
+- Document keys and defaults in user docs (picked up in M8).
+- Backward compatibility: when no denied tokens present, behavior unchanged; logs can be suppressed by log level.
