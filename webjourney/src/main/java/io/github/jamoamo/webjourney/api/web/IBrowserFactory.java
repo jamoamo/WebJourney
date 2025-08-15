@@ -23,6 +23,8 @@
  */
 package io.github.jamoamo.webjourney.api.web;
 
+import io.github.jamoamo.webjourney.api.IJourneyContext;
+
 /**
  * The factory responsible for creating a browser instance.
  * @author James Amoore
@@ -36,4 +38,17 @@ public interface IBrowserFactory
 	 * @return The newly created browser.
 	*/
 	IBrowser createBrowser(IBrowserOptions options);
+	
+	/**
+	 * Creates the browser instance with journey context for browser arguments.
+	 * 
+	 * @param options The options for the created browser.
+	 * @param journeyContext The journey context containing browser arguments.
+	 * @return The newly created browser.
+	*/
+	default IBrowser createBrowser(IBrowserOptions options, IJourneyContext journeyContext)
+	{
+		// Default implementation for backward compatibility
+		return createBrowser(options);
+	}
 }

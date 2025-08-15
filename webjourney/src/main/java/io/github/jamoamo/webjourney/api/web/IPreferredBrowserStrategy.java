@@ -23,6 +23,8 @@
  */
 package io.github.jamoamo.webjourney.api.web;
 
+import io.github.jamoamo.webjourney.api.IJourneyContext;
+
 /**
  * Strategy for determining the preferred browser to use.
  * @author James Amoore
@@ -35,4 +37,16 @@ public interface IPreferredBrowserStrategy
 	 * @return the preferred browser.
 	 */
 	IBrowser getPreferredBrowser(IBrowserOptions options);
+	
+	/**
+	 * Returns the preferred browser with journey context for browser arguments.
+	 * @param options Options for the browser.
+	 * @param journeyContext The journey context containing browser arguments.
+	 * @return the preferred browser.
+	 */
+	default IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext)
+	{
+		// Default implementation for backward compatibility
+		return getPreferredBrowser(options);
+	}
 }

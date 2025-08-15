@@ -28,6 +28,7 @@ import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
 import io.github.jamoamo.webjourney.api.ITravelOptions;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
+import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,13 +54,25 @@ public class WebTravellerTest
 	{
 		System.out.println("travelJourney");
 		IJourney journey = Mockito.mock(IJourney.class);
-		IBrowser browser = Mockito.mock(IBrowser.class);
-		IPreferredBrowserStrategy browserStrategy = Mockito.mock(IPreferredBrowserStrategy.class);
-		Mockito.when(browserStrategy.getPreferredBrowser(ArgumentMatchers.any())).thenReturn(browser);
+		final IBrowser browser = Mockito.mock(IBrowser.class);
+		
+		// Create a custom strategy that always returns our mock browser
+		IPreferredBrowserStrategy browserStrategy = new IPreferredBrowserStrategy() {
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options) {
+				return browser;
+			}
+			
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext) {
+				return browser;
+			}
+		};
+		
 		ITravelOptions travelOptions = Mockito.mock(ITravelOptions.class);
 		Mockito.when(travelOptions.getJourneyObservers()).thenReturn(new ArrayList<>());
-		
 		Mockito.when(travelOptions.getPreferredBrowserStrategy()).thenReturn(browserStrategy);
+		
 		WebTraveller instance = new WebTraveller(travelOptions);
 		instance.travelJourney(journey);
 		
@@ -76,13 +89,25 @@ public class WebTravellerTest
 		System.out.println("travelJourney");
 		IJourney journey = Mockito.mock(IJourney.class);
 		IBrowser browser = Mockito.mock(IBrowser.class);
-		IPreferredBrowserStrategy browserStrategy = Mockito.mock(IPreferredBrowserStrategy.class);
-		Mockito.when(browserStrategy.getPreferredBrowser(ArgumentMatchers.any())).thenReturn(browser);
+		
+		// Create a custom strategy that always returns our mock browser
+		IPreferredBrowserStrategy browserStrategy = new IPreferredBrowserStrategy() {
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options) {
+				return browser;
+			}
+			
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext) {
+				return browser;
+			}
+		};
+		
 		ITravelOptions travelOptions = Mockito.mock(ITravelOptions.class);
 		IJourneyObserver observer = Mockito.mock(IJourneyObserver.class);
 		Mockito.when(travelOptions.getJourneyObservers()).thenReturn(Collections.singletonList(observer));
-		
 		Mockito.when(travelOptions.getPreferredBrowserStrategy()).thenReturn(browserStrategy);
+		
 		WebTraveller instance = new WebTraveller(travelOptions);
 		instance.travelJourney(journey);
 		
@@ -99,14 +124,26 @@ public class WebTravellerTest
 		System.out.println("travelJourney");
 		IJourney journey = Mockito.mock(IJourney.class);
 		IBrowser browser = Mockito.mock(IBrowser.class);
-		IPreferredBrowserStrategy browserStrategy = Mockito.mock(IPreferredBrowserStrategy.class);
-		Mockito.when(browserStrategy.getPreferredBrowser(ArgumentMatchers.any())).thenReturn(browser);
+		
+		// Create a custom strategy that always returns our mock browser
+		IPreferredBrowserStrategy browserStrategy = new IPreferredBrowserStrategy() {
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options) {
+				return browser;
+			}
+			
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext) {
+				return browser;
+			}
+		};
+		
 		ITravelOptions travelOptions = Mockito.mock(ITravelOptions.class);
 		Mockito.when(travelOptions.getJourneyObservers()).thenReturn(new ArrayList<>());
+		Mockito.when(travelOptions.getPreferredBrowserStrategy()).thenReturn(browserStrategy);
 		
 		Mockito.doThrow(new JourneyException("Journey Failed.")).when(journey).doJourney(ArgumentMatchers.any());
 		
-		Mockito.when(travelOptions.getPreferredBrowserStrategy()).thenReturn(browserStrategy);
 		WebTraveller instance = new WebTraveller(travelOptions);
 		JourneyException assertThrows =
 			 Assertions.assertThrows(JourneyException.class, () -> instance.travelJourney(journey));

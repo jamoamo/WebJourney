@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.api.web;
 
 import java.net.URL;
 import java.util.Arrays;
+import io.github.jamoamo.webjourney.api.IJourneyContext;
 
 /**
  * Uses a prioritized list of browsers to determine the browser to use. 
@@ -76,11 +77,23 @@ public class PriorityBrowserStrategy implements IPreferredBrowserStrategy
 	@SuppressWarnings("IllegalCatch")
 	public IBrowser getPreferredBrowser(IBrowserOptions options)
 	{
+		return getPreferredBrowser(options, null);
+	}
+	
+	/**
+	 * Returns the highest priority browser for the system with journey context.
+	 */
+	@Override
+	@SuppressWarnings("IllegalCatch")
+	public IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext)
+	{
 		for(IBrowserFactory browserFactory : this.browserPriority)
 		{
 			try
 			{
-				IBrowser browser = browserFactory.createBrowser(options);
+				IBrowser browser = journeyContext != null ? 
+					browserFactory.createBrowser(options, journeyContext) :
+					browserFactory.createBrowser(options);
 				//test the browser
 				browser.getActiveWindow().navigateToUrl(new URL("http://www.google.com"));
 				return browser;

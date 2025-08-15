@@ -10,6 +10,9 @@ public final class AsyncConfiguration
 {	
 	private final List<String> globalArguments;
 	private final List<String> chromeArguments;
+	private final List<String> firefoxArguments;
+	private final List<String> edgeArguments;
+	private final boolean enableExtraArgs;
 	private final String validationMode;
 	private final List<String> denyList;
 	private final List<String> redactionExtraKeys;
@@ -23,7 +26,8 @@ public final class AsyncConfiguration
 	 */
 	public AsyncConfiguration(List<String> globalArguments, List<String> chromeArguments)
 	{
-		this(globalArguments, chromeArguments, "reject", getDefaultDenyList(), Collections.emptyList(), "DEBUG");
+		this(globalArguments, chromeArguments, Collections.emptyList(), Collections.emptyList(), 
+			 true, "reject", getDefaultDenyList(), Collections.emptyList(), "DEBUG");
 	}
 
 	/**
@@ -31,17 +35,24 @@ public final class AsyncConfiguration
 	 * 
 	 * @param globalArguments The global arguments to use for all browsers.
 	 * @param chromeArguments The arguments to use for all chrome browsers.
+	 * @param firefoxArguments The arguments to use for all firefox browsers.
+	 * @param edgeArguments The arguments to use for all edge browsers.
+	 * @param enableExtraArgs Feature flag to enable extra browser arguments.
 	 * @param validationMode The validation mode for browser arguments (reject or warn).
 	 * @param denyList The list of denied browser argument keys.
 	 * @param redactionExtraKeys Additional keys to redact beyond defaults.
 	 * @param logLevel The log level for browser arguments logging.
 	 */
 	public AsyncConfiguration(List<String> globalArguments, List<String> chromeArguments, 
-							  String validationMode, List<String> denyList, 
+							  List<String> firefoxArguments, List<String> edgeArguments,
+							  boolean enableExtraArgs, String validationMode, List<String> denyList, 
 							  List<String> redactionExtraKeys, String logLevel)
 	{
 		this.globalArguments = List.copyOf(globalArguments == null ? Collections.emptyList() : globalArguments);
 		this.chromeArguments = List.copyOf(chromeArguments == null ? Collections.emptyList() : chromeArguments);
+		this.firefoxArguments = List.copyOf(firefoxArguments == null ? Collections.emptyList() : firefoxArguments);
+		this.edgeArguments = List.copyOf(edgeArguments == null ? Collections.emptyList() : edgeArguments);
+		this.enableExtraArgs = enableExtraArgs;
 		this.validationMode = validationMode != null ? validationMode : "reject";
 		this.denyList = List.copyOf(denyList == null || denyList.isEmpty() ? getDefaultDenyList() : denyList);
 		this.redactionExtraKeys = List.copyOf(redactionExtraKeys == null ? Collections.emptyList() : redactionExtraKeys);
@@ -84,6 +95,36 @@ public final class AsyncConfiguration
 	public List<String> getChromeArguments()
 	{
 		return this.chromeArguments;
+	}
+
+	/**
+	 * Gets the firefox arguments.
+	 * 
+	 * @return The firefox arguments.
+	 */
+	public List<String> getFirefoxArguments()
+	{
+		return this.firefoxArguments;
+	}
+
+	/**
+	 * Gets the edge arguments.
+	 * 
+	 * @return The edge arguments.
+	 */
+	public List<String> getEdgeArguments()
+	{
+		return this.edgeArguments;
+	}
+
+	/**
+	 * Gets the enable extra args feature flag.
+	 * 
+	 * @return true if extra arguments are enabled, false otherwise.
+	 */
+	public boolean isEnableExtraArgs()
+	{
+		return this.enableExtraArgs;
 	}
 
 	/**

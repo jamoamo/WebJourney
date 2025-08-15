@@ -36,47 +36,48 @@ import java.util.Map;
 import org.openqa.selenium.BuildInfo;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Browser factory to create a chrome browser.
+ * Browser factory to create an edge browser.
  *
  * @author James Amoore
  */
-public final class ChromeBrowserFactory implements IBrowserFactory
+public final class EdgeBrowserFactory implements IBrowserFactory
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChromeBrowserFactory.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EdgeBrowserFactory.class);
 	private final IBrowserArgumentsProvider browserArgumentsProvider;
 	private final AsyncConfiguration configuration;
 	
 	/**
-	 * Creates a new ChromeBrowserFactory with default configuration.
+	 * Creates a new EdgeBrowserFactory with default configuration.
 	 */
-	public ChromeBrowserFactory()
+	public EdgeBrowserFactory()
 	{
 		this(null, null);
 	}
 	
 	/**
-	 * Creates a new ChromeBrowserFactory with provided configuration.
+	 * Creates a new EdgeBrowserFactory with provided configuration.
 	 * 
 	 * @param configuration The configuration for browser arguments.
 	 * @param browserArgumentsProvider The provider for browser arguments. If null, a default provider will be created.
 	 */
-	public ChromeBrowserFactory(AsyncConfiguration configuration, IBrowserArgumentsProvider browserArgumentsProvider)
+	public EdgeBrowserFactory(AsyncConfiguration configuration, IBrowserArgumentsProvider browserArgumentsProvider)
 	{
 		this.configuration = configuration != null ? configuration : new AsyncConfiguration(java.util.List.of(), java.util.List.of());
 		this.browserArgumentsProvider = browserArgumentsProvider != null ? browserArgumentsProvider : new DefaultBrowserArgumentsProvider(System::getenv, this.configuration);
 	}
+	
 	/**
-	 * Creates a new Chrome browser.
+	 * Creates a new Edge browser.
 	 *
 	 * @param browserOptions the options to use to create the browser
 	 *
-	 * @return a new Chrome browser instance.
+	 * @return a new Edge browser instance.
 	 */
 	@Override
 	public IBrowser createBrowser(IBrowserOptions browserOptions)
@@ -87,27 +88,28 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 	@Override
 	public IBrowser createBrowser(IBrowserOptions browserOptions, IJourneyContext journeyContext)
 	{
-		ChromeOptions options =
-			createChromeOptions(browserOptions, journeyContext);
+		EdgeOptions options =
+			createEdgeOptions(browserOptions, journeyContext);
 		
 		logSeleniumBuildInfo();
 		
-		ChromeDriver driver = new ChromeDriver(options);
+		EdgeDriver driver = new EdgeDriver(options);
 		
 		logDriverInfo(driver);
 		
 		return new SeleniumDrivenBrowser(driver);
 	}
 
-	protected ChromeOptions createChromeOptions(IBrowserOptions browserOptions)
+	protected EdgeOptions createEdgeOptions(IBrowserOptions browserOptions)
 	{
-		return createChromeOptions(browserOptions, null);
+		return createEdgeOptions(browserOptions, null);
 	}
 	
-	protected ChromeOptions createChromeOptions(IBrowserOptions browserOptions, IJourneyContext journeyContext)
+	protected EdgeOptions createEdgeOptions(IBrowserOptions browserOptions, IJourneyContext journeyContext)
 	{
-		ChromeOptions options =
-				  new ChromeOptions();
+		EdgeOptions options = new EdgeOptions();
+		
+		// Apply basic Edge-specific settings (similar to Chrome)
 		options = options.addArguments("--no-sandbox", "--remote-allow-origins=*", "--disable-dev-shm-usage");
 		options = setHeadless(browserOptions, options);
 		options = setUnexpectedAlertBehaviour(browserOptions, options);
@@ -117,10 +119,10 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 		{
 			try
 			{
-				ResolvedBrowserArguments resolved = this.browserArgumentsProvider.resolve(StandardBrowser.CHROME, journeyContext);
+				ResolvedBrowserArguments resolved = this.browserArgumentsProvider.resolve(StandardBrowser.EDGE, journeyContext);
 				if (!resolved.getArguments().isEmpty())
 				{
-					LOGGER.debug("Applying {} resolved Chrome arguments", resolved.getArguments().size());
+					LOGGER.debug("Applying {} resolved Edge arguments", resolved.getArguments().size());
 					options = options.addArguments(resolved.getArguments());
 				}
 			}
@@ -133,16 +135,15 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 		return options;
 	}
 
-	private void logDriverInfo(ChromeDriver driver)
+	private void logDriverInfo(EdgeDriver driver)
 	{
 		Capabilities capabilities = driver.getCapabilities();
-		Map<String, String> chromeInfo = (Map<String, String>)capabilities.getCapability("chrome");
+		Map<String, String> edgeInfo = (Map<String, String>)capabilities.getCapability("msedge");
 		LOGGER.info(String.format(
-				  "Started Selenium driver: browserName[%s], browserVersion[%s], driverVersion[%s], dataDir[%s]",
+				  "Started Selenium driver: browserName[%s], browserVersion[%s], driverVersion[%s]",
 				  capabilities.getBrowserName(),
 				  capabilities.getBrowserVersion(),
-				  chromeInfo.get("chromedriverVersion"),
-				  chromeInfo.get("userDataDir")));
+				  edgeInfo != null ? edgeInfo.get("msedgedriverVersion") : "unknown"));
 	}
 
 	private void logSeleniumBuildInfo()
@@ -153,20 +154,20 @@ public final class ChromeBrowserFactory implements IBrowserFactory
 				  info.toString()));
 	}
 
-	private ChromeOptions setUnexpectedAlertBehaviour(IBrowserOptions browserOptions, ChromeOptions options)
+	private EdgeOptions setUnexpectedAlertBehaviour(IBrowserOptions browserOptions, EdgeOptions options)
 	{
 		if(browserOptions.acceptUnexpectedAlerts())
 		{
-			options = (ChromeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
+			options = (EdgeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.ACCEPT);
 		}
 		else
 		{
-			options = (ChromeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
+			options = (EdgeOptions) options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.DISMISS);
 		}
 		return options;
 	}
 
-	private ChromeOptions setHeadless(IBrowserOptions browserOptions, ChromeOptions options)
+	private EdgeOptions setHeadless(IBrowserOptions browserOptions, EdgeOptions options)
 	{
 		if(browserOptions.isHeadless())
 		{

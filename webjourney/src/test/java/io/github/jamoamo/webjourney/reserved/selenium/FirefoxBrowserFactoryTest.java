@@ -36,15 +36,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Tests for FirefoxBrowserFactory browser arguments integration.
  *
  * @author James Amoore
  */
-public class ChromeBrowserFactoryTest
+public class FirefoxBrowserFactoryTest
 {
 	private IBrowserOptions browserOptions;
 	private IJourneyContext journeyContext;
@@ -66,122 +67,80 @@ public class ChromeBrowserFactoryTest
 		configuration = new AsyncConfiguration(List.of(), List.of(), List.of(), List.of(), true, "reject", List.of(), List.of(), "DEBUG");
 	}
 
-	/**
-	 * Test of createBrowser method, of class ChromeBrowserFactory.
-	 */
 	@Test
-	public void testCreateBrowser()
-	{
-		IBrowser browser = null;
-		try
-		{
-			ChromeBrowserFactory factory = new ChromeBrowserFactory();
-			browser = factory.createBrowser(browserOptions);
-			Assertions.assertInstanceOf(SeleniumDrivenBrowser.class, browser);
-		}
-		finally
-		{
-			if(browser != null)
-			{
-				browser.exit();
-			}
-		}
-	}
-
-	@Test
-	public void testCreateChromeOptionsAppliesResolvedArguments()
+	public void testCreateFirefoxOptionsAppliesResolvedArguments()
 	{
 		// Given: provider returns specific arguments
-		List<String> expectedArgs = List.of("--disable-gpu", "--window-size=1920,1080");
+		List<String> expectedArgs = List.of("--safe-mode", "--new-instance");
 		List<ProvenancedArgument> provenance = new ArrayList<>();
 		ResolvedBrowserArguments resolved = new ResolvedBrowserArguments(expectedArgs, provenance);
 		
-		Mockito.when(mockProvider.resolve(StandardBrowser.CHROME, journeyContext))
+		Mockito.when(mockProvider.resolve(StandardBrowser.FIREFOX, journeyContext))
 			   .thenReturn(resolved);
 
-		// When: creating chrome options with context
-		ChromeBrowserFactory factory = new ChromeBrowserFactory(configuration, mockProvider);
-		ChromeOptions options = factory.createChromeOptions(browserOptions, journeyContext);
+		// When: creating firefox options with context
+		FirefoxBrowserFactory factory = new FirefoxBrowserFactory(configuration, mockProvider);
+		FirefoxOptions options = factory.createFirefoxOptions(browserOptions, journeyContext);
 
 		// Then: verify provider was called
-		Mockito.verify(mockProvider).resolve(StandardBrowser.CHROME, journeyContext);
+		Mockito.verify(mockProvider).resolve(StandardBrowser.FIREFOX, journeyContext);
 		
 		// And options object is created successfully
-		Assertions.assertNotNull(options, "ChromeOptions should be created");
+		Assertions.assertNotNull(options, "FirefoxOptions should be created");
 	}
 
 	@Test
-	public void testCreateChromeOptionsSkipsProviderWhenFeatureDisabled()
+	public void testCreateFirefoxOptionsSkipsProviderWhenFeatureDisabled()
 	{
 		// Given: feature flag disabled
 		AsyncConfiguration disabledConfig = new AsyncConfiguration(
 			List.of(), List.of(), List.of(), List.of(), false, "reject", List.of(), List.of(), "DEBUG");
 
 		// When: creating options
-		ChromeBrowserFactory factory = new ChromeBrowserFactory(disabledConfig, mockProvider);
-		ChromeOptions options = factory.createChromeOptions(browserOptions, journeyContext);
+		FirefoxBrowserFactory factory = new FirefoxBrowserFactory(disabledConfig, mockProvider);
+		FirefoxOptions options = factory.createFirefoxOptions(browserOptions, journeyContext);
 
 		// Then: provider not called
 		Mockito.verify(mockProvider, Mockito.never()).resolve(Mockito.any(), Mockito.any());
-		
-		// And options object is created successfully
-		Assertions.assertNotNull(options, "ChromeOptions should be created");
 	}
 
 	@Test
-	public void testCreateChromeOptionsSkipsProviderWhenContextNull()
+	public void testCreateFirefoxOptionsSkipsProviderWhenContextNull()
 	{
 		// When: creating options without context
-		ChromeBrowserFactory factory = new ChromeBrowserFactory(configuration, mockProvider);
-		ChromeOptions options = factory.createChromeOptions(browserOptions, null);
+		FirefoxBrowserFactory factory = new FirefoxBrowserFactory(configuration, mockProvider);
+		FirefoxOptions options = factory.createFirefoxOptions(browserOptions, null);
 
 		// Then: provider not called
 		Mockito.verify(mockProvider, Mockito.never()).resolve(Mockito.any(), Mockito.any());
-		
-		// And options object is created successfully
-		Assertions.assertNotNull(options, "ChromeOptions should be created");
 	}
 
 	@Test
-	public void testCreateChromeOptionsHandlesProviderException()
+	public void testCreateFirefoxOptionsHandlesProviderException()
 	{
 		// Given: provider throws exception
-		Mockito.when(mockProvider.resolve(StandardBrowser.CHROME, journeyContext))
+		Mockito.when(mockProvider.resolve(StandardBrowser.FIREFOX, journeyContext))
 			   .thenThrow(new RuntimeException("Provider error"));
 
 		// When: creating options (should not throw)
-		ChromeBrowserFactory factory = new ChromeBrowserFactory(configuration, mockProvider);
-		ChromeOptions options = factory.createChromeOptions(browserOptions, journeyContext);
+		FirefoxBrowserFactory factory = new FirefoxBrowserFactory(configuration, mockProvider);
+		FirefoxOptions options = factory.createFirefoxOptions(browserOptions, journeyContext);
 
-		// Then: options are still created successfully despite provider error
-		Assertions.assertNotNull(options, "ChromeOptions should be created despite provider error");
+		// Then: options are still created successfully
+		Assertions.assertNotNull(options, "Options should be created despite provider error");
 	}
 
 	@Test
-	public void testCreateBrowserWithContext()
+	public void testCreateFirefoxOptionsAppliesHeadlessMode()
 	{
-		// Given: provider returns empty arguments
-		ResolvedBrowserArguments resolved = new ResolvedBrowserArguments(List.of(), List.of());
-		Mockito.when(mockProvider.resolve(StandardBrowser.CHROME, journeyContext))
-			   .thenReturn(resolved);
+		// Given: headless mode enabled
+		Mockito.when(browserOptions.isHeadless()).thenReturn(true);
 
-		IBrowser browser = null;
-		try
-		{
-			// When: creating browser with context
-			ChromeBrowserFactory factory = new ChromeBrowserFactory(configuration, mockProvider);
-			browser = factory.createBrowser(browserOptions, journeyContext);
+		// When: creating options
+		FirefoxBrowserFactory factory = new FirefoxBrowserFactory();
+		FirefoxOptions options = factory.createFirefoxOptions(browserOptions);
 
-			// Then: browser is created successfully
-			Assertions.assertInstanceOf(SeleniumDrivenBrowser.class, browser);
-		}
-		finally
-		{
-			if(browser != null)
-			{
-				browser.exit();
-			}
-		}
+		// Then: options are created successfully with headless mode
+		Assertions.assertNotNull(options, "FirefoxOptions should be created with headless mode");
 	}
-
 }

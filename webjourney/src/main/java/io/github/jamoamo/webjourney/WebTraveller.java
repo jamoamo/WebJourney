@@ -67,12 +67,16 @@ public class WebTraveller
 		MDC.put(LOGGER_CONTEXT_JOURNEY_LABEL, UUID.randomUUID().toString());
 		this.logger.info("Starting Journey.");
 		IPreferredBrowserStrategy browserStrategy = this.travelOptions.getPreferredBrowserStrategy();
-		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions());
+		
+		// Create context first so browser arguments can be accessed during browser creation
 		JourneyContext context = new JourneyContext();
 		IJourneyBreadcrumb breadcrumb = new JourneyBreadcrumb();
 		context.setJourneyBreadcrumb(breadcrumb);
-		context.setBrowser(browser);
 		context.setJourneyObservers(this.travelOptions.getJourneyObservers());
+		
+		// Create browser with context for browser arguments
+		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions(), context);
+		context.setBrowser(browser);
 		try
 		{
 			journey.doJourney(context);
@@ -85,7 +89,9 @@ public class WebTraveller
 		}
 		finally
 		{
-			browser.exit();
+			if (browser != null) {
+				browser.exit();
+			}
 			MDC.remove(LOGGER_CONTEXT_JOURNEY_LABEL);
 		}
 	}
