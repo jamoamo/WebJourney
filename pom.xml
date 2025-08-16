@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jamoamo</groupId>
     <artifactId>webjourney-parent</artifactId>
-    <version>3.3.3-SNAPSHOT</version>
+    <version>0.4.2</version>
     <packaging>pom</packaging>
     <name>WebJourney Parent</name>
     <description>
@@ -36,7 +36,7 @@
         <connection>scm:git:https://github.com/jamoamo/webjourney.git</connection>
         <developerConnection>scm:git:https://github.com/jamoamo/webjourney.git</developerConnection>
         <url>https://github.com/jamoamo/webjourney</url>
-        <tag>HEAD</tag>
+        <tag>v0.4.2</tag>
     </scm>
    
     <distributionManagement>
@@ -48,6 +48,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.github.jamoamo</groupId>
+                <artifactId>webjourney</artifactId>
+                <version>0.4.2</version>
+            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -173,6 +178,14 @@
                             <publishingServerId>central</publishingServerId>
                             <autoPublish>true</autoPublish>
                             <tokenAuth>true</tokenAuth>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>3.1.2</version>
+                        <configuration>
+                            <skip>true</skip>
                         </configuration>
                     </plugin>
                 </plugins>
