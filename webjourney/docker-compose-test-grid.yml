@@ -1,0 +1,65 @@
+# Docker Compose configuration for Selenium Grid testing
+# Used by M7.3 Grid compatibility tests
+version: '3.8'
+
+services:
+  selenium-hub:
+    image: selenium/hub:4.15.0
+    container_name: selenium-hub-test
+    ports:
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=16
+      - GRID_BROWSER_TIMEOUT=300
+      - GRID_TIMEOUT=300
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  chrome-node:
+    image: selenium/node-chrome:4.15.0
+    container_name: chrome-node-test
+    environment:
+      - HUB_HOST=selenium-hub
+      - NODE_MAX_INSTANCES=4
+      - NODE_MAX_SESSION=4
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2gb
+
+  firefox-node:
+    image: selenium/node-firefox:4.15.0
+    container_name: firefox-node-test
+    environment:
+      - HUB_HOST=selenium-hub
+      - NODE_MAX_INSTANCES=4
+      - NODE_MAX_SESSION=4
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2gb
+
+  edge-node:
+    image: selenium/node-edge:4.15.0
+    container_name: edge-node-test
+    environment:
+      - HUB_HOST=selenium-hub
+      - NODE_MAX_INSTANCES=4
+      - NODE_MAX_SESSION=4
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2gb
+
+networks:
+  default:
+    name: selenium-grid-test

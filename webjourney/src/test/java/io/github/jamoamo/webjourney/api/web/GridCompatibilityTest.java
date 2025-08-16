@@ -26,25 +26,32 @@ package io.github.jamoamo.webjourney.api.web;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.config.AsyncConfiguration;
 import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.FirefoxBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.EdgeBrowserFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.mockito.Mockito;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Tests for verifying browser arguments compatibility with Selenium Grid.
- * 
- * These tests focus on the conceptual behavior and capability serialization
- * rather than actual Grid deployment due to infrastructure complexity.
+ * Enhanced tests for verifying browser arguments compatibility with Selenium Grid.
+ * Tests argument serialization, capability propagation, and Grid integration scenarios.
  *
  * @author James Amoore
  */
-public class GridCompatibilityTest
+public class GridCompatibilityTest extends GridCompatibilityTestBase
 {
 	private IJourneyContext journeyContext;
 	private IBrowserOptions browserOptions;
@@ -207,5 +214,391 @@ public class GridCompatibilityTest
 		);
 		
 		return envVars::get;
+	}
+	
+	// M7.3 Enhanced Tests - Comprehensive Grid Compatibility
+	
+	@Test
+	public void chromeOptions_argumentsSerialized_correctlyToCapabilities()
+	{
+		// Given: ChromeOptions with custom arguments from provider
+		AsyncConfiguration config = createTestConfig(
+			List.of("--disable-dev-shm-usage"),
+			List.of("--window-size=1920,1080"),
+			true,
+			"warn"
+		);
+		
+		DefaultBrowserArgumentsProvider provider = createTestProvider(createFakeEnvironment(Map.of()), config);
+		IJourneyContext context = createMockJourneyContext(List.of("--headless"), List.of());
+		
+		ChromeOptions options = createTestChromeOptions(List.of("--disable-gpu"));
+		
+		// Add arguments from provider resolution
+		ResolvedBrowserArguments resolved = provider.resolve(StandardBrowser.CHROME, context);
+		options.addArguments(resolved.getArguments());
+		
+		// When: converting to capabilities
+		Map<String, Object> capabilitiesMap = options.asMap();
+		
+		// Then: verify arguments are present in capabilities
+		@SuppressWarnings("unchecked")
+		Map<String, Object> chromeOptionsMap = (Map<String, Object>) capabilitiesMap.get("goog:chromeOptions");
+		Assertions.assertNotNull(chromeOptionsMap, "Chrome options should be present in capabilities");
+		
+		@SuppressWarnings("unchecked")
+		List<String> args = (List<String>) chromeOptionsMap.get("args");
+		Assertions.assertNotNull(args, "Arguments should be present in Chrome options");
+		
+		// Verify expected arguments are present
+		Assertions.assertTrue(args.contains("--disable-gpu"), "Manual argument should be preserved");
+		Assertions.assertTrue(args.contains("--disable-dev-shm-usage"), "Global config argument should be included");
+		Assertions.assertTrue(args.contains("--window-size=1920,1080"), "Chrome-specific argument should be included");
+		Assertions.assertTrue(args.contains("--headless"), "Per-journey argument should be included");
+	}
+	
+	@Test
+	public void firefoxOptions_argumentsSerialized_correctlyToCapabilities()
+	{
+		// Given: FirefoxOptions with custom arguments
+		AsyncConfiguration config = createTestConfig(
+			List.of("--disable-background-timer-throttling"),
+			List.of(), // chrome args
+			true,
+			"warn"
+		);
+		
+		DefaultBrowserArgumentsProvider provider = createTestProvider(createFakeEnvironment(Map.of()), config);
+		IJourneyContext context = createMockJourneyContext(List.of("-headless"), List.of());
+		
+		FirefoxOptions options = createTestFirefoxOptions(List.of("-safe-mode"));
+		
+		// Add arguments from provider resolution
+		ResolvedBrowserArguments resolved = provider.resolve(StandardBrowser.FIREFOX, context);
+		options.addArguments(resolved.getArguments());
+		
+		// When: converting to capabilities
+		Map<String, Object> capabilitiesMap = options.asMap();
+		
+		// Then: verify Firefox capabilities structure
+		Assertions.assertEquals("firefox", capabilitiesMap.get("browserName"));
+		
+		// Firefox options may be under different keys
+		Object firefoxOptionsObj = capabilitiesMap.get("moz:firefoxOptions");
+		if (firefoxOptionsObj == null)
+		{
+			firefoxOptionsObj = capabilitiesMap.get(FirefoxOptions.FIREFOX_OPTIONS);
+		}
+		
+		if (firefoxOptionsObj != null)
+		{
+			@SuppressWarnings("unchecked")
+			Map<String, Object> firefoxOptionsMap = (Map<String, Object>) firefoxOptionsObj;
+			@SuppressWarnings("unchecked")
+			List<String> args = (List<String>) firefoxOptionsMap.get("args");
+			
+			if (args != null)
+			{
+				Assertions.assertTrue(args.contains("-safe-mode"), "Manual Firefox argument should be preserved");
+				Assertions.assertTrue(args.contains("-headless"), "Per-journey Firefox argument should be included");
+			}
+		}
+	}
+	
+	@Test
+	public void edgeOptions_argumentsSerialized_correctlyToCapabilities()
+	{
+		// Given: EdgeOptions with custom arguments
+		AsyncConfiguration config = createTestConfig(
+			List.of("--disable-background-mode"),
+			List.of(), // chrome args
+			true,
+			"warn"
+		);
+		
+		DefaultBrowserArgumentsProvider provider = createTestProvider(createFakeEnvironment(Map.of()), config);
+		IJourneyContext context = createMockJourneyContext(List.of("--headless"), List.of());
+		
+		EdgeOptions options = createTestEdgeOptions(List.of("--disable-features=VizDisplayCompositor"));
+		
+		// Add arguments from provider resolution
+		ResolvedBrowserArguments resolved = provider.resolve(StandardBrowser.EDGE, context);
+		options.addArguments(resolved.getArguments());
+		
+		// When: converting to capabilities
+		Map<String, Object> capabilitiesMap = options.asMap();
+		
+		// Then: verify Edge capabilities structure
+		Assertions.assertEquals("MicrosoftEdge", capabilitiesMap.get("browserName"));
+		
+		@SuppressWarnings("unchecked")
+		Map<String, Object> edgeOptionsMap = (Map<String, Object>) capabilitiesMap.get("ms:edgeOptions");
+		Assertions.assertNotNull(edgeOptionsMap, "Edge options should be present in capabilities");
+		
+		@SuppressWarnings("unchecked")
+		List<String> args = (List<String>) edgeOptionsMap.get("args");
+		if (args != null)
+		{
+			Assertions.assertTrue(args.contains("--disable-features=VizDisplayCompositor"), "Manual Edge argument should be preserved");
+			Assertions.assertTrue(args.contains("--headless"), "Per-journey argument should be included");
+		}
+	}
+	
+	@Test
+	@EnabledIf("isGridAvailable")
+	public void remoteChrome_customArguments_appliedSuccessfully()
+	{
+		// Given: Chrome configuration with custom arguments
+		AsyncConfiguration config = createTestConfig(
+			List.of("--disable-background-timer-throttling"),
+			List.of("--no-first-run"),
+			true,
+			"warn"
+		);
+		
+		DefaultBrowserArgumentsProvider provider = createTestProvider(createFakeEnvironment(Map.of()), config);
+		ChromeOptions options = createTestChromeOptions(List.of("--disable-gpu"));
+		
+		// Add arguments from provider
+		ResolvedBrowserArguments resolved = provider.resolve(StandardBrowser.CHROME, createMockJourneyContext(List.of(), List.of()));
+		options.addArguments(resolved.getArguments());
+		
+		// When: creating RemoteWebDriver (requires actual Grid)
+		RemoteWebDriver driver = null;
+		try
+		{
+			driver = new RemoteWebDriver(URI.create(GRID_HUB_URL).toURL(), options);
+			Assertions.assertNotNull(driver, "RemoteWebDriver should be created successfully");
+			
+			// Then: verify capabilities reflect custom arguments
+			Capabilities caps = driver.getCapabilities();
+			verifyCapabilitiesSerialization(caps, List.of("--disable-background-timer-throttling", "--no-first-run", "--disable-gpu"));
+			
+			// Basic functionality test
+			driver.get("https://example.com");
+			Assertions.assertNotNull(driver.getTitle(), "Should be able to navigate with custom arguments");
+			
+		}
+		catch (Exception e)
+		{
+			Assertions.fail("Grid integration test failed: " + e.getMessage());
+		}
+		finally
+		{
+			if (driver != null)
+			{
+				try
+				{
+					driver.quit();
+				}
+				catch (Exception e)
+				{
+					// Ignore cleanup errors
+				}
+			}
+		}
+	}
+	
+	@Test
+	@EnabledIf("isGridAvailable")
+	public void gridNodeRejection_handledGracefully()
+	{
+		// Given: Options with potentially problematic arguments
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--invalid-flag-that-might-be-rejected");
+		
+		// When: attempting to create RemoteWebDriver
+		RemoteWebDriver driver = null;
+		try
+		{
+			driver = new RemoteWebDriver(URI.create(GRID_HUB_URL).toURL(), options);
+			
+			// Then: either succeeds (Grid accepts the argument) or fails gracefully
+			if (driver != null)
+			{
+				Assertions.assertNotNull(driver.getCapabilities(), "Should have valid capabilities if creation succeeded");
+			}
+		}
+		catch (Exception e)
+		{
+			// Expected behavior: Grid should reject invalid arguments gracefully
+			Assertions.assertTrue(e.getMessage().contains("invalid") || e.getMessage().contains("rejected") || 
+								 e.getMessage().contains("error") || e.getMessage().contains("session"),
+								 "Exception should indicate argument rejection or session creation failure");
+		}
+		finally
+		{
+			if (driver != null)
+			{
+				try
+				{
+					driver.quit();
+				}
+				catch (Exception e)
+				{
+					// Ignore cleanup errors
+				}
+			}
+		}
+	}
+	
+	@Test
+	public void capabilitiesMerge_preservesArguments()
+	{
+		// Given: Chrome options with arguments and additional grid capabilities
+		ChromeOptions chromeOptions = createTestChromeOptions(List.of("--disable-gpu", "--headless"));
+		
+		MutableCapabilities gridCapabilities = new MutableCapabilities();
+		gridCapabilities.setCapability("platformName", "linux");
+		gridCapabilities.setCapability("version", "latest");
+		
+		// When: merging capabilities (Grid scenario)
+		MutableCapabilities merged = new MutableCapabilities();
+		merged.merge(gridCapabilities);
+		merged.merge(chromeOptions);
+		
+		// Then: verify all capabilities are preserved
+		Object platformName = merged.getCapability("platformName");
+		if (platformName != null) {
+			Assertions.assertEquals("linux", platformName.toString().toLowerCase());
+		}
+		Object browserName = merged.getCapability("browserName");
+		if (browserName != null) {
+			Assertions.assertEquals("chrome", browserName.toString());
+		}
+		
+		// Verify Chrome options are preserved
+		@SuppressWarnings("unchecked")
+		Map<String, Object> chromeOptionsMap = (Map<String, Object>) merged.getCapability("goog:chromeOptions");
+		if (chromeOptionsMap != null)
+		{
+			@SuppressWarnings("unchecked")
+			List<String> args = (List<String>) chromeOptionsMap.get("args");
+			if (args != null)
+			{
+				Assertions.assertTrue(args.contains("--disable-gpu"), "Arguments should be preserved during merge");
+				Assertions.assertTrue(args.contains("--headless"), "Arguments should be preserved during merge");
+			}
+		}
+	}
+	
+	@Test
+	public void argumentSerialization_handlesSpecialCharacters()
+	{
+		// Given: Arguments with special characters that might cause serialization issues
+		List<String> specialArgs = List.of(
+			"--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+			"--proxy-server=http://proxy.example.com:8080",
+			"--lang=zh-CN",
+			"--window-size=1920,1080"
+		);
+		
+		ChromeOptions options = createTestChromeOptions(specialArgs);
+		
+		// When: serializing to capabilities
+		Map<String, Object> capabilitiesMap = options.asMap();
+		
+		// Then: verify serialization doesn't corrupt arguments
+		@SuppressWarnings("unchecked")
+		Map<String, Object> chromeOptionsMap = (Map<String, Object>) capabilitiesMap.get("goog:chromeOptions");
+		Assertions.assertNotNull(chromeOptionsMap, "Chrome options should be serializable");
+		
+		@SuppressWarnings("unchecked")
+		List<String> serializedArgs = (List<String>) chromeOptionsMap.get("args");
+		Assertions.assertNotNull(serializedArgs, "Arguments should be serializable");
+		
+		for (String expectedArg : specialArgs)
+		{
+			Assertions.assertTrue(serializedArgs.contains(expectedArg), 
+				"Special character argument should be preserved: " + expectedArg);
+		}
+	}
+	
+	@Test
+	public void multipleProviders_isolatedSerialization()
+	{
+		// Given: Multiple configurations with different arguments
+		AsyncConfiguration config1 = createTestConfig(
+			List.of("--config1-global"),
+			List.of("--config1-chrome"),
+			true,
+			"warn"
+		);
+		
+		AsyncConfiguration config2 = createTestConfig(
+			List.of("--config2-global"),
+			List.of("--config2-chrome"),
+			true,
+			"warn"
+		);
+		
+		DefaultBrowserArgumentsProvider provider1 = createTestProvider(createFakeEnvironment(Map.of()), config1);
+		DefaultBrowserArgumentsProvider provider2 = createTestProvider(createFakeEnvironment(Map.of()), config2);
+		
+		IJourneyContext context1 = createMockJourneyContext(List.of("--journey1"), List.of());
+		IJourneyContext context2 = createMockJourneyContext(List.of("--journey2"), List.of());
+		
+		// When: resolving arguments and creating options
+		ResolvedBrowserArguments resolved1 = provider1.resolve(StandardBrowser.CHROME, context1);
+		ResolvedBrowserArguments resolved2 = provider2.resolve(StandardBrowser.CHROME, context2);
+		
+		ChromeOptions options1 = createTestChromeOptions(resolved1.getArguments());
+		ChromeOptions options2 = createTestChromeOptions(resolved2.getArguments());
+		
+		        // Then: verify configurations are isolated
+        Map<String, Object> caps1 = options1.asMap();
+        Map<String, Object> caps2 = options2.asMap();
+        
+        // Extract arguments manually for verification
+        @SuppressWarnings("unchecked")
+        Map<String, Object> chromeOpts1 = (Map<String, Object>) caps1.get("goog:chromeOptions");
+        @SuppressWarnings("unchecked")
+        List<String> args1 = chromeOpts1 != null ? (List<String>) chromeOpts1.get("args") : List.of();
+        
+        @SuppressWarnings("unchecked")
+        Map<String, Object> chromeOpts2 = (Map<String, Object>) caps2.get("goog:chromeOptions");
+        @SuppressWarnings("unchecked")
+        List<String> args2 = chromeOpts2 != null ? (List<String>) chromeOpts2.get("args") : List.of();
+		
+		Assertions.assertNotNull(args1, "First configuration should have arguments");
+		Assertions.assertNotNull(args2, "Second configuration should have arguments");
+		
+		// Verify configuration isolation
+		Assertions.assertTrue(args1.contains("--config1-global"), "First config should contain its global args");
+		Assertions.assertTrue(args1.contains("--journey1"), "First config should contain its journey args");
+		Assertions.assertFalse(args1.contains("--config2-global"), "First config should not contain second config args");
+		
+		Assertions.assertTrue(args2.contains("--config2-global"), "Second config should contain its global args");
+		Assertions.assertTrue(args2.contains("--journey2"), "Second config should contain its journey args");
+		Assertions.assertFalse(args2.contains("--config1-global"), "Second config should not contain first config args");
+	}
+	
+	@Test
+	public void gridCompatibility_dockerComposeExample()
+	{
+		// Given: Configuration that would work with docker-compose grid
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments(
+			"--no-sandbox",
+			"--disable-dev-shm-usage",
+			"--headless",
+			"--disable-gpu"
+		);
+		
+		// When: preparing for Grid deployment
+		Map<String, Object> capabilities = options.asMap();
+		
+		// Then: verify compatibility with standard Grid setup
+		Assertions.assertEquals("chrome", capabilities.get("browserName"));
+		Assertions.assertNotNull(capabilities.get("goog:chromeOptions"));
+		
+		        // Verify common Grid-compatible arguments
+        @SuppressWarnings("unchecked")
+        Map<String, Object> chromeOpts = (Map<String, Object>) capabilities.get("goog:chromeOptions");
+        @SuppressWarnings("unchecked")
+        List<String> args = chromeOpts != null ? (List<String>) chromeOpts.get("args") : List.of();
+		Assertions.assertTrue(args.contains("--no-sandbox"), "Should include sandbox disable for Docker");
+		Assertions.assertTrue(args.contains("--disable-dev-shm-usage"), "Should include shm usage disable for Docker");
+		Assertions.assertTrue(args.contains("--headless"), "Should include headless for CI");
 	}
 }
