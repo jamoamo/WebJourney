@@ -3,7 +3,7 @@
  
     <groupId>io.github.jamoamo</groupId>
     <artifactId>webjourney-test</artifactId>
-    <version>0.4.2-SNAPSHOT</version>
+    <version>0.4.2</version>
     <packaging>jar</packaging>
  
     <name>Web Journey Testing</name>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>io.github.jamoamo</groupId>
         <artifactId>webjourney-parent</artifactId>
-        <version>3.3.3-SNAPSHOT</version>
+        <version>0.4.2</version>
     </parent>
    
     <properties>
@@ -44,7 +44,6 @@
         <dependency>
             <groupId>io.github.jamoamo</groupId>
             <artifactId>webjourney</artifactId>
-            <version>0.4.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.spotbugs</groupId>
