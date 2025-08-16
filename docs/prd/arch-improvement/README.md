@@ -58,7 +58,7 @@ Owner: Core Team
 
 ## Milestone 11 – Documentation & DX
 - [ ] Revise README with module map and quickstart (1d)
-- [ ] Add end-to-end examples (journey DSL, smart waits, entities) (3d)
+- [ ] Add end-to-end examples (journey Domain Specific Language, smart waits, entities) (3d)
 - [ ] Migration guide from `reserved.*` to new modules (2d)
 - [ ] CLI starter to run YAML journeys locally/CI (4d)
 
