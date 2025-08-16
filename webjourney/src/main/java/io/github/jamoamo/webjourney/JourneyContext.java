@@ -30,22 +30,24 @@ import io.github.jamoamo.webjourney.api.web.DefaultJourneyBrowserArguments;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IJourneyBrowserArguments;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * Journey context implementation that maintains state for a single journey.
+ * This implementation is thread-safe and can be safely accessed from multiple threads.
  *
  * @author James Amoore
  */
-class JourneyContext implements IJourneyContext
+public class JourneyContext implements IJourneyContext
 {
 	private IBrowser browser;
 	private IJourneyBreadcrumb breadcrumb;
-	private final Map<String, Object> inputs = new HashMap<>(2);
-	private final List<IJourneyObserver> journeyObservers = new ArrayList<>();
+	private final Map<String, Object> inputs = new ConcurrentHashMap<>(2);
+	private final List<IJourneyObserver> journeyObservers = new CopyOnWriteArrayList<>();
 	private final IJourneyBrowserArguments browserArguments = new DefaultJourneyBrowserArguments();
 	
 	void setBrowser(IBrowser browser)

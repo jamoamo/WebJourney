@@ -150,6 +150,7 @@ This document breaks the feature into sized, independently verifiable tasks. Eac
 - **Dependencies**: M2–M4
 
 ### M7.2: Integration tests for local drivers
+Descoped
 - **Scope**: Launch Chrome, Firefox, Edge locally with custom flags and verify reflection in `Capabilities` and runtime behavior where feasible (e.g., headless).
 - **Deliverables**: Integration tests + fixtures.
 - **Acceptance**: All browser paths validated on CI-supported OS.
