@@ -15,6 +15,12 @@ import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.config.AsyncConfiguration;
 import io.github.jamoamo.webjourney.api.config.ConfigurationEnvironmentKeys;
 
+/**
+ * Default implementation of {@link IBrowserArgumentsProvider}.
+ * 
+ * <p>This implementation is stateless and thread-safe. All dependencies (configuration,
+ * validator, redactor) are immutable and established during construction.
+ */
 public class DefaultBrowserArgumentsProvider implements IBrowserArgumentsProvider
 {
    private static final Logger logger = LoggerFactory.getLogger(DefaultBrowserArgumentsProvider.class);
