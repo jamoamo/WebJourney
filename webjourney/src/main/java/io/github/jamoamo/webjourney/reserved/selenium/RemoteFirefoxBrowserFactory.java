@@ -68,17 +68,8 @@ public final class RemoteFirefoxBrowserFactory extends RemoteBrowserFactory<Fire
 	{
 		super(hubConfiguration);
 		
-		// Create local factory with custom arguments provider if available
-		if (browserArgumentsProvider != null)
-		{
-			// Note: This assumes FirefoxBrowserFactory has a constructor that accepts IBrowserArgumentsProvider
-			// For now, we'll use the default constructor and delegate options creation
-			this.localFactory = new FirefoxBrowserFactory();
-		}
-		else
-		{
-			this.localFactory = new FirefoxBrowserFactory();
-		}
+		// Use the default constructor - options creation will be delegated to this factory
+		this.localFactory = new FirefoxBrowserFactory();
 	}
 	
 	@Override

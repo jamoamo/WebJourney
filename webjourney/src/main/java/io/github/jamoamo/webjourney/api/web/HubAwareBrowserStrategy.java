@@ -78,11 +78,10 @@ public class HubAwareBrowserStrategy implements IPreferredBrowserStrategy
 		// Start health monitoring if enabled
 		if (enableHealthMonitoring && healthMonitor != null)
 		{
-			// Extract hub URL from remote factory if possible
-			if (remoteFactory instanceof io.github.jamoamo.webjourney.reserved.selenium.RemoteBrowserFactory)
+			// Extract hub URL from remote factory via API abstraction
+			if (remoteFactory instanceof IRemoteBrowserFactory)
 			{
-				io.github.jamoamo.webjourney.reserved.selenium.RemoteBrowserFactory<?> rbf = 
-					(io.github.jamoamo.webjourney.reserved.selenium.RemoteBrowserFactory<?>) remoteFactory;
+				IRemoteBrowserFactory rbf = (IRemoteBrowserFactory) remoteFactory;
 				String hubUrl = rbf.getHubConfiguration().getHubUrl();
 				if (hubUrl != null)
 				{
@@ -146,10 +145,9 @@ public class HubAwareBrowserStrategy implements IPreferredBrowserStrategy
 		}
 		
 		// Check if remote factory can be used (has hub configuration)
-		if (remoteFactory instanceof io.github.jamoamo.webjourney.reserved.selenium.RemoteBrowserFactory)
+		if (remoteFactory instanceof IRemoteBrowserFactory)
 		{
-			io.github.jamoamo.webjourney.reserved.selenium.RemoteBrowserFactory<?> rbf = 
-				(io.github.jamoamo.webjourney.reserved.selenium.RemoteBrowserFactory<?>) remoteFactory;
+			IRemoteBrowserFactory rbf = (IRemoteBrowserFactory) remoteFactory;
 			return isHubAvailable(rbf.getHubConfiguration());
 		}
 		

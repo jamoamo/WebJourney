@@ -68,17 +68,8 @@ public final class RemoteEdgeBrowserFactory extends RemoteBrowserFactory<EdgeOpt
 	{
 		super(hubConfiguration);
 		
-		// Create local factory with custom arguments provider if available
-		if (browserArgumentsProvider != null)
-		{
-			// Note: This assumes EdgeBrowserFactory has a constructor that accepts IBrowserArgumentsProvider
-			// For now, we'll use the default constructor and delegate options creation
-			this.localFactory = new EdgeBrowserFactory();
-		}
-		else
-		{
-			this.localFactory = new EdgeBrowserFactory();
-		}
+		// Use the default constructor - options creation will be delegated to this factory
+		this.localFactory = new EdgeBrowserFactory();
 	}
 	
 	@Override
