@@ -30,6 +30,10 @@ import io.github.jamoamo.webjourney.reserved.entity.EntityDefn;
 import io.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
 import io.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
 import java.util.ArrayList;
+import io.github.jamoamo.webjourney.api.web.XWebException;
+import io.github.jamoamo.webjourney.test.mock.MockBrowser;
+import io.github.jamoamo.webjourney.test.mock.MockBrowserWindow;
+import io.github.jamoamo.webjourney.test.mock.MockRouter;
 
 /**
  * Entity Creation tester.
@@ -92,5 +96,29 @@ public final class TestCreator<T>
 			result.setFailureException(ex);
 		}
 		return result;
+	}
+
+	/**
+	 * Convenience: create an entity using a MockBrowser initialised with a router and initial URL.
+	 * @param router the router
+	 * @param initialUrl the initial URL to load (may be null)
+	 * @return the creation result
+	 */
+	public CreationResult<T> createEntityWith(MockRouter router, String initialUrl)
+	{
+		MockBrowser browser = new MockBrowser(router);
+		try
+		{
+			MockBrowserWindow window = (MockBrowserWindow) browser.getActiveWindow();
+			window.loadInitial(initialUrl);
+		}
+		catch(XWebException | RuntimeException ex)
+		{
+			CreationResult<T> r = new CreationResult<>();
+			r.setResult(CreationResult.Result.FAILED);
+			r.setFailureException(ex);
+			return r;
+		}
+		return createEntityWith((IBrowser) browser);
 	}
 }
