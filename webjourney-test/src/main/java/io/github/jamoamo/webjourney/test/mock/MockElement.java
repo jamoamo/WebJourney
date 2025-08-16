@@ -217,8 +217,10 @@ public final class MockElement extends AElement
 		collectDescendantsByTag(this, tagName, results);
 		if(attrName != null)
 		{
+			final String key = attrName;
+			final String value = attrValue;
 			return results.stream()
-				.filter(e -> Objects.equals(e.attributes.get(attrName), attrValue))
+				.filter(e -> Objects.equals(e.attributes.get(key), value))
 				.collect(Collectors.toList());
 		}
 		return results;
