@@ -26,7 +26,7 @@ Owner: Core Team
 
 ## Milestone 5 – Entity pipeline public API
 - [ ] Promote `reserved.entity.*` to `entity` module with stable facades (3d)
-- [ ] Add annotation processor to generate mappers/transformers (PoC) (4d)
+- [ ] Add annotation processor to generate mappers/transformers (Proof of Concept) (4d)
 - [ ] Provide JSON/YAML mapping support and loader (3d)
 
 ## Milestone 6 – Selector ergonomics and page helpers
