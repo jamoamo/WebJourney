@@ -32,7 +32,6 @@ import io.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
 import java.util.ArrayList;
 import io.github.jamoamo.webjourney.api.web.XWebException;
 import io.github.jamoamo.webjourney.test.mock.MockBrowser;
-import io.github.jamoamo.webjourney.test.mock.MockBrowserWindow;
 import io.github.jamoamo.webjourney.test.mock.MockRouter;
 
 /**
@@ -109,10 +108,9 @@ public final class TestCreator<T>
 		MockBrowser browser = new MockBrowser(router);
 		try
 		{
-			MockBrowserWindow window = (MockBrowserWindow) browser.getActiveWindow();
-			window.loadInitial(initialUrl);
+			browser.loadInitial(initialUrl);
 		}
-		catch(XWebException | RuntimeException ex)
+		catch(Exception ex)
 		{
 			CreationResult<T> r = new CreationResult<>();
 			r.setResult(CreationResult.Result.FAILED);
