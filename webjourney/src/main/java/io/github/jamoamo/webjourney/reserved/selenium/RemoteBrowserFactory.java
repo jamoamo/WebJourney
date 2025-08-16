@@ -28,6 +28,7 @@ import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserFactory;
 import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
 import io.github.jamoamo.webjourney.api.web.IHubConfiguration;
+import io.github.jamoamo.webjourney.api.web.IRemoteBrowserFactory;
 import io.github.jamoamo.webjourney.api.web.IRemoteBrowserOptions;
 import io.github.jamoamo.webjourney.api.web.HubConnectionException;
 import io.github.jamoamo.webjourney.api.web.HubSessionException;
@@ -49,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> the type of browser options (ChromeOptions, FirefoxOptions, etc.)
  * @author James Amoore
  */
-public abstract class RemoteBrowserFactory<T extends Capabilities> implements IBrowserFactory
+public abstract class RemoteBrowserFactory<T extends Capabilities> implements IRemoteBrowserFactory
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteBrowserFactory.class);
 	
