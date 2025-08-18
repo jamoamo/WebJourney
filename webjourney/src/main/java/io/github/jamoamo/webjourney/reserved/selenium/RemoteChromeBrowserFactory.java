@@ -27,7 +27,6 @@ import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.web.IBrowserArgumentsProvider;
 import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
 import io.github.jamoamo.webjourney.api.web.IHubConfiguration;
-import io.github.jamoamo.webjourney.api.web.DefaultBrowserArgumentsProvider;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

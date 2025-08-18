@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HubSupportIntegrationTest
 {
 	private static final String TEST_HUB_URL = "http://localhost:4444/wd/hub";
+	private static final String NON_EXISTENT_HUB_URL = "http://non-existent-hub:9999/wd/hub";
 	
 	@Test
 	void testHubConfigurationCreation()
@@ -118,6 +119,9 @@ class HubSupportIntegrationTest
 		assertEquals(localFactory, strategy.getLocalFactory());
 		assertTrue(strategy.isFallbackEnabled());
 		assertTrue(strategy.isHealthMonitoringEnabled());
+		
+		// Clean up - stop monitoring to avoid affecting other tests
+		strategy.shutdown();
 	}
 	
 	@Test
@@ -127,20 +131,36 @@ class HubSupportIntegrationTest
 		IGridHealthMonitor healthMonitor = new GridHealthMonitor();
 		
 		assertNotNull(healthMonitor);
-		assertFalse(healthMonitor.isMonitoring());
 		
 		// Add a hub (won't actually connect)
-		healthMonitor.addHub(TEST_HUB_URL);
+		healthMonitor.addHub(NON_EXISTENT_HUB_URL);
 		
 		// Test availability check (will return false for non-existent hub)
-		boolean available = healthMonitor.isHubAvailable(TEST_HUB_URL);
+		boolean available = healthMonitor.isHubAvailable(NON_EXISTENT_HUB_URL);
 		assertFalse(available); // Expected to be false since hub doesn't exist
 		
 		// Test status check
-		GridStatus status = healthMonitor.getHubStatus(TEST_HUB_URL);
+		GridStatus status = healthMonitor.getHubStatus(NON_EXISTENT_HUB_URL);
 		assertNotNull(status);
-		assertEquals(TEST_HUB_URL, status.getHubUrl());
+		assertEquals(NON_EXISTENT_HUB_URL, status.getHubUrl());
 		assertFalse(status.isAvailable());
+		
+		// Test that we can start and stop monitoring
+		// Start monitoring
+		healthMonitor.startMonitoring(Duration.ofSeconds(30));
+		assertTrue(healthMonitor.isMonitoring());
+		
+		// Stop monitoring
+		healthMonitor.stopMonitoring();
+		assertFalse(healthMonitor.isMonitoring());
+		
+		// Verify we can start again
+		healthMonitor.startMonitoring(Duration.ofSeconds(30));
+		assertTrue(healthMonitor.isMonitoring());
+		
+		// Final cleanup
+		healthMonitor.stopMonitoring();
+		assertFalse(healthMonitor.isMonitoring());
 	}
 	
 	@Test

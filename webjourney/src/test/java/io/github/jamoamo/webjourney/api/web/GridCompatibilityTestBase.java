@@ -105,11 +105,26 @@ public abstract class GridCompatibilityTestBase extends BrowserArgumentsTestBase
     @SuppressWarnings("unchecked")
     protected void verifyChromeCapabilities(Capabilities caps, List<String> expectedArgs)
     {
-        Map<String, Object> chromeOptions = (Map<String, Object>) caps.getCapability(ChromeOptions.CAPABILITY);
-        assertNotNull(chromeOptions, "Chrome options should be present in capabilities");
+        // Try multiple capability keys for Chrome options
+        Map<String, Object> chromeOptions = null;
+        
+        // Try the standard capability first
+        if (caps.getCapability(ChromeOptions.CAPABILITY) != null) {
+            chromeOptions = (Map<String, Object>) caps.getCapability(ChromeOptions.CAPABILITY);
+        }
+        // Fallback to the string-based capability key
+        else if (caps.getCapability("goog:chromeOptions") != null) {
+            chromeOptions = (Map<String, Object>) caps.getCapability("goog:chromeOptions");
+        }
+        // Try the legacy capability key
+        else if (caps.getCapability("chromeOptions") != null) {
+            chromeOptions = (Map<String, Object>) caps.getCapability("chromeOptions");
+        }
+        
+        assertNotNull(chromeOptions, "Chrome options should be present in capabilities. Available capabilities: " + caps.asMap());
         
         List<String> args = (List<String>) chromeOptions.get("args");
-        assertNotNull(args, "Chrome arguments should be present in options");
+        assertNotNull(args, "Chrome arguments should be present in options. Chrome options: " + chromeOptions);
         
         for (String expectedArg : expectedArgs)
         {
