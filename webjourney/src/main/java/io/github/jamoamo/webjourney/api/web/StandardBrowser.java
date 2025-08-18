@@ -25,6 +25,9 @@ package io.github.jamoamo.webjourney.api.web;
 
 import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
 import io.github.jamoamo.webjourney.reserved.selenium.FirefoxBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.RemoteChromeBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.RemoteEdgeBrowserFactory;
+import io.github.jamoamo.webjourney.reserved.selenium.RemoteFirefoxBrowserFactory;
 import io.github.jamoamo.webjourney.reserved.selenium.EdgeBrowserFactory;
 
 /**
@@ -56,4 +59,35 @@ public enum StandardBrowser
 		return this.browserFactory;
 	}
 	
+	public IBrowserFactory getRemoteBrowserFactory(IHubConfiguration hubConfiguration)
+	{
+		if (hubConfiguration == null)
+		{
+			throw new IllegalArgumentException("Hub configuration cannot be null");
+		}
+		
+		switch (this)
+		{
+			case CHROME:
+				return new RemoteChromeBrowserFactory(hubConfiguration);
+				
+			case FIREFOX:
+				return new RemoteFirefoxBrowserFactory(hubConfiguration);
+				
+			case EDGE:
+				return new RemoteEdgeBrowserFactory(hubConfiguration);
+				
+			case CHROMIUM:
+			case OPERA:
+			case SAFARI:
+				throw new UnsupportedOperationException(
+					"Remote execution is not yet supported for " + this.name() + " browser"
+				);
+				
+			default:
+				throw new UnsupportedOperationException(
+					"Unknown browser type: " + this.name()
+				);
+		}
+	}
 }
