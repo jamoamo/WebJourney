@@ -662,10 +662,7 @@ public class TestProgressListener implements ExtractionListener {
 public class TestUtils {
     public static ExtractionEvent createTestEvent(EventType type, String journeyId, String path) {
         switch (type) {
-            case JOURNEY_START:
-                return new JourneyStartEvent(journeyId);
-            case ENTITY_START:
-                return new EntityStartEvent(journeyId, path, TestEntity.class);
+                return new EntityStartEvent(journeyId, TestEntity.class, path);
             case FIELD_EXTRACT_END:
                 return new FieldExtractEndEvent(journeyId, path, "test-value", true);
             default:
