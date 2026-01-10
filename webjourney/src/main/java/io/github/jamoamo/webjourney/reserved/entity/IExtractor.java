@@ -31,24 +31,34 @@ package io.github.jamoamo.webjourney.reserved.entity;
  */
 public interface IExtractor<T>
 {
-	 /**
-	  * Extracts a value using the provided value reader.
-	  *
-	  * @param reader the reader
-	  * @param entityCreationContext entity creation context
-	  *
-	  * @return the raw value.
-	  *
-	  * @throws io.github.jamoamo.webjourney.reserved.entity.XExtractionException if an error occurs during extraction
-	  */
-	 T extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
-		  throws XExtractionException;
+	/**
+	 * Extracts a value using the provided value reader.
+	 *
+	 * @param reader                the reader
+	 * @param entityCreationContext entity creation context
+	 *
+	 * @return the raw value.
+	 *
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XExtractionException if an error occurs
+	 *                                                                              during extraction
+	 */
+	T extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext) throws XExtractionException;
 
-	 /**
-	  * Returns the condition under which this extractor should be used.
-	  *
-	  * @return the condition
-	  */
-	 ICondition getCondition();
+	/**
+	 * Returns the condition under which this extractor should be used.
+	 *
+	 * @return the condition
+	 */
+	ICondition getCondition();
+
+	/**
+	 * Provides a human readable description of the extractor.
+	 * 
+	 * @return the extractor's description
+	 */
+	default String describe()
+	{
+		return this.getClass().getSimpleName();
+	}
 
 }

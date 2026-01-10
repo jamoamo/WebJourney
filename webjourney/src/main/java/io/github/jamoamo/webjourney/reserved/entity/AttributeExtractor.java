@@ -31,60 +31,72 @@ import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
  * @author James Amoore
  */
 @SuppressWarnings("AbstractClassName")
-class AttributeExtractor
-	 implements IExtractor<String>
+class AttributeExtractor implements IExtractor<String>
 {
-	 private final String elementXPath;
-	 private final String attribute;
-	 private ICondition condition;
-	 private final boolean optional;
+	private final String elementXPath;
+	private final String attribute;
+	private ICondition condition;
+	private final boolean optional;
 
-	 AttributeExtractor(String elementXPath, String attribute)
-	 {
-		  this(elementXPath, attribute, new AlwaysCondition(), false);
-	 }
+	AttributeExtractor(
+		String elementXPath,
+		String attribute)
+	{
+		this(elementXPath, attribute, new AlwaysCondition(), false);
+	}
 
-	 AttributeExtractor(String elementXPath, String attribute, ICondition condition, boolean optional)
-	 {
-		  this.elementXPath = elementXPath;
-		  this.attribute = attribute;
-		  this.condition = condition;
-		  this.optional = optional;
-	 }
+	AttributeExtractor(
+		String elementXPath,
+		String attribute,
+		ICondition condition,
+		boolean optional)
+	{
+		this.elementXPath = elementXPath;
+		this.attribute = attribute;
+		this.condition = condition;
+		this.optional = optional;
+	}
 
-	 boolean getOptional()
-	 {
-		  return this.optional;
-	 }
+	boolean getOptional()
+	{
+		return this.optional;
+	}
 
-	 @Override
-	 public String extractRawValue(IValueReader browser, EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  try
-		  {
-				AElement element = browser.getElement(this.elementXPath, this.optional);
-				if(this.optional && element == null)
-				{
-					 return null;
-				}
-				else if(element == null)
-				{
-					 throw new XElementDoesntExistException();
-				}
+	@Override
+	public String extractRawValue(IValueReader browser, EntityCreationContext entityCreationContext)
+		throws XExtractionException
+	{
+		try
+		{
+			AElement element = browser.getElement(this.elementXPath, this.optional);
+			if (this.optional && element == null)
+			{
+				return null;
+			}
+			else if (element == null)
+			{
+				throw new XElementDoesntExistException();
+			}
 
-				return element.getAttribute(this.attribute);
-		  }
-		  catch(XElementDoesntExistException | XValueReaderException ex)
-		  {
-				throw new XExtractionException(ex);
-		  }
-	 }
+			return element.getAttribute(this.attribute);
+		}
+		catch (XElementDoesntExistException | XValueReaderException ex)
+		{
+			throw new XExtractionException(
+				ex);
+		}
+	}
 
-	 @Override
-	 public ICondition getCondition()
-	 {
-		  return this.condition;
-	 }
+	@Override
+	public ICondition getCondition()
+	{
+		return this.condition;
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Attribute: " + this.elementXPath + " on condition: " + this.condition.describe();
+	}
 
 }

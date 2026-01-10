@@ -31,15 +31,16 @@ class WindowTitleExtractor implements IExtractor
 {
 	@Override
 	public Object extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
-			  throws XExtractionException
+		throws XExtractionException
 	{
 		try
 		{
 			return reader.getWindowTitle();
 		}
-		catch(XValueReaderException xvre)
+		catch (XValueReaderException xvre)
 		{
-			throw new XExtractionException("Failed to read window title");
+			throw new XExtractionException(
+				"Failed to read window title");
 		}
 	}
 
@@ -48,5 +49,10 @@ class WindowTitleExtractor implements IExtractor
 	{
 		return new AlwaysCondition();
 	}
-	
+
+	public String describe()
+	{
+		return "Window Title";
+	}
+
 }

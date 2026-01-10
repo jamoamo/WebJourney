@@ -31,39 +31,45 @@ import java.util.regex.Pattern;
  *
  * @author James Amoore
  */
-class RegexCondition
-	 implements ICondition
+class RegexCondition implements ICondition
 {
-	 private final IExtractor<String> extractor;
-	 private final String regexPattern;
+	private final IExtractor<String> extractor;
+	private final String regexPattern;
 
-	 RegexCondition(IExtractor<String> extractor, String regexPattern)
-	 {
-		  this.extractor = extractor;
-		  this.regexPattern = regexPattern;
-	 }
+	RegexCondition(
+		IExtractor<String> extractor,
+		String regexPattern)
+	{
+		this.extractor = extractor;
+		this.regexPattern = regexPattern;
+	}
 
-	 @Override
-	 public boolean evaluate(IValueReader reader, EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  try
-		  {
-				String extractRawValue = this.extractor.extractRawValue(reader, entityCreationContext);
-				if(extractRawValue == null)
-				{
-					 return false;
-				}
+	@Override
+	public boolean evaluate(IValueReader reader, EntityCreationContext entityCreationContext) throws XExtractionException
+	{
+		try
+		{
+			String extractRawValue = this.extractor.extractRawValue(reader, entityCreationContext);
+			if (extractRawValue == null)
+			{
+				return false;
+			}
 
-				Pattern pattern = Patterns.getPattern(this.regexPattern);
-				boolean match = pattern.matcher(extractRawValue)
-					 .find();
-				return match;
-		  }
-		  catch(XRegexException ex)
-		  {
-				throw new XExtractionException(ex);
-		  }
-	 }
+			Pattern pattern = Patterns.getPattern(this.regexPattern);
+			boolean match = pattern.matcher(extractRawValue).find();
+			return match;
+		}
+		catch (XRegexException ex)
+		{
+			throw new XExtractionException(
+				ex);
+		}
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Regex[" + this.regexPattern + "]";
+	}
 
 }

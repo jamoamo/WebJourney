@@ -25,43 +25,52 @@ package io.github.jamoamo.webjourney.reserved.entity;
 
 /**
  * Extractor that extracts the current index of a collection being processed.
+ * 
  * @author James Amoore
  */
 public final class CollectionIndexExtractor implements IExtractor<String>
 {
-	 private final int baseIndex;
-	 
-	 CollectionIndexExtractor(int baseIndex)
-	 {
-		  this.baseIndex = baseIndex;
-	 }
+	private final int baseIndex;
 
-	 /**
-	  * Extract the index.
-	  * @param reader unused. the reader to read a value.
-	  * @param entityCreationContext the current context
-	  * @return the current index.
-	  * @throws XExtractionException if a collection is not being processed.
-	  */
-	 @Override
-	 public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  if(entityCreationContext.getExistingIndex() == null)
-		  {
-				throw new XExtractionException("Can't use index when not part of a collection.");
-		  }
-		  
-		  return Integer.toString(entityCreationContext.getExistingIndex() + this.baseIndex);
-	 }
+	CollectionIndexExtractor(
+		int baseIndex)
+	{
+		this.baseIndex = baseIndex;
+	}
 
-	 /**
-	  * @return an AlwaysCondition instance.
-	  */
-	 @Override
-	 public ICondition getCondition()
-	 {
-		  return new AlwaysCondition();
-	 }
-	 
+	/**
+	 * Extract the index.
+	 * 
+	 * @param reader                unused. the reader to read a value.
+	 * @param entityCreationContext the current context
+	 * @return the current index.
+	 * @throws XExtractionException if a collection is not being processed.
+	 */
+	@Override
+	public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		throws XExtractionException
+	{
+		if (entityCreationContext.getExistingIndex() == null)
+		{
+			throw new XExtractionException(
+				"Can't use index when not part of a collection.");
+		}
+
+		return Integer.toString(entityCreationContext.getExistingIndex() + this.baseIndex);
+	}
+
+	/**
+	 * @return an AlwaysCondition instance.
+	 */
+	@Override
+	public ICondition getCondition()
+	{
+		return new AlwaysCondition();
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Collection Index";
+	}
 }

@@ -27,48 +27,58 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-class ElementTextExtractor
-	 implements IExtractor<String>
+class ElementTextExtractor implements IExtractor<String>
 {
-	 private final String xPath;
-	 private final ICondition condition;
-	 private final boolean optional;
+	private final String xPath;
+	private final ICondition condition;
+	private final boolean optional;
 
-	 ElementTextExtractor(String xPath)
-	 {
-		  this(xPath, new AlwaysCondition(), false);
-	 }
+	ElementTextExtractor(
+		String xPath)
+	{
+		this(xPath, new AlwaysCondition(), false);
+	}
 
-	 ElementTextExtractor(String xPath, ICondition condition, boolean optional)
-	 {
-		  this.xPath = xPath;
-		  this.condition = condition;
-		  this.optional = optional;
-	 }
+	ElementTextExtractor(
+		String xPath,
+		ICondition condition,
+		boolean optional)
+	{
+		this.xPath = xPath;
+		this.condition = condition;
+		this.optional = optional;
+	}
 
-	 boolean isOptional()
-	 {
-		  return this.optional;
-	 }
+	boolean isOptional()
+	{
+		return this.optional;
+	}
 
-	 @Override
-	 public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  try
-		  {
-				return reader.getElementText(this.xPath, this.optional);
-		  }
-		  catch(XValueReaderException ex)
-		  {
-				throw new XExtractionException(ex);
-		  }
-	 }
+	@Override
+	public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		throws XExtractionException
+	{
+		try
+		{
+			return reader.getElementText(this.xPath, this.optional);
+		}
+		catch (XValueReaderException ex)
+		{
+			throw new XExtractionException(
+				ex);
+		}
+	}
 
-	 @Override
-	 public ICondition getCondition()
-	 {
-		  return this.condition;
-	 }
+	@Override
+	public ICondition getCondition()
+	{
+		return this.condition;
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Element Text on condition: " + this.condition.describe();
+	}
 
 }

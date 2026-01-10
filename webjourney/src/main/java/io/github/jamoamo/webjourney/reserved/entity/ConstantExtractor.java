@@ -27,28 +27,35 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-class ConstantExtractor
-	 implements IExtractor<String>
+class ConstantExtractor implements IExtractor<String>
 {
-	 private final String value;
-	 private final ICondition condition;
+	private final String value;
+	private final ICondition condition;
 
-	 ConstantExtractor(String value, ICondition condition)
-	 {
-		  this.value = value;
-		  this.condition = condition;
-	 }
+	ConstantExtractor(
+		String value,
+		ICondition condition)
+	{
+		this.value = value;
+		this.condition = condition;
+	}
 
-	 @Override
-	 public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
-	 {
-		  return this.value;
-	 }
+	@Override
+	public String extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+	{
+		return this.value;
+	}
 
-	 @Override
-	 public ICondition getCondition()
-	 {
-		  return this.condition;
-	 }
+	@Override
+	public ICondition getCondition()
+	{
+		return this.condition;
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Constant: " + this.value + " on condition: " + this.condition.describe();
+	}
 
 }
