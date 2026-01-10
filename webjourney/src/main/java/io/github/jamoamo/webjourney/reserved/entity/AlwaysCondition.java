@@ -28,20 +28,25 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-public class AlwaysCondition
-	 implements ICondition
+public class AlwaysCondition implements ICondition
 {
-	 /**
-	  * Evaluates the condition.
-	  *
-	  * @param reader the value reader
-	  *
-	  * @return true always
-	  */
-	 @Override
-	 public boolean evaluate(IValueReader reader, EntityCreationContext entityCreationContext)
-	 {
-		  return true;
-	 }
+	/**
+	 * Evaluates the condition.
+	 *
+	 * @param reader the value reader
+	 *
+	 * @return true always
+	 */
+	@Override
+	public boolean evaluate(IValueReader reader, EntityCreationContext entityCreationContext)
+	{
+		return true;
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Always";
+	}
 
 }

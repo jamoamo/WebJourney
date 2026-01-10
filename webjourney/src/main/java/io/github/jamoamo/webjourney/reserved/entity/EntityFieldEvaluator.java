@@ -26,6 +26,8 @@ package io.github.jamoamo.webjourney.reserved.entity;
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,71 +35,71 @@ import org.slf4j.LoggerFactory;
  *
  * @author James Amoore
  */
-class EntityFieldEvaluator
-	 implements IEntityFieldEvaluator
+@SuppressWarnings({"rawtypes", "unchecked"})
+class EntityFieldEvaluator implements IEntityFieldEvaluator
 {
-	 private static final Logger LOGGER = LoggerFactory.getLogger(EntityFieldEvaluator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EntityFieldEvaluator.class);
 
-	 private final List<IExtractor> extractors;
-	 private final IConverter converter;
-	 private final ITransformer transformer;
+	private final List<IExtractor> extractors;
+	private final IConverter converter;
+	private final ITransformer transformer;
 
-	 EntityFieldEvaluator(List<IExtractor> extractors, ITransformer transformer, IConverter converter)
-	 {
-		  this.extractors = extractors;
-		  this.transformer = transformer;
-		  this.converter = converter;
-	 }
+	EntityFieldEvaluator(
+		List<IExtractor> extractors,
+		ITransformer transformer,
+		IConverter converter)
+	{
+		this.extractors = extractors;
+		this.transformer = transformer;
+		this.converter = converter;
+	}
 
-	 @Override
-	 public Object evaluate(IValueReader browser, List<IEntityCreationListener> listeners,
-		  EntityCreationContext entityCreationContext)
-		  throws XEntityEvaluationException
-	 {
-		  Object extractedValue = extractValue(browser, entityCreationContext);
+	@Override
+	public Object evaluate(IValueReader browser, List<IEntityCreationListener> listeners,
+		EntityCreationContext entityCreationContext) throws XEntityEvaluationException
+	{
+		Object extractedValue = extractValue(browser, entityCreationContext);
 
-		  Object transformedValue = extractedValue;
-		  if(this.transformer != null)
-		  {
-				transformedValue = this.transformer.transformValue(extractedValue);
-		  }
+		Object transformedValue = extractedValue;
+		if (this.transformer != null)
+		{
+			transformedValue = this.transformer.transformValue(extractedValue);
+		}
 
-		  Object convertedValue = this.converter.convertValue(
-				transformedValue, browser, 
-				new ArrayList<>(), 
-				entityCreationContext);
-		  return convertedValue;
-	 }
+		Object convertedValue =
+			this.converter.convertValue(transformedValue, browser, new ArrayList<>(), entityCreationContext);
+		return convertedValue;
+	}
 
-	 private Object extractValue(IValueReader browser, EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  List<IExtractor> matchingExtractors = new ArrayList<>();
-		  for(IExtractor extractor : this.extractors)
-		  {
-				if(extractor.getCondition()
-					 .evaluate(browser, entityCreationContext))
-				{
-					 matchingExtractors.add(extractor);
-				}
-		  }
+	private Object extractValue(IValueReader browser, EntityCreationContext entityCreationContext)
+		throws XExtractionException
+	{
+		List<IExtractor> matchingExtractors = new ArrayList<>();
+		for (IExtractor extractor : this.extractors)
+		{
+			if (extractor.getCondition().evaluate(browser, entityCreationContext))
+			{
+				matchingExtractors.add(extractor);
+			}
+		}
 
-		  Object extractedValue = null;
-		  if(matchingExtractors.isEmpty())
-		  {
-				LOGGER.warn("No extractors apply. Defaulting to null.");
-				return null;
-		  }
-		  else if(matchingExtractors.size() > 1)
-		  {
-				throw new RuntimeException("More than one Extractor applies.");
-		  }
-		  else
-		  {
-				extractedValue = matchingExtractors.get(0)
-					 .extractRawValue(browser, entityCreationContext);
-		  }
-		  return extractedValue;
-	 }
+		Object extractedValue = null;
+		if (matchingExtractors.isEmpty())
+		{
+			LOGGER.warn("No extractors apply. Defaulting to null.");
+			return null;
+		}
+		else if (matchingExtractors.size() > 1)
+		{
+			String extractors = matchingExtractors.stream().map(IExtractor::describe).collect(Collectors.joining(", "));
+			throw new XEntityEvaluationException(
+				"More than one Extractor applies. Extractors: " + extractors);
+		}
+		else
+		{
+			extractedValue = matchingExtractors.get(0).extractRawValue(browser, entityCreationContext);
+		}
+		return extractedValue;
+	}
 
 }

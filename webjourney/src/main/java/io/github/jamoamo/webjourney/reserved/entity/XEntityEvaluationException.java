@@ -27,26 +27,25 @@ package io.github.jamoamo.webjourney.reserved.entity;
  *
  * @author James Amoore
  */
-public class XEntityEvaluationException extends Exception
-{
+public class XEntityEvaluationException extends RuntimeException {
 	/**
-	 * Constructs an instance of <code>XEntityEvaluationException</code> with the specified detail message.
+	 * Constructs an instance of <code>XEntityEvaluationException</code> with the
+	 * specified detail message.
 	 *
 	 * @param msg the detail message.
 	 */
-	public XEntityEvaluationException(String msg)
-	{
+	public XEntityEvaluationException(String msg) {
 		super(msg);
 	}
-	
+
 	/**
-	 * Constructs an instance of <code>XEntityEvaluationException</code> with the specified detail message and exception.
+	 * Constructs an instance of <code>XEntityEvaluationException</code> with the
+	 * specified detail message and exception.
 	 *
 	 * @param msg the detail message.
-	 * @param ex the cause
+	 * @param ex  the cause
 	 */
-	public XEntityEvaluationException(String msg, Exception ex)
-	{
+	public XEntityEvaluationException(String msg, Exception ex) {
 		super(msg, ex);
 	}
 }

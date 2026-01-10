@@ -30,37 +30,43 @@ import java.util.List;
  *
  * @author James Amoore
  */
-abstract class AElementsExtractor
-	 implements IExtractor<List<? extends AElement>>
+abstract class AElementsExtractor implements IExtractor<List<? extends AElement>>
 {
-	 private final String xPath;
-	 private final ICondition condition;
+	private final String xPath;
+	private final ICondition condition;
 
-	 AElementsExtractor(String xPath, ICondition condition)
-	 {
-		  this.xPath = xPath;
-		  this.condition = condition;
-	 }
+	AElementsExtractor(
+		String xPath,
+		ICondition condition)
+	{
+		this.xPath = xPath;
+		this.condition = condition;
+	}
 
-	 @Override
-	 public List<? extends AElement> extractRawValue(
-		  IValueReader reader, 
-		  EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  try
-		  {
-				return reader.getElements(this.xPath);
-		  }
-		  catch(XValueReaderException ex)
-		  {
-				throw new XExtractionException(ex);
-		  }
-	 }
+	@Override
+	public List<? extends AElement> extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
+		throws XExtractionException
+	{
+		try
+		{
+			return reader.getElements(this.xPath);
+		}
+		catch (XValueReaderException ex)
+		{
+			throw new XExtractionException(
+				ex);
+		}
+	}
 
-	 @Override
-	 public ICondition getCondition()
-	 {
-		  return this.condition;
-	 }
+	@Override
+	public ICondition getCondition()
+	{
+		return this.condition;
+	}
+
+	@Override
+	public String describe()
+	{
+		return "Elements: " + this.xPath + " on condition: " + this.condition.describe();
+	}
 }

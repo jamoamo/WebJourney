@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  build:
+    cmds:
+      - mvn clean install
+  prepare-release:
+    cmds:
+      - mvn release:clean release:prepare -P release
+  perform-release:
+    cmds:
+      - mvn release:perform -P release

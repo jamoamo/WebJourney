@@ -29,40 +29,49 @@ import java.util.List;
  *
  * @author James Amoore
  */
-class AttributesExtractor
-	 implements IExtractor<List<String>>
+class AttributesExtractor implements IExtractor<List<String>>
 {
-	 private final String xpath;
-	 private final String attribute;
-	 private final ICondition condition;
-	 private final boolean optional;
+	private final String xpath;
+	private final String attribute;
+	private final ICondition condition;
+	private final boolean optional;
 
-	 AttributesExtractor(String xPath, String attribute, ICondition condition, boolean optional)
-	 {
-		  this.xpath = xPath;
-		  this.attribute = attribute;
-		  this.condition = condition;
-		  this.optional = optional;
-	 }
+	AttributesExtractor(
+		String xPath,
+		String attribute,
+		ICondition condition,
+		boolean optional)
+	{
+		this.xpath = xPath;
+		this.attribute = attribute;
+		this.condition = condition;
+		this.optional = optional;
+	}
 
-	 @Override
-	 public List<String> extractRawValue(IValueReader browser, EntityCreationContext entityCreationContext)
-		  throws XExtractionException
-	 {
-		  try
-		  {
-				return browser.getAttributes(this.xpath, this.attribute);
-		  }
-		  catch(XValueReaderException ex)
-		  {
-				throw new XExtractionException(ex);
-		  }
-	 }
+	@Override
+	public List<String> extractRawValue(IValueReader browser, EntityCreationContext entityCreationContext)
+		throws XExtractionException
+	{
+		try
+		{
+			return browser.getAttributes(this.xpath, this.attribute);
+		}
+		catch (XValueReaderException ex)
+		{
+			throw new XExtractionException(
+				ex);
+		}
+	}
 
-	 @Override
-	 public ICondition getCondition()
-	 {
-		  return this.condition;
-	 }
+	@Override
+	public ICondition getCondition()
+	{
+		return this.condition;
+	}
 
+	@Override
+	public String describe()
+	{
+		return "Attributes: " + this.xpath + " on condition: " + this.condition.describe();
+	}
 }
