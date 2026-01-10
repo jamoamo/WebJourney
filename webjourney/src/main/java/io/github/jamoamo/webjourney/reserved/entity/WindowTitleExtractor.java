@@ -50,6 +50,7 @@ class WindowTitleExtractor implements IExtractor
 		return new AlwaysCondition();
 	}
 
+	@Override
 	public String describe()
 	{
 		return "Window Title";
