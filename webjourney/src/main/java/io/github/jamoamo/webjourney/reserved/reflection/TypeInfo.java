@@ -116,7 +116,11 @@ public final class TypeInfo
 		return isStringType() || isNumericType() || isBoolean() || isDateType();
 	}
 	
-	private boolean isBoolean()
+	/**
+	 * Determines if the class is Boolean.class or boolean.class.
+	 * @return true if the class is a boolean
+	 */
+	public boolean isBoolean()
 	{
 		return this.theClass.equals(Boolean.class) || this.theClass.equals(boolean.class);
 	}

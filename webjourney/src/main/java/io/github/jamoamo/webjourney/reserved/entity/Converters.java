@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.mapper.AConverter;
+import io.github.jamoamo.webjourney.api.mapper.BooleanConverter;
 import io.github.jamoamo.webjourney.api.mapper.DateConverter;
 import io.github.jamoamo.webjourney.api.mapper.DoubleConverter;
 import io.github.jamoamo.webjourney.api.mapper.IntegerConverter;
@@ -117,6 +118,10 @@ final class Converters
 		else if(info.isDateType())
 		{
 			mapper = new DateConverter();
+		}
+		else if(info.isBoolean())
+		{
+			mapper = new BooleanConverter();
 		}
 		else
 		{

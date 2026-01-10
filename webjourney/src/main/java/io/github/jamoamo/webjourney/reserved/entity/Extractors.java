@@ -69,8 +69,8 @@ public final class Extractors
 		  FieldInfo fieldInfo,
 		  boolean extractCollectionSingularly,
 		  boolean hasConverter)
-	 {
-		  if(annotation instanceof Constant constant)
+	 {		
+		if(annotation instanceof Constant constant)
 		  {
 				LOGGER.debug("Using ConstantExtractor with value = " + constant.value());
 				return new ConstantExtractor(constant.value(), new AlwaysCondition());

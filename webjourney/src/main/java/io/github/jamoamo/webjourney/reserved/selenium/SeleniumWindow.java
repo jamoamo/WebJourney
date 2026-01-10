@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
+import io.github.jamoamo.webjourney.api.web.XEnvironmentalNavigationError;
 import io.github.jamoamo.webjourney.api.web.XNavigationError;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.time.format.DateTimeFormatter;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,7 @@ final class SeleniumWindow implements IBrowserWindow
 	private IWebPage currentPage;
 	
 	private boolean screenshotEnabled = false;
+	private NavigationRetryConfig retryConfig = new NavigationRetryConfig();
 	
 	SeleniumWindow(String windowName, RemoteWebDriver webDriver)
 	{
@@ -58,6 +61,15 @@ final class SeleniumWindow implements IBrowserWindow
 		this.webDriver = webDriver;
 		this.currentPage = new SeleniumPage(this.webDriver);
 		this.active = false;
+	}
+	
+	/**
+	 * Sets the retry configuration for navigation operations.
+	 * @param config the retry configuration
+	 */
+	void setRetryConfig(NavigationRetryConfig config)
+	{
+		this.retryConfig = config != null ? config : new NavigationRetryConfig();
 	}
 	
 	private void checkWindowIsActive()
@@ -84,9 +96,15 @@ final class SeleniumWindow implements IBrowserWindow
 
 	@Override
 	public IWebPage refreshCurrentPage()
+		throws XNavigationError
 	{
 		checkWindowIsActive();
-		this.webDriver.navigate().refresh();
+		
+		executeWithRetry(
+			() -> this.webDriver.navigate().refresh(),
+			"refreshCurrentPage()"
+		);
+		
 		this.currentPage = new SeleniumPage(this.webDriver);
 		return this.currentPage;
 	}
@@ -99,13 +117,143 @@ final class SeleniumWindow implements IBrowserWindow
 		this.currentPage = new SeleniumPage(this.webDriver);
 	}
 
+	/**
+	 * Checks if a WebDriverException is an environmental error that should be retried.
+	 * @param ex the exception to check
+	 * @return true if the error is environmental/retryable, false otherwise
+	 */
+	private boolean isEnvironmentalError(WebDriverException ex)
+	{
+		String message = ex.getMessage();
+		if (message == null)
+		{
+			return false;
+		}
+		
+		// Check for common connection/network errors
+		return message.contains("ERR_CONNECTION_REFUSED") ||
+			   message.contains("ERR_CONNECTION_RESET") ||
+			   message.contains("ERR_CONNECTION_CLOSED") ||
+			   message.contains("ERR_CONNECTION_TIMED_OUT") ||
+			   message.contains("ERR_NETWORK_CHANGED") ||
+			   message.contains("ERR_INTERNET_DISCONNECTED") ||
+			   message.contains("ERR_TIMED_OUT") ||
+			   message.contains("ERR_NAME_NOT_RESOLVED") ||
+			   message.contains("ERR_PROXY_CONNECTION_FAILED") ||
+			   message.contains("net::ERR_") && (
+				   message.contains("CONNECTION") || 
+				   message.contains("TIMEOUT") || 
+				   message.contains("NETWORK")
+			   );
+	}
+	
+	/**
+	 * Executes a navigation operation with retry logic.
+	 * @param operation the navigation operation to execute
+	 * @param operationDescription description of the operation for logging
+	 * @throws XNavigationError if navigation fails after all retries
+	 */
+	private void executeWithRetry(NavigationOperation operation, String operationDescription)
+		throws XNavigationError
+	{
+		int attempts = 0;
+		WebDriverException lastException = null;
+		
+		while (attempts < this.retryConfig.getMaxAttempts())
+		{
+			attempts++;
+			try
+			{
+				operation.execute();
+				if (attempts > 1)
+				{
+					LOGGER.info(String.format("Window [%s] %s succeeded on attempt %d", 
+						this.windowName, operationDescription, attempts));
+				}
+				return; // Success
+			}
+			catch (WebDriverException ex)
+			{
+				lastException = ex;
+				
+				if (isEnvironmentalError(ex))
+				{
+					if (attempts < this.retryConfig.getMaxAttempts())
+					{
+						String warnMsg = String.format(
+							"Window [%s] %s failed with environmental error on attempt %d: %s. Retrying...", 
+							this.windowName, operationDescription, attempts, ex.getMessage());
+						LOGGER.warn(warnMsg);
+						
+						// Wait before retrying
+						if (this.retryConfig.getRetryDelayMillis() > 0)
+						{
+							try
+							{
+								Thread.sleep(this.retryConfig.getRetryDelayMillis());
+							}
+							catch (InterruptedException ie)
+							{
+								Thread.currentThread().interrupt();
+								throw new XNavigationError("Navigation interrupted during retry delay");
+							}
+						}
+					}
+					else
+					{
+						// Max attempts reached with environmental error
+						String errorMsg = String.format(
+							"Window [%s] %s failed after %d attempts with environmental error", 
+							this.windowName, operationDescription, attempts);
+						LOGGER.error(errorMsg);
+						throw new XEnvironmentalNavigationError(
+							String.format("%s: %s", operationDescription, ex.getMessage()), 
+							attempts, 
+							ex
+						);
+					}
+				}
+				else
+				{
+					// Non-environmental error, don't retry
+					LOGGER.error(String.format("Window [%s] %s failed with non-retryable error: %s", 
+						this.windowName, operationDescription, ex.getMessage()));
+					throw new XNavigationError(String.format("%s: %s", operationDescription, ex.getMessage()));
+				}
+			}
+		}
+		
+		// Should not reach here, but just in case
+		if (lastException != null)
+		{
+			throw new XEnvironmentalNavigationError(
+				String.format("%s: %s", operationDescription, lastException.getMessage()), 
+				attempts, 
+				lastException
+			);
+		}
+	}
+	
+	/**
+	 * Functional interface for navigation operations that can be retried.
+	 */
+	@FunctionalInterface
+	private interface NavigationOperation
+	{
+		void execute() throws WebDriverException;
+	}
+
 	@Override
 	public IWebPage navigateToUrl(URL url)
 		throws XNavigationError
 	{
 		checkWindowIsActive();
 		LOGGER.info(String.format("Window [%s] navigating to url %s", this.windowName, url.toString()));
-		this.webDriver.navigate().to(url);
+		
+		executeWithRetry(
+			() -> this.webDriver.navigate().to(url),
+			"navigateToUrl(" + url.toString() + ")"
+		);
 		
 		takeScreenshot();
 		this.currentPage = new SeleniumPage(this.webDriver);
@@ -119,7 +267,11 @@ final class SeleniumWindow implements IBrowserWindow
 		checkWindowIsActive();
 		LOGGER.info(String.format("Window [%s] navigating back", this.windowName));
 		
-		this.webDriver.navigate().back();
+		executeWithRetry(
+			() -> this.webDriver.navigate().back(),
+			"navigateBack()"
+		);
+		
 		takeScreenshot();
 		this.currentPage = new SeleniumPage(this.webDriver);
 		return this.currentPage;
@@ -132,7 +284,11 @@ final class SeleniumWindow implements IBrowserWindow
 		checkWindowIsActive();
 		LOGGER.info(String.format("Window [%s] navigating forward", this.windowName));
 		
-		this.webDriver.navigate().forward();
+		executeWithRetry(
+			() -> this.webDriver.navigate().forward(),
+			"navigateForward()"
+		);
+		
 		takeScreenshot();
 		this.currentPage = new SeleniumPage(this.webDriver);
 		return this.currentPage;
