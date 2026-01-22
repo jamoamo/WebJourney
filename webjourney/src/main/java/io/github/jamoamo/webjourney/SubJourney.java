@@ -56,11 +56,17 @@ class SubJourney implements IJourney, ICrumb
 			  throws JourneyException
 	{
 		context.getJourneyBreadcrumb().pushCrumb(this);
-		this.actions.stream().sequential().forEach(action ->
+		try
 		{
-			processAction(action, context);
-		});
-		context.getJourneyBreadcrumb().popCrumb();
+			this.actions.stream().sequential().forEach(action ->
+			{
+				processAction(action, context);
+			});
+		}
+		finally
+		{
+			context.getJourneyBreadcrumb().popCrumb();
+		}
 	}
 
 	private void processAction(AWebAction action, IJourneyContext context)
@@ -68,16 +74,37 @@ class SubJourney implements IJourney, ICrumb
 	{
 		context.getJourneyObservers().forEach(observer -> observer.actionStarted(action));
 		context.getJourneyBreadcrumb().pushCrumb(action);
-		waitFor(action.getPreActionWaitTime());
-
-		ActionResult result = action.executeAction(context);
-		if(result == ActionResult.FAILURE)
+		try
 		{
-			throw new JourneyException("Action failed: " + action.getClass(), context.getJourneyBreadcrumb());
+			waitFor(action.getPreActionWaitTime());
+
+			try
+			{
+				ActionResult result = action.executeAction(context);
+				if(result == ActionResult.FAILURE)
+				{
+					throw new JourneyException("Action failed: " + action.getClass(), context.getJourneyBreadcrumb());
+				}
+			}
+			catch(JourneyException ex)
+			{
+				if(ex.getBreadcrumb() == null)
+				{
+					throw new JourneyException(ex.getMessage(), ex.getCause(), context.getJourneyBreadcrumb());
+				}
+				throw ex;
+			}
+			catch(Exception ex)
+			{
+				throw new JourneyException(ex, context.getJourneyBreadcrumb());
+			}
+			waitFor(action.getPostActionWaitTime());
 		}
-		waitFor(action.getPostActionWaitTime());
-		context.getJourneyBreadcrumb().popCrumb();
-		context.getJourneyObservers().forEach(observer -> observer.actionEnded(action));
+		finally
+		{
+			context.getJourneyBreadcrumb().popCrumb();
+			context.getJourneyObservers().forEach(observer -> observer.actionEnded(action));
+		}
 	}
 
 	private void waitFor(long timeMillis)
