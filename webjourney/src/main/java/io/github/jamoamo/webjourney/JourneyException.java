@@ -47,6 +47,29 @@ public class JourneyException extends RuntimeException
 		super(journeyError);
 		this.breadcrumb = breadcrumb;
 	}
+
+	/**
+	 * Constructor.
+	 * @param cause the cause of the exception.
+	 * @param breadcrumb the current journey breadcrumb.
+	 */
+	public JourneyException(Throwable cause, IJourneyBreadcrumb breadcrumb)
+	{
+		super(cause);
+		this.breadcrumb = breadcrumb;
+	}
+
+	/**
+	 * Constructor.
+	 * @param message the journey message.
+	 * @param cause the cause of the exception.
+	 * @param breadcrumb the current journey breadcrumb.
+	 */
+	public JourneyException(String message, Throwable cause, IJourneyBreadcrumb breadcrumb)
+	{
+		super(message, cause);
+		this.breadcrumb = breadcrumb;
+	}
 	
 	/**
 	 * @return the breadcrumb.

@@ -58,12 +58,11 @@ class CompleteFormAction extends AWebAction
 	@Override
 	protected ActionResult executeActionImpl(IJourneyContext context)
 	{
-		IBrowser browser = context.getBrowser();
 		List<Field> textFields =
 				  FieldUtils.getFieldsListWithAnnotation(this.form.getClass(), TextField.class);
 		for(Field field : textFields)
 		{
-			setTextField(browser, field);
+			setTextField(context, field);
 		}
 
 		if(this.submit)
@@ -71,7 +70,7 @@ class CompleteFormAction extends AWebAction
 			try
 			{
 				String submitXPath = this.form.getClass().getAnnotation(Form.class).submit();
-				browser.getActiveWindow().getCurrentPage().getElement(submitXPath).click();
+				context.getBrowser().getActiveWindow().getCurrentPage().getElement(submitXPath).click();
 			}
 			catch(XWebException ex)
 			{
@@ -86,8 +85,9 @@ class CompleteFormAction extends AWebAction
 		this.submit = true;
 	}
 
-	private void setTextField(IBrowser browser, Field textField)
+	private void setTextField(IJourneyContext context, Field textField)
 	{
+		IBrowser browser = context.getBrowser();
 		try
 		{
 			Object value = PropertyUtils.getSimpleProperty(this.form, textField.getName());

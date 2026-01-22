@@ -70,10 +70,25 @@ class SubJourney implements IJourney, ICrumb
 		context.getJourneyBreadcrumb().pushCrumb(action);
 		waitFor(action.getPreActionWaitTime());
 
-		ActionResult result = action.executeAction(context);
-		if(result == ActionResult.FAILURE)
+		try
 		{
-			throw new JourneyException("Action failed: " + action.getClass(), context.getJourneyBreadcrumb());
+			ActionResult result = action.executeAction(context);
+			if(result == ActionResult.FAILURE)
+			{
+				throw new JourneyException("Action failed: " + action.getClass(), context.getJourneyBreadcrumb());
+			}
+		}
+		catch(JourneyException ex)
+		{
+			if(ex.getBreadcrumb() == null)
+			{
+				throw new JourneyException(ex.getMessage(), ex.getCause(), context.getJourneyBreadcrumb());
+			}
+			throw ex;
+		}
+		catch(Exception ex)
+		{
+			throw new JourneyException(ex, context.getJourneyBreadcrumb());
 		}
 		waitFor(action.getPostActionWaitTime());
 		context.getJourneyBreadcrumb().popCrumb();
