@@ -74,11 +74,14 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 	private Object extractValue(IValueReader browser, EntityCreationContext entityCreationContext)
 		throws XExtractionException
 	{
+		LOGGER.debug("Evaluating value for entity field");
 		List<IExtractor> matchingExtractors = new ArrayList<>();
 		for (IExtractor extractor : this.extractors)
 		{
+			LOGGER.debug("Checking extractor: {}", extractor.describe());
 			if (extractor.getCondition().evaluate(browser, entityCreationContext))
 			{
+				LOGGER.debug("Extractor applies");
 				matchingExtractors.add(extractor);
 			}
 		}
@@ -97,8 +100,10 @@ class EntityFieldEvaluator implements IEntityFieldEvaluator
 		}
 		else
 		{
+			LOGGER.debug("Using extractor: {}", matchingExtractors.get(0).describe());
 			extractedValue = matchingExtractors.get(0).extractRawValue(browser, entityCreationContext);
 		}
+		LOGGER.debug("Extracted value: {}", extractedValue);
 		return extractedValue;
 	}
 
