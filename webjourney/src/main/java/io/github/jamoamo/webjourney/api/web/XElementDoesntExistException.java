@@ -38,6 +38,11 @@ public class XElementDoesntExistException extends XWebException
 		super("Element doesn't exist.");
 	}
 
+	/**
+	 * Constructor with message.
+	 * 
+	 * @param message The message to display.
+	 */
 	public XElementDoesntExistException(
 		String message)
 	{
