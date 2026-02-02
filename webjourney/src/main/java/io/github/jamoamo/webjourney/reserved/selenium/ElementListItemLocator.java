@@ -58,7 +58,7 @@ class ElementListItemLocator implements ISeleniumElementLocator
 		catch (IndexOutOfBoundsException ex)
 		{
 			throw new XElementDoesntExistException(
-				"Elements Identified By: " + this.by.toString() + " don't exist.");
+				"Elements Identified By: " + this.by.toString() + " at index " + this.index + " don't exist.");
 		}
 	}
 
