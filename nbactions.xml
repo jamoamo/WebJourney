@@ -7,6 +7,9 @@
             <goal>release:clean</goal>
             <goal>release:prepare</goal>
         </goals>
+        <properties>
+                <env.GPG_PASSPHRASE>J8a7m1e0s7key</env.GPG_PASSPHRASE>
+            </properties>
         <activatedProfiles>
             <activatedProfile>release</activatedProfile>
         </activatedProfiles>
@@ -17,9 +20,11 @@
         <goals>
             <goal>release:perform</goal>
         </goals>
+        <properties>
+                <env.GPG_PASSPHRASE>J8a7m1e0s7key</env.GPG_PASSPHRASE>
+            </properties>
         <activatedProfiles>
             <activatedProfile>release</activatedProfile>
         </activatedProfiles>
     </action>
 </actions>
-
