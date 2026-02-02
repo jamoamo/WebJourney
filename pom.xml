@@ -150,12 +150,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <useGpgCmd>true</useGpgCmd>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                            <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                         </configuration>
                     </plugin>
                     <plugin>
