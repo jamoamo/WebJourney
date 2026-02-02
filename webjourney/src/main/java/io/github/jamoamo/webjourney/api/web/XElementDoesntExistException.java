@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.api.web;
 
 /**
  * An exception that occurs when a required web element doesn't exist.
+ * 
  * @author James Amoore
  */
 public class XElementDoesntExistException extends XWebException
@@ -36,5 +37,11 @@ public class XElementDoesntExistException extends XWebException
 	{
 		super("Element doesn't exist.");
 	}
-	
+
+	public XElementDoesntExistException(
+		String message)
+	{
+		super(message);
+	}
+
 }

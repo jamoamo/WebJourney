@@ -37,8 +37,11 @@ class ElementListItemLocator implements ISeleniumElementLocator
 	private final WebDriver driver;
 	private final By by;
 	private final int index;
-	
-	ElementListItemLocator(WebDriver driver, By by, int index)
+
+	ElementListItemLocator(
+		WebDriver driver,
+		By by,
+		int index)
 	{
 		this.driver = driver;
 		this.by = by;
@@ -52,10 +55,11 @@ class ElementListItemLocator implements ISeleniumElementLocator
 		{
 			return this.driver.findElements(this.by).get(this.index);
 		}
-		catch(IndexOutOfBoundsException ex)
+		catch (IndexOutOfBoundsException ex)
 		{
-			throw new XElementDoesntExistException();
+			throw new XElementDoesntExistException(
+				"Elements Identified By: " + this.by.toString() + " don't exist.");
 		}
 	}
-	
+
 }
