@@ -38,8 +38,11 @@ class ChildElementLocator implements ISeleniumElementLocator
 	private final SeleniumElement element;
 	private final By by;
 	private final boolean optional;
-	
-	ChildElementLocator(SeleniumElement element, By by, boolean optional)
+
+	ChildElementLocator(
+		SeleniumElement element,
+		By by,
+		boolean optional)
 	{
 		this.element = element;
 		this.by = by;
@@ -49,18 +52,31 @@ class ChildElementLocator implements ISeleniumElementLocator
 	@Override
 	public WebElement findElement() throws XElementDoesntExistException
 	{
-		try
+		WebElement parent = this.element.getWebElement();
+
+		if (parent == null)
 		{
-			return this.element.getWebElement().findElement(this.by);
-		}
-		catch(NoSuchElementException ex)
-		{
-			if(this.optional)
+			if (this.optional)
 			{
 				return null;
 			}
-			throw new XElementDoesntExistException();
+			throw new XElementDoesntExistException(
+				"Parent element missing for child identified by: " + this.by.toString());
+		}
+
+		try
+		{
+			return parent.findElement(this.by);
+		}
+		catch (NoSuchElementException ex)
+		{
+			if (this.optional)
+			{
+				return null;
+			}
+			throw new XElementDoesntExistException(
+				"Element Identified By: " + this.by.toString() + " doesn't exist.");
 		}
 	}
-	
+
 }
