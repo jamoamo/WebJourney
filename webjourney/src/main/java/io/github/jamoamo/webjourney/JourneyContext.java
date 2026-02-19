@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney;
 
+import io.github.jamoamo.webjourney.api.ActionRetryPolicy;
 import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
@@ -49,6 +50,7 @@ public class JourneyContext implements IJourneyContext
 	private final Map<String, Object> inputs = new ConcurrentHashMap<>(2);
 	private final List<IJourneyObserver> journeyObservers = new CopyOnWriteArrayList<>();
 	private final IJourneyBrowserArguments browserArguments = new DefaultJourneyBrowserArguments();
+	private ActionRetryPolicy actionRetryPolicy = new ActionRetryPolicy();
 	
 	void setBrowser(IBrowser browser)
 	{
@@ -100,5 +102,17 @@ public class JourneyContext implements IJourneyContext
 	public IJourneyBrowserArguments getBrowserArguments()
 	{
 		return this.browserArguments;
+	}
+
+	@Override
+	public void setActionRetryPolicy(ActionRetryPolicy policy)
+	{
+		this.actionRetryPolicy = policy;
+	}
+
+	@Override
+	public ActionRetryPolicy getActionRetryPolicy()
+	{
+		return this.actionRetryPolicy;
 	}
 }
