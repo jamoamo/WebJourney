@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -71,6 +72,66 @@ public class AWebActionRetryTest
         verify(action, times(1)).executeActionImpl(context);
     }
 
+    @Test
+    public void testExecuteAction_RetryableException_Matches() throws Exception
+    {
+        // Policy retries on BaseJourneyActionException
+        ActionRetryPolicy policy = new ActionRetryPolicy(1, 0, List.of(BaseJourneyActionException.class));
+
+        // Action throws BaseJourneyActionException on first attempt, succeeds on second
+        TestAction action = spy(new TestAction(false, true));
+
+        IJourneyContext context = mock(IJourneyContext.class);
+        when(context.getActionRetryPolicy()).thenReturn(policy);
+
+        ActionResult result = action.executeAction(context);
+
+        Assertions.assertEquals(ActionResult.SUCCESS, result);
+        verify(action, times(2)).executeActionImpl(context);
+    }
+
+    @Test
+    public void testExecuteAction_RetryableException_NoMatch() throws Exception
+    {
+        // Policy retries ONLY on IllegalArgumentException
+        ActionRetryPolicy policy = new ActionRetryPolicy(1, 0, List.of(IllegalArgumentException.class));
+
+        // Action throws BaseJourneyActionException (which is NOT IllegalArgumentException)
+        TestAction action = spy(new TestAction(false, true));
+
+        IJourneyContext context = mock(IJourneyContext.class);
+        when(context.getActionRetryPolicy()).thenReturn(policy);
+
+        // Should throw immediately on first failure because exception type doesn't match policy
+        Assertions.assertThrows(BaseJourneyActionException.class, () ->
+        {
+            action.executeAction(context);
+        });
+
+        verify(action, times(1)).executeActionImpl(context);
+    }
+
+    @Test
+    public void testExecuteAction_RuntimeException_Retry() throws Exception
+    {
+        // Policy retries on RuntimeException
+        ActionRetryPolicy policy = new ActionRetryPolicy(1, 0, List.of(RuntimeException.class));
+
+        // Custom action that throws RuntimeException
+        AWebAction action = spy(new RuntimeExceptionAction());
+
+        IJourneyContext context = mock(IJourneyContext.class);
+        when(context.getActionRetryPolicy()).thenReturn(policy);
+
+        // Should fail eventually but retry once
+        Assertions.assertThrows(RuntimeException.class, () ->
+        {
+            action.executeAction(context);
+        });
+
+        verify(action, times(2)).executeActionImpl(context);
+    }
+
     static class TestAction extends AWebAction
     {
         private final boolean[] outcomes;
@@ -86,7 +147,6 @@ public class AWebActionRetryTest
         {
             if (attempt >= outcomes.length)
             {
-                // Default fail if we run out of outcomes (shouldn't happen in valid tests)
                 throw new BaseJourneyActionException("Failed (out of outcomes)", this, new RuntimeException("Simulated failure"));
             }
             boolean success = outcomes[attempt++];
@@ -104,6 +164,21 @@ public class AWebActionRetryTest
         protected String getActionName()
         {
             return "Test Action";
+        }
+    }
+
+    static class RuntimeExceptionAction extends AWebAction
+    {
+        @Override
+        public ActionResult executeActionImpl(IJourneyContext context)
+        {
+            throw new RuntimeException("Simulated Runtime Exception");
+        }
+
+        @Override
+        protected String getActionName()
+        {
+            return "Runtime Exception Action";
         }
     }
 }
