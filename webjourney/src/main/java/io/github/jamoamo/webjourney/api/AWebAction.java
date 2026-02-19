@@ -61,7 +61,42 @@ public abstract class AWebAction implements ICrumb
 		
 		try
 		{
-			return executeActionImpl(context);
+			ActionRetryPolicy retryPolicy = context.getActionRetryPolicy();
+			int attempt = 1;
+			while(true)
+			{
+				try
+				{
+					return executeActionImpl(context);
+				}
+				catch(RuntimeException ex)
+				{
+					if(retryPolicy != null && retryPolicy.shouldRetry(attempt, ex))
+					{
+						attempt++;
+						try
+						{
+							Thread.sleep(retryPolicy.getRetryDelay());
+						}
+						catch(InterruptedException ie)
+						{
+							Thread.currentThread().interrupt();
+							throw new BaseJourneyActionException("Interrupted during retry wait", this, ie);
+						}
+					}
+					else
+					{
+						if(ex instanceof BaseJourneyActionException)
+						{
+							throw (BaseJourneyActionException) ex;
+						}
+						else
+						{
+							throw (RuntimeException) ex;
+						}
+					}
+				}
+			}
 		}
 		finally
 		{

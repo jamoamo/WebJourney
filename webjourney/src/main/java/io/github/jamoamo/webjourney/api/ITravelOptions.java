@@ -55,5 +55,17 @@ public interface ITravelOptions
 	 * @return the journey observers
 	 */
 	List<IJourneyObserver> getJourneyObservers();
+
+	/**
+	 * Sets the action retry policy.
+	 * @param policy the policy to use for retrying actions.
+	 */
+	void setActionRetryPolicy(ActionRetryPolicy policy);
+
+	/**
+	 * Retrieves the action retry policy.
+	 * @return the action retry policy.
+	 */
+	ActionRetryPolicy getActionRetryPolicy();
 	
 }

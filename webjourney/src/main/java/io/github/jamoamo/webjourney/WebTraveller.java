@@ -73,6 +73,7 @@ public class WebTraveller
 		IJourneyBreadcrumb breadcrumb = new JourneyBreadcrumb();
 		context.setJourneyBreadcrumb(breadcrumb);
 		context.setJourneyObservers(this.travelOptions.getJourneyObservers());
+		context.setActionRetryPolicy(this.travelOptions.getActionRetryPolicy());
 		
 		// Create browser with context for browser arguments
 		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions(), context);

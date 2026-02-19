@@ -80,4 +80,16 @@ public interface IJourneyContext
 	 * @return the browser arguments.
 	 */
 	IJourneyBrowserArguments getBrowserArguments();
+
+	/**
+	 * Sets the action retry policy.
+	 * @param policy the policy to use for retrying actions.
+	 */
+	void setActionRetryPolicy(ActionRetryPolicy policy);
+
+	/**
+	 * Retrieves the action retry policy.
+	 * @return the action retry policy.
+	 */
+	ActionRetryPolicy getActionRetryPolicy();
 }
