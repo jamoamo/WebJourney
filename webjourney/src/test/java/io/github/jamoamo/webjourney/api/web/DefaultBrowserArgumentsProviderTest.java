@@ -179,7 +179,7 @@ class DefaultBrowserArgumentsProviderTest
         @Override
         public ActionRetryPolicy getActionRetryPolicy()
         {
-            return null;
+            return new ActionRetryPolicy();
         }
     }
 

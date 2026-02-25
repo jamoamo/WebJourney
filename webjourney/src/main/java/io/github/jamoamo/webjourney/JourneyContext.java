@@ -50,7 +50,7 @@ public class JourneyContext implements IJourneyContext
 	private final Map<String, Object> inputs = new ConcurrentHashMap<>(2);
 	private final List<IJourneyObserver> journeyObservers = new CopyOnWriteArrayList<>();
 	private final IJourneyBrowserArguments browserArguments = new DefaultJourneyBrowserArguments();
-	private ActionRetryPolicy actionRetryPolicy = new ActionRetryPolicy();
+	private volatile ActionRetryPolicy actionRetryPolicy = new ActionRetryPolicy();
 	
 	void setBrowser(IBrowser browser)
 	{
