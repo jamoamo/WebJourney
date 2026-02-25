@@ -131,11 +131,11 @@ public class SubJourneyTest
 		assertSame(instance, crumbCaptor.getAllValues().get(0));
 		assertSame(mockAction, crumbCaptor.getAllValues().get(1));
 		
-		Mockito.verify(breadcrumb, never()).popCrumb();
+		Mockito.verify(breadcrumb, times(2)).popCrumb();
 		
 		ArgumentCaptor<AWebAction> startedActioncaptor = ArgumentCaptor.forClass(AWebAction.class);
 		ArgumentCaptor<AWebAction> endedActioncaptor = ArgumentCaptor.forClass(AWebAction.class);
 		Mockito.verify(observer, times(1)).actionStarted(startedActioncaptor.capture());
-		Mockito.verify(observer, times(0)).actionEnded(endedActioncaptor.capture());
+		Mockito.verify(observer, times(1)).actionEnded(endedActioncaptor.capture());
 	}
 }

@@ -26,12 +26,16 @@ package io.github.jamoamo.webjourney.reserved.entity;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author James Amoore
  */
 abstract class AElementsExtractor implements IExtractor<List<? extends AElement>>
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AElementsExtractor.class);
 	private final String xPath;
 	private final ICondition condition;
 
@@ -49,6 +53,7 @@ abstract class AElementsExtractor implements IExtractor<List<? extends AElement>
 	{
 		try
 		{
+			LOGGER.debug("Extracting elements: {}", this.xPath);
 			return reader.getElements(this.xPath);
 		}
 		catch (XValueReaderException ex)

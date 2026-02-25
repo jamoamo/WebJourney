@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jamoamo</groupId>
     <artifactId>webjourney-parent</artifactId>
-    <version>0.4.4-SNAPSHOT</version>
+    <version>0.4.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WebJourney Parent</name>
     <description>
@@ -51,7 +51,7 @@
             <dependency>
                 <groupId>io.github.jamoamo</groupId>
                 <artifactId>webjourney</artifactId>
-                <version>0.4.4-SNAPSHOT</version>
+                <version>0.4.6-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -150,12 +150,6 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <useGpgCmd>true</useGpgCmd>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                            <passphrase>${env.GPG_PASSPHRASE}</passphrase>
                         </configuration>
                     </plugin>
                     <plugin>

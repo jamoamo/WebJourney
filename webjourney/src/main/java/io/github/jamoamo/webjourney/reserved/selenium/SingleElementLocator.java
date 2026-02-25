@@ -38,15 +38,17 @@ class SingleElementLocator implements ISeleniumElementLocator
 	private final WebDriver driver;
 	private final By by;
 	private final boolean optional;
-	
-	SingleElementLocator(WebDriver driver, By by, boolean optional)
+
+	SingleElementLocator(
+		WebDriver driver,
+		By by,
+		boolean optional)
 	{
 		this.driver = driver;
 		this.by = by;
 		this.optional = optional;
 	}
-	
-	
+
 	@Override
 	public WebElement findElement() throws XElementDoesntExistException
 	{
@@ -54,14 +56,15 @@ class SingleElementLocator implements ISeleniumElementLocator
 		{
 			return this.driver.findElement(this.by);
 		}
-		catch(NoSuchElementException ex)
+		catch (NoSuchElementException ex)
 		{
-			if(this.optional)
+			if (this.optional)
 			{
 				return null;
 			}
-			throw new XElementDoesntExistException();
+			throw new XElementDoesntExistException(
+				"Element Identified By: " + this.by.toString() + " doesn't exist.");
 		}
 	}
-	
+
 }
