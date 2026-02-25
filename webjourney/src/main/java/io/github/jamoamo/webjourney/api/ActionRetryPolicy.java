@@ -45,6 +45,14 @@ public class ActionRetryPolicy
 	 */
 	public ActionRetryPolicy(int maxRetries, long retryDelay, List<Class<? extends Throwable>> retryableExceptions)
 	{
+		if(maxRetries < 0)
+		{
+			throw new IllegalArgumentException("maxRetries must be non-negative");
+		}
+		if(retryDelay < 0)
+		{
+			throw new IllegalArgumentException("retryDelay must be non-negative");
+		}
 		this.maxRetries = maxRetries;
 		this.retryDelay = retryDelay;
 		this.retryableExceptions = retryableExceptions != null ? new ArrayList<>(retryableExceptions) : new ArrayList<>();
