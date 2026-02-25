@@ -23,49 +23,44 @@
  */
 package io.github.jamoamo.webjourney.api;
 
-import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
-import java.util.List;
+import java.util.Collections;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
- *
- * @author James Amoore
+ * Tests for ActionRetryPolicy.
  */
-public interface ITravelOptions
+public class ActionRetryPolicyTest
 {
-	/**
-	 * Sets the preferred browser strategy to use.
-	 * @param strategy the strategy to use to create the preferred browser.
-	 */
-	void setPreferredBrowserStrategy(IPreferredBrowserStrategy strategy);
+	@Test
+	public void testConstructor_ValidValues()
+	{
+		ActionRetryPolicy policy = new ActionRetryPolicy(3, 1000, Collections.emptyList());
+		Assertions.assertEquals(3, policy.getMaxRetries());
+		Assertions.assertEquals(1000, policy.getRetryDelay());
+	}
 
-	/**
-	 * Returns the preferred browser strategy.
-	 * @return the preferred browser strategy.
-	 */
-	IPreferredBrowserStrategy getPreferredBrowserStrategy();
-	
-	/**
-	 * Adds an observer to the journey.
-	 * @param observer the observer to add.
-	 */
-	void addObserver(IJourneyObserver observer);
+	@Test
+	public void testConstructor_NegativeMaxRetries()
+	{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			new ActionRetryPolicy(-1, 1000, Collections.emptyList());
+		});
+	}
 
-	/**
-	 * Retrieves the journey observers.
-	 * @return the journey observers
-	 */
-	List<IJourneyObserver> getJourneyObservers();
+	@Test
+	public void testConstructor_NegativeRetryDelay()
+	{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			new ActionRetryPolicy(3, -1, Collections.emptyList());
+		});
+	}
 
-	/**
-	 * Sets the action retry policy.
-	 * @param policy the policy to use for retrying actions.
-	 */
-	void setActionRetryPolicy(ActionRetryPolicy policy);
-
-	/**
-	 * Retrieves the action retry policy.
-	 * @return the action retry policy.
-	 */
-	ActionRetryPolicy getActionRetryPolicy();
-	
+	@Test
+	public void testConstructor_NullExceptionsList()
+	{
+		ActionRetryPolicy policy = new ActionRetryPolicy(3, 1000, null);
+		Assertions.assertNotNull(policy.getRetryableExceptions());
+		Assertions.assertTrue(policy.getRetryableExceptions().isEmpty());
+	}
 }
