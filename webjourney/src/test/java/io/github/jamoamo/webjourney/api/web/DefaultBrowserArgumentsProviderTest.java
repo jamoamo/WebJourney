@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.jamoamo.webjourney.api.ActionRetryPolicy;
 import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
@@ -169,17 +168,6 @@ class DefaultBrowserArgumentsProviderTest
         public IJourneyBrowserArguments getBrowserArguments()
         {
             return this.args;
-        }
-
-        @Override
-        public void setActionRetryPolicy(ActionRetryPolicy policy)
-        {
-        }
-
-        @Override
-        public ActionRetryPolicy getActionRetryPolicy()
-        {
-            return new ActionRetryPolicy();
         }
     }
 
