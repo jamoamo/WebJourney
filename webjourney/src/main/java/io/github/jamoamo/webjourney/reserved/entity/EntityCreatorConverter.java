@@ -24,9 +24,8 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
-import java.net.MalformedURLException;
+import io.github.jamoamo.webjourney.api.IRetryPolicy;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +37,10 @@ import org.slf4j.LoggerFactory;
 class EntityCreatorConverter
 	 implements IConverter<String, Object>
 {
-	 private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
+	 private static final Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);	 
 	 private final EntityCreator entityCreator;
 
-	 private io.github.jamoamo.webjourney.api.IRetryPolicy retryPolicy;
+	 private IRetryPolicy retryPolicy;
 
 	 EntityCreatorConverter(EntityFieldDefn fieldDefn)
 		  throws XEntityFieldDefinitionException
@@ -91,21 +90,15 @@ class EntityCreatorConverter
 					policyToUse = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
 				}
 
+				URI uri = new URI(source);
+				java.net.URL url = uri.toURL();
+
 				Object instance = policyToUse.execute(() -> {
-					URI uri = new URI(source);
-					reader.navigateTo(uri.toURL());
+					reader.navigateTo(url);
 
 					return this.entityCreator.createNewEntity(reader.getBrowser(), context);
 				});
-
-				try
-				{
-					reader.navigateBack();
-				}
-				catch(Exception e)
-				{
-					logger.debug("Failed to navigate back after creating entity", e);
-				}
+				NavigationUtils.retryNavigateBack(reader, 3, 500L);
 
 				return instance;
 		  }

@@ -7,8 +7,7 @@ Java library for automating web interactions via the concept of a sequence of ac
 Built on top of Selenium for interacting with web pages.
 ## [WIP] Test Utility
 
-Inlcudes a test utility (WIP) to test web interactions without a real browser\web page.
-
+Includes a test utility (WIP) to test web interactions without a real browser/web page.
 ## Retries
 
 WebJourney includes robust, customizable retry capabilities via `failsafe` to handle transient network errors during navigation or action execution.

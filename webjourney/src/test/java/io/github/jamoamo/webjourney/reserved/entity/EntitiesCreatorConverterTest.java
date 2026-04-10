@@ -24,8 +24,6 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.annotation.Constant;
-import io.github.jamoamo.webjourney.reserved.entity.EntityDefn;
-import io.github.jamoamo.webjourney.reserved.entity.XValueReaderException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

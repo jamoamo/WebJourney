@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import io.github.jamoamo.webjourney.api.IRetryPolicy;
+import io.github.jamoamo.webjourney.api.RetryPolicyBuilder;
 import io.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import java.net.URI;
 import java.util.ArrayList;
@@ -39,9 +40,8 @@ import org.slf4j.LoggerFactory;
 class EntitiesCreatorConverter
 	 implements IConverter<List<String>, List<Object>>
 {
-	 private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
+	 private static final Logger logger = LoggerFactory.getLogger(EntitiesCreatorConverter.class);
 	 private final EntityCreator entityCreator;
-
 	 private IRetryPolicy retryPolicy;
 
 	 EntitiesCreatorConverter(EntityFieldDefn fieldDefn)
@@ -100,31 +100,17 @@ class EntitiesCreatorConverter
 		  }
 		  try
 		  {
-				io.github.jamoamo.webjourney.api.IRetryPolicy policyToUse = this.retryPolicy;
-				if (policyToUse == null && context != null && context.getRetryPolicy() != null)
-				{
-					policyToUse = context.getRetryPolicy();
-				}
-				if (policyToUse == null)
-				{
-					policyToUse = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
-				}
+				IRetryPolicy policyToUse = getRetryPolicy(context);
 
 				Object instance = policyToUse.execute(() -> {
+					logger.debug("Creating entity from URL: {}", source);
 					URI uri = new URI(source);
 					reader.navigateTo(uri.toURL());
 
 					return this.entityCreator.createNewEntity(reader.getBrowser(), context);
 				});
 
-				try
-				{
-					reader.navigateBack();
-				}
-				catch(Exception e)
-				{
-					logger.debug("Failed to navigate back after creating entity", e);
-				}
+				NavigationUtils.retryNavigateBack(reader, 3, 500L);
 
 				return instance;
 		  }
@@ -136,6 +122,20 @@ class EntitiesCreatorConverter
 		  {
 				throw new XConversionException(ex);
 		  }
+	 }
+
+	 private IRetryPolicy getRetryPolicy(EntityCreationContext context)
+	 {
+		  IRetryPolicy policyToUse = this.retryPolicy;
+		  if (policyToUse == null && context != null && context.getRetryPolicy() != null)
+		  {
+				policyToUse = context.getRetryPolicy();
+		  }
+		  if (policyToUse == null)
+		  {
+				policyToUse = RetryPolicyBuilder.builder().build();
+		  }
+		  return policyToUse;
 	 }
 
 }

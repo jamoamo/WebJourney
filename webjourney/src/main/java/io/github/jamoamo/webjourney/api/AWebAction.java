@@ -25,6 +25,8 @@ package io.github.jamoamo.webjourney.api;
 
 import io.github.jamoamo.webjourney.ActionResult;
 import io.github.jamoamo.webjourney.BaseJourneyActionException;
+import io.github.jamoamo.webjourney.api.IRetryPolicy;
+import io.github.jamoamo.webjourney.api.RetryPolicyBuilder;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.MDC;
 
@@ -61,9 +63,9 @@ public abstract class AWebAction implements ICrumb
 		
 		try
 		{
-			io.github.jamoamo.webjourney.api.IRetryPolicy retryPolicy = (context.getOptions() != null) 
+			IRetryPolicy retryPolicy = (context.getOptions() != null) 
 				? context.getOptions().getRetryPolicy() 
-				: io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
+				: RetryPolicyBuilder.builder().build();
 
 			return retryPolicy.execute(() -> executeActionImpl(context));
 		}

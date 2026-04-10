@@ -28,6 +28,9 @@ import dev.failsafe.FailsafeException;
 import dev.failsafe.RetryPolicy;
 import java.time.Duration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Builder for {@link IRetryPolicy}.
  * 
@@ -35,6 +38,7 @@ import java.time.Duration;
  */
 public final class RetryPolicyBuilder
 {
+	private static final Logger logger = LoggerFactory.getLogger(RetryPolicyBuilder.class);
 	private int maxRetries = 3;
 	private Duration delay = Duration.ofSeconds(1);
 
@@ -99,6 +103,8 @@ public final class RetryPolicyBuilder
 			.handle(Exception.class)
 			.withDelay(this.delay)
 			.withMaxRetries(this.maxRetries)
+			.onRetry(e -> logger.info("Action failed, retrying... (Attempt #{})", e.getAttemptCount(), e.getLastException()))
+			.onRetriesExceeded(e -> logger.warn("Max retries exceeded", e.getException()))
 			.build();
 
 		return new IRetryPolicy()
