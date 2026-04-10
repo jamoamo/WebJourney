@@ -41,6 +41,8 @@ class EntityCreatorConverter
 	 private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
 	 private final EntityCreator entityCreator;
 
+	 private io.github.jamoamo.webjourney.api.IRetryPolicy retryPolicy;
+
 	 EntityCreatorConverter(EntityFieldDefn fieldDefn)
 		  throws XEntityFieldDefinitionException
 	 {
@@ -48,6 +50,16 @@ class EntityCreatorConverter
 		  {
 				EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
 				this.entityCreator = new EntityCreator(defn, true, null);
+				
+				io.github.jamoamo.webjourney.annotation.Retry retryAnnotation = 
+					fieldDefn.getField().getAnnotation(io.github.jamoamo.webjourney.annotation.Retry.class);
+				if (retryAnnotation != null)
+				{
+					this.retryPolicy = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder()
+						.maxRetries(retryAnnotation.maxRetries())
+						.delay(java.time.Duration.ofMillis(retryAnnotation.delayMs()))
+						.build();
+				}
 		  }
 		  catch(XEntityDefinitionException e)
 		  {
@@ -69,16 +81,39 @@ class EntityCreatorConverter
 
 		  try
 		  {
-				URI uri = new URI(source);
-				reader.navigateTo(uri.toURL());
+				io.github.jamoamo.webjourney.api.IRetryPolicy policyToUse = this.retryPolicy;
+				if (policyToUse == null && context != null && context.getRetryPolicy() != null)
+				{
+					policyToUse = context.getRetryPolicy();
+				}
+				if (policyToUse == null)
+				{
+					policyToUse = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
+				}
 
-				Object instance = this.entityCreator.createNewEntity(reader.getBrowser(), context);
+				Object instance = policyToUse.execute(() -> {
+					URI uri = new URI(source);
+					reader.navigateTo(uri.toURL());
 
-				reader.navigateBack();
+					return this.entityCreator.createNewEntity(reader.getBrowser(), context);
+				});
+
+				try
+				{
+					reader.navigateBack();
+				}
+				catch(Exception e)
+				{
+					logger.debug("Failed to navigate back after creating entity", e);
+				}
+
 				return instance;
 		  }
-		  catch(MalformedURLException | URISyntaxException | IllegalArgumentException | XValueReaderException
-				| XEntityFieldScrapeException ex)
+		  catch (XConversionException ex)
+		  {
+			    throw ex;
+		  }
+		  catch(Exception ex)
 		  {
 				throw new XConversionException(ex);
 		  }

@@ -61,7 +61,19 @@ public abstract class AWebAction implements ICrumb
 		
 		try
 		{
-			return executeActionImpl(context);
+			io.github.jamoamo.webjourney.api.IRetryPolicy retryPolicy = (context.getOptions() != null) 
+				? context.getOptions().getRetryPolicy() 
+				: io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
+
+			return retryPolicy.execute(() -> executeActionImpl(context));
+		}
+		catch (BaseJourneyActionException ex)
+		{
+			throw ex;
+		}
+		catch (Exception ex)
+		{
+			throw new BaseJourneyActionException(ex.getMessage(), this, ex);
 		}
 		finally
 		{

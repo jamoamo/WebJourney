@@ -21,51 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.api;
+package io.github.jamoamo.webjourney.annotation;
 
-import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *
+ * Annotation to define custom retry behavior for an entity's fields extraction mechanism.
+ * 
  * @author James Amoore
  */
-public interface ITravelOptions
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Retry
 {
 	/**
-	 * Sets the preferred browser strategy to use.
-	 * @param strategy the strategy to use to create the preferred browser.
+	 * The maximum number of retry attempts. Defaults to 3.
+	 * 
+	 * @return the maximum number of retries
 	 */
-	void setPreferredBrowserStrategy(IPreferredBrowserStrategy strategy);
+	int maxRetries() default 3;
 
 	/**
-	 * Returns the preferred browser strategy.
-	 * @return the preferred browser strategy.
+	 * The delay in milliseconds between retries. Defaults to 1000.
+	 * 
+	 * @return the delay in milliseconds
 	 */
-	IPreferredBrowserStrategy getPreferredBrowserStrategy();
-	
-	/**
-	 * Adds an observer to the journey.
-	 * @param observer the observer to add.
-	 */
-	void addObserver(IJourneyObserver observer);
-
-	/**
-	 * Retrieves the journey observers.
-	 * @return the journey observers
-	 */
-	List<IJourneyObserver> getJourneyObservers();
-	
-	/**
-	 * Retrieves the retry policy for operations that can be retried.
-	 * @return the retry policy
-	 */
-	IRetryPolicy getRetryPolicy();
-
-	/**
-	 * Sets the retry policy for operations that can be retried.
-	 * @param retryPolicy the retry policy to use
-	 */
-	void setRetryPolicy(IRetryPolicy retryPolicy);
-	
+	long delayMs() default 1000;
 }

@@ -169,6 +169,12 @@ class DefaultBrowserArgumentsProviderTest
         {
             return this.args;
         }
+
+        @Override
+        public io.github.jamoamo.webjourney.api.ITravelOptions getOptions()
+        {
+            return null;
+        }
     }
 
     // M4 Tests: Validation, Redaction, and Logging

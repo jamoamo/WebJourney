@@ -65,9 +65,16 @@ class ConsumePageAction<T> extends AWebAction
 		try
 		{
 			IBrowser browser = context.getBrowser();
+			io.github.jamoamo.webjourney.api.IRetryPolicy retryPolicy = (context.getOptions() != null) 
+				? context.getOptions().getRetryPolicy() 
+				: null;
+
 			EntityDefn entityDefn = new EntityDefn(this.pageClass);
 			EntityCreator<T> creator = new EntityCreator(entityDefn, false, context.getJourneyObservers());
-			T instance = creator.createNewEntity(browser);
+			io.github.jamoamo.webjourney.reserved.entity.EntityCreationContext creationContext = 
+				new io.github.jamoamo.webjourney.reserved.entity.EntityCreationContext(entityDefn, retryPolicy);
+
+			T instance = creator.createNewEntity(browser, creationContext);
 			this.pageConsumer.accept(instance);
 		}
 		catch(PageConsumerException | XEntityDefinitionException | XEntityFieldScrapeException ex)
