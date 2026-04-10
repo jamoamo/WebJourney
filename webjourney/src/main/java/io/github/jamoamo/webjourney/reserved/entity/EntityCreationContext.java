@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import java.util.Stack;
+import io.github.jamoamo.webjourney.api.IRetryPolicy;
 
 /**
  * The context of the current entity creation context.
@@ -62,11 +63,29 @@ public final class EntityCreationContext
 	 private Stack<EntityBreadcrumb> entityBreadCrumbs;
 	 private Stack<Integer> collectionIndices;
 
+	 private IRetryPolicy retryPolicy;
+
 	 EntityCreationContext(EntityDefn entityDefn)
 	 {
 		  this.baseEntity = entityDefn;
 		  this.entityBreadCrumbs = new Stack<>();
 		  this.collectionIndices = new Stack<>();
+	 }
+
+	 public EntityCreationContext(EntityDefn entityDefn, IRetryPolicy retryPolicy)
+	 {
+		  this(entityDefn);
+		  this.retryPolicy = retryPolicy;
+	 }
+	 
+	 /**
+	  * Gets the retry policy configured for this context.
+	  * 
+	  * @return the configured retry policy, or {@code null} if no retry policy is configured.
+	  */
+	 public IRetryPolicy getRetryPolicy()
+	 {
+		  return this.retryPolicy;
 	 }
 	 
 	 protected void processField(EntityFieldDefn entityFieldDefn)

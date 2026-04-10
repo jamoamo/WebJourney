@@ -26,11 +26,11 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.PageConsumerException;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.IRetryPolicy;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
+import io.github.jamoamo.webjourney.reserved.entity.EntityCreationContext;
 import io.github.jamoamo.webjourney.reserved.entity.EntityCreator;
 import io.github.jamoamo.webjourney.reserved.entity.EntityDefn;
-import io.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException;
-import io.github.jamoamo.webjourney.reserved.entity.XEntityFieldScrapeException;
 import org.apache.commons.lang3.function.FailableConsumer;
 
 /**
@@ -65,12 +65,25 @@ class ConsumePageAction<T> extends AWebAction
 		try
 		{
 			IBrowser browser = context.getBrowser();
+			IRetryPolicy retryPolicy = (context.getOptions() != null) 
+				? context.getOptions().getRetryPolicy() 
+				: null;
+
 			EntityDefn entityDefn = new EntityDefn(this.pageClass);
 			EntityCreator<T> creator = new EntityCreator(entityDefn, false, context.getJourneyObservers());
-			T instance = creator.createNewEntity(browser);
+			T instance;
+			EntityCreationContext creationContext = new EntityCreationContext(entityDefn, retryPolicy);
+			if(retryPolicy != null)
+			{
+				instance = retryPolicy.execute(() -> creator.createNewEntity(browser, creationContext));
+			}
+			else
+			{
+				instance = creator.createNewEntity(browser, creationContext);
+			}
 			this.pageConsumer.accept(instance);
 		}
-		catch(PageConsumerException | XEntityDefinitionException | XEntityFieldScrapeException ex)
+		catch(Exception ex)
 		{
 			throw new BaseJourneyActionException(ex.getMessage(), this, ex);
 		}

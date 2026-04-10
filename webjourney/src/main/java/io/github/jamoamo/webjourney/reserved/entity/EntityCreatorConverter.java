@@ -24,9 +24,8 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
-import java.net.MalformedURLException;
+import io.github.jamoamo.webjourney.api.IRetryPolicy;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +37,10 @@ import org.slf4j.LoggerFactory;
 class EntityCreatorConverter
 	 implements IConverter<String, Object>
 {
-	 private Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);
+	 private static final Logger logger = LoggerFactory.getLogger(EntityCreatorConverter.class);	 
 	 private final EntityCreator entityCreator;
+
+	 private IRetryPolicy retryPolicy;
 
 	 EntityCreatorConverter(EntityFieldDefn fieldDefn)
 		  throws XEntityFieldDefinitionException
@@ -48,6 +49,16 @@ class EntityCreatorConverter
 		  {
 				EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
 				this.entityCreator = new EntityCreator(defn, true, null);
+				
+				io.github.jamoamo.webjourney.annotation.Retry retryAnnotation = 
+					fieldDefn.getField().getAnnotation(io.github.jamoamo.webjourney.annotation.Retry.class);
+				if (retryAnnotation != null)
+				{
+					this.retryPolicy = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder()
+						.maxRetries(retryAnnotation.maxRetries())
+						.delay(java.time.Duration.ofMillis(retryAnnotation.delayMs()))
+						.build();
+				}
 		  }
 		  catch(XEntityDefinitionException e)
 		  {
@@ -69,16 +80,33 @@ class EntityCreatorConverter
 
 		  try
 		  {
+				io.github.jamoamo.webjourney.api.IRetryPolicy policyToUse = this.retryPolicy;
+				if (policyToUse == null && context != null && context.getRetryPolicy() != null)
+				{
+					policyToUse = context.getRetryPolicy();
+				}
+				if (policyToUse == null)
+				{
+					policyToUse = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
+				}
+
 				URI uri = new URI(source);
-				reader.navigateTo(uri.toURL());
+				java.net.URL url = uri.toURL();
 
-				Object instance = this.entityCreator.createNewEntity(reader.getBrowser(), context);
+				Object instance = policyToUse.execute(() -> {
+					reader.navigateTo(url);
 
-				reader.navigateBack();
+					return this.entityCreator.createNewEntity(reader.getBrowser(), context);
+				});
+				NavigationUtils.retryNavigateBack(reader, 3, 500L);
+
 				return instance;
 		  }
-		  catch(MalformedURLException | URISyntaxException | IllegalArgumentException | XValueReaderException
-				| XEntityFieldScrapeException ex)
+		  catch (XConversionException ex)
+		  {
+			    throw ex;
+		  }
+		  catch(Exception ex)
 		  {
 				throw new XConversionException(ex);
 		  }

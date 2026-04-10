@@ -26,6 +26,7 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
+import io.github.jamoamo.webjourney.api.ITravelOptions;
 import io.github.jamoamo.webjourney.api.web.DefaultJourneyBrowserArguments;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IJourneyBrowserArguments;
@@ -100,5 +101,18 @@ public class JourneyContext implements IJourneyContext
 	public IJourneyBrowserArguments getBrowserArguments()
 	{
 		return this.browserArguments;
+	}
+
+	private ITravelOptions options;
+
+	public void setOptions(ITravelOptions options)
+	{
+		this.options = options;
+	}
+
+	@Override
+	public ITravelOptions getOptions()
+	{
+		return this.options;
 	}
 }

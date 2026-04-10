@@ -80,4 +80,10 @@ public interface IJourneyContext
 	 * @return the browser arguments.
 	 */
 	IJourneyBrowserArguments getBrowserArguments();
+
+	/**
+	 * Gets the travel options for the current journey.
+	 * @return the travel options.
+	 */
+	ITravelOptions getOptions();
 }

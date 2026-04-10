@@ -23,49 +23,20 @@
  */
 package io.github.jamoamo.webjourney.api;
 
-import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
-import java.util.List;
-
 /**
- *
+ * An action that can be executed and might throw an exception.
+ * @param <T> the type of the result
+ * 
  * @author James Amoore
  */
-public interface ITravelOptions
+@FunctionalInterface
+public interface CallableAction<T>
 {
 	/**
-	 * Sets the preferred browser strategy to use.
-	 * @param strategy the strategy to use to create the preferred browser.
+	 * Computes a result, or throws an exception if unable to do so.
+	 *
+	 * @return computed result
+	 * @throws Exception if unable to compute a result
 	 */
-	void setPreferredBrowserStrategy(IPreferredBrowserStrategy strategy);
-
-	/**
-	 * Returns the preferred browser strategy.
-	 * @return the preferred browser strategy.
-	 */
-	IPreferredBrowserStrategy getPreferredBrowserStrategy();
-	
-	/**
-	 * Adds an observer to the journey.
-	 * @param observer the observer to add.
-	 */
-	void addObserver(IJourneyObserver observer);
-
-	/**
-	 * Retrieves the journey observers.
-	 * @return the journey observers
-	 */
-	List<IJourneyObserver> getJourneyObservers();
-	
-	/**
-	 * Retrieves the retry policy for operations that can be retried.
-	 * @return the retry policy
-	 */
-	IRetryPolicy getRetryPolicy();
-
-	/**
-	 * Sets the retry policy for operations that can be retried.
-	 * @param retryPolicy the retry policy to use
-	 */
-	void setRetryPolicy(IRetryPolicy retryPolicy);
-	
+	T call() throws Exception;
 }

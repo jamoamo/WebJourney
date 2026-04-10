@@ -97,4 +97,43 @@ public class EntitiesCreatorConverterTest
 		  assertEquals("Value", ((SubEntity) convertValue.get(0)).getField());
 	 }
 
+	 /**
+	  * Test of convertValue method applying a retry policy.
+	  */
+	 @Test
+	 public void testConvertValue_withRetry()
+		  throws Exception
+	 {
+		  EntityFieldDefn fieldDefn = Mockito.mock(EntityFieldDefn.class);
+		  Mockito.when(fieldDefn.getField())
+				.thenReturn(Entity.class.getDeclaredField("subEntities"));
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  
+		  // Fail the first navigation, succeed on the second
+		  Mockito.doThrow(new XValueReaderException(new Exception("Network Error")))
+		         .doNothing()
+				.when(reader).navigateTo(Mockito.any());
+
+		  Mockito.when(reader.getElementText(Mockito.anyString(), Mockito.anyBoolean()))
+				.thenReturn("Value");
+
+		  EntitiesCreatorConverter converter = new EntitiesCreatorConverter(fieldDefn);
+		  
+		  io.github.jamoamo.webjourney.api.IRetryPolicy retryPolicy = 
+			io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder()
+				.maxRetries(3)
+				.delay(java.time.Duration.ofMillis(10))
+				.build();
+				
+		  List<Object> convertValue =
+				converter.convertValue(Collections.singletonList("https://some.url"), reader, new ArrayList<>(), 
+					 new EntityCreationContext(new EntityDefn(Entity.class), retryPolicy));
+
+		  assertEquals(1, convertValue.size());
+		  assertInstanceOf(SubEntity.class, convertValue.get(0));
+		  assertEquals("Value", ((SubEntity) convertValue.get(0)).getField());
+		  Mockito.verify(reader, Mockito.times(2)).navigateTo(Mockito.any());
+	 }
+
 }
