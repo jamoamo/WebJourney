@@ -63,7 +63,7 @@ class SingleElementLocator implements ISeleniumElementLocator
 				return null;
 			}
 			throw new XElementDoesntExistException(
-				"Element Identified By: " + this.by.toString() + " doesn't exist.");
+				"Element Identified By: " + this.by.toString() + " on page " + this.driver.getCurrentUrl() + " doesn't exist.");
 		}
 	}
 
