@@ -39,9 +39,15 @@ class EntityFromElementConverter
 	 EntityFromElementConverter(EntityFieldDefn fieldDefn)
 		  throws XEntityFieldDefinitionException
 	 {
+		  this(fieldDefn.getFieldType());
+	 }
+
+	 EntityFromElementConverter(Class<?> entityType)
+		  throws XEntityFieldDefinitionException
+	 {
 		  try
 		  {
-				this.defn = new EntityDefn(fieldDefn.getFieldType());
+				this.defn = new EntityDefn(entityType);
 		  }
 		  catch(XEntityDefinitionException e)
 		  {

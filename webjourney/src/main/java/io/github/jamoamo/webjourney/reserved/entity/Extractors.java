@@ -183,10 +183,12 @@ public final class Extractors
 		  boolean optional, 
 		  ICondition condition)
 	 {
-		  TypeInfo fieldTypeInfo = fieldInfo.getFieldTypeInfo();
+		  TypeInfo fieldTypeInfo = getResolvedFieldTypeInfo(fieldInfo);
+		  TypeInfo fieldGenericTypeInfo = getResolvedFieldGenericTypeInfo(fieldInfo);
+		  boolean resolvedOptional = optional || isOptionalField(fieldInfo);
 
-		  if(fieldTypeInfo.isCollectionType() && !fieldInfo.getFieldGenericTypeInfo()
-				.isStandardType() && fieldInfo.getFieldGenericTypeInfo()
+		  if(fieldTypeInfo.isCollectionType() && !fieldGenericTypeInfo
+				.isStandardType() && fieldGenericTypeInfo
 					 .hasNoArgsConstructor())
 		  {
 				if(attribute.isBlank())
@@ -197,8 +199,8 @@ public final class Extractors
 				else
 				{
 					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + " and attribute = " + attribute + 
-						  " and optional = " + optional);
-					 return new AttributesExtractor(xPath, attribute, condition, optional);
+						  " and optional = " + resolvedOptional);
+					 return new AttributesExtractor(xPath, attribute, condition, resolvedOptional);
 				}
 		  }
 		  else if(!fieldTypeInfo.isStandardType() && fieldTypeInfo.hasNoArgsConstructor())
@@ -206,13 +208,14 @@ public final class Extractors
 				if(!attribute.isBlank())
 				{
 					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + " and attribute = " + attribute + 
-						  " and optional = " + optional);
-					 return new AttributeExtractor(xPath, attribute, condition, optional);
+						  " and optional = " + resolvedOptional);
+					 return new AttributeExtractor(xPath, attribute, condition, resolvedOptional);
 				}
 				else
 				{
-					 LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + optional);
-					 return new ElementTextExtractor(xPath, condition, optional);
+					 LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " 
+						  + resolvedOptional);
+					 return new ElementTextExtractor(xPath, condition, resolvedOptional);
 				}
 		  }
 		  throw new RuntimeException("Cannot determine a suitable value extractor. "
@@ -253,7 +256,8 @@ public final class Extractors
 		  boolean hasConverter,
 		  ICondition condition)
 	 {
-		  TypeInfo typeInfo = fieldInfo.getFieldTypeInfo();
+		  TypeInfo typeInfo = getResolvedFieldTypeInfo(fieldInfo);
+		  boolean resolvedOptional = optional || isOptionalField(fieldInfo);
 		  if(typeInfo.isCollectionType())
 		  {
 				if(attribute.isBlank())
@@ -261,29 +265,29 @@ public final class Extractors
 					 LOGGER.debug("Getting collection of element text extractor. extractCollectionSingularly = " 
 						  + extractCollectionSingularly);
 					 return getElementTextCollectionExtractor(extractCollectionSingularly, xPath, condition, fieldInfo,
-						  hasConverter, optional);
+						  hasConverter, resolvedOptional);
 				}
 				else
 				{
 					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + "and attribute = " + attribute 
-						  + " and optional = " + optional);
-					 return new AttributesExtractor(xPath, attribute, condition, optional);
+						  + " and optional = " + resolvedOptional);
+					 return new AttributesExtractor(xPath, attribute, condition, resolvedOptional);
 				}
 		  }
 		  else if(!attribute.isBlank())
 		  {
 				LOGGER.debug("Getting attribute extractor.");
-				return getAttributeExtractor(xPath, attribute, condition, optional);
+				return getAttributeExtractor(xPath, attribute, condition, resolvedOptional);
 		  }
 		  else if(!typeInfo.isStandardType())
 		  {
 				LOGGER.debug("Getting non standard value extractor.");
-				return getNonStandardValueExtractor(xPath, typeInfo, hasConverter, optional);
+				return getNonStandardValueExtractor(xPath, typeInfo, hasConverter, resolvedOptional);
 		  }
 		  else
 		  {
-				LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + optional);
-				return new ElementTextExtractor(xPath, condition, optional);
+				LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + resolvedOptional);
+				return new ElementTextExtractor(xPath, condition, resolvedOptional);
 		  }
 	 }
 
@@ -350,25 +354,36 @@ public final class Extractors
 	 private static IExtractor getCollectionExtractor(FieldInfo fieldInfo, String xPath,
 		  boolean hasConverter, ICondition condition)
 	 {
-		  if(fieldInfo.getFieldGenericTypeInfo()
-				.isStandardType())
+		  TypeInfo fieldGenericTypeInfo = getResolvedFieldGenericTypeInfo(fieldInfo);
+		  if(fieldGenericTypeInfo != null && fieldGenericTypeInfo.isStandardType())
 		  {
 				LOGGER.debug("Using ElementTextsCollectionExtractor for xpath = " + xPath);
 				return new ElementTextsCollectionExtractor(xPath, condition);
 		  }
-		  else
+		  if(hasConverter)
 		  {
-				if(hasConverter)
-				{
-					 LOGGER.debug("Using ElementTextsCollectionExtractor for xpath = " + xPath);
-					 return new ElementTextsCollectionExtractor(xPath, condition);
-				}
-				else
-				{
-					 LOGGER.debug("Using ElementListExtractor for xpath = " + xPath);
-					 return new ElementListExtractor(xPath, condition);
-				}
+				LOGGER.debug("Using ElementTextsCollectionExtractor for xpath = " + xPath);
+				return new ElementTextsCollectionExtractor(xPath, condition);
 		  }
+		  LOGGER.debug("Using ElementListExtractor for xpath = " + xPath);
+		  return new ElementListExtractor(xPath, condition);
+	 }
+
+	 private static TypeInfo getResolvedFieldTypeInfo(FieldInfo fieldInfo)
+	 {
+		  TypeInfo resolvedFieldTypeInfo = fieldInfo.getResolvedFieldTypeInfo();
+		  return resolvedFieldTypeInfo == null ? fieldInfo.getFieldTypeInfo() : resolvedFieldTypeInfo;
+	 }
+
+	 private static TypeInfo getResolvedFieldGenericTypeInfo(FieldInfo fieldInfo)
+	 {
+		  TypeInfo resolvedFieldGenericTypeInfo = fieldInfo.getResolvedFieldGenericTypeInfo();
+		  return resolvedFieldGenericTypeInfo == null ? fieldInfo.getFieldGenericTypeInfo() : resolvedFieldGenericTypeInfo;
+	 }
+
+	 private static boolean isOptionalField(FieldInfo fieldInfo)
+	 {
+		  return fieldInfo != null && fieldInfo.isOptionalType();
 	 }
 
 }

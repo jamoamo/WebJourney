@@ -32,6 +32,7 @@ import io.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
 import io.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import io.github.jamoamo.webjourney.reserved.reflection.InstanceCreator;
 import io.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
+import java.lang.reflect.Field;
 
 /**
  *
@@ -43,8 +44,23 @@ final class Converters
 	
 	public static IConverter getConverterForField(EntityFieldDefn defn) throws XEntityFieldDefinitionException
 	{
-		TypeInfo info = TypeInfo.forClass(defn.getFieldType());
+		FieldInfo fieldInfo = getFieldInfo(defn);
+		TypeInfo info = getResolvedFieldTypeInfo(defn, fieldInfo);
 		EntityAnnotations annotations = defn.getAnnotations();
+		
+		if(isOptionalField(fieldInfo))
+		{
+			return new OptionalConverter(getConverterForType(defn, fieldInfo, info, annotations));
+		}
+		return getConverterForType(defn, fieldInfo, info, annotations);
+	}
+
+	private static IConverter getConverterForType(
+		EntityFieldDefn defn,
+		FieldInfo fieldInfo,
+		TypeInfo info,
+		EntityAnnotations annotations) throws XEntityFieldDefinitionException
+	{
 		
 		if(annotations.getConversion() != null)
 		{
@@ -57,25 +73,28 @@ final class Converters
 		}
 		else if(info.isCollectionType())
 		{
-			return getCollectionMapper(defn);
+			return getCollectionMapper(defn, fieldInfo);
 		}
 		else if(!info.isStandardType())
 		{
 			if(annotations.hasExtractFromUrl())
 			{
-				return new EntityCreatorConverter(defn);
+				return new EntityCreatorConverter(info.getType(), defn.getField());
 			}
-			return new EntityFromElementConverter(defn);
+			return new EntityFromElementConverter(info.getType());
 		}
 		
 		return determineDefaultMapper(info);
 	}
 
-	private static IConverter getCollectionMapper(EntityFieldDefn defn)
+	private static IConverter getCollectionMapper(EntityFieldDefn defn, FieldInfo fieldInfo)
 			  throws XEntityFieldDefinitionException
 	{
-		FieldInfo fieldInfo = FieldInfo.forField(defn.getField());
-		TypeInfo genericTypeInfo = TypeInfo.forClass(fieldInfo.getFieldGenericType());
+		if(fieldInfo == null)
+		{
+			throw new XEntityFieldDefinitionException("Cannot determine collection type without field metadata.");
+		}
+		TypeInfo genericTypeInfo = fieldInfo.getResolvedFieldGenericTypeInfo();
 		if(genericTypeInfo.isStandardType())
 		{
 			return new CollectionTypeConverter(getDefaultMapper(genericTypeInfo));
@@ -86,7 +105,7 @@ final class Converters
 			{
 				return new EntitiesCreatorConverter(defn);
 			}
-			return new EntitiesFromElementConverter(fieldInfo.getFieldGenericType());
+			return new EntitiesFromElementConverter(fieldInfo.getResolvedFieldGenericType());
 		}
 		throw new XEntityFieldDefinitionException("Cannot create a converter for collection type " +
 				  "[" + defn.getFieldName() + "] without a mapping");
@@ -123,5 +142,33 @@ final class Converters
 			throw new RuntimeException("Cannot determine mapper.");
 		}
 		return mapper;
+	}
+
+	private static FieldInfo getFieldInfo(EntityFieldDefn defn)
+	{
+		Field field = defn.getField();
+		if(field == null)
+		{
+			return null;
+		}
+		return FieldInfo.forField(field);
+	}
+
+	private static TypeInfo getResolvedFieldTypeInfo(EntityFieldDefn defn, FieldInfo fieldInfo)
+	{
+		if(fieldInfo != null)
+		{
+			TypeInfo resolvedTypeInfo = fieldInfo.getResolvedFieldTypeInfo();
+			if(resolvedTypeInfo != null)
+			{
+				return resolvedTypeInfo;
+			}
+		}
+		return TypeInfo.forClass(defn.getFieldType());
+	}
+
+	private static boolean isOptionalField(FieldInfo fieldInfo)
+	{
+		return fieldInfo != null && fieldInfo.isOptionalType();
 	}
 }

@@ -37,6 +37,7 @@ import io.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,6 +65,18 @@ public class ExtractorsTest
 			this.stringField = stringField;
 		}
 
+	}
+
+	public static class OptionalEntityHolder
+	{
+		@ExtractValue(path = "xpath", optional = false)
+		private Optional<Entity> entity;
+	}
+
+	public static class OptionalStringHolder
+	{
+		@ExtractValue(path = "xpath", optional = false)
+		private Optional<String> value;
 	}
 
 	/**
@@ -631,6 +644,47 @@ public class ExtractorsTest
 	}
 
 	@Test
+	public void testGetExtractorForAnnotation_ExtractValue_List_BlankAttribute_noGenericTypeInfo_noConverter()
+	{
+		ExtractValue extractFromUrl = new ExtractValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractValue.class;
+			}
+
+			@Override
+			public String attribute()
+			{
+				return "";
+			}
+
+			@Override
+			public String path()
+			{
+				return "xpath";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
+
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo())
+			 .thenReturn(TypeInfo.forClass(List.class));
+		Mockito.when(fieldInfo.getFieldGenericTypeInfo())
+			 .thenReturn(null);
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, false, false);
+		assertInstanceOf(ElementListExtractor.class, extractor);
+	}
+
+	@Test
 	public void testGetExtractorForAnnotation_ExtractValue_List_Attribute()
 	{
 		ExtractValue extractFromUrl = new ExtractValue()
@@ -786,6 +840,41 @@ public class ExtractorsTest
 
 		IExtractor extractor = Extractors.getExtractorForAnnotation(extractFromUrl, fieldInfo, false, false);
 		assertInstanceOf(ElementTextExtractor.class, extractor);
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_ExtractValue_OptionalStringField()
+		throws Exception
+	{
+		Field field = OptionalStringHolder.class.getDeclaredField("value");
+		ExtractValue extractValue = field.getAnnotation(ExtractValue.class);
+		FieldInfo fieldInfo = FieldInfo.forField(field);
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractValue, fieldInfo, false, false);
+
+		assertInstanceOf(ElementTextExtractor.class, extractor);
+		assertTrue(((ElementTextExtractor) extractor).isOptional());
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_ExtractValue_OptionalEntityField()
+		throws Exception
+	{
+		Field field = OptionalEntityHolder.class.getDeclaredField("entity");
+		ExtractValue extractValue = field.getAnnotation(ExtractValue.class);
+		FieldInfo fieldInfo = FieldInfo.forField(field);
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractValue, fieldInfo, false, false);
+
+		assertInstanceOf(ElementExtractor.class, extractor);
+
+		IValueReader reader = Mockito.mock(IValueReader.class);
+		Mockito.when(reader.getElement("xpath", true))
+			.thenReturn(null);
+
+		assertNull(extractor.extractRawValue(reader, null));
+		Mockito.verify(reader)
+			.getElement("xpath", true);
 	}
 
 	@Test

@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import io.github.jamoamo.webjourney.api.IRetryPolicy;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.List;
 import org.slf4j.Logger;
@@ -45,13 +46,19 @@ class EntityCreatorConverter
 	 EntityCreatorConverter(EntityFieldDefn fieldDefn)
 		  throws XEntityFieldDefinitionException
 	 {
+		  this(fieldDefn.getFieldType(), fieldDefn.getField());
+	 }
+
+	 EntityCreatorConverter(Class<?> entityType, Field field)
+		  throws XEntityFieldDefinitionException
+	 {
 		  try
 		  {
-				EntityDefn defn = new EntityDefn(fieldDefn.getFieldType());
+				EntityDefn defn = new EntityDefn(entityType);
 				this.entityCreator = new EntityCreator(defn, true, null);
 				
 				io.github.jamoamo.webjourney.annotation.Retry retryAnnotation = 
-					fieldDefn.getField().getAnnotation(io.github.jamoamo.webjourney.annotation.Retry.class);
+					field.getAnnotation(io.github.jamoamo.webjourney.annotation.Retry.class);
 				if (retryAnnotation != null)
 				{
 					this.retryPolicy = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder()

@@ -53,10 +53,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,10 +96,76 @@ public class EntityCreatorTest
 	 public static final String XPATH_SUB_LIST_DATA = "//div[@id='sub-list-data']";
 	 public static final String XPATH_URL_LIST_DATA = "//div[@class='url-list-data']";
 	 public static final String XPATH_SEPARATED_STRING_DATA = "//div[@id='split-string-data']";
+	 public static final String XPATH_MISSING_OPTIONAL_DATA = "//div[@id='missing-optional-data']";
+	 public static final String XPATH_MISSING_OPTIONAL_SUB_DATA = "//div[@id='missing-optional-sub-data']";
 
 	 private static IBrowser browser;
 	 private static IBrowserWindow window;
 	 private static IWebPage webPage;
+
+	 public static class ValidEntityOptionalExtractValue
+	 {
+		  @io.github.jamoamo.webjourney.annotation.ExtractValue(path = XPATH_STRING_DATA, optional = false)
+		  private Optional<String> stringData;
+		  @io.github.jamoamo.webjourney.annotation.ExtractValue(path = XPATH_MISSING_OPTIONAL_DATA, optional = false)
+		  private Optional<String> missingStringData;
+		  @io.github.jamoamo.webjourney.annotation.ExtractValue(path = XPATH_SUB_DATA, optional = false)
+		  private Optional<ValidEntityExtractValue.SubEntity> subData;
+		  @io.github.jamoamo.webjourney.annotation.ExtractValue(path = XPATH_MISSING_OPTIONAL_SUB_DATA, optional = false)
+		  private Optional<ValidEntityExtractValue.SubEntity> missingSubData;
+		  @io.github.jamoamo.webjourney.annotation.ExtractValue(path = XPATH_INTEGER_LIST_DATA, optional = false)
+		  private Optional<List<Integer>> integerListData;
+
+		  public Optional<String> getStringData()
+		  {
+				return stringData;
+		  }
+
+		  public void setStringData(Optional<String> stringData)
+		  {
+				this.stringData = stringData;
+		  }
+
+		  public Optional<String> getMissingStringData()
+		  {
+				return missingStringData;
+		  }
+
+		  public void setMissingStringData(Optional<String> missingStringData)
+		  {
+				this.missingStringData = missingStringData;
+		  }
+
+		  public Optional<ValidEntityExtractValue.SubEntity> getSubData()
+		  {
+				return subData;
+		  }
+
+		  public void setSubData(Optional<ValidEntityExtractValue.SubEntity> subData)
+		  {
+				this.subData = subData;
+		  }
+
+		  public Optional<ValidEntityExtractValue.SubEntity> getMissingSubData()
+		  {
+				return missingSubData;
+		  }
+
+		  public void setMissingSubData(Optional<ValidEntityExtractValue.SubEntity> missingSubData)
+		  {
+				this.missingSubData = missingSubData;
+		  }
+
+		  public Optional<List<Integer>> getIntegerListData()
+		  {
+				return integerListData;
+		  }
+
+		  public void setIntegerListData(Optional<List<Integer>> integerListData)
+		  {
+				this.integerListData = integerListData;
+		  }
+	 }
 
 	 @BeforeAll
 	 public static void setup()
@@ -293,6 +362,17 @@ public class EntityCreatorTest
 				.thenReturn(new TestElement("item1,item2,item3"));
 		  when(webPage.getElement(eq(XPATH_SEPARATED_STRING_DATA), anyBoolean()))
 				.thenReturn(new TestElement("item1,item2,item3"));
+		  
+		  AElement missingOptionalElement = mock(AElement.class);
+		  when(missingOptionalElement.getElementText())
+				.thenReturn(null);
+		  when(missingOptionalElement.exists())
+				.thenReturn(false);
+		  when(webPage.getElement(XPATH_MISSING_OPTIONAL_DATA, true))
+				.thenReturn(missingOptionalElement);
+		  when(webPage.getElement(XPATH_MISSING_OPTIONAL_SUB_DATA, true))
+				.thenReturn(missingOptionalElement);
+		  
 		  when(window.getCurrentUrl())
 				.thenReturn("https://currenturl.com");
 
@@ -420,6 +500,41 @@ public class EntityCreatorTest
 				.get(2)
 				.getDoubleData());
 
+	 }
+
+	 @Test
+	 public void testCreateNewEntity_OptionalExtractValue()
+		  throws Exception
+	 {
+		  Mockito.clearInvocations(browser);
+		  Mockito.clearInvocations(window);
+		  Mockito.clearInvocations(webPage);
+		  EntityDefn defn = new EntityDefn(ValidEntityOptionalExtractValue.class);
+		  EntityCreator creator = new EntityCreator(defn, false, new ArrayList<>());
+
+		  ValidEntityOptionalExtractValue createNewEntity =
+				(ValidEntityOptionalExtractValue) creator.createNewEntity(browser);
+
+		  assertTrue(createNewEntity.getStringData().isPresent());
+		  assertEquals("String Data", createNewEntity.getStringData().orElseThrow());
+		  assertFalse(createNewEntity.getMissingStringData().isPresent());
+		  assertTrue(createNewEntity.getSubData().isPresent());
+		  assertEquals("String Data", createNewEntity.getSubData().orElseThrow().getStringData());
+		  assertFalse(createNewEntity.getMissingSubData().isPresent());
+		  assertTrue(createNewEntity.getIntegerListData().isPresent());
+		  assertEquals(3, createNewEntity.getIntegerListData().orElseThrow().size());
+		  assertEquals(1, createNewEntity.getIntegerListData().orElseThrow().get(0));
+		  assertEquals(2, createNewEntity.getIntegerListData().orElseThrow().get(1));
+		  assertEquals(3, createNewEntity.getIntegerListData().orElseThrow().get(2));
+
+		  Mockito.verify(webPage)
+				.getElement(XPATH_STRING_DATA, true);
+		  Mockito.verify(webPage)
+				.getElement(XPATH_MISSING_OPTIONAL_DATA, true);
+		  Mockito.verify(webPage)
+				.getElement(XPATH_SUB_DATA, true);
+		  Mockito.verify(webPage)
+				.getElement(XPATH_MISSING_OPTIONAL_SUB_DATA, true);
 	 }
 
 	 @Test

@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -98,6 +99,15 @@ public final class TypeInfo
 	public boolean isCollectionType()
 	{
 		return implementsInterface(Collection.class) || isArrayType();
+	}
+
+	/**
+	 * Determines if the class is {@link Optional}.
+	 * @return true if the class is Optional.
+	 */
+	public boolean isOptionalType()
+	{
+		return this.theClass.equals(Optional.class);
 	}
 	
 	/**
