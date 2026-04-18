@@ -56,14 +56,7 @@ public final class FieldInfo
 	 */
 	public Class<?> getFieldGenericType()
 	{
-		Type type = this.field.getGenericType();
-		if (type instanceof ParameterizedType) 
-		{
-			ParameterizedType paramType = (ParameterizedType)type;
-			TypeToken paramToken = TypeToken.of(paramType.getActualTypeArguments()[0]);
-			return paramToken.getRawType();
-		}
-		return null;
+		return getGenericType(this.field.getGenericType());
 	}
 	
 	/**
@@ -84,5 +77,72 @@ public final class FieldInfo
 	public TypeInfo getFieldTypeInfo()
 	{
 		return TypeInfo.forClass(this.field.getType());
+	}
+
+	/**
+	 * @return true if the field type is Optional.
+	 */
+	public boolean isOptionalType()
+	{
+		return getFieldTypeInfo().isOptionalType();
+	}
+
+	/**
+	 * Returns the field type with Optional unwrapped.
+	 * @return the resolved field type.
+	 */
+	public Class<?> getResolvedFieldType()
+	{
+		Type resolvedType = getResolvedFieldGenericType(this.field.getGenericType());
+		return TypeToken.of(resolvedType).getRawType();
+	}
+
+	/**
+	 * Returns the resolved generic type when the resolved field type is parameterized.
+	 * @return the resolved generic type or null if none exists.
+	 */
+	public Class<?> getResolvedFieldGenericType()
+	{
+		return getGenericType(getResolvedFieldGenericType(this.field.getGenericType()));
+	}
+
+	/**
+	 * @return the TypeInfo for the resolved field type.
+	 */
+	public TypeInfo getResolvedFieldTypeInfo()
+	{
+		return TypeInfo.forClass(getResolvedFieldType());
+	}
+
+	/**
+	 * @return the TypeInfo for the resolved field generic type.
+	 */
+	public TypeInfo getResolvedFieldGenericTypeInfo()
+	{
+		Class<?> genericType = getResolvedFieldGenericType();
+		if(genericType == null)
+		{
+			return null;
+		}
+		return TypeInfo.forClass(genericType);
+	}
+
+	private static Class<?> getGenericType(Type type)
+	{
+		if(type instanceof ParameterizedType paramType)
+		{
+			TypeToken<?> paramToken = TypeToken.of(paramType.getActualTypeArguments()[0]);
+			return paramToken.getRawType();
+		}
+		return null;
+	}
+
+	private Type getResolvedFieldGenericType(Type type)
+	{
+		if(isOptionalType() && type instanceof ParameterizedType paramType)
+		{
+			return paramType.getActualTypeArguments()[0];
+		}
+		return type;
 	}
 }

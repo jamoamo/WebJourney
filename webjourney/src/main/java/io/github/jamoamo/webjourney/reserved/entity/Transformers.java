@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.reserved.annotation.EntityAnnotations;
+import io.github.jamoamo.webjourney.reserved.reflection.FieldInfo;
 import io.github.jamoamo.webjourney.reserved.reflection.TypeInfo;
 import io.github.jamoamo.webjourney.reserved.regex.RegexGroup;
 import io.github.jamoamo.webjourney.reserved.regex.XRegexException;
@@ -43,13 +44,12 @@ final class Transformers
 		try
 		{
 			EntityAnnotations annotations = defn.getAnnotations();
-			TypeInfo typeInfo = TypeInfo.forClass(defn.getFieldType());
+			TypeInfo typeInfo = getResolvedFieldTypeInfo(defn);
 			if(annotations.hasTransformation())
 			{
 				return getTransformerForTransformation(annotations, typeInfo, defn);
 			}
-			if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection() && annotations.hasRegexExtract())
-			{
+			if(typeInfo.isCollectionType() && !defn.getAnnotations().hasMappedCollection() && annotations.hasRegexExtract())			{
 				return new CollectionTransformer(new RegexTransformation(annotations.getRegexExtractGroup()));
 			}
 			else if(annotations.hasRegexExtract())
@@ -68,8 +68,7 @@ final class Transformers
 	private static ITransformer getTransformerForTransformation(EntityAnnotations annotations, TypeInfo typeInfo,
 		EntityFieldDefn defn) throws XRegexException
 	{
-		if(typeInfo.isCollectionType() & !defn.getAnnotations().hasMappedCollection())
-		{
+		if(typeInfo.isCollectionType() && !defn.getAnnotations().hasMappedCollection())		{
 			if(annotations.hasRegexExtract())
 			{
 				RegexGroup regexGroup = annotations.getRegexExtractGroup();
@@ -88,5 +87,18 @@ final class Transformers
 		{
 			return new Transformer(defn.getAnnotations().getTransformation());
 		}
+	}
+
+	private static TypeInfo getResolvedFieldTypeInfo(EntityFieldDefn defn)
+	{
+		if(defn.getField() != null)
+		{
+			TypeInfo resolvedFieldTypeInfo = FieldInfo.forField(defn.getField()).getResolvedFieldTypeInfo();
+			if(resolvedFieldTypeInfo != null)
+			{
+				return resolvedFieldTypeInfo;
+			}
+		}
+		return TypeInfo.forClass(defn.getFieldType());
 	}
 }

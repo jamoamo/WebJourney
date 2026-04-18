@@ -50,7 +50,7 @@ class EntitiesCreatorConverter
 		  try
 		  {
 				EntityDefn defn = new EntityDefn(FieldInfo.forField(fieldDefn.getField())
-					 .getFieldGenericType());
+					 .getResolvedFieldGenericType());
 				this.entityCreator = new EntityCreator(defn, true, null);
 
 				io.github.jamoamo.webjourney.annotation.Retry retryAnnotation = 

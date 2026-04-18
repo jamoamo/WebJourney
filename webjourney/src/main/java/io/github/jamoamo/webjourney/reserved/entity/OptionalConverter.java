@@ -23,70 +23,37 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
-import io.github.jamoamo.webjourney.api.web.AElement;
-import org.openqa.selenium.NoSuchElementException;
+import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import java.util.List;
+import java.util.Optional;
 
 /**
+ * Wraps converter results in Optional.
  *
  * @author James Amoore
  */
-abstract class AElementExtractor implements IExtractor<AElement>
+class OptionalConverter
+	 implements IConverter<Object, Optional<?>>
 {
-	private final String xPath;
-	private ICondition condition;
-	private final boolean optional;
+	 private final IConverter converter;
 
-	AElementExtractor(
-		String elementXPath,
-		boolean optional)
-	{
-		this(elementXPath, new AlwaysCondition(), optional);
-	}
+	 OptionalConverter(IConverter converter)
+	 {
+		  this.converter = converter;
+	 }
 
-	AElementExtractor(
-		String elementXPath,
-		ICondition condition,
-		boolean optional)
-	{
-		this.xPath = elementXPath;
-		this.condition = condition;
-		this.optional = optional;
-	}
-
-	@Override
-	public AElement extractRawValue(IValueReader reader, EntityCreationContext entityCreationContext)
-		throws XExtractionException
-	{
-		try
-		{
-			return reader.getElement(this.xPath, this.optional);
-		}
-		catch (NoSuchElementException ex)
-		{
-			if (this.optional)
-			{
-				return null;
-			}
-			throw new XExtractionException(
-				ex);
-		}
-		catch (XValueReaderException ex)
-		{
-			throw new XExtractionException(
-				ex);
-		}
-	}
-
-	@Override
-	public ICondition getCondition()
-	{
-		return this.condition;
-	}
-
-	@Override
-	public String describe()
-	{
-		return "Element: " + this.xPath + " on condition: " + this.condition.describe();
-	}
+	 @Override
+	 public Optional<?> convertValue(Object source,
+		  IValueReader reader,
+		  List<IEntityCreationListener> entityCreationListeners,
+		  EntityCreationContext context)
+		  throws XConversionException
+	 {
+		  if(source == null)
+		  {
+				return Optional.empty();
+		  }
+		  return Optional.ofNullable(this.converter.convertValue(source, reader, entityCreationListeners, context));
+	 }
 
 }
