@@ -24,6 +24,8 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
+import io.github.jamoamo.webjourney.api.event.EntityScrapeCompletedEvent;
+import io.github.jamoamo.webjourney.api.event.EntityScrapeStartedEvent;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.lang.reflect.InvocationTargetException;
@@ -279,6 +281,16 @@ public final class EntityCreator<T>
 
 	private void fireEntityCreated(T instance)
 	{
+		if (this.context != null && this.context.getJourneyContext() != null)
+		{
+			EntityScrapeCompletedEvent event = new EntityScrapeCompletedEvent(this.context.getJourneyContext(), instance);
+			this.context.getJourneyContext().getJourneyPassengers().forEach(p ->
+			{
+				p.entityScrapeCompleted(event);
+				p.onEvent(event);
+			});
+		}
+
 		if (this.creationListeners == null)
 		{
 			return;
@@ -288,6 +300,17 @@ public final class EntityCreator<T>
 
 	private void fireEntityCreationStarted()
 	{
+		if (this.context != null && this.context.getJourneyContext() != null)
+		{
+			EntityScrapeStartedEvent event =
+				new EntityScrapeStartedEvent(this.context.getJourneyContext(), this.defn.getFieldType());
+			this.context.getJourneyContext().getJourneyPassengers().forEach(p ->
+			{
+				p.entityScrapeStarted(event);
+				p.onEvent(event);
+			});
+		}
+
 		if (this.creationListeners == null)
 		{
 			return;

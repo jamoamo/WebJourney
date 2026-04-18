@@ -70,6 +70,18 @@ public interface IJourneyContext
 	void setJourneyObservers(List<IJourneyObserver> observers);
 	
 	/**
+	 * Gets all the passengers of the journey.
+	 * @return the journey passengers.
+	 */
+	List<IJourneyPassenger> getJourneyPassengers();
+
+	/**
+	 * Sets all the passengers of the journey.
+	 * @param passengers The journey passengers
+	 */
+	void setJourneyPassengers(List<IJourneyPassenger> passengers);
+
+	/**
 	 * Gets the breadcrumb of the current journey.
 	 * @return the breadcrumb.
 	 */

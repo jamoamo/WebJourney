@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
+package io.github.jamoamo.webjourney.api;
 
-import io.github.jamoamo.webjourney.api.AWebAction;
-import io.github.jamoamo.webjourney.api.IJourneyContext;
-import io.github.jamoamo.webjourney.api.event.PageNavigatedEvent;
-import io.github.jamoamo.webjourney.api.web.IBrowser;
+import io.github.jamoamo.webjourney.api.event.EntityScrapeCompletedEvent;
+import io.github.jamoamo.webjourney.api.event.EntityScrapeStartedEvent;
+import io.github.jamoamo.webjourney.api.event.IJourneyEvent;
 
 /**
+ * A passenger on a journey that is notified of journey events.
  *
  * @author James Amoore
  */
-class NavigateAction extends AWebAction
+public interface IJourneyPassenger
 {
-	private final ANavigationTarget target;
-	
-	NavigateAction(ANavigationTarget target)
-	{
-		this.target = target;
-	}
+	/**
+	 * Called when a new entity scrape has started.
+	 *
+	 * @param event the event
+	 */
+	void entityScrapeStarted(EntityScrapeStartedEvent event);
 
-	@Override
-	protected ActionResult executeActionImpl(IJourneyContext context)
-	{
-		IBrowser browser = context.getBrowser();
-		this.target.navigate(browser);
+	/**
+	 * Called when an entity scrape has completed.
+	 *
+	 * @param event the event
+	 */
+	void entityScrapeCompleted(EntityScrapeCompletedEvent event);
 
-		PageNavigatedEvent event = new PageNavigatedEvent(context, browser.getActiveWindow().getCurrentUrl());
-		context.getJourneyPassengers().forEach(p -> p.onEvent(event));
-
-		return ActionResult.SUCCESS;
-	}
-
-	@Override
-	protected String getActionName()
-	{
-		return "Navigate";
-	}
+	/**
+	 * Called when any other event occurs.
+	 *
+	 * @param event the event
+	 */
+	void onEvent(IJourneyEvent event);
 }

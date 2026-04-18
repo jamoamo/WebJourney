@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
+package io.github.jamoamo.webjourney.api.event;
 
-import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
-import io.github.jamoamo.webjourney.api.event.PageNavigatedEvent;
-import io.github.jamoamo.webjourney.api.web.IBrowser;
+import java.time.LocalDateTime;
 
 /**
+ * An event that occurs during a journey.
  *
  * @author James Amoore
  */
-class NavigateAction extends AWebAction
+public interface IJourneyEvent
 {
-	private final ANavigationTarget target;
-	
-	NavigateAction(ANavigationTarget target)
-	{
-		this.target = target;
-	}
+	/**
+	 * @return The timestamp when the event occurred.
+	 */
+	LocalDateTime getTimestamp();
 
-	@Override
-	protected ActionResult executeActionImpl(IJourneyContext context)
-	{
-		IBrowser browser = context.getBrowser();
-		this.target.navigate(browser);
-
-		PageNavigatedEvent event = new PageNavigatedEvent(context, browser.getActiveWindow().getCurrentUrl());
-		context.getJourneyPassengers().forEach(p -> p.onEvent(event));
-
-		return ActionResult.SUCCESS;
-	}
-
-	@Override
-	protected String getActionName()
-	{
-		return "Navigate";
-	}
+	/**
+	 * @return The context of the journey when the event occurred.
+	 */
+	IJourneyContext getContext();
 }

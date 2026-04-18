@@ -26,6 +26,7 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.IJourneyBreadcrumb;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
+import io.github.jamoamo.webjourney.api.IJourneyPassenger;
 import io.github.jamoamo.webjourney.api.ITravelOptions;
 import io.github.jamoamo.webjourney.api.web.DefaultJourneyBrowserArguments;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
@@ -49,6 +50,7 @@ public class JourneyContext implements IJourneyContext
 	private IJourneyBreadcrumb breadcrumb;
 	private final Map<String, Object> inputs = new ConcurrentHashMap<>(2);
 	private final List<IJourneyObserver> journeyObservers = new CopyOnWriteArrayList<>();
+	private final List<IJourneyPassenger> journeyPassengers = new CopyOnWriteArrayList<>();
 	private final IJourneyBrowserArguments browserArguments = new DefaultJourneyBrowserArguments();
 	
 	void setBrowser(IBrowser browser)
@@ -84,6 +86,18 @@ public class JourneyContext implements IJourneyContext
 	public void setJourneyObservers(List<IJourneyObserver> observers)
 	{
 		this.journeyObservers.addAll(observers);
+	}
+
+	@Override
+	public List<IJourneyPassenger> getJourneyPassengers()
+	{
+		return Collections.unmodifiableList(this.journeyPassengers);
+	}
+
+	@Override
+	public void setJourneyPassengers(List<IJourneyPassenger> passengers)
+	{
+		this.journeyPassengers.addAll(passengers);
 	}
 
 	@Override

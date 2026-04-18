@@ -72,7 +72,7 @@ class ConsumePageAction<T> extends AWebAction
 			EntityDefn entityDefn = new EntityDefn(this.pageClass);
 			EntityCreator<T> creator = new EntityCreator(entityDefn, false, context.getJourneyObservers());
 			T instance;
-			EntityCreationContext creationContext = new EntityCreationContext(entityDefn, retryPolicy);
+			EntityCreationContext creationContext = new EntityCreationContext(entityDefn, retryPolicy, context);
 			if(retryPolicy != null)
 			{
 				instance = retryPolicy.execute(() -> creator.createNewEntity(browser, creationContext));
