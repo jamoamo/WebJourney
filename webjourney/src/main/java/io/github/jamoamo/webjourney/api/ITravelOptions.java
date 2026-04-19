@@ -55,6 +55,18 @@ public interface ITravelOptions
 	 * @return the journey observers
 	 */
 	List<IJourneyObserver> getJourneyObservers();
+
+	/**
+	 * Adds a passenger to the journey.
+	 * @param passenger the passenger to add.
+	 */
+	void addPassenger(IJourneyPassenger passenger);
+
+	/**
+	 * Retrieves the journey passengers.
+	 * @return the journey passengers
+	 */
+	List<IJourneyPassenger> getJourneyPassengers();
 	
 	/**
 	 * Retrieves the retry policy for operations that can be retried.

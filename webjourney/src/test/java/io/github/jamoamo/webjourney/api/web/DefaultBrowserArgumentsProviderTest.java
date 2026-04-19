@@ -159,6 +159,17 @@ class DefaultBrowserArgumentsProviderTest
         }
 
         @Override
+        public List<io.github.jamoamo.webjourney.api.IJourneyPassenger> getJourneyPassengers()
+        {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public void setJourneyPassengers(List<io.github.jamoamo.webjourney.api.IJourneyPassenger> passengers)
+        {
+        }
+
+        @Override
         public IJourneyBreadcrumb getJourneyBreadcrumb()
         {
             return null;

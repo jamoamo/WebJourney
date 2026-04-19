@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney;
+package io.github.jamoamo.webjourney.api.event;
 
-import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
-import io.github.jamoamo.webjourney.api.event.PageNavigatedEvent;
-import io.github.jamoamo.webjourney.api.web.IBrowser;
 
 /**
+ * Event fired when an entity scrape starts.
  *
  * @author James Amoore
  */
-class NavigateAction extends AWebAction
+public class EntityScrapeStartedEvent extends AWebJourneyEvent
 {
-	private final ANavigationTarget target;
-	
-	NavigateAction(ANavigationTarget target)
+	private final Class<?> entityClass;
+
+	public EntityScrapeStartedEvent(IJourneyContext context, Class<?> entityClass)
 	{
-		this.target = target;
+		super(context);
+		this.entityClass = entityClass;
 	}
 
-	@Override
-	protected ActionResult executeActionImpl(IJourneyContext context)
+	public Class<?> getEntityClass()
 	{
-		IBrowser browser = context.getBrowser();
-		this.target.navigate(browser);
-
-		PageNavigatedEvent event = new PageNavigatedEvent(context, browser.getActiveWindow().getCurrentUrl());
-		context.getJourneyPassengers().forEach(p -> p.onEvent(event));
-
-		return ActionResult.SUCCESS;
-	}
-
-	@Override
-	protected String getActionName()
-	{
-		return "Navigate";
+		return this.entityClass;
 	}
 }

@@ -65,6 +65,8 @@ public final class EntityCreationContext
 
 	 private IRetryPolicy retryPolicy;
 
+	 private io.github.jamoamo.webjourney.api.IJourneyContext journeyContext;
+
 	 EntityCreationContext(EntityDefn entityDefn)
 	 {
 		  this.baseEntity = entityDefn;
@@ -78,6 +80,23 @@ public final class EntityCreationContext
 		  this.retryPolicy = retryPolicy;
 	 }
 	 
+	 public EntityCreationContext(EntityDefn entityDefn, IRetryPolicy retryPolicy,
+		io.github.jamoamo.webjourney.api.IJourneyContext journeyContext)
+	 {
+		  this(entityDefn, retryPolicy);
+		  this.journeyContext = journeyContext;
+	 }
+
+	 /**
+	  * Gets the journey context.
+	  *
+	  * @return the journey context
+	  */
+	 public io.github.jamoamo.webjourney.api.IJourneyContext getJourneyContext()
+	 {
+		  return this.journeyContext;
+	 }
+
 	 /**
 	  * Gets the retry policy configured for this context.
 	  * 

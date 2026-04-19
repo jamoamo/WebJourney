@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney;
 
 import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.event.FormCompletedEvent;
 import io.github.jamoamo.webjourney.annotation.form.Form;
 import io.github.jamoamo.webjourney.annotation.form.TextField;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
@@ -77,6 +78,10 @@ class CompleteFormAction extends AWebAction
 				throw new JourneyException(ex);
 			}
 		}
+
+		FormCompletedEvent event = new FormCompletedEvent(context, this.form);
+		context.getJourneyPassengers().forEach(p -> p.onEvent(event));
+
 		return ActionResult.SUCCESS;
 	}
 

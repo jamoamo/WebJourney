@@ -26,6 +26,7 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.IJourneyObserver;
 import io.github.jamoamo.webjourney.api.ITravelOptions;
 import io.github.jamoamo.webjourney.api.IRetryPolicy;
+import io.github.jamoamo.webjourney.api.IJourneyPassenger;
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
 import io.github.jamoamo.webjourney.api.web.PreferredBrowserStrategy;
 import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
@@ -43,6 +44,8 @@ public final class TravelOptions implements ITravelOptions
 			  = new PreferredBrowserStrategy(new ChromeBrowserFactory());
 	
 	private List<IJourneyObserver> journeyObservers = new ArrayList<>();
+
+	private List<IJourneyPassenger> journeyPassengers = new ArrayList<>();
 
 	private IRetryPolicy retryPolicy = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
 
@@ -87,6 +90,26 @@ public final class TravelOptions implements ITravelOptions
 		return Collections.unmodifiableList(this.journeyObservers);
 	}
 	
+	/**
+	 * Adds a passenger to the journey.
+	 * @param passenger the passenger to add.
+	 */
+	@Override
+	public void addPassenger(IJourneyPassenger passenger)
+	{
+		this.journeyPassengers.add(passenger);
+	}
+
+	/**
+	 * Retrieves the journey passengers.
+	 * @return the journey passengers
+	 */
+	@Override
+	public List<IJourneyPassenger> getJourneyPassengers()
+	{
+		return Collections.unmodifiableList(this.journeyPassengers);
+	}
+
 	@Override
 	public IRetryPolicy getRetryPolicy()
 	{
