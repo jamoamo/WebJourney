@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 James Amoore.
+ * Copyright 2024 James Amoore.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.jamoamo.webjourney.reserved.entity;
+package io.github.jamoamo.webjourney;
+
+import java.time.Duration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author James Amoore
  */
-class ElementExtractor
-	 extends AElementExtractor
+public class TravelOptionsTest
 {
-	 ElementExtractor(String elementXPath, boolean optional)
-	 {
-		  super(elementXPath, optional);
-	 }
+	@Test
+	public void testGetElementWaitTimeout_DefaultsToZero()
+	{
+		TravelOptions options = new TravelOptions();
+		assertEquals(Duration.ZERO, options.getElementWaitTimeout());
+	}
 
-	 ElementExtractor(String elementXPath, boolean optional, long waitSeconds)
-	 {
-		  super(elementXPath, new AlwaysCondition(), optional, waitSeconds);
-	 }
+	@Test
+	public void testSetElementWaitTimeout()
+	{
+		TravelOptions options = new TravelOptions();
+		options.setElementWaitTimeout(Duration.ofSeconds(10));
+		assertEquals(Duration.ofSeconds(10), options.getElementWaitTimeout());
+	}
 
+	@Test
+	public void testGetElementWaitTimeout_NullCoercedToZero()
+	{
+		TravelOptions options = new TravelOptions();
+		options.setElementWaitTimeout(null);
+		assertEquals(Duration.ZERO, options.getElementWaitTimeout());
+	}
+
+	@Test
+	public void testGetElementWaitTimeout_NegativeCoercedToZero()
+	{
+		TravelOptions options = new TravelOptions();
+		options.setElementWaitTimeout(Duration.ofSeconds(-5));
+		assertEquals(Duration.ZERO, options.getElementWaitTimeout());
+	}
 }

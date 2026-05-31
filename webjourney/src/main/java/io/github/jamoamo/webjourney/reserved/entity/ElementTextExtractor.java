@@ -23,6 +23,8 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
+import java.time.Duration;
+
 /**
  *
  * @author James Amoore
@@ -32,6 +34,7 @@ class ElementTextExtractor implements IExtractor<String>
 	private final String xPath;
 	private final ICondition condition;
 	private final boolean optional;
+	private final long waitSeconds;
 
 	ElementTextExtractor(
 		String xPath)
@@ -44,9 +47,19 @@ class ElementTextExtractor implements IExtractor<String>
 		ICondition condition,
 		boolean optional)
 	{
+		this(xPath, condition, optional, -1);
+	}
+
+	ElementTextExtractor(
+		String xPath,
+		ICondition condition,
+		boolean optional,
+		long waitSeconds)
+	{
 		this.xPath = xPath;
 		this.condition = condition;
 		this.optional = optional;
+		this.waitSeconds = waitSeconds;
 	}
 
 	boolean isOptional()
@@ -60,7 +73,12 @@ class ElementTextExtractor implements IExtractor<String>
 	{
 		try
 		{
-			return reader.getElementText(this.xPath, this.optional);
+			Duration wait = ElementWaitResolver.resolve(this.waitSeconds, entityCreationContext);
+			if(wait.isZero())
+			{
+				return reader.getElementText(this.xPath, this.optional);
+			}
+			return reader.getElementText(this.xPath, this.optional, wait);
 		}
 		catch (XValueReaderException ex)
 		{

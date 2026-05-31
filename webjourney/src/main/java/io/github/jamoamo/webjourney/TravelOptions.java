@@ -30,6 +30,7 @@ import io.github.jamoamo.webjourney.api.IJourneyPassenger;
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
 import io.github.jamoamo.webjourney.api.web.PreferredBrowserStrategy;
 import io.github.jamoamo.webjourney.reserved.selenium.ChromeBrowserFactory;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,9 @@ public final class TravelOptions implements ITravelOptions
 
 	private IRetryPolicy retryPolicy = io.github.jamoamo.webjourney.api.RetryPolicyBuilder.builder().build();
 
-	
+	private Duration elementWaitTimeout = Duration.ZERO;
+
+
 	/**
 	 * Sets the preferred browser strategy to use. 
 	 * @param strategy the strategy to use to create the preferred browser.
@@ -120,5 +123,21 @@ public final class TravelOptions implements ITravelOptions
 	public void setRetryPolicy(IRetryPolicy retryPolicy)
 	{
 		this.retryPolicy = retryPolicy;
+	}
+
+	@Override
+	public Duration getElementWaitTimeout()
+	{
+		if(this.elementWaitTimeout == null || this.elementWaitTimeout.isNegative())
+		{
+			return Duration.ZERO;
+		}
+		return this.elementWaitTimeout;
+	}
+
+	@Override
+	public void setElementWaitTimeout(Duration timeout)
+	{
+		this.elementWaitTimeout = timeout;
 	}
 }

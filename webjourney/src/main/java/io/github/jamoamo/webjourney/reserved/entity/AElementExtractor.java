@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
+import java.time.Duration;
 import org.openqa.selenium.NoSuchElementException;
 
 /**
@@ -35,6 +36,7 @@ abstract class AElementExtractor implements IExtractor<AElement>
 	private final String xPath;
 	private ICondition condition;
 	private final boolean optional;
+	private final long waitSeconds;
 
 	AElementExtractor(
 		String elementXPath,
@@ -48,9 +50,19 @@ abstract class AElementExtractor implements IExtractor<AElement>
 		ICondition condition,
 		boolean optional)
 	{
+		this(elementXPath, condition, optional, -1);
+	}
+
+	AElementExtractor(
+		String elementXPath,
+		ICondition condition,
+		boolean optional,
+		long waitSeconds)
+	{
 		this.xPath = elementXPath;
 		this.condition = condition;
 		this.optional = optional;
+		this.waitSeconds = waitSeconds;
 	}
 
 	@Override
@@ -59,7 +71,12 @@ abstract class AElementExtractor implements IExtractor<AElement>
 	{
 		try
 		{
-			return reader.getElement(this.xPath, this.optional);
+			Duration wait = ElementWaitResolver.resolve(this.waitSeconds, entityCreationContext);
+			if(wait.isZero())
+			{
+				return reader.getElement(this.xPath, this.optional);
+			}
+			return reader.getElement(this.xPath, this.optional, wait);
 		}
 		catch (NoSuchElementException ex)
 		{

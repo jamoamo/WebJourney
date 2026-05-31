@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney.api.web;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -51,6 +52,22 @@ public interface IWebPage
 	 * @throws io.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
 	 */
 	AElement getElement(String xPath, boolean optional) throws XWebException;
+
+	/**
+	 * Find an element that matches the xpath expression, waiting for it to be present.
+	 *
+	 * @param xPath xPath expression to the element.
+	 * @param optional indicates if the element is optional.
+	 * @param wait the maximum time to wait for the element to be present. A zero or negative duration disables
+	 * waiting.
+	 *
+	 * @return the found Element.
+	 * @throws io.github.jamoamo.webjourney.api.web.XWebException if a browsing error occurs
+	 */
+	default AElement getElement(String xPath, boolean optional, Duration wait) throws XWebException
+	{
+		return getElement(xPath, optional);
+	}
 
 	/**
 	 * Find a list of elements that match the xpath expression.

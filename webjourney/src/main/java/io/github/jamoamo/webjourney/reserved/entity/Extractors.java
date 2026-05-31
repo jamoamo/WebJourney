@@ -103,7 +103,7 @@ public final class Extractors
 		  {
 				LOGGER.debug("Finding Extractor for value extraction.");
 				return getValueExtractor(fieldInfo, extractor.path(), extractor.attribute(), extractor.optional(),
-					 extractCollectionSingularly, hasConverter, new AlwaysCondition());
+					 extractCollectionSingularly, hasConverter, new AlwaysCondition(), extractor.waitSeconds());
 		  }
 		  else if(annotation instanceof RegexExtractValue extractor)
 		  {
@@ -173,7 +173,9 @@ public final class Extractors
 				false,
 				extractCollectionSingularly,
 				hasConverter,
-				condition);
+				condition,
+				extractor.thenExtractValue()
+					 .waitSeconds());
 	 }
 
 	 private static IExtractor getUrlExtractor(
@@ -254,7 +256,8 @@ public final class Extractors
 		  boolean optional,
 		  boolean extractCollectionSingularly,
 		  boolean hasConverter,
-		  ICondition condition)
+		  ICondition condition,
+		  long waitSeconds)
 	 {
 		  TypeInfo typeInfo = getResolvedFieldTypeInfo(fieldInfo);
 		  boolean resolvedOptional = optional || isOptionalField(fieldInfo);
@@ -262,14 +265,14 @@ public final class Extractors
 		  {
 				if(attribute.isBlank())
 				{
-					 LOGGER.debug("Getting collection of element text extractor. extractCollectionSingularly = " 
+					 LOGGER.debug("Getting collection of element text extractor. extractCollectionSingularly = "
 						  + extractCollectionSingularly);
 					 return getElementTextCollectionExtractor(extractCollectionSingularly, xPath, condition, fieldInfo,
-						  hasConverter, resolvedOptional);
+						  hasConverter, resolvedOptional, waitSeconds);
 				}
 				else
 				{
-					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + "and attribute = " + attribute 
+					 LOGGER.debug("Using AttributesExtractor for xpath = " + xPath + "and attribute = " + attribute
 						  + " and optional = " + resolvedOptional);
 					 return new AttributesExtractor(xPath, attribute, condition, resolvedOptional);
 				}
@@ -277,29 +280,29 @@ public final class Extractors
 		  else if(!attribute.isBlank())
 		  {
 				LOGGER.debug("Getting attribute extractor.");
-				return getAttributeExtractor(xPath, attribute, condition, resolvedOptional);
+				return getAttributeExtractor(xPath, attribute, condition, resolvedOptional, waitSeconds);
 		  }
 		  else if(!typeInfo.isStandardType())
 		  {
 				LOGGER.debug("Getting non standard value extractor.");
-				return getNonStandardValueExtractor(xPath, typeInfo, hasConverter, resolvedOptional);
+				return getNonStandardValueExtractor(xPath, typeInfo, hasConverter, resolvedOptional, waitSeconds);
 		  }
 		  else
 		  {
 				LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + resolvedOptional);
-				return new ElementTextExtractor(xPath, condition, resolvedOptional);
+				return new ElementTextExtractor(xPath, condition, resolvedOptional, waitSeconds);
 		  }
 	 }
 
 	 private static IExtractor getElementTextCollectionExtractor(boolean extractCollectionSingularly,
 		  String xPath, ICondition condition,
 		  FieldInfo fieldInfo, boolean hasConverter,
-		  boolean optional)
+		  boolean optional, long waitSeconds)
 	 {
 		  if(extractCollectionSingularly)
 		  {
 				LOGGER.debug("Getting text extractor.");
-				return getTextExtractor(xPath, condition, optional);
+				return getTextExtractor(xPath, condition, optional, waitSeconds);
 		  }
 		  return getCollectionExtractor(fieldInfo, xPath, hasConverter, condition);
 	 }
@@ -308,7 +311,7 @@ public final class Extractors
 	 {
 		  if(!attribute.isBlank())
 		  {
-				LOGGER.debug("Using AttributeExtractor for xpath = " + path + "attribute = " + attribute 
+				LOGGER.debug("Using AttributeExtractor for xpath = " + path + "attribute = " + attribute
 					 + " and optional = " + optional);
 				return new AttributeExtractor(path, attribute, new AlwaysCondition(), optional);
 		  }
@@ -319,33 +322,34 @@ public final class Extractors
 		  }
 	 }
 
-	 private static IExtractor<String> getTextExtractor(String xPath, ICondition condition, boolean optional)
+	 private static IExtractor<String> getTextExtractor(String xPath, ICondition condition, boolean optional,
+		  long waitSeconds)
 	 {
 		  LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + optional);
-		  return new ElementTextExtractor(xPath, condition, optional);
+		  return new ElementTextExtractor(xPath, condition, optional, waitSeconds);
 	 }
 
 	 private static IExtractor<String> getAttributeExtractor(String xPath, String attribute, ICondition condition,
-		  boolean optional)
+		  boolean optional, long waitSeconds)
 	 {
-		  LOGGER.debug("Using AttributeExtractor for xpath = " + xPath + " attribute = " + attribute 
+		  LOGGER.debug("Using AttributeExtractor for xpath = " + xPath + " attribute = " + attribute
 				+ " and optional = " + optional);
-		  return new AttributeExtractor(xPath, attribute, condition, optional);
+		  return new AttributeExtractor(xPath, attribute, condition, optional, waitSeconds);
 	 }
 
 	 private static IExtractor getNonStandardValueExtractor(
-		  String xPath, TypeInfo typeInfo, boolean hasConverter, boolean optional)
+		  String xPath, TypeInfo typeInfo, boolean hasConverter, boolean optional, long waitSeconds)
 		  throws RuntimeException
 	 {
 		  if(hasConverter)
 		  {
 				LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + optional);
-				return new ElementTextExtractor(xPath, new AlwaysCondition(), optional);
+				return new ElementTextExtractor(xPath, new AlwaysCondition(), optional, waitSeconds);
 		  }
 		  if(typeInfo.hasNoArgsConstructor())
 		  {
 				LOGGER.debug("Using ElementExtractor for xpath = " + xPath + " and optional = " + optional);
-				return new ElementExtractor(xPath, optional);
+				return new ElementExtractor(xPath, optional, waitSeconds);
 		  }
 		  throw new RuntimeException("Unable to determine a suitable value extractor. "
 				+ "Is there a converter or no-args constructor missing?");

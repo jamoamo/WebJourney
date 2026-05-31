@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.api;
 
 import io.github.jamoamo.webjourney.api.web.IPreferredBrowserStrategy;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -79,5 +80,19 @@ public interface ITravelOptions
 	 * @param retryPolicy the retry policy to use
 	 */
 	void setRetryPolicy(IRetryPolicy retryPolicy);
-	
+
+	/**
+	 * Retrieves the default maximum time to wait for an element to be present when reading it.
+	 * <p>
+	 * This default applies to element reads that do not specify their own wait. A {@link Duration#isZero() zero}
+	 * (or {@code null}) duration disables waiting.
+	 * @return the default element wait timeout. Never returns a negative duration.
+	 */
+	Duration getElementWaitTimeout();
+
+	/**
+	 * Sets the default maximum time to wait for an element to be present when reading it.
+	 * @param timeout the default element wait timeout. A {@code null} or zero duration disables waiting.
+	 */
+	void setElementWaitTimeout(Duration timeout);
 }

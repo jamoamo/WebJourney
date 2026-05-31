@@ -24,9 +24,12 @@
 package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
+import java.time.Duration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
 
 /**
  *
@@ -35,18 +38,31 @@ import org.openqa.selenium.WebElement;
 
 class ChildElementLocator implements ISeleniumElementLocator
 {
+	private static final Duration POLL_INTERVAL = Duration.ofMillis(200);
+
 	private final SeleniumElement element;
 	private final By by;
 	private final boolean optional;
+	private final Duration wait;
 
 	ChildElementLocator(
 		SeleniumElement element,
 		By by,
 		boolean optional)
 	{
+		this(element, by, optional, Duration.ZERO);
+	}
+
+	ChildElementLocator(
+		SeleniumElement element,
+		By by,
+		boolean optional,
+		Duration wait)
+	{
 		this.element = element;
 		this.by = by;
 		this.optional = optional;
+		this.wait = wait;
 	}
 
 	@Override
@@ -64,19 +80,45 @@ class ChildElementLocator implements ISeleniumElementLocator
 				"Parent element missing for child identified by: " + this.by.toString());
 		}
 
+		if (this.wait != null && !this.wait.isZero() && !this.wait.isNegative())
+		{
+			return findChildWaiting(parent);
+		}
+
 		try
 		{
 			return parent.findElement(this.by);
 		}
 		catch (NoSuchElementException ex)
 		{
-			if (this.optional)
-			{
-				return null;
-			}
-			throw new XElementDoesntExistException(
-				"Element Identified By: " + this.by.toString() + " doesn't exist.");
+			return handleMissingElement();
 		}
+	}
+
+	private WebElement findChildWaiting(WebElement parent) throws XElementDoesntExistException
+	{
+		try
+		{
+			return new FluentWait<>(parent)
+				.withTimeout(this.wait)
+				.pollingEvery(POLL_INTERVAL)
+				.ignoring(NoSuchElementException.class)
+				.until(p -> p.findElement(this.by));
+		}
+		catch (TimeoutException ex)
+		{
+			return handleMissingElement();
+		}
+	}
+
+	private WebElement handleMissingElement() throws XElementDoesntExistException
+	{
+		if (this.optional)
+		{
+			return null;
+		}
+		throw new XElementDoesntExistException(
+			"Element Identified By: " + this.by.toString() + " doesn't exist.");
 	}
 
 }

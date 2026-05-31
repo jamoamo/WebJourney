@@ -49,9 +49,24 @@ public @interface ExtractValue
 	String attribute() default "";
 	
 	/**
-	 * Is the value extract optional? If true the extraction will result in null if the entity the value is 
+	 * Is the value extract optional? If true the extraction will result in null if the entity the value is
 	 * extracted from doesn't exist.
-	 * @return true if the value is optional. 
+	 * @return true if the value is optional.
 	 */
 	boolean optional() default false;
+
+	/**
+	 * The maximum number of seconds to wait for the element to be present before reading it.
+	 * <p>
+	 * When the element is not immediately present the extraction will wait, up to this many seconds, for it to
+	 * appear in the page before reading its value.
+	 * <ul>
+	 * <li>A negative value (the default) means the wait configured on the journey's
+	 * {@link io.github.jamoamo.webjourney.api.ITravelOptions#getElementWaitTimeout() travel options} is used.</li>
+	 * <li>A value of {@code 0} disables waiting, reading the element immediately.</li>
+	 * <li>A positive value waits up to that many seconds for the element to be present.</li>
+	 * </ul>
+	 * @return the number of seconds to wait for the element, or a negative value to inherit the global default.
+	 */
+	long waitSeconds() default -1;
 }

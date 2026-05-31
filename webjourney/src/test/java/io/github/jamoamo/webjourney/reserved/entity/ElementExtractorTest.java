@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
@@ -47,6 +48,23 @@ public class ElementExtractorTest
 		  ElementExtractor extractor = new ElementExtractor("//div", false);
 		  AElement extractRawValue = extractor.extractRawValue(reader, null);
 		  assertSame(element, extractRawValue);
+	 }
+
+	 @Test
+	 public void testextractRawValue_withWait()
+		  throws Exception
+	 {
+		  AElement element = Mockito.mock(AElement.class);
+
+		  IValueReader reader = Mockito.mock(IValueReader.class);
+		  Mockito.when(reader.getElement("//div", false, Duration.ofSeconds(5)))
+				.thenReturn(element);
+
+		  ElementExtractor extractor = new ElementExtractor("//div", false, 5);
+		  AElement extractRawValue = extractor.extractRawValue(reader, null);
+		  assertSame(element, extractRawValue);
+		  Mockito.verify(reader).getElement("//div", false, Duration.ofSeconds(5));
+		  Mockito.verify(reader, Mockito.never()).getElement("//div", false);
 	 }
 
 }

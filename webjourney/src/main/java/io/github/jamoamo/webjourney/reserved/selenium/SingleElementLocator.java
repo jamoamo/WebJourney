@@ -24,10 +24,14 @@
 package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
+import java.time.Duration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  *
@@ -38,33 +42,66 @@ class SingleElementLocator implements ISeleniumElementLocator
 	private final WebDriver driver;
 	private final By by;
 	private final boolean optional;
+	private final Duration wait;
 
 	SingleElementLocator(
 		WebDriver driver,
 		By by,
 		boolean optional)
 	{
+		this(driver, by, optional, Duration.ZERO);
+	}
+
+	SingleElementLocator(
+		WebDriver driver,
+		By by,
+		boolean optional,
+		Duration wait)
+	{
 		this.driver = driver;
 		this.by = by;
 		this.optional = optional;
+		this.wait = wait;
 	}
 
 	@Override
 	public WebElement findElement() throws XElementDoesntExistException
 	{
+		if (this.wait != null && !this.wait.isZero() && !this.wait.isNegative())
+		{
+			return findElementWaiting();
+		}
 		try
 		{
 			return this.driver.findElement(this.by);
 		}
 		catch (NoSuchElementException ex)
 		{
-			if (this.optional)
-			{
-				return null;
-			}
-			throw new XElementDoesntExistException(
-				"Element Identified By: " + this.by.toString() + " on page " + this.driver.getCurrentUrl() + " doesn't exist.");
+			return handleMissingElement();
 		}
+	}
+
+	private WebElement findElementWaiting() throws XElementDoesntExistException
+	{
+		try
+		{
+			return new WebDriverWait(this.driver, this.wait)
+				.until(ExpectedConditions.presenceOfElementLocated(this.by));
+		}
+		catch (TimeoutException ex)
+		{
+			return handleMissingElement();
+		}
+	}
+
+	private WebElement handleMissingElement() throws XElementDoesntExistException
+	{
+		if (this.optional)
+		{
+			return null;
+		}
+		throw new XElementDoesntExistException(
+			"Element Identified By: " + this.by.toString() + " on page " + this.driver.getCurrentUrl() + " doesn't exist.");
 	}
 
 }
