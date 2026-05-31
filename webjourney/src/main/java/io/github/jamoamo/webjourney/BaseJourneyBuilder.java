@@ -30,6 +30,7 @@ import io.github.jamoamo.webjourney.api.JourneyBuilderException;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.function.Function;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -41,6 +42,8 @@ import org.apache.commons.lang3.function.FailableFunction;
  */
 public class BaseJourneyBuilder implements IJourneyBuilder
 {
+	private static final int DEFAULT_URL_CHANGE_TIMEOUT_SEC = 10;
+
 	private final JourneyBuild build;
 
 	BaseJourneyBuilder()
@@ -182,6 +185,35 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	{
 		ConsumePageAction<T> action = new ConsumePageAction<>(pageClass, pageConsumer);
 		this.build.addAction(action);
+		return new ActionOptionsJourneyBuilder(this.build);
+	}
+
+	/**
+	 * Adds an action that waits until the active window's url no longer contains the provided substring. A default
+	 * timeout of 10 seconds is applied. This is useful when a previous action lands on an intermediate url that
+	 * redirects to the desired page.
+	 *
+	 * @param urlSubstring The url substring to wait away from.
+	 *
+	 * @return the current builder
+	 */
+	public ActionOptionsJourneyBuilder waitUntilUrlChangesFrom(String urlSubstring)
+	{
+		return waitUntilUrlChangesFrom(urlSubstring, Duration.ofSeconds(DEFAULT_URL_CHANGE_TIMEOUT_SEC));
+	}
+
+	/**
+	 * Adds an action that waits until the active window's url no longer contains the provided substring. This is useful
+	 * when a previous action lands on an intermediate url that redirects to the desired page.
+	 *
+	 * @param urlSubstring The url substring to wait away from.
+	 * @param timeout      The maximum time to wait before failing.
+	 *
+	 * @return the current builder
+	 */
+	public ActionOptionsJourneyBuilder waitUntilUrlChangesFrom(String urlSubstring, Duration timeout)
+	{
+		this.build.addAction(new WaitUntilUrlChangesAction(urlSubstring, timeout));
 		return new ActionOptionsJourneyBuilder(this.build);
 	}
 
