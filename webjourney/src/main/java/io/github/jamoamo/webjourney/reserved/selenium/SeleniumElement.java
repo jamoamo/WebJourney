@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import io.github.jamoamo.webjourney.api.web.AElement;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +76,12 @@ class SeleniumElement extends AElement
 	public AElement findElement(String path, boolean optional)
 	{
 		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), optional), this.executor);
+	}
+
+	@Override
+	public AElement findElement(String path, boolean optional, Duration wait)
+	{
+		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), optional, wait), this.executor);
 	}
 
 	@Override

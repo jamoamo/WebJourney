@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney.api.web;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -63,6 +64,21 @@ public abstract class AElement
 	 * is not optional
 	 */
 	public abstract AElement findElement(String path, boolean optional) throws XElementDoesntExistException;
+
+	/**
+	 * Finds a sub-element using the xpath, waiting for it to be present.
+	 * @param path the xpath.
+	 * @param optional if the element is optional.
+	 * @param wait the maximum time to wait for the element to be present. A zero or negative duration disables
+	 * waiting.
+	 * @return the sub-element
+	 * @throws io.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist and
+	 * is not optional
+	 */
+	public AElement findElement(String path, boolean optional, Duration wait) throws XElementDoesntExistException
+	{
+		return findElement(path, optional);
+	}
 
 	/**
 	 * Finds a list of sub-element using the xpath.

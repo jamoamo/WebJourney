@@ -27,6 +27,7 @@ import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.function.Failable;
@@ -87,6 +88,70 @@ class BrowserValueReader implements IValueReader
 		{
 			throw new XValueReaderException(ex);
 		}
+	}
+
+	@Override
+	public String getElementText(String xPath, boolean optional, Duration wait) throws XValueReaderException
+	{
+		if(!isWaitRequested(wait))
+		{
+			return getElementText(xPath, optional);
+		}
+		try
+		{
+			return this.browser
+				.getActiveWindow()
+				.getCurrentPage()
+				.getElement(xPath, optional, wait)
+				.getElementText();
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+
+	@Override
+	public AElement getElement(String xPath, boolean optional, Duration wait) throws XValueReaderException
+	{
+		if(!isWaitRequested(wait))
+		{
+			return getElement(xPath, optional);
+		}
+		try
+		{
+			return this.browser.getActiveWindow().getCurrentPage().getElement(xPath, optional, wait);
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+
+	@Override
+	public String getAttribute(String elementXPath, String attr, Duration wait) throws XValueReaderException
+	{
+		if(!isWaitRequested(wait))
+		{
+			return getAttribute(elementXPath, attr);
+		}
+		try
+		{
+			return this.browser
+				.getActiveWindow()
+				.getCurrentPage()
+				.getElement(elementXPath, false, wait)
+				.getAttribute(attr);
+		}
+		catch(XWebException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+
+	private static boolean isWaitRequested(Duration wait)
+	{
+		return wait != null && !wait.isZero() && !wait.isNegative();
 	}
 
 	@Override

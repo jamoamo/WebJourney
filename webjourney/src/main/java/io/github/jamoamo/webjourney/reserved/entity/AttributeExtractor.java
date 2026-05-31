@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.entity;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
+import java.time.Duration;
 
 /**
  *
@@ -37,6 +38,7 @@ class AttributeExtractor implements IExtractor<String>
 	private final String attribute;
 	private ICondition condition;
 	private final boolean optional;
+	private final long waitSeconds;
 
 	AttributeExtractor(
 		String elementXPath,
@@ -51,10 +53,21 @@ class AttributeExtractor implements IExtractor<String>
 		ICondition condition,
 		boolean optional)
 	{
+		this(elementXPath, attribute, condition, optional, -1);
+	}
+
+	AttributeExtractor(
+		String elementXPath,
+		String attribute,
+		ICondition condition,
+		boolean optional,
+		long waitSeconds)
+	{
 		this.elementXPath = elementXPath;
 		this.attribute = attribute;
 		this.condition = condition;
 		this.optional = optional;
+		this.waitSeconds = waitSeconds;
 	}
 
 	boolean getOptional()
@@ -68,7 +81,10 @@ class AttributeExtractor implements IExtractor<String>
 	{
 		try
 		{
-			AElement element = browser.getElement(this.elementXPath, this.optional);
+			Duration wait = ElementWaitResolver.resolve(this.waitSeconds, entityCreationContext);
+			AElement element = wait.isZero()
+				? browser.getElement(this.elementXPath, this.optional)
+				: browser.getElement(this.elementXPath, this.optional, wait);
 			if (this.optional && element == null)
 			{
 				return null;

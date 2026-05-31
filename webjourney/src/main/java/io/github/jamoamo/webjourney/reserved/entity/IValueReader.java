@@ -26,6 +26,7 @@ package io.github.jamoamo.webjourney.reserved.entity;
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -49,7 +50,21 @@ public interface IValueReader
 	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
 	String getElementText(String xPath, boolean optional) throws XValueReaderException;
-	
+
+	/**
+	 * Get the text of the element identified by the xpath, waiting for it to be present.
+	 * @param xPath the element xpath
+	 * @param optional if the element is optional
+	 * @param wait the maximum time to wait for the element to be present. A zero or negative duration disables
+	 * waiting.
+	 * @return the element text
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
+	 */
+	default String getElementText(String xPath, boolean optional, Duration wait) throws XValueReaderException
+	{
+		return getElementText(xPath, optional);
+	}
+
 	/**
 	 * Get the text of the elements identified by the xpath.
 	 * @param xPath the element xpath
@@ -66,7 +81,21 @@ public interface IValueReader
 	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
 	AElement getElement(String xPath, boolean optional) throws XValueReaderException;
-	
+
+	/**
+	 * Get the element identified by the xpath, waiting for it to be present.
+	 * @param xPath the element xpath
+	 * @param optional if the element is optional
+	 * @param wait the maximum time to wait for the element to be present. A zero or negative duration disables
+	 * waiting.
+	 * @return the element
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
+	 */
+	default AElement getElement(String xPath, boolean optional, Duration wait) throws XValueReaderException
+	{
+		return getElement(xPath, optional);
+	}
+
 	/**
 	 * Get the elements identified by the xpath.
 	 * @param xPath the element xpath
@@ -83,7 +112,21 @@ public interface IValueReader
 	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
 	String getAttribute(String xPath, String attr) throws XValueReaderException;
-	
+
+	/**
+	 * Get the attribute identified by the element xpath and attribute name, waiting for the element to be present.
+	 * @param xPath the element xpath
+	 * @param attr the arribute name
+	 * @param wait the maximum time to wait for the element to be present. A zero or negative duration disables
+	 * waiting.
+	 * @return the element attribute value
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
+	 */
+	default String getAttribute(String xPath, String attr, Duration wait) throws XValueReaderException
+	{
+		return getAttribute(xPath, attr);
+	}
+
 	/**
 	 * Get the attribute identified by the element xpath and attribute name.
 	 * @param xPath the element xpath

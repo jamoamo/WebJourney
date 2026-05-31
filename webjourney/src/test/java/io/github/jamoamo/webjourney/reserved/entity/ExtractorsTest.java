@@ -430,6 +430,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -469,6 +474,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -508,6 +518,11 @@ public class ExtractorsTest
 				return true;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -549,6 +564,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -590,6 +610,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -631,6 +656,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -672,6 +702,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -713,6 +748,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -754,6 +794,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -793,6 +838,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -832,6 +882,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
@@ -906,6 +961,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		RegexExtractValue regex = new RegexExtractValue()
@@ -982,6 +1042,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		RegexExtractValue regex = new RegexExtractValue()
@@ -1058,6 +1123,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		ConditionalExtractValue.RegexMatch regex = new ConditionalExtractValue.RegexMatch()
@@ -1125,6 +1195,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		ConditionalExtractValue.RegexMatch regex = new ConditionalExtractValue.RegexMatch()
@@ -1192,6 +1267,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		ExtractFromUrl extractFromUrl = new ExtractFromUrl()
@@ -1287,6 +1367,11 @@ public class ExtractorsTest
 				return false;
 			}
 
+			@Override
+			public long waitSeconds()
+			{
+				return -1;
+			}
 		};
 
 		Constant constant = new Constant()

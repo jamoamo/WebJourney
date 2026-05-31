@@ -28,6 +28,7 @@ import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
 import io.github.jamoamo.webjourney.api.web.XWebException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.function.Failable;
@@ -96,6 +97,75 @@ class ParentElementValueReader implements IValueReader
 			}
 			throw new XValueReaderException(e);
 		}
+	}
+
+	@Override
+	public String getElementText(String xPath, boolean optional, Duration wait) throws XValueReaderException
+	{
+		if(!isWaitRequested(wait))
+		{
+			return getElementText(xPath, optional);
+		}
+		try
+		{
+			AElement element = getElement(xPath, optional, wait);
+			if(element == null)
+			{
+				return null;
+			}
+			return element.getElementText();
+		}
+		catch(XElementDoesntExistException e)
+		{
+			if(optional)
+			{
+				 return null;
+			}
+			throw new XValueReaderException(e);
+		}
+	}
+
+	@Override
+	public AElement getElement(String xPath, boolean optional, Duration wait) throws XValueReaderException
+	{
+		if(!isWaitRequested(wait))
+		{
+			return getElement(xPath, optional);
+		}
+		try
+		{
+			return this.parentElement.findElement(xPath, optional, wait);
+		}
+		catch(XElementDoesntExistException e)
+		{
+			if(optional)
+			{
+				 return null;
+			}
+			throw new XValueReaderException(e);
+		}
+	}
+
+	@Override
+	public String getAttribute(String element, String attr, Duration wait) throws XValueReaderException
+	{
+		if(!isWaitRequested(wait))
+		{
+			return getAttribute(element, attr);
+		}
+		try
+		{
+			return this.parentElement.findElement(element, false, wait).getAttribute(attr);
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+
+	private static boolean isWaitRequested(Duration wait)
+	{
+		return wait != null && !wait.isZero() && !wait.isNegative();
 	}
 
 	@Override

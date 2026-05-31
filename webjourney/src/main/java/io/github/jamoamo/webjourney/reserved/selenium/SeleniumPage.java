@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
+import java.time.Duration;
 import java.util.List;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.openqa.selenium.By;
@@ -52,7 +53,15 @@ final class SeleniumPage implements IWebPage
 	public AElement getElement(String xPath, boolean optional)
 	{
 		return new SeleniumElement(
-			new SingleElementLocator(this.webDriver, By.xpath(xPath), optional), 
+			new SingleElementLocator(this.webDriver, By.xpath(xPath), optional),
+			new ScriptExecutor(this.webDriver));
+	}
+
+	@Override
+	public AElement getElement(String xPath, boolean optional, Duration wait)
+	{
+		return new SeleniumElement(
+			new SingleElementLocator(this.webDriver, By.xpath(xPath), optional, wait),
 			new ScriptExecutor(this.webDriver));
 	}
 
