@@ -35,13 +35,24 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface RegexExtractValue
-{	
+{
 	/**
-	 * How to Extract value.
+	 * How to Extract the raw value to apply the regex to. Exactly one of {@link #extractValue()} or
+	 * {@link #extractTextValue()} must be set - leave this at its default (a blank path) when using
+	 * {@link #extractTextValue()} instead.
 	 * @return the Extract Value
 	 */
-	ExtractValue extractValue();
-	
+	ExtractValue extractValue() default @ExtractValue(path = "");
+
+	/**
+	 * How to extract the raw text-node value to apply the regex to, as an alternative to
+	 * {@link #extractValue()} for text nodes that cannot be reached by an element-resolving XPath (see
+	 * {@link ExtractTextValue}). Exactly one of {@link #extractValue()} or {@link #extractTextValue()} must be
+	 * set - leave this at its default (a blank path) when using {@link #extractValue()} instead.
+	 * @return the ExtractTextValue to use to get the raw value.
+	 */
+	ExtractTextValue extractTextValue() default @ExtractTextValue(path = "");
+
 	/**
 	 * The regexes to evaluate use to extract the value. The first regex with a matching group will be used.
 	 * @return the regexes to use to extract the value.

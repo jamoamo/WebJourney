@@ -110,6 +110,12 @@ public class ConsumePageActionTest
 		  {
 				return true;
 		  }
+		  @Override
+		  public List<String> getTextNodeValues(String xPath)
+		  {
+				return List.of();
+		  }
+
 
 	 }
 

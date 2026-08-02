@@ -219,7 +219,13 @@ public class TestElement
 	 {
 		  return true;
 	 }
-	 
+
+	 @Override
+	 public List<String> getTextNodeValues(String xPath)
+	 {
+		  return List.of();
+	 }
+
 	 public void addElement(AElement element)
 	 {
 		 AElement[] newArr = Arrays.copyOf(subElements, subElements.length + 1);

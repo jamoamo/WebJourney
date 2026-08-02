@@ -39,4 +39,15 @@ public class XEntityDefinitionException extends Exception
 	{
 		super(String.format("An error occurred defining entity with type [%s]", cls.toString()), ex);
 	}
+
+	/**
+	 * Constructs an instance of <code>XEntityDefinitionException</code> with the specified detail message.
+	 *
+	 * @param cls the class of the entity that failed to be defined
+	 * @param message a message describing why the entity could not be defined.
+	 */
+	public XEntityDefinitionException(Class<?> cls, String message)
+	{
+		super(String.format("An error occurred defining entity with type [%s]: %s", cls.toString(), message));
+	}
 }

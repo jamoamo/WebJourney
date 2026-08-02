@@ -116,11 +116,23 @@ public abstract class AElement
 	 * @throws io.github.jamoamo.webjourney.api.web.XElementDoesntExistException if the element doesn't exist
 	 */
 	public abstract String getTag() throws XElementDoesntExistException;
-	
+
 	/**
 	 * Indicates if the element exists in the current context.
 	 * @return true if the element exists
 	 */
 	public abstract boolean exists();
+
+	/**
+	 * Gets the string values of the text node(s) matched by the xpath, evaluated relative to this element.
+	 * <p>
+	 * Unlike {@link #findElement(String)} and {@link #findElements(String)}, the xpath here is expected to
+	 * resolve directly to a text node or a set of text nodes (for example {@code following-sibling::text()[1]}),
+	 * which cannot be represented as an {@link AElement}.
+	 * @param xPath the xpath to the text node(s), evaluated relative to this element.
+	 * @return the text values of the matched text nodes, in document order. An empty list if none match.
+	 * @throws io.github.jamoamo.webjourney.api.web.XElementDoesntExistException if this element doesn't exist
+	 */
+	public abstract List<String> getTextNodeValues(String xPath) throws XElementDoesntExistException;
 
 }

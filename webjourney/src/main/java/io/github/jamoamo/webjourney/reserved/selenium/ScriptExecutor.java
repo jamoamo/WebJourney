@@ -38,8 +38,8 @@ class ScriptExecutor
 		this.driver = driver;
 	}
 	
-	public void executeScript(String script, Object... args)
+	public Object executeScript(String script, Object... args)
 	{
-		this.driver.executeScript(script, args);
+		return this.driver.executeScript(script, args);
 	}
 }

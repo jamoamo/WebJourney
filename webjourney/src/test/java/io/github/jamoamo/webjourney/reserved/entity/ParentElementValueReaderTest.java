@@ -284,6 +284,97 @@ public class ParentElementValueReaderTest
 	 }
 
 	 /**
+	  * Test of getTextNodeValue method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetTextNodeValue()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.getTextNodeValues("following-sibling::text()[1]"))
+				.thenReturn(Collections.singletonList("End of over 1: 4 runs scored"));
+
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  String result = reader.getTextNodeValue("following-sibling::text()[1]", false);
+		  assertEquals("End of over 1: 4 runs scored", result);
+	 }
+
+	 @Test
+	 public void testGetTextNodeValue_optional_noMatch()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.getTextNodeValues("following-sibling::text()[1]"))
+				.thenReturn(Collections.emptyList());
+
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  String result = reader.getTextNodeValue("following-sibling::text()[1]", true);
+		  assertNull(result);
+	 }
+
+	 @Test
+	 public void testGetTextNodeValue_required_noMatch_throws()
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  try
+		  {
+				Mockito.when(parentElement.getTextNodeValues("following-sibling::text()[1]"))
+					 .thenReturn(Collections.emptyList());
+		  }
+		  catch (XElementDoesntExistException ex)
+		  {
+				throw new IllegalStateException(ex);
+		  }
+
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  assertThrows(XValueReaderException.class, () -> reader.getTextNodeValue("following-sibling::text()[1]", false));
+	 }
+
+	 @Test
+	 public void testGetTextNodeValue_optional_elementMissing()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.getTextNodeValues("following-sibling::text()[1]"))
+				.thenThrow(new XElementDoesntExistException());
+
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  String result = reader.getTextNodeValue("following-sibling::text()[1]", true);
+		  assertNull(result);
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class ParentElementValueReader.
+	  */
+	 @Test
+	 public void testGetTextNodeValues()
+		  throws Exception
+	 {
+		  IBrowser browser = Mockito.mock(IBrowser.class);
+
+		  AElement parentElement = Mockito.mock(AElement.class);
+		  Mockito.when(parentElement.getTextNodeValues("text()"))
+				.thenReturn(List.of("0", "1lb"));
+
+		  ParentElementValueReader reader = new ParentElementValueReader(browser, parentElement);
+
+		  List<String> result = reader.getTextNodeValues("text()");
+		  assertEquals(List.of("0", "1lb"), result);
+	 }
+
+	 /**
 	  * Test of getBrowser method, of class ParentElementValueReader.
 	  */
 	 @Test

@@ -29,6 +29,7 @@ import io.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
 import io.github.jamoamo.webjourney.annotation.Constant;
 import io.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import io.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import io.github.jamoamo.webjourney.annotation.ExtractTextValue;
 import io.github.jamoamo.webjourney.annotation.ExtractValue;
 import io.github.jamoamo.webjourney.annotation.RegexExtractCurrentUrl;
 import io.github.jamoamo.webjourney.annotation.RegexExtractValue;
@@ -55,6 +56,7 @@ public final class ExtractionAnnotations
 	static 
 	{
 		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractValue.class);
+		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractTextValue.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractFromUrl.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(ExtractCurrentUrl.class);
 		ALWAYS_EXTRACT_ANNOTATIONS.add(RegexExtractValue.class);

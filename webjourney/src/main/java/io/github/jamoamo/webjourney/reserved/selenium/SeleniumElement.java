@@ -32,6 +32,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.stream.IntStreams;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -40,6 +41,20 @@ import org.openqa.selenium.WebElement;
  */
 class SeleniumElement extends AElement
 {
+	private static final int DOM_TEXT_NODE_TYPE = 3;
+
+	private static final String TEXT_NODE_XPATH_SCRIPT =
+		"var result = document.evaluate(arguments[1], arguments[0], null, "
+		+ "XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);"
+		+ "var values = [];"
+		+ "for (var i = 0; i < result.snapshotLength; i++) {"
+		+ "var node = result.snapshotItem(i);"
+		+ "if (node.nodeType === " + DOM_TEXT_NODE_TYPE + ") {"
+		+ "values.push(node.textContent);"
+		+ "}"
+		+ "}"
+		+ "return values;";
+
 	private final ISeleniumElementLocator locator;
 	private final ScriptExecutor executor;
 
@@ -181,5 +196,38 @@ class SeleniumElement extends AElement
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public List<String> getTextNodeValues(String xPath) throws XElementDoesntExistException
+	{
+		Optional<WebElement> elem = getElement();
+		if(elem.isEmpty())
+		{
+			return new ArrayList<>();
+		}
+		if(this.executor == null)
+		{
+			throw new IllegalStateException("No script executor available to evaluate xpath text nodes.");
+		}
+
+		Object result;
+		try
+		{
+			result = this.executor.executeScript(TEXT_NODE_XPATH_SCRIPT, elem.get(), xPath);
+		}
+		catch(WebDriverException ex)
+		{
+			// e.g. a malformed xpath surfaces as a JS SyntaxError, wrapped by Selenium as a WebDriverException.
+			throw new XElementDoesntExistException(
+				"Unable to evaluate text node xpath [" + xPath + "]: " + ex.getMessage());
+		}
+		if(!(result instanceof List<?> rawValues))
+		{
+			return new ArrayList<>();
+		}
+		return rawValues.stream()
+			.map(value -> value == null ? null : value.toString())
+			.toList();
 	}
 }

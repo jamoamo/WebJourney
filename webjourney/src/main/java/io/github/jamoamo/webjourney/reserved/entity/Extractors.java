@@ -29,6 +29,7 @@ import io.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
 import io.github.jamoamo.webjourney.annotation.Constant;
 import io.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import io.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import io.github.jamoamo.webjourney.annotation.ExtractTextValue;
 import io.github.jamoamo.webjourney.annotation.ExtractValue;
 import io.github.jamoamo.webjourney.annotation.RegexExtractCurrentUrl;
 import io.github.jamoamo.webjourney.annotation.RegexExtractValue;
@@ -105,10 +106,15 @@ public final class Extractors
 				return getValueExtractor(fieldInfo, extractor.path(), extractor.attribute(), extractor.optional(),
 					 extractCollectionSingularly, hasConverter, new AlwaysCondition(), extractor.waitSeconds());
 		  }
+		  else if(annotation instanceof ExtractTextValue extractor)
+		  {
+				LOGGER.debug("Finding Extractor for text node value extraction.");
+				return getTextValueExtractor(fieldInfo, extractor.path(), extractor.optional(), extractor.trim());
+		  }
 		  else if(annotation instanceof RegexExtractValue extractor)
 		  {
 				LOGGER.debug("Finding Extractor for value extraction using regex.");
-				return getExtractorForAnnotation(extractor.extractValue(), fieldInfo,
+				return getExtractorForAnnotation(resolveRegexExtractionSource(extractor), fieldInfo,
 					 extractCollectionSingularly, hasConverter);
 		  }
 		  else if(annotation instanceof RegexExtractCurrentUrl)
@@ -151,6 +157,22 @@ public final class Extractors
 		  LOGGER.debug("No extractor found");
 		  throw new RuntimeException("Unable to determine an extractor for annotation of type " + "[" + annotation
 				.annotationType() + "].");
+	 }
+
+	 /**
+	  * Resolves which of {@link RegexExtractValue#extractValue()} or {@link RegexExtractValue#extractTextValue()}
+	  * supplies the raw value the regex should be applied to. Exactly one must have a non-blank path.
+	  */
+	 private static Annotation resolveRegexExtractionSource(RegexExtractValue extractor)
+	 {
+		  boolean hasExtractValue = !extractor.extractValue().path().isBlank();
+		  boolean hasExtractTextValue = !extractor.extractTextValue().path().isBlank();
+		  if(hasExtractValue == hasExtractTextValue)
+		  {
+				throw new RuntimeException(
+					 "RegexExtractValue requires exactly one of extractValue() or extractTextValue() to be set.");
+		  }
+		  return hasExtractTextValue ? extractor.extractTextValue() : extractor.extractValue();
 	 }
 
 	 private static IExtractor getRegexMatchConditionalValueExtractor(ConditionalExtractValue.RegexMatch extractor,
@@ -292,6 +314,20 @@ public final class Extractors
 				LOGGER.debug("Using ElementTextExtractor for xpath = " + xPath + " and optional = " + resolvedOptional);
 				return new ElementTextExtractor(xPath, condition, resolvedOptional, waitSeconds);
 		  }
+	 }
+
+	 private static IExtractor getTextValueExtractor(FieldInfo fieldInfo, String xPath, boolean optional,
+		  boolean trim)
+	 {
+		  TypeInfo typeInfo = getResolvedFieldTypeInfo(fieldInfo);
+		  boolean resolvedOptional = optional || isOptionalField(fieldInfo);
+		  if(typeInfo.isCollectionType())
+		  {
+				LOGGER.debug("Using TextNodeCollectionExtractor for xpath = " + xPath);
+				return new TextNodeCollectionExtractor(xPath, new AlwaysCondition(), trim);
+		  }
+		  LOGGER.debug("Using TextNodeExtractor for xpath = " + xPath + " and optional = " + resolvedOptional);
+		  return new TextNodeExtractor(xPath, new AlwaysCondition(), resolvedOptional, trim);
 	 }
 
 	 private static IExtractor getElementTextCollectionExtractor(boolean extractCollectionSingularly,

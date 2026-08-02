@@ -245,6 +245,26 @@ class BrowserValueReader implements IValueReader
 	}
 
 	@Override
+	public String getTextNodeValue(String xPath, boolean optional) throws XValueReaderException
+	{
+		throw new XValueReaderException(unsupportedTextNodeExtraction());
+	}
+
+	@Override
+	public List<String> getTextNodeValues(String xPath) throws XValueReaderException
+	{
+		throw new XValueReaderException(unsupportedTextNodeExtraction());
+	}
+
+	private static UnsupportedOperationException unsupportedTextNodeExtraction()
+	{
+		return new UnsupportedOperationException(
+			"Text node extraction (@ExtractTextValue) requires a parent element context - "
+			+ "it is only supported on fields of an entity that is itself extracted from a repeated or "
+			+ "nested element, not on the root entity read directly from the page.");
+	}
+
+	@Override
 	public IBrowser getBrowser()
 	{
 		return this.browser;

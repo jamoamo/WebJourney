@@ -253,6 +253,45 @@ class ParentElementValueReader implements IValueReader
 	}
 
 	@Override
+	public String getTextNodeValue(String xPath, boolean optional) throws XValueReaderException
+	{
+		try
+		{
+			List<String> values = this.parentElement.getTextNodeValues(xPath);
+			if(values.isEmpty())
+			{
+				if(optional)
+				{
+					return null;
+				}
+				throw new XValueReaderException(new XElementDoesntExistException());
+			}
+			return values.get(0);
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			if(optional)
+			{
+				return null;
+			}
+			throw new XValueReaderException(ex);
+		}
+	}
+
+	@Override
+	public List<String> getTextNodeValues(String xPath) throws XValueReaderException
+	{
+		try
+		{
+			return this.parentElement.getTextNodeValues(xPath);
+		}
+		catch(XElementDoesntExistException ex)
+		{
+			throw new XValueReaderException(ex);
+		}
+	}
+
+	@Override
 	public IBrowser getBrowser()
 	{
 		return this.browser;
