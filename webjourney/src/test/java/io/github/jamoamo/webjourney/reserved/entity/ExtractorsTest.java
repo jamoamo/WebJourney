@@ -29,6 +29,7 @@ import io.github.jamoamo.webjourney.annotation.ConditionalExtractValue;
 import io.github.jamoamo.webjourney.annotation.Constant;
 import io.github.jamoamo.webjourney.annotation.ExtractCurrentUrl;
 import io.github.jamoamo.webjourney.annotation.ExtractFromUrl;
+import io.github.jamoamo.webjourney.annotation.ExtractTextValue;
 import io.github.jamoamo.webjourney.annotation.ExtractValue;
 import io.github.jamoamo.webjourney.annotation.RegexExtractCurrentUrl;
 import io.github.jamoamo.webjourney.annotation.RegexExtractValue;
@@ -51,6 +52,36 @@ import io.github.jamoamo.webjourney.annotation.ExtractCollectionIndex;
  */
 public class ExtractorsTest
 {
+	private static ExtractTextValue blankExtractTextValue()
+	{
+		return new ExtractTextValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractTextValue.class;
+			}
+
+			@Override
+			public String path()
+			{
+				return "";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean trim()
+			{
+				return true;
+			}
+		};
+	}
+
 	public static class Entity
 	{
 		private String stringField;
@@ -977,6 +1008,12 @@ public class ExtractorsTest
 			}
 
 			@Override
+			public ExtractTextValue extractTextValue()
+			{
+				return blankExtractTextValue();
+			}
+
+			@Override
 			public String[] regexes()
 			{
 				return new String[]
@@ -1055,6 +1092,12 @@ public class ExtractorsTest
 			public ExtractValue extractValue()
 			{
 				return extractValue;
+			}
+
+			@Override
+			public ExtractTextValue extractTextValue()
+			{
+				return blankExtractTextValue();
 			}
 
 			@Override
@@ -1464,6 +1507,376 @@ public class ExtractorsTest
 
 		IExtractor extractor = Extractors.getExtractorForAnnotation(regex, fieldInfo, false, false);
 		assertInstanceOf(CurrentUrlExtractor.class, extractor);
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_ExtractTextValue_String()
+	{
+		ExtractTextValue extractTextValue = new ExtractTextValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractTextValue.class;
+			}
+
+			@Override
+			public String path()
+			{
+				return "following-sibling::text()[1]";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean trim()
+			{
+				return true;
+			}
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo())
+			 .thenReturn(TypeInfo.forClass(String.class));
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractTextValue, fieldInfo, false, false);
+		assertInstanceOf(TextNodeExtractor.class, extractor);
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_ExtractTextValue_String_optional()
+	{
+		ExtractTextValue extractTextValue = new ExtractTextValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractTextValue.class;
+			}
+
+			@Override
+			public String path()
+			{
+				return "following-sibling::text()[1]";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				return true;
+			}
+
+			@Override
+			public boolean trim()
+			{
+				return true;
+			}
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo())
+			 .thenReturn(TypeInfo.forClass(String.class));
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractTextValue, fieldInfo, false, false);
+		assertInstanceOf(TextNodeExtractor.class, extractor);
+		assertTrue(((TextNodeExtractor) extractor).isOptional());
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_ExtractTextValue_List()
+	{
+		ExtractTextValue extractTextValue = new ExtractTextValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractTextValue.class;
+			}
+
+			@Override
+			public String path()
+			{
+				return "text()";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean trim()
+			{
+				return true;
+			}
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo())
+			 .thenReturn(TypeInfo.forClass(List.class));
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractTextValue, fieldInfo, false, false);
+		assertInstanceOf(TextNodeCollectionExtractor.class, extractor);
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_ExtractTextValue_trimFalse()
+	{
+		ExtractTextValue extractTextValue = new ExtractTextValue()
+		{
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return ExtractTextValue.class;
+			}
+
+			@Override
+			public String path()
+			{
+				return "following-sibling::text()[1]";
+			}
+
+			@Override
+			public boolean optional()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean trim()
+			{
+				return false;
+			}
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo())
+			 .thenReturn(TypeInfo.forClass(String.class));
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(extractTextValue, fieldInfo, false, false);
+		assertInstanceOf(TextNodeExtractor.class, extractor);
+		org.junit.jupiter.api.Assertions.assertFalse(((TextNodeExtractor) extractor).isTrim());
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_RegexExtractValue_extractTextValue()
+	{
+		RegexExtractValue regex = new RegexExtractValue()
+		{
+			@Override
+			public ExtractValue extractValue()
+			{
+				return new ExtractValue()
+				{
+					@Override
+					public Class<? extends Annotation> annotationType()
+					{
+						return ExtractValue.class;
+					}
+
+					@Override
+					public String attribute()
+					{
+						return "";
+					}
+
+					@Override
+					public String path()
+					{
+						return "";
+					}
+
+					@Override
+					public boolean optional()
+					{
+						return false;
+					}
+
+					@Override
+					public long waitSeconds()
+					{
+						return -1;
+					}
+				};
+			}
+
+			@Override
+			public ExtractTextValue extractTextValue()
+			{
+				return new ExtractTextValue()
+				{
+					@Override
+					public Class<? extends Annotation> annotationType()
+					{
+						return ExtractTextValue.class;
+					}
+
+					@Override
+					public String path()
+					{
+						return "following-sibling::text()[1]";
+					}
+
+					@Override
+					public boolean optional()
+					{
+						return false;
+					}
+
+					@Override
+					public boolean trim()
+					{
+						return true;
+					}
+				};
+			}
+
+			@Override
+			public String[] regexes()
+			{
+				return new String[]
+				{
+					"regex"
+				};
+			}
+
+			@Override
+			public String groupName()
+			{
+				return "group";
+			}
+
+			@Override
+			public String defaultValue()
+			{
+				return "";
+			}
+
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return RegexExtractValue.class;
+			}
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+		Mockito.when(fieldInfo.getFieldTypeInfo())
+			 .thenReturn(TypeInfo.forClass(String.class));
+
+		IExtractor extractor = Extractors.getExtractorForAnnotation(regex, fieldInfo, false, false);
+		assertInstanceOf(TextNodeExtractor.class, extractor);
+	}
+
+	@Test
+	public void testGetExtractorForAnnotation_RegexExtractValue_neitherSourceSet_throws()
+	{
+		RegexExtractValue regex = new RegexExtractValue()
+		{
+			@Override
+			public ExtractValue extractValue()
+			{
+				return new ExtractValue()
+				{
+					@Override
+					public Class<? extends Annotation> annotationType()
+					{
+						return ExtractValue.class;
+					}
+
+					@Override
+					public String attribute()
+					{
+						return "";
+					}
+
+					@Override
+					public String path()
+					{
+						return "";
+					}
+
+					@Override
+					public boolean optional()
+					{
+						return false;
+					}
+
+					@Override
+					public long waitSeconds()
+					{
+						return -1;
+					}
+				};
+			}
+
+			@Override
+			public ExtractTextValue extractTextValue()
+			{
+				return new ExtractTextValue()
+				{
+					@Override
+					public Class<? extends Annotation> annotationType()
+					{
+						return ExtractTextValue.class;
+					}
+
+					@Override
+					public String path()
+					{
+						return "";
+					}
+
+					@Override
+					public boolean optional()
+					{
+						return false;
+					}
+
+					@Override
+					public boolean trim()
+					{
+						return true;
+					}
+				};
+			}
+
+			@Override
+			public String[] regexes()
+			{
+				return new String[]
+				{
+					"regex"
+				};
+			}
+
+			@Override
+			public String groupName()
+			{
+				return "group";
+			}
+
+			@Override
+			public String defaultValue()
+			{
+				return "";
+			}
+
+			@Override
+			public Class<? extends Annotation> annotationType()
+			{
+				return RegexExtractValue.class;
+			}
+		};
+
+		FieldInfo fieldInfo = Mockito.mock(FieldInfo.class);
+
+		org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class,
+			() -> Extractors.getExtractorForAnnotation(regex, fieldInfo, false, false));
 	}
 
 }

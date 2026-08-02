@@ -23,6 +23,7 @@
  */
 package io.github.jamoamo.webjourney.reserved.entity;
 
+import io.github.jamoamo.webjourney.annotation.ExtractTextValue;
 import io.github.jamoamo.webjourney.api.entity.IEntityCreationListener;
 import io.github.jamoamo.webjourney.api.event.EntityScrapeCompletedEvent;
 import io.github.jamoamo.webjourney.api.event.EntityScrapeStartedEvent;
@@ -63,20 +64,45 @@ public final class EntityCreator<T>
 
 	/**
 	 * Creates a new instance.
+	 * <p>
+	 * This constructor is used when the entity will be scraped directly from a whole page (e.g. via
+	 * {@code consumePage} or an {@code @ExtractFromUrl}-navigated page), rather than from a parent element. Such
+	 * an entity cannot have fields using {@link ExtractTextValue}, which requires a parent element context - see
+	 * {@link #EntityCreator(EntityDefn, AElement, List)}.
 	 *
 	 * @param defn              The entity definition to create an instance for
 	 * @param useCache          if the cache should be used
 	 * @param creationListeners the creation listeners
+	 *
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XEntityDefinitionException if a field of the entity
+	 * uses {@link ExtractTextValue}, which requires a parent element context unavailable to a page-level entity.
 	 */
 	public EntityCreator(
 		EntityDefn<T> defn,
 		boolean useCache,
 		List<IEntityCreationListener> creationListeners)
+		throws XEntityDefinitionException
 	{
 		this.defn = defn;
 		this.useCache = useCache;
 		this.creationListeners = creationListeners;
+		validateNoTextNodeExtractionAtPageLevel(defn);
+	}
 
+	private static void validateNoTextNodeExtractionAtPageLevel(EntityDefn<?> defn)
+		throws XEntityDefinitionException
+	{
+		for(EntityFieldDefn fieldDefn : defn.getEntityFields())
+		{
+			if(fieldDefn.getField().isAnnotationPresent(ExtractTextValue.class))
+			{
+				throw new XEntityDefinitionException(defn.getFieldType(),
+					"field [" + fieldDefn.getFieldName() + "] uses @ExtractTextValue, which requires a parent "
+					+ "element context and cannot be used on an entity scraped directly from a page (via "
+					+ "consumePage or @ExtractFromUrl). Move this field to an entity that is itself extracted "
+					+ "via @ExtractValue from a repeated or nested element.");
+			}
+		}
 	}
 
 	/**

@@ -72,7 +72,37 @@ public interface IValueReader
 	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
 	 */
 	List<String> getElementTexts(String xPath) throws XValueReaderException;
-	
+
+	/**
+	 * Get the string value of the text node identified by the xpath.
+	 * <p>
+	 * Default implementation throws {@link UnsupportedOperationException}; provided so that implementations of
+	 * this interface predating this method remain source-compatible.
+	 * @param xPath the xpath to the text node.
+	 * @param optional if the text node is optional
+	 * @return the value of the first matched text node, or null if none match and {@code optional} is true.
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error, or if no
+	 * text node is matched and {@code optional} is false
+	 */
+	default String getTextNodeValue(String xPath, boolean optional) throws XValueReaderException
+	{
+		throw new UnsupportedOperationException("Text node extraction is not supported by this value reader.");
+	}
+
+	/**
+	 * Get the string values of all text nodes identified by the xpath.
+	 * <p>
+	 * Default implementation throws {@link UnsupportedOperationException}; provided so that implementations of
+	 * this interface predating this method remain source-compatible.
+	 * @param xPath the xpath to the text node(s).
+	 * @return the values of the matched text nodes, in document order. An empty list if none match.
+	 * @throws io.github.jamoamo.webjourney.reserved.entity.XValueReaderException if there's an error
+	 */
+	default List<String> getTextNodeValues(String xPath) throws XValueReaderException
+	{
+		throw new UnsupportedOperationException("Text node extraction is not supported by this value reader.");
+	}
+
 	/**
 	 * Get the element identified by the xpath.
 	 * @param xPath the element xpath

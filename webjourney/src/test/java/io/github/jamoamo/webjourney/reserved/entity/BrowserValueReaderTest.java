@@ -322,4 +322,32 @@ public class BrowserValueReaderTest
 				.close();
 	 }
 
+	 /**
+	  * Test of getTextNodeValue method, of class BrowserValueReader. Text node extraction requires a parent
+	  * element context and is not supported at the top-level page.
+	  */
+	 @Test
+	 public void testGetTextNodeValue_unsupported()
+	 {
+		 IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		 BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+
+		 org.junit.jupiter.api.Assertions.assertThrows(XValueReaderException.class,
+			 () -> reader.getTextNodeValue("text()", false));
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class BrowserValueReader. Text node extraction requires a parent
+	  * element context and is not supported at the top-level page.
+	  */
+	 @Test
+	 public void testGetTextNodeValues_unsupported()
+	 {
+		 IBrowser mockBrowser = Mockito.mock(IBrowser.class);
+		 BrowserValueReader reader = new BrowserValueReader(mockBrowser);
+
+		 org.junit.jupiter.api.Assertions.assertThrows(XValueReaderException.class,
+			 () -> reader.getTextNodeValues("text()"));
+	 }
+
 }

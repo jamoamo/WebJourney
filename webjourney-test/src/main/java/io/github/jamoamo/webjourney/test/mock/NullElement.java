@@ -92,4 +92,10 @@ final class NullElement extends AElement
 	{
 		return false;
 	}
+
+	@Override
+	public List<String> getTextNodeValues(String xPath) throws XElementDoesntExistException
+	{
+		return Collections.emptyList();
+	}
 }

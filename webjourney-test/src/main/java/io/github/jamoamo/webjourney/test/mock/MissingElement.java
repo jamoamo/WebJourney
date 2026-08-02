@@ -101,4 +101,10 @@ final class MissingElement extends AElement
 	{
 		return false;
 	}
+
+	@Override
+	public List<String> getTextNodeValues(String xPath) throws XElementDoesntExistException
+	{
+		throw error();
+	}
 }

@@ -248,4 +248,119 @@ public class SeleniumElementTest
 		  assertEquals("td", tag);
 	 }
 
+	 /**
+	  * Test of getTextNodeValues method, of class SeleniumElement.
+	  */
+	 @Test
+	 public void testGetTextNodeValues()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+		  Mockito.when(mockExecutor.executeScript(Mockito.anyString(), Mockito.eq(webElementMock),
+					Mockito.eq("following-sibling::text()[1]")))
+				.thenReturn(List.of("End of over 1: 4 runs scored"));
+
+		  SeleniumElement element = new SeleniumElement(locator, mockExecutor);
+		  List<String> result = element.getTextNodeValues("following-sibling::text()[1]");
+
+		  assertEquals(1, result.size());
+		  assertEquals("End of over 1: 4 runs scored", result.get(0));
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class SeleniumElement, when the element itself doesn't exist.
+	  */
+	 @Test
+	 public void testGetTextNodeValues_elementMissing()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(null);
+		  ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+
+		  SeleniumElement element = new SeleniumElement(locator, mockExecutor);
+		  List<String> result = element.getTextNodeValues("text()");
+
+		  Assertions.assertTrue(result.isEmpty());
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class SeleniumElement, when no script executor is available.
+	  */
+	 @Test
+	 public void testGetTextNodeValues_noExecutor()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+
+		  SeleniumElement element = new SeleniumElement(locator, null);
+
+		  Assertions.assertThrows(IllegalStateException.class, () -> element.getTextNodeValues("text()"));
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class SeleniumElement, when the script returns something other than
+	  * a List (defensive branch - should degrade to an empty list rather than throwing a cast exception).
+	  */
+	 @Test
+	 public void testGetTextNodeValues_scriptReturnsNonList()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+		  Mockito.when(mockExecutor.executeScript(Mockito.anyString(), Mockito.eq(webElementMock), Mockito.eq("text()")))
+				.thenReturn("not a list");
+
+		  SeleniumElement element = new SeleniumElement(locator, mockExecutor);
+		  List<String> result = element.getTextNodeValues("text()");
+
+		  Assertions.assertTrue(result.isEmpty());
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class SeleniumElement, when the script returns a list containing
+	  * null and non-String entries.
+	  */
+	 @Test
+	 public void testGetTextNodeValues_scriptReturnsListWithNullAndNonStringEntries()
+		  throws XElementDoesntExistException
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+		  java.util.List<Object> rawValues = java.util.Arrays.asList("0", null, 5L);
+		  Mockito.when(mockExecutor.executeScript(Mockito.anyString(), Mockito.eq(webElementMock), Mockito.eq("text()")))
+				.thenReturn(rawValues);
+
+		  SeleniumElement element = new SeleniumElement(locator, mockExecutor);
+		  List<String> result = element.getTextNodeValues("text()");
+
+		  assertEquals(java.util.Arrays.asList("0", null, "5"), result);
+	 }
+
+	 /**
+	  * Test of getTextNodeValues method, of class SeleniumElement, when the script throws a WebDriverException
+	  * (e.g. a malformed xpath surfaced as a JS SyntaxError) - should be translated to
+	  * XElementDoesntExistException so the optional contract can absorb it upstream.
+	  */
+	 @Test
+	 public void testGetTextNodeValues_malformedXPath_throwsElementDoesntExist()
+	 {
+		  Mockito.when(locator.findElement())
+				.thenReturn(webElementMock);
+		  ScriptExecutor mockExecutor = Mockito.mock(ScriptExecutor.class);
+		  Mockito.when(mockExecutor.executeScript(Mockito.anyString(), Mockito.eq(webElementMock),
+					Mockito.eq("not[[a valid xpath")))
+				.thenThrow(new org.openqa.selenium.JavascriptException("SyntaxError: invalid xpath"));
+
+		  SeleniumElement element = new SeleniumElement(locator, mockExecutor);
+
+		  Assertions.assertThrows(XElementDoesntExistException.class,
+				() -> element.getTextNodeValues("not[[a valid xpath"));
+	 }
+
 }
