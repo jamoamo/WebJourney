@@ -49,8 +49,13 @@ class SeleniumDrivenBrowser implements IBrowser
 
 	SeleniumDrivenBrowser(RemoteWebDriver driver)
 	{
+		this(driver, false, null);
+	}
+
+	SeleniumDrivenBrowser(RemoteWebDriver driver, boolean screenshotEnabled, String screenshotDirectory)
+	{
 		this.driver = driver;
-		this.windowManager = new SeleniumWindowManager(this.driver);
+		this.windowManager = new SeleniumWindowManager(this.driver, screenshotEnabled, screenshotDirectory);
 		this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(DEFAULT_TIMEOUT));
 		this.browserName = this.driver.getCapabilities().getBrowserName();
 		this.browserVersion = this.driver.getCapabilities().getBrowserVersion();

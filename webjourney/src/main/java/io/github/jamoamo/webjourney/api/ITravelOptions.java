@@ -95,4 +95,31 @@ public interface ITravelOptions
 	 * @param timeout the default element wait timeout. A {@code null} or zero duration disables waiting.
 	 */
 	void setElementWaitTimeout(Duration timeout);
+
+	/**
+	 * Whether a screenshot should be captured after each navigation (to a URL, back, or forward).
+	 * Intended for debugging journeys where the page content cannot otherwise be inspected -- e.g. a
+	 * remote/headless browser. Disabled by default, since it costs a screenshot round-trip per navigation.
+	 * @return true if screenshots should be captured on navigation.
+	 */
+	boolean isScreenshotOnNavigationEnabled();
+
+	/**
+	 * Sets whether a screenshot should be captured after each navigation.
+	 * @param enabled true to capture a screenshot after each navigation.
+	 */
+	void setScreenshotOnNavigationEnabled(boolean enabled);
+
+	/**
+	 * The directory screenshots are written to when
+	 * {@link #isScreenshotOnNavigationEnabled() navigation screenshots} are enabled.
+	 * @return the screenshot directory. Never null.
+	 */
+	String getScreenshotDirectory();
+
+	/**
+	 * Sets the directory screenshots are written to.
+	 * @param directory the screenshot directory. A {@code null} or blank value resets it to the default.
+	 */
+	void setScreenshotDirectory(String directory);
 }

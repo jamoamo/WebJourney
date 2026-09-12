@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.ITravelOptions;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserFactory;
 import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
@@ -80,7 +81,13 @@ public abstract class RemoteBrowserFactory<T extends Capabilities> implements IR
 		{
 			T browserOptions = createBrowserOptions(options, context);
 			RemoteWebDriver driver = createRemoteDriver(browserOptions);
-			return new SeleniumDrivenBrowser(driver);
+			ITravelOptions travelOptions = context == null ? null : context.getOptions();
+			if(travelOptions == null)
+			{
+				return new SeleniumDrivenBrowser(driver);
+			}
+			return new SeleniumDrivenBrowser(driver, travelOptions.isScreenshotOnNavigationEnabled(),
+				travelOptions.getScreenshotDirectory());
 		}
 		catch (Exception e)
 		{

@@ -52,6 +52,12 @@ public final class TravelOptions implements ITravelOptions
 
 	private Duration elementWaitTimeout = Duration.ZERO;
 
+	private static final String DEFAULT_SCREENSHOT_DIRECTORY = "output/screenshot";
+
+	private boolean screenshotOnNavigationEnabled = false;
+
+	private String screenshotDirectory = DEFAULT_SCREENSHOT_DIRECTORY;
+
 
 	/**
 	 * Sets the preferred browser strategy to use. 
@@ -139,5 +145,30 @@ public final class TravelOptions implements ITravelOptions
 	public void setElementWaitTimeout(Duration timeout)
 	{
 		this.elementWaitTimeout = timeout;
+	}
+
+	@Override
+	public boolean isScreenshotOnNavigationEnabled()
+	{
+		return this.screenshotOnNavigationEnabled;
+	}
+
+	@Override
+	public void setScreenshotOnNavigationEnabled(boolean enabled)
+	{
+		this.screenshotOnNavigationEnabled = enabled;
+	}
+
+	@Override
+	public String getScreenshotDirectory()
+	{
+		return this.screenshotDirectory;
+	}
+
+	@Override
+	public void setScreenshotDirectory(String directory)
+	{
+		this.screenshotDirectory = (directory == null || directory.isBlank())
+			? DEFAULT_SCREENSHOT_DIRECTORY : directory;
 	}
 }

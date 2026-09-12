@@ -26,7 +26,9 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
 import java.io.File;
 import java.net.URL;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -179,6 +181,46 @@ public class SeleniumWindowTest
 				.to(captor.capture());
 		  assertEquals("https://new.url", captor.getValue()
 				.toString());
+	 }
+
+	 @Test
+	 public void testNavigateToUrl_screenshotEnabled_writesScreenshotToConfiguredDirectory(@TempDir File tempDir)
+		  throws Exception
+	 {
+		  Navigation navigate = Mockito.mock(Navigation.class);
+		  Mockito.when(driverMock.navigate())
+				.thenReturn(navigate);
+
+		  File sourceScreenshot = new File(tempDir, "source.png");
+		  FileUtils.writeByteArrayToFile(sourceScreenshot, new byte[]{1, 2, 3});
+		  Mockito.when(driverMock.getScreenshotAs(OutputType.FILE))
+				.thenReturn(sourceScreenshot);
+
+		  File screenshotDir = new File(tempDir, "screenshots");
+		  SeleniumWindow window = new SeleniumWindow("Name", driverMock, true, screenshotDir.getPath());
+		  window.setActive(true);
+		  window.navigateToUrl(new URL("https://new.url"));
+
+		  File[] written = screenshotDir.listFiles();
+		  assertNotNull(written);
+		  assertEquals(1, written.length);
+		  assertTrue(written[0].getName().startsWith("screenshot-"));
+	 }
+
+	 @Test
+	 public void testNavigateToUrl_screenshotDisabled_doesNotTakeScreenshot()
+		  throws Exception
+	 {
+		  Navigation navigate = Mockito.mock(Navigation.class);
+		  Mockito.when(driverMock.navigate())
+				.thenReturn(navigate);
+
+		  SeleniumWindow window = new SeleniumWindow("Name", driverMock);
+		  window.setActive(true);
+		  window.navigateToUrl(new URL("https://new.url"));
+
+		  Mockito.verify(driverMock, Mockito.never())
+				.getScreenshotAs(OutputType.FILE);
 	 }
 
 	 @Test

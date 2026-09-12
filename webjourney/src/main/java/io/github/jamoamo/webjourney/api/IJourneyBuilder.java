@@ -69,9 +69,22 @@ public interface IJourneyBuilder
 	 * @return this journey builder
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
-	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction, 
-		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue, 
+	IJourneyBuilder conditionalJourney(FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction,
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue,
 		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifFalse) throws JourneyBuilderException;
+
+	/**
+	 * Always attempts a sub journey, but unlike {@link #conditionalJourney(Function, Function)} does not
+	 * abort the rest of the journey if it fails -- the failure is logged and swallowed instead. Intended
+	 * for steps worth attempting on every run (e.g. logging in) whose own unreliability shouldn't take
+	 * down journeys that don't strictly depend on them succeeding.
+	 *
+	 * @param subJourney a function providing the sub journey to attempt.
+	 * @return this journey builder
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 */
+	IJourneyBuilder bestEffortJourney(FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney)
+		 throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to click a button on the page.
