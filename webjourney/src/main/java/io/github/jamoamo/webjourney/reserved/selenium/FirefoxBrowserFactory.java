@@ -27,6 +27,7 @@ import io.github.jamoamo.webjourney.api.web.IBrowserFactory;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserOptions;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.ITravelOptions;
 import io.github.jamoamo.webjourney.api.web.IBrowserArgumentsProvider;
 import io.github.jamoamo.webjourney.api.web.DefaultBrowserArgumentsProvider;
 import io.github.jamoamo.webjourney.api.web.StandardBrowser;
@@ -93,10 +94,16 @@ public final class FirefoxBrowserFactory implements IBrowserFactory
 		logSeleniumBuildInfo();
 		
 		FirefoxDriver driver = new FirefoxDriver(options);
-		
+
 		logDriverInfo(driver);
-		
-		return new SeleniumDrivenBrowser(driver);
+
+		ITravelOptions travelOptions = journeyContext == null ? null : journeyContext.getOptions();
+		if(travelOptions == null)
+		{
+			return new SeleniumDrivenBrowser(driver);
+		}
+		return new SeleniumDrivenBrowser(driver, travelOptions.isScreenshotOnNavigationEnabled(),
+			travelOptions.getScreenshotDirectory());
 	}
 
 	protected FirefoxOptions createFirefoxOptions(IBrowserOptions browserOptions)

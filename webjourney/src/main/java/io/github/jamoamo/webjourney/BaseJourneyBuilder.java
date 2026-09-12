@@ -356,10 +356,24 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	@Override
 	public BaseJourneyBuilder conditionalJourney(
 		 FailableFunction<IBrowser, Boolean, JourneyException> conditionFunction,
-		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue, 
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifTrue,
 		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> ifFalse)
 	{
 		this.build.addAction(new ConditionalAction(conditionFunction, ifTrue, ifFalse));
+		return this;
+	}
+
+	/**
+	 * Always attempts a sub journey, but does not abort the rest of the journey if it fails -- the
+	 * failure is logged and swallowed instead.
+	 *
+	 * @param subJourney a function providing the sub journey to attempt.
+	 * @return this journey builder
+	 */
+	@Override
+	public BaseJourneyBuilder bestEffortJourney(FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney)
+	{
+		this.build.addAction(new BestEffortAction(subJourney));
 		return this;
 	}
 }

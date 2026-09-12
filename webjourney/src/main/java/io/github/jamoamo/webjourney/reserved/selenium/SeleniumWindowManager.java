@@ -39,12 +39,22 @@ class SeleniumWindowManager
 	
 	private final HashMap<String, SeleniumWindow> windowNames = new HashMap<>();
 	private final RemoteWebDriver webDriver;
-	
+	private final boolean screenshotEnabled;
+	private final String screenshotDirectory;
+
 	SeleniumWindowManager(RemoteWebDriver webDriver)
 	{
+		this(webDriver, false, null);
+	}
+
+	SeleniumWindowManager(RemoteWebDriver webDriver, boolean screenshotEnabled, String screenshotDirectory)
+	{
 		this.webDriver = webDriver;
+		this.screenshotEnabled = screenshotEnabled;
+		this.screenshotDirectory = screenshotDirectory;
 		String windowHandle = this.webDriver.getWindowHandle();
-		SeleniumWindow window = new SeleniumWindow(windowHandle, this.webDriver);
+		SeleniumWindow window =
+			new SeleniumWindow(windowHandle, this.webDriver, this.screenshotEnabled, this.screenshotDirectory);
 		this.windowNames.put(windowHandle, window);
 		LOGGER.info("Starting browser window has handle " + windowHandle);
 		window.setActive(true);
@@ -74,7 +84,8 @@ class SeleniumWindowManager
 		//first deactivate existing active window
 		getActiveWindow().setActive(false);
 		this.webDriver.switchTo().newWindow(WindowType.TAB);
-		SeleniumWindow window = new SeleniumWindow(this.webDriver.getWindowHandle(), this.webDriver);
+		SeleniumWindow window = new SeleniumWindow(this.webDriver.getWindowHandle(), this.webDriver,
+			this.screenshotEnabled, this.screenshotDirectory);
 		this.windowNames.put(window.getName(), window);
 		LOGGER.info("Opened new window with handle " + window.getName());
 		window.setActive(true);

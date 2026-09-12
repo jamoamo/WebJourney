@@ -49,15 +49,25 @@ final class SeleniumWindow implements IBrowserWindow
 	private boolean active;
 	private final RemoteWebDriver webDriver;
 	private IWebPage currentPage;
-	
-	private boolean screenshotEnabled = false;
-	
+
+	private final boolean screenshotEnabled;
+	private final String screenshotDirectory;
+
 	SeleniumWindow(String windowName, RemoteWebDriver webDriver)
+	{
+		this(windowName, webDriver, false, null);
+	}
+
+	SeleniumWindow(String windowName, RemoteWebDriver webDriver, boolean screenshotEnabled,
+		String screenshotDirectory)
 	{
 		this.windowName = windowName;
 		this.webDriver = webDriver;
 		this.currentPage = new SeleniumPage(this.webDriver);
 		this.active = false;
+		this.screenshotEnabled = screenshotEnabled;
+		this.screenshotDirectory = (screenshotDirectory == null || screenshotDirectory.isBlank())
+			? "output/screenshot" : screenshotDirectory;
 	}
 	
 	private void checkWindowIsActive()
@@ -172,10 +182,9 @@ final class SeleniumWindow implements IBrowserWindow
 			}
 			
 			LocalDateTime time = LocalDateTime.now();
-			var timeStr = time.format(DateTimeFormatter.ofPattern("YYYYMMddHHmmss"));
-			String fileName = String.format("output/screenshot/screenshot-%s.png", timeStr);
-			File destFile = new File(fileName);
-			LOGGER.debug(String.format("Copying Screenshot [%s]", fileName));
+			var timeStr = time.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+			File destFile = new File(this.screenshotDirectory, String.format("screenshot-%s.png", timeStr));
+			LOGGER.debug(String.format("Copying Screenshot [%s]", destFile.getPath()));
 			FileUtils.copyFile(srcFile, destFile);
 		}
 		catch(IOException ioe)
