@@ -40,6 +40,7 @@ public final class HubConfiguration implements IHubConfiguration
 	private final String hubUrl;
 	private final Duration connectionTimeout;
 	private final Duration sessionTimeout;
+	private final Duration commandTimeout;
 	private final int maxRetries;
 	private final Duration retryDelay;
 	private final Map<String, Object> customCapabilities;
@@ -53,6 +54,7 @@ public final class HubConfiguration implements IHubConfiguration
 		this.hubUrl = builder.hubUrl;
 		this.connectionTimeout = builder.connectionTimeout;
 		this.sessionTimeout = builder.sessionTimeout;
+		this.commandTimeout = builder.commandTimeout;
 		this.maxRetries = builder.maxRetries;
 		this.retryDelay = builder.retryDelay;
 		this.customCapabilities = Collections.unmodifiableMap(new HashMap<>(builder.customCapabilities));
@@ -76,7 +78,13 @@ public final class HubConfiguration implements IHubConfiguration
 	{
 		return sessionTimeout;
 	}
-	
+
+	@Override
+	public Duration getCommandTimeout()
+	{
+		return commandTimeout;
+	}
+
 	@Override
 	public int getMaxRetries()
 	{
@@ -119,6 +127,7 @@ public final class HubConfiguration implements IHubConfiguration
 		private String hubUrl;
 		private Duration connectionTimeout = Duration.ofSeconds(30);
 		private Duration sessionTimeout = Duration.ofMinutes(10);
+		private Duration commandTimeout = DEFAULT_COMMAND_TIMEOUT;
 		private int maxRetries = 3;
 		private Duration retryDelay = Duration.ofSeconds(2);
 		private final Map<String, Object> customCapabilities = new HashMap<>();
@@ -179,7 +188,24 @@ public final class HubConfiguration implements IHubConfiguration
 			this.sessionTimeout = timeout;
 			return this;
 		}
-		
+
+		/**
+		 * Sets the command timeout: how long to wait for the hub to respond to a single WebDriver command.
+		 *
+		 * @param timeout the command timeout duration
+		 * @return this builder instance
+		 * @throws IllegalArgumentException if timeout is null, zero or negative
+		 */
+		public Builder withCommandTimeout(Duration timeout)
+		{
+			if (timeout == null || timeout.isNegative() || timeout.isZero())
+			{
+				throw new IllegalArgumentException("Command timeout must be positive");
+			}
+			this.commandTimeout = timeout;
+			return this;
+		}
+
 		/**
 		 * Sets the maximum retry attempts.
 		 * 
@@ -294,6 +320,7 @@ public final class HubConfiguration implements IHubConfiguration
 			   Objects.equals(hubUrl, that.hubUrl) &&
 			   Objects.equals(connectionTimeout, that.connectionTimeout) &&
 			   Objects.equals(sessionTimeout, that.sessionTimeout) &&
+			   Objects.equals(commandTimeout, that.commandTimeout) &&
 			   Objects.equals(retryDelay, that.retryDelay) &&
 			   Objects.equals(customCapabilities, that.customCapabilities);
 	}
@@ -301,7 +328,7 @@ public final class HubConfiguration implements IHubConfiguration
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(hubUrl, connectionTimeout, sessionTimeout, maxRetries, 
+		return Objects.hash(hubUrl, connectionTimeout, sessionTimeout, commandTimeout, maxRetries,
 						   retryDelay, customCapabilities, enabled);
 	}
 	
@@ -312,6 +339,7 @@ public final class HubConfiguration implements IHubConfiguration
 			   "hubUrl='" + hubUrl + '\'' +
 			   ", connectionTimeout=" + connectionTimeout +
 			   ", sessionTimeout=" + sessionTimeout +
+			   ", commandTimeout=" + commandTimeout +
 			   ", maxRetries=" + maxRetries +
 			   ", retryDelay=" + retryDelay +
 			   ", customCapabilities=" + customCapabilities +

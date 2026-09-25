@@ -35,11 +35,20 @@ import io.github.jamoamo.webjourney.api.web.HubConnectionException;
 import io.github.jamoamo.webjourney.api.web.HubSessionException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Objects;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.AbstractDriverOptions;
+import org.openqa.selenium.remote.CommandExecutor;
+import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.TracedCommandExecutor;
+import org.openqa.selenium.remote.http.ClientConfig;
+import org.openqa.selenium.remote.http.HttpClient;
+import org.openqa.selenium.remote.tracing.TracedHttpClient;
+import org.openqa.selenium.remote.tracing.Tracer;
+import org.openqa.selenium.remote.tracing.opentelemetry.OpenTelemetryTracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,7 +158,7 @@ public abstract class RemoteBrowserFactory<T extends Capabilities> implements IR
 				LOGGER.debug("Attempting to create RemoteWebDriver (attempt {} of {}): {}", 
 							attempt + 1, maxRetries + 1, hubUrl);
 				
-				RemoteWebDriver driver = new RemoteWebDriver(url, browserOptions);
+				RemoteWebDriver driver = new RemoteWebDriver(createCommandExecutor(url), browserOptions);
 				
 				LOGGER.info("Successfully created RemoteWebDriver on hub: {} (sessionId: {})", 
 						   hubUrl, driver.getSessionId());
@@ -182,6 +191,37 @@ public abstract class RemoteBrowserFactory<T extends Capabilities> implements IR
 									 lastException, hubUrl, null, maxRetries);
 	}
 	
+	/**
+	 * Creates the command executor for a remote driver. This mirrors what {@code new RemoteWebDriver(URL, Capabilities)}
+	 * builds internally, including its tracing, except that the HTTP client is configured from the hub configuration.
+	 * Without this every command used Selenium's default timeouts regardless of what was configured, so a browser
+	 * that stopped responding held up each remaining command, including quitting the session, for three minutes.
+	 *
+	 * @param url the hub URL
+	 * @return the command executor
+	 */
+	private CommandExecutor createCommandExecutor(URL url)
+	{
+		Tracer tracer = OpenTelemetryTracer.getInstance();
+		HttpClient.Factory clientFactory = new TracedHttpClient.Factory(tracer, HttpClient.Factory.createDefault());
+		CommandExecutor executor = new HttpCommandExecutor(Collections.emptyMap(), createClientConfig(url), clientFactory);
+		return new TracedCommandExecutor(executor, tracer);
+	}
+
+	/**
+	 * Creates the HTTP client configuration for talking to the hub.
+	 *
+	 * @param url the hub URL
+	 * @return the client configuration
+	 */
+	ClientConfig createClientConfig(URL url)
+	{
+		return ClientConfig.defaultConfig()
+			.baseUrl(url)
+			.connectionTimeout(hubConfiguration.getConnectionTimeout())
+			.readTimeout(hubConfiguration.getCommandTimeout());
+	}
+
 	/**
 	 * Gets the hub configuration used by this factory.
 	 *
