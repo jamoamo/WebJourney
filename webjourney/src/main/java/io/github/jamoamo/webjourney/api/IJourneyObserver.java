@@ -42,4 +42,27 @@ public interface IJourneyObserver extends IEntityCreationListener
 	 * @param action the action that ended.
 	 */
 	void actionEnded(AWebAction action);
+
+	/**
+	 * notifies the observer that an attempt at an action failed and the action is about to be attempted again by the
+	 * retry policy. Called when the next attempt starts. Does nothing unless overridden.
+	 * @param action the action being retried.
+	 * @param attempt the number of the attempt that failed, starting at 1.
+	 * @param failure why that attempt failed.
+	 */
+	default void actionRetried(AWebAction action, int attempt, Throwable failure)
+	{
+	}
+
+	/**
+	 * notifies the observer that an attempt at an action failed and the retry policy did not retry it, either because
+	 * a rule said not to (e.g. a refused connection) or because it ran out of retries. The action then fails with that
+	 * failure. Does nothing unless overridden.
+	 * @param action the action that failed.
+	 * @param attempt the number of the attempt that failed, starting at 1, so also how many attempts were made.
+	 * @param failure why that attempt failed.
+	 */
+	default void actionRetryAborted(AWebAction action, int attempt, Throwable failure)
+	{
+	}
 }
