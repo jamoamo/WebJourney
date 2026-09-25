@@ -26,8 +26,11 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 import io.github.jamoamo.webjourney.api.web.HubConfiguration;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.http.ClientConfig;
 
 /**
@@ -66,5 +69,54 @@ public class RemoteBrowserFactoryTest
 		ClientConfig config = factory.createClientConfig(new URL(hubConfiguration.getHubUrl()));
 
 		Assertions.assertEquals(ClientConfig.defaultConfig().readTimeout(), config.readTimeout());
+	}
+
+	@Test
+	public void testCreateSessionCapabilities_appliesPageLoadTimeout()
+	{
+		HubConfiguration hubConfiguration = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.withPageLoadTimeout(Duration.ofSeconds(60))
+			.build();
+		RemoteChromeBrowserFactory factory = new RemoteChromeBrowserFactory(hubConfiguration);
+
+		Capabilities capabilities = factory.createSessionCapabilities(new ChromeOptions());
+
+		Assertions.assertEquals(60_000L, pageLoadTimeoutMillis(capabilities));
+	}
+
+	@Test
+	public void testCreateSessionCapabilities_defaultsPageLoadTimeoutToW3cDefault()
+	{
+		HubConfiguration hubConfiguration = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.build();
+		RemoteChromeBrowserFactory factory = new RemoteChromeBrowserFactory(hubConfiguration);
+
+		Capabilities capabilities = factory.createSessionCapabilities(new ChromeOptions());
+
+		Assertions.assertEquals(300_000L, pageLoadTimeoutMillis(capabilities));
+	}
+
+	@Test
+	public void testCreateSessionCapabilities_includesCustomCapabilities()
+	{
+		HubConfiguration hubConfiguration = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.withPageLoadTimeout(Duration.ofSeconds(60))
+			.withCustomCapability("se:recordVideo", true)
+			.build();
+		RemoteChromeBrowserFactory factory = new RemoteChromeBrowserFactory(hubConfiguration);
+
+		Capabilities capabilities = factory.createSessionCapabilities(new ChromeOptions());
+
+		Assertions.assertEquals(true, capabilities.getCapability("se:recordVideo"));
+		Assertions.assertEquals(60_000L, pageLoadTimeoutMillis(capabilities));
+	}
+
+	private static long pageLoadTimeoutMillis(Capabilities capabilities)
+	{
+		Map<?, ?> timeouts = (Map<?, ?>) capabilities.getCapability("timeouts");
+		return ((Number) timeouts.get("pageLoad")).longValue();
 	}
 }

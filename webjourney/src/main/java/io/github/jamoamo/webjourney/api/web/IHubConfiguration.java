@@ -41,6 +41,12 @@ public interface IHubConfiguration
 	Duration DEFAULT_COMMAND_TIMEOUT = Duration.ofMinutes(3);
 
 	/**
+	 * The page load timeout used when none is configured. Matches the W3C WebDriver default, so configurations that
+	 * don't set one keep the behaviour they had before it was configurable.
+	 */
+	Duration DEFAULT_PAGE_LOAD_TIMEOUT = Duration.ofMinutes(5);
+
+	/**
 	 * Gets the Selenium Hub URL.
 	 * 
 	 * @return the hub URL (e.g., "http://selenium-hub:4444/wd/hub")
@@ -70,6 +76,18 @@ public interface IHubConfiguration
 	default Duration getCommandTimeout()
 	{
 		return DEFAULT_COMMAND_TIMEOUT;
+	}
+
+	/**
+	 * Gets the maximum time the browser waits for a page to load before failing the navigation. Keep this below the
+	 * command timeout, so a slow page fails in the browser with a page load error rather than the client giving up
+	 * on the command while the browser is still loading, which leaves later commands queued behind the navigation.
+	 *
+	 * @return the page load timeout duration
+	 */
+	default Duration getPageLoadTimeout()
+	{
+		return DEFAULT_PAGE_LOAD_TIMEOUT;
 	}
 
 	/**

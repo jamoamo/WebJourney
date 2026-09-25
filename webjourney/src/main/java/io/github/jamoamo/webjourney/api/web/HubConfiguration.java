@@ -41,6 +41,7 @@ public final class HubConfiguration implements IHubConfiguration
 	private final Duration connectionTimeout;
 	private final Duration sessionTimeout;
 	private final Duration commandTimeout;
+	private final Duration pageLoadTimeout;
 	private final int maxRetries;
 	private final Duration retryDelay;
 	private final Map<String, Object> customCapabilities;
@@ -55,6 +56,7 @@ public final class HubConfiguration implements IHubConfiguration
 		this.connectionTimeout = builder.connectionTimeout;
 		this.sessionTimeout = builder.sessionTimeout;
 		this.commandTimeout = builder.commandTimeout;
+		this.pageLoadTimeout = builder.pageLoadTimeout;
 		this.maxRetries = builder.maxRetries;
 		this.retryDelay = builder.retryDelay;
 		this.customCapabilities = Collections.unmodifiableMap(new HashMap<>(builder.customCapabilities));
@@ -83,6 +85,12 @@ public final class HubConfiguration implements IHubConfiguration
 	public Duration getCommandTimeout()
 	{
 		return commandTimeout;
+	}
+
+	@Override
+	public Duration getPageLoadTimeout()
+	{
+		return pageLoadTimeout;
 	}
 
 	@Override
@@ -128,6 +136,7 @@ public final class HubConfiguration implements IHubConfiguration
 		private Duration connectionTimeout = Duration.ofSeconds(30);
 		private Duration sessionTimeout = Duration.ofMinutes(10);
 		private Duration commandTimeout = DEFAULT_COMMAND_TIMEOUT;
+		private Duration pageLoadTimeout = DEFAULT_PAGE_LOAD_TIMEOUT;
 		private int maxRetries = 3;
 		private Duration retryDelay = Duration.ofSeconds(2);
 		private final Map<String, Object> customCapabilities = new HashMap<>();
@@ -203,6 +212,23 @@ public final class HubConfiguration implements IHubConfiguration
 				throw new IllegalArgumentException("Command timeout must be positive");
 			}
 			this.commandTimeout = timeout;
+			return this;
+		}
+
+		/**
+		 * Sets the page load timeout: how long the browser waits for a page to load before failing the navigation.
+		 *
+		 * @param timeout the page load timeout duration
+		 * @return this builder instance
+		 * @throws IllegalArgumentException if timeout is null, zero or negative
+		 */
+		public Builder withPageLoadTimeout(Duration timeout)
+		{
+			if (timeout == null || timeout.isNegative() || timeout.isZero())
+			{
+				throw new IllegalArgumentException("Page load timeout must be positive");
+			}
+			this.pageLoadTimeout = timeout;
 			return this;
 		}
 
@@ -321,6 +347,7 @@ public final class HubConfiguration implements IHubConfiguration
 			   Objects.equals(connectionTimeout, that.connectionTimeout) &&
 			   Objects.equals(sessionTimeout, that.sessionTimeout) &&
 			   Objects.equals(commandTimeout, that.commandTimeout) &&
+			   Objects.equals(pageLoadTimeout, that.pageLoadTimeout) &&
 			   Objects.equals(retryDelay, that.retryDelay) &&
 			   Objects.equals(customCapabilities, that.customCapabilities);
 	}
@@ -328,7 +355,7 @@ public final class HubConfiguration implements IHubConfiguration
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(hubUrl, connectionTimeout, sessionTimeout, commandTimeout, maxRetries,
+		return Objects.hash(hubUrl, connectionTimeout, sessionTimeout, commandTimeout, pageLoadTimeout, maxRetries,
 						   retryDelay, customCapabilities, enabled);
 	}
 	
@@ -340,6 +367,7 @@ public final class HubConfiguration implements IHubConfiguration
 			   ", connectionTimeout=" + connectionTimeout +
 			   ", sessionTimeout=" + sessionTimeout +
 			   ", commandTimeout=" + commandTimeout +
+			   ", pageLoadTimeout=" + pageLoadTimeout +
 			   ", maxRetries=" + maxRetries +
 			   ", retryDelay=" + retryDelay +
 			   ", customCapabilities=" + customCapabilities +
