@@ -62,7 +62,7 @@ public class BrowserArgumentsIntegrationTest
 		Mockito.when(browserArgs.snapshotForBrowser(StandardBrowser.EDGE)).thenReturn(List.of("--disable-features=VizDisplayCompositor"));
 
 		browserOptions = Mockito.mock(IBrowserOptions.class);
-		Mockito.when(browserOptions.isHeadless()).thenReturn(false);
+		Mockito.when(browserOptions.isHeadless()).thenReturn(true);
 		Mockito.when(browserOptions.acceptUnexpectedAlerts()).thenReturn(true);
 
 		// Create configuration with arguments from different sources
