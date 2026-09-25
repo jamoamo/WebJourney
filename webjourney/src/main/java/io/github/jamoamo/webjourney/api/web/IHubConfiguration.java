@@ -35,6 +35,12 @@ import java.util.Map;
 public interface IHubConfiguration
 {
 	/**
+	 * The command timeout used when none is configured. Matches Selenium's own client read timeout default, so
+	 * configurations that don't set one keep the behaviour they had before it was configurable.
+	 */
+	Duration DEFAULT_COMMAND_TIMEOUT = Duration.ofMinutes(3);
+
+	/**
 	 * Gets the Selenium Hub URL.
 	 * 
 	 * @return the hub URL (e.g., "http://selenium-hub:4444/wd/hub")
@@ -54,7 +60,18 @@ public interface IHubConfiguration
 	 * @return the session timeout duration
 	 */
 	Duration getSessionTimeout();
-	
+
+	/**
+	 * Gets the maximum time to wait for the hub to respond to a single WebDriver command (the HTTP read timeout).
+	 * A browser that has stopped responding blocks every command, including quitting the session, for this long.
+	 *
+	 * @return the command timeout duration
+	 */
+	default Duration getCommandTimeout()
+	{
+		return DEFAULT_COMMAND_TIMEOUT;
+	}
+
 	/**
 	 * Gets the maximum number of retry attempts for failed connections.
 	 * 

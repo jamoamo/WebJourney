@@ -62,6 +62,7 @@ public class WebTraveller
 	 * Travel the provided journey.
 	 * @param journey the journey to travel.
 	 */
+	@SuppressWarnings("IllegalCatch")
 	public void travelJourney(IJourney journey)
 	{
 		MDC.put(LOGGER_CONTEXT_JOURNEY_LABEL, UUID.randomUUID().toString());
@@ -79,6 +80,7 @@ public class WebTraveller
 		// Create browser with context for browser arguments
 		IBrowser browser = browserStrategy.getPreferredBrowser(new DefaultBrowserOptions(), context);
 		context.setBrowser(browser);
+		RuntimeException journeyFailure = null;
 		try
 		{
 			journey.doJourney(context);
@@ -87,14 +89,52 @@ public class WebTraveller
 		{
 			String breadcrumbString = getBreadcrumb(ex);
 			this.logger.error("Can't complete journey (" + breadcrumbString + ": " + ex.getMessage());
+			journeyFailure = ex;
+			throw ex;
+		}
+		catch(RuntimeException ex)
+		{
+			journeyFailure = ex;
 			throw ex;
 		}
 		finally
 		{
-			if (browser != null) {
-				browser.exit();
-			}
+			exitBrowser(browser, journeyFailure);
 			MDC.remove(LOGGER_CONTEXT_JOURNEY_LABEL);
+		}
+	}
+
+	/**
+	 * Exits the browser without letting an exit failure mask the outcome of the journey. A browser that has stopped
+	 * responding fails on exit too, and before this an exception thrown from the finally block replaced the journey's
+	 * own exception, hiding what actually went wrong. An exit failure is attached to the journey failure as a
+	 * suppressed exception; after a successful journey it is only logged, as the journey's work is already done.
+	 *
+	 * @param browser the browser to exit, may be null
+	 * @param journeyFailure the exception the journey failed with, or null if it succeeded
+	 */
+	@SuppressWarnings("IllegalCatch")
+	private void exitBrowser(IBrowser browser, RuntimeException journeyFailure)
+	{
+		if (browser == null)
+		{
+			return;
+		}
+		try
+		{
+			browser.exit();
+		}
+		catch(RuntimeException exitFailure)
+		{
+			if (journeyFailure != null)
+			{
+				this.logger.warn("Failed to exit browser after journey failure", exitFailure);
+				journeyFailure.addSuppressed(exitFailure);
+			}
+			else
+			{
+				this.logger.warn("Failed to exit browser after completed journey", exitFailure);
+			}
 		}
 	}
 

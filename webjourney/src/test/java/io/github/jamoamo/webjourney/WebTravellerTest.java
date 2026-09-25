@@ -149,7 +149,79 @@ public class WebTravellerTest
 			 Assertions.assertThrows(JourneyException.class, () -> instance.travelJourney(journey));
 		
 		Assertions.assertEquals("Journey Failed.", assertThrows.getMessage());
-		
+
 		Mockito.verify(browser).exit();
+	}
+
+	@Test
+	public void testTravelJourney_failedAndExitFails_keepsJourneyFailure()
+	{
+		IJourney journey = Mockito.mock(IJourney.class);
+		IBrowser browser = Mockito.mock(IBrowser.class);
+		WebTraveller instance = new WebTraveller(travelOptionsFor(browser));
+
+		JourneyException journeyFailure = new JourneyException("Journey Failed.");
+		RuntimeException exitFailure = new RuntimeException("Quit timed out.");
+		Mockito.doThrow(journeyFailure).when(journey).doJourney(ArgumentMatchers.any());
+		Mockito.doThrow(exitFailure).when(browser).exit();
+
+		JourneyException thrown =
+			 Assertions.assertThrows(JourneyException.class, () -> instance.travelJourney(journey));
+
+		Assertions.assertSame(journeyFailure, thrown);
+		Assertions.assertArrayEquals(new Throwable[] {exitFailure}, thrown.getSuppressed());
+	}
+
+	@Test
+	public void testTravelJourney_unexpectedFailureAndExitFails_keepsJourneyFailure()
+	{
+		IJourney journey = Mockito.mock(IJourney.class);
+		IBrowser browser = Mockito.mock(IBrowser.class);
+		WebTraveller instance = new WebTraveller(travelOptionsFor(browser));
+
+		IllegalStateException journeyFailure = new IllegalStateException("Command timed out.");
+		RuntimeException exitFailure = new RuntimeException("Quit timed out.");
+		Mockito.doThrow(journeyFailure).when(journey).doJourney(ArgumentMatchers.any());
+		Mockito.doThrow(exitFailure).when(browser).exit();
+
+		IllegalStateException thrown =
+			 Assertions.assertThrows(IllegalStateException.class, () -> instance.travelJourney(journey));
+
+		Assertions.assertSame(journeyFailure, thrown);
+		Assertions.assertArrayEquals(new Throwable[] {exitFailure}, thrown.getSuppressed());
+	}
+
+	@Test
+	public void testTravelJourney_succeededAndExitFails_doesNotThrow()
+	{
+		IJourney journey = Mockito.mock(IJourney.class);
+		IBrowser browser = Mockito.mock(IBrowser.class);
+		WebTraveller instance = new WebTraveller(travelOptionsFor(browser));
+
+		Mockito.doThrow(new RuntimeException("Quit timed out.")).when(browser).exit();
+
+		Assertions.assertDoesNotThrow(() -> instance.travelJourney(journey));
+		Mockito.verify(journey).doJourney(ArgumentMatchers.any());
+		Mockito.verify(browser).exit();
+	}
+
+	private static ITravelOptions travelOptionsFor(IBrowser browser)
+	{
+		IPreferredBrowserStrategy browserStrategy = new IPreferredBrowserStrategy() {
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options) {
+				return browser;
+			}
+
+			@Override
+			public IBrowser getPreferredBrowser(IBrowserOptions options, IJourneyContext journeyContext) {
+				return browser;
+			}
+		};
+
+		ITravelOptions travelOptions = Mockito.mock(ITravelOptions.class);
+		Mockito.when(travelOptions.getJourneyObservers()).thenReturn(new ArrayList<>());
+		Mockito.when(travelOptions.getPreferredBrowserStrategy()).thenReturn(browserStrategy);
+		return travelOptions;
 	}
 }
