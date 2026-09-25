@@ -134,6 +134,53 @@ class HubConfigurationTest
 	}
 
 	@Test
+	void testPageLoadTimeoutDefaultsToW3cDefault()
+	{
+		HubConfiguration config = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.build();
+
+		assertEquals(Duration.ofMinutes(5), config.getPageLoadTimeout());
+	}
+
+	@Test
+	void testBuilderWithPageLoadTimeout()
+	{
+		HubConfiguration config = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.withPageLoadTimeout(Duration.ofSeconds(60))
+			.build();
+
+		assertEquals(Duration.ofSeconds(60), config.getPageLoadTimeout());
+	}
+
+	@Test
+	void testBuilderWithInvalidPageLoadTimeout()
+	{
+		assertThrows(IllegalArgumentException.class,
+			() -> HubConfiguration.builder().withPageLoadTimeout(null));
+		assertThrows(IllegalArgumentException.class,
+			() -> HubConfiguration.builder().withPageLoadTimeout(Duration.ZERO));
+		assertThrows(IllegalArgumentException.class,
+			() -> HubConfiguration.builder().withPageLoadTimeout(Duration.ofSeconds(-1)));
+	}
+
+	@Test
+	void testPageLoadTimeoutIncludedInEquality()
+	{
+		HubConfiguration first = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.withPageLoadTimeout(Duration.ofSeconds(60))
+			.build();
+		HubConfiguration second = HubConfiguration.builder()
+			.withUrl("http://selenium-hub:4444/wd/hub")
+			.withPageLoadTimeout(Duration.ofSeconds(90))
+			.build();
+
+		assertNotEquals(first, second);
+	}
+
+	@Test
 	void testBuilderWithNullUrl()
 	{
 		assertThrows(IllegalArgumentException.class, () -> {

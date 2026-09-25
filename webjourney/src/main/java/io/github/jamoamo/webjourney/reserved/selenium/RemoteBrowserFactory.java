@@ -138,13 +138,8 @@ public abstract class RemoteBrowserFactory<T extends Capabilities> implements IR
 			throw new HubConnectionException("Hub URL is not configured");
 		}
 		
-		// Add custom capabilities
-		if (!hubConfiguration.getCustomCapabilities().isEmpty())
-		{
-			MutableCapabilities customCaps = new MutableCapabilities(hubConfiguration.getCustomCapabilities());
-			browserOptions.merge(customCaps);
-		}
-		
+		Capabilities sessionCapabilities = createSessionCapabilities(browserOptions);
+
 		URL url = new URL(hubUrl);
 		int maxRetries = hubConfiguration.getMaxRetries();
 		Duration retryDelay = hubConfiguration.getRetryDelay();
@@ -158,7 +153,7 @@ public abstract class RemoteBrowserFactory<T extends Capabilities> implements IR
 				LOGGER.debug("Attempting to create RemoteWebDriver (attempt {} of {}): {}", 
 							attempt + 1, maxRetries + 1, hubUrl);
 				
-				RemoteWebDriver driver = new RemoteWebDriver(createCommandExecutor(url), browserOptions);
+				RemoteWebDriver driver = new RemoteWebDriver(createCommandExecutor(url), sessionCapabilities);
 				
 				LOGGER.info("Successfully created RemoteWebDriver on hub: {} (sessionId: {})", 
 						   hubUrl, driver.getSessionId());
@@ -191,6 +186,37 @@ public abstract class RemoteBrowserFactory<T extends Capabilities> implements IR
 									 lastException, hubUrl, null, maxRetries);
 	}
 	
+	/**
+	 * Creates the capabilities to request the remote session with: the browser options, with the configured page load
+	 * timeout applied, merged with the configured custom capabilities.
+	 * <p>
+	 * {@code merge} returns a new instance rather than modifying the options in place (for {@code ChromeOptions} at
+	 * least), so its result has to be used. Before this it was discarded, which silently dropped every custom
+	 * capability.
+	 * </p>
+	 *
+	 * @param browserOptions the browser options
+	 * @return the capabilities for the new session
+	 */
+	Capabilities createSessionCapabilities(T browserOptions)
+	{
+		if (browserOptions instanceof AbstractDriverOptions<?> driverOptions)
+		{
+			driverOptions.setPageLoadTimeout(hubConfiguration.getPageLoadTimeout());
+		}
+		else
+		{
+			LOGGER.warn("Page load timeout not applied: {} does not support driver timeouts",
+				browserOptions.getClass().getSimpleName());
+		}
+
+		if (hubConfiguration.getCustomCapabilities().isEmpty())
+		{
+			return browserOptions;
+		}
+		return browserOptions.merge(new MutableCapabilities(hubConfiguration.getCustomCapabilities()));
+	}
+
 	/**
 	 * Creates the command executor for a remote driver. This mirrors what {@code new RemoteWebDriver(URL, Capabilities)}
 	 * builds internally, including its tracing, except that the HTTP client is configured from the hub configuration.
