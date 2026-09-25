@@ -27,13 +27,21 @@ import dev.failsafe.Failsafe;
 import dev.failsafe.FailsafeException;
 import dev.failsafe.RetryPolicy;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Builder for {@link IRetryPolicy}.
- * 
+ * <p>
+ * By default a refused connection (see {@link ConnectionFailures#isConnectionRefused(Throwable)}) is never retried,
+ * because retrying it will not fix it and only adds to whatever is causing the refusal. Use
+ * {@link #abortOn(Predicate)} to add further failures that must not be retried, and {@link #clearAbortRules()} to
+ * opt out of the default.
+ *
  * @author James Amoore
  */
 public final class RetryPolicyBuilder
@@ -41,6 +49,7 @@ public final class RetryPolicyBuilder
 	private static final Logger logger = LoggerFactory.getLogger(RetryPolicyBuilder.class);
 	private int maxRetries = 3;
 	private Duration delay = Duration.ofSeconds(1);
+	private final List<Predicate<Throwable>> abortRules = new ArrayList<>(List.of(ConnectionFailures::isConnectionRefused));
 
 	private RetryPolicyBuilder()
 	{
@@ -93,18 +102,55 @@ public final class RetryPolicyBuilder
 	}
 
 	/**
-	 * Builds an {@link IRetryPolicy} from the configured settings.
-	 * 
+	 * Adds a rule for failures that must not be retried. A failure that matches any rule is thrown straight away
+	 * rather than retried. Can be called more than once, the rules are combined. This is in addition to the default
+	 * rule (see the class description), unless {@link #clearAbortRules()} has removed it.
+	 *
+	 * @param rule matches the failures that must not be retried. It is given the failure thrown by the action, so
+	 * check its causes too if they matter.
+	 * @return the current builder
+	 */
+	public RetryPolicyBuilder abortOn(Predicate<Throwable> rule)
+	{
+		if(rule == null)
+		{
+			throw new IllegalArgumentException("rule cannot be null");
+		}
+		this.abortRules.add(rule);
+		return this;
+	}
+
+	/**
+	 * Removes every abort rule, including the default one, so that a refused connection is retried like any other
+	 * failure. Rules added with {@link #abortOn(Predicate)} afterwards still apply.
+	 *
+	 * @return the current builder
+	 */
+	public RetryPolicyBuilder clearAbortRules()
+	{
+		this.abortRules.clear();
+		return this;
+	}
+
+	/**
+	 * Builds an {@link IRetryPolicy} from the configured settings. A failure matching an abort rule is not retried;
+	 * by default that means a refused connection (see {@link ConnectionFailures#isConnectionRefused(Throwable)}).
+	 *
 	 * @return a built IRetryPolicy
 	 */
 	public IRetryPolicy build()
 	{
+		final List<Predicate<Throwable>> rules = List.copyOf(this.abortRules);
 		final RetryPolicy<Object> policy = RetryPolicy.builder()
 			.handle(Exception.class)
+			.abortOn((Throwable failure) -> rules.stream().anyMatch(rule -> rule.test(failure)))
 			.withDelay(this.delay)
 			.withMaxRetries(this.maxRetries)
 			.onRetry(e -> logger.info("Action failed, retrying... (Attempt #{})", e.getAttemptCount(), e.getLastException()))
-			.onRetriesExceeded(e -> logger.warn("Max retries exceeded", e.getException()))
+			.onAbort(e -> logger.info("Not retrying, an abort rule matched (attempt #{}, {} ms elapsed): {}",
+				e.getAttemptCount(), e.getElapsedTime().toMillis(), String.valueOf(e.getException())))
+			.onRetriesExceeded(e -> logger.warn("Max retries exceeded (attempt #{}, {} ms elapsed)",
+				e.getAttemptCount(), e.getElapsedTime().toMillis(), e.getException()))
 			.build();
 
 		return new IRetryPolicy()

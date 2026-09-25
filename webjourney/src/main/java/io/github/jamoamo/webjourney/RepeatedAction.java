@@ -26,6 +26,7 @@ package io.github.jamoamo.webjourney;
 import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.NonRetryableActionException;
 
 
 /**
@@ -71,7 +72,9 @@ class RepeatedAction<T> extends AWebAction
 		}
 		catch(JourneyException ex)
 		{
-			return ActionResult.FAILURE;
+			// Not returned as ActionResult.FAILURE, which would drop the cause (e.g. a refused connection). Not retried, as
+			// a FAILURE result was not: the sub journey has already had its own retries.
+			throw new NonRetryableActionException(ex);
 		}
 	}
 

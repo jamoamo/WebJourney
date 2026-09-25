@@ -77,14 +77,57 @@ public interface IJourneyBuilder
 	 * Always attempts a sub journey, but unlike {@link #conditionalJourney(Function, Function)} does not
 	 * abort the rest of the journey if it fails -- the failure is logged and swallowed instead. Intended
 	 * for steps worth attempting on every run (e.g. logging in) whose own unreliability shouldn't take
-	 * down journeys that don't strictly depend on them succeeding.
+	 * down journeys that don't strictly depend on them succeeding. The step is named "BestEffort" in logs.
+	 * <p>
+	 * Note that a refused connection (see {@link ConnectionFailures#isConnectionRefused(Throwable)}) is not retried by
+	 * default, so it fails on the first attempt with no retry delay. A caller that runs whole journeys in a loop should
+	 * use the listener overload, and its {@link BestEffortDecision#ABORT} decision, to back off when that happens.
 	 *
 	 * @param subJourney a function providing the sub journey to attempt.
 	 * @return this journey builder
+	 * @throws IllegalArgumentException if the sub journey function is null.
 	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
 	 */
 	IJourneyBuilder bestEffortJourney(FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney)
 		 throws JourneyBuilderException;
+
+	/**
+	 * Always attempts a sub journey, but does not abort the rest of the journey if it fails, just like
+	 * {@link #bestEffortJourney(FailableFunction)}. The listener is additionally told how the sub journey
+	 * ended, including the swallowed exception on failure, so callers can react to it (e.g. back off when
+	 * {@link ConnectionFailures#isConnectionRefused(Throwable)} returns true), and decides what happens next:
+	 * <ul>
+	 * <li>{@link BestEffortDecision#CONTINUE} carries on with the rest of the journey.</li>
+	 * <li>{@link BestEffortDecision#ABORT} after a failure stops the journey by rethrowing the original failure, cause
+	 * chain intact. The step is not retried. After a success it is ignored.</li>
+	 * <li>A listener that throws an {@link Exception} (checked or not) is logged and treated as {@code CONTINUE}; an
+	 * {@link Error} propagates. A listener that returns null is also treated as {@code CONTINUE}.</li>
+	 * </ul>
+	 *
+	 * @param subJourney a function providing the sub journey to attempt.
+	 * @param outcomeListener a listener notified of how the sub journey ended, and deciding whether to carry on.
+	 * @return this journey builder
+	 * @throws IllegalArgumentException if the sub journey function or the listener is null.
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 */
+	IJourneyBuilder bestEffortJourney(FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney,
+		 IBestEffortOutcomeListener outcomeListener) throws JourneyBuilderException;
+
+	/**
+	 * As {@link #bestEffortJourney(FailableFunction, IBestEffortOutcomeListener)}, but the step has a name. The name
+	 * is used in the step's log messages, as its action name (so in the MDC label and the journey breadcrumb) and is
+	 * given to the listener in {@link BestEffortOutcome#getName()}. The overloads without a name call the step
+	 * "BestEffort".
+	 *
+	 * @param name the name of the step, e.g. "login".
+	 * @param subJourney a function providing the sub journey to attempt.
+	 * @param outcomeListener a listener notified of how the sub journey ended, and deciding whether to carry on.
+	 * @return this journey builder
+	 * @throws IllegalArgumentException if the name is null or blank, or the sub journey function or the listener is null.
+	 * @throws io.github.jamoamo.webjourney.api.JourneyBuilderException if an error occurs
+	 */
+	IJourneyBuilder bestEffortJourney(String name, FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney,
+		 IBestEffortOutcomeListener outcomeListener) throws JourneyBuilderException;
 
 	/**
 	 * Adds an action to click a button on the page.

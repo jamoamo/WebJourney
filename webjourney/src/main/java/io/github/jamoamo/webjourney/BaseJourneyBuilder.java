@@ -24,6 +24,7 @@
 package io.github.jamoamo.webjourney;
 
 import io.github.jamoamo.webjourney.api.PageConsumerException;
+import io.github.jamoamo.webjourney.api.IBestEffortOutcomeListener;
 import io.github.jamoamo.webjourney.api.IJourney;
 import io.github.jamoamo.webjourney.api.IJourneyBuilder;
 import io.github.jamoamo.webjourney.api.JourneyBuilderException;
@@ -373,7 +374,28 @@ public class BaseJourneyBuilder implements IJourneyBuilder
 	@Override
 	public BaseJourneyBuilder bestEffortJourney(FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney)
 	{
-		this.build.addAction(new BestEffortAction(subJourney));
+		return bestEffortJourney(BestEffortAction.DEFAULT_NAME, subJourney, BestEffortAction.NO_OP);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public BaseJourneyBuilder bestEffortJourney(FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney,
+		 IBestEffortOutcomeListener outcomeListener)
+	{
+		return bestEffortJourney(BestEffortAction.DEFAULT_NAME, subJourney, outcomeListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public BaseJourneyBuilder bestEffortJourney(String name,
+		 FailableFunction<IJourneyBuilder, IJourney, JourneyException> subJourney,
+		 IBestEffortOutcomeListener outcomeListener)
+	{
+		this.build.addAction(new BestEffortAction(name, subJourney, outcomeListener));
 		return this;
 	}
 }

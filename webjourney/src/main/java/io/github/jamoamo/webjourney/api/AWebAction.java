@@ -27,7 +27,11 @@ import io.github.jamoamo.webjourney.ActionResult;
 import io.github.jamoamo.webjourney.BaseJourneyActionException;
 import io.github.jamoamo.webjourney.api.IRetryPolicy;
 import io.github.jamoamo.webjourney.api.RetryPolicyBuilder;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import org.slf4j.MDC;
 
 /**
@@ -59,15 +63,63 @@ public abstract class AWebAction implements ICrumb
 	public final ActionResult executeAction(IJourneyContext context)
 			  throws BaseJourneyActionException
 	{
+		// Actions nest (e.g. a best-effort step runs a sub journey), so restore the enclosing action's label afterwards
+		// rather than removing it, otherwise the enclosing action's own log lines lose their label.
+		String previousLabel = MDC.get(ACTION_LOG_LABEL);
 		MDC.put(ACTION_LOG_LABEL, getActionName());
-		
+
 		try
 		{
-			IRetryPolicy retryPolicy = (context.getOptions() != null) 
-				? context.getOptions().getRetryPolicy() 
+			IRetryPolicy retryPolicy = (context.getOptions() != null)
+				? context.getOptions().getRetryPolicy()
 				: RetryPolicyBuilder.builder().build();
 
-			return retryPolicy.execute(() -> executeActionImpl(context));
+			// A NonRetryableActionException is caught inside the retried callable so that no retry policy, including a
+			// custom one, gets the chance to run the action again. It is rethrown, unwrapped, once the policy is done.
+			AtomicReference<Exception> nonRetryable = new AtomicReference<>();
+			AtomicReference<Exception> lastFailure = new AtomicReference<>();
+			AtomicInteger attempts = new AtomicInteger();
+			ActionResult result;
+			try
+			{
+				result = retryPolicy.execute(() ->
+				{
+					int attempt = attempts.incrementAndGet();
+					Exception previousFailure = lastFailure.getAndSet(null);
+					if(previousFailure != null)
+					{
+						notifyObservers(context, observer -> observer.actionRetried(this, attempt - 1, previousFailure));
+					}
+					try
+					{
+						return executeActionImpl(context);
+					}
+					catch (NonRetryableActionException ex)
+					{
+						nonRetryable.set((Exception) ex.getCause());
+						return null;
+					}
+					catch (Exception ex)
+					{
+						lastFailure.set(ex);
+						throw ex;
+					}
+				});
+			}
+			catch (Exception ex)
+			{
+				Exception finalFailure = lastFailure.get();
+				if(finalFailure != null)
+				{
+					notifyObservers(context, observer -> observer.actionRetryAborted(this, attempts.get(), finalFailure));
+				}
+				throw ex;
+			}
+			if(nonRetryable.get() != null)
+			{
+				throw nonRetryable.get();
+			}
+			return result;
 		}
 		catch (BaseJourneyActionException ex)
 		{
@@ -79,7 +131,23 @@ public abstract class AWebAction implements ICrumb
 		}
 		finally
 		{
-			MDC.remove(ACTION_LOG_LABEL);
+			if(previousLabel == null)
+			{
+				MDC.remove(ACTION_LOG_LABEL);
+			}
+			else
+			{
+				MDC.put(ACTION_LOG_LABEL, previousLabel);
+			}
+		}
+	}
+
+	private static void notifyObservers(IJourneyContext context, Consumer<IJourneyObserver> notification)
+	{
+		List<IJourneyObserver> observers = context.getJourneyObservers();
+		if(observers != null)
+		{
+			observers.forEach(notification);
 		}
 	}
 
