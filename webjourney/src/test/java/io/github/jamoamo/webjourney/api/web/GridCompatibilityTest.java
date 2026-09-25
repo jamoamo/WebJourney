@@ -69,7 +69,7 @@ public class GridCompatibilityTest extends GridCompatibilityTestBase
 		Mockito.when(browserArgs.snapshotForBrowser(StandardBrowser.CHROME)).thenReturn(List.of("--window-size=1920,1080"));
 
 		browserOptions = Mockito.mock(IBrowserOptions.class);
-		Mockito.when(browserOptions.isHeadless()).thenReturn(false);
+		Mockito.when(browserOptions.isHeadless()).thenReturn(true);
 		Mockito.when(browserOptions.acceptUnexpectedAlerts()).thenReturn(true);
 
 		configuration = new AsyncConfiguration(

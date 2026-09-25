@@ -198,7 +198,7 @@ public abstract class BrowserArgumentsTestBase
     protected IBrowserOptions createMockBrowserOptions()
     {
         IBrowserOptions options = Mockito.mock(IBrowserOptions.class);
-        Mockito.when(options.isHeadless()).thenReturn(false);
+        Mockito.when(options.isHeadless()).thenReturn(true);
         Mockito.when(options.acceptUnexpectedAlerts()).thenReturn(true);
         return options;
     }
