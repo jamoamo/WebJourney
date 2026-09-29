@@ -84,6 +84,44 @@ The listener's `BestEffortDecision` says what to do next:
 
 A refused connection fails on the first attempt (see Retries), so a caller that runs whole journeys in a loop should use the listener, and `ABORT`, to back off rather than rely on retries to slow it down. The overloads without a listener never abort the journey.
 
+## Browser Cookies (since the next release)
+
+`IBrowser` can read, add and delete cookies, so a login can be captured once and reused by a later browser instead of logging in every time:
+
+```java
+List<SessionCookie> getCookies() throws XWebException;
+void addCookie(SessionCookie cookie) throws XWebException;
+void deleteAllCookies() throws XWebException;
+```
+
+`SessionCookie` is an immutable value (`name`, `value`, `domain`, `path`, `expiry`, `secure`, `httpOnly`, `sameSite`); build one with `SessionCookie.builder(name, value, domain)`. A null expiry is a session cookie.
+
+Rules to know:
+- **Cookie values are credentials.** Never log them or put them in exception messages. `SessionCookie.toString()` omits the value, and the exceptions thrown by this API carry the cookie's name and domain only (the underlying Selenium exception is deliberately not chained, because its message can contain the value). If you persist cookies, protecting them is your job: `SessionCookie` is not `Serializable`.
+- **Landing-page rule.** `getCookies()` only shows cookies for the current page's URL (HttpOnly cookies are included), and `addCookie` only works once the browser is on a page whose domain matches the cookie's domain. A domain-wide cookie (`.example.com`) can be added from any page on that domain, so land on a cheap page first, add the cookies, then navigate to where you need them.
+- A browser may silently discard a cookie it considers invalid for the page rather than throw (Chrome does this for a Secure cookie added over plain http), so use `getCookies()` to confirm.
+- Cookies must be read inside the journey: the browser is quit when the journey ends.
+- Only Selenium-driven browsers support this; other `IBrowser` implementations throw `UnsupportedOperationException`. `MockBrowser` (webjourney-test) supports it and enforces the same domain rule.
+- **Discovering support.** Call `browser.supportsCookies()` before using the cookie methods to check support without relying on catching `UnsupportedOperationException`; it returns `true` for Selenium-driven browsers and `MockBrowser`, and `false` (the default) for anything else.
+
+Use it through `conditionalJourney`, whose condition function receives the live browser when it runs and whose branches are built lazily, so a cookie can be seeded and checked before deciding what to do next:
+
+```java
+FailableFunction<IBrowser, Boolean, JourneyException> seedAndCheck = browser -> {
+    for (SessionCookie cookie : savedCookies) {
+        browser.addCookie(cookie);
+    }
+    browser.getActiveWindow().navigateToUrl(new URL("https://example.com/members"));
+    return !browser.getActiveWindow().getTitle().contains("Log in");
+};
+IJourney journey = JourneyBuilder.path()
+    .navigateTo("https://example.com/")           // landing page on the cookie's domain
+    .conditionalJourney(seedAndCheck,
+        loggedIn -> loggedIn.navigateTo("https://example.com/data").build(),
+        loggedOut -> login(loggedOut))             // fall back to a real login
+    .build();
+```
+
 ## Text Node Extraction (since 0.8.0)
 
 `@ExtractValue` resolves its XPath to an element. Some content, however, is a bare text node sitting
