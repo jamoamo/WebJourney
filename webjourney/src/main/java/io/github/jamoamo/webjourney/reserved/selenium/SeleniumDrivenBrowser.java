@@ -25,7 +25,13 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.IBrowserWindow;
+import io.github.jamoamo.webjourney.api.web.SessionCookie;
+import io.github.jamoamo.webjourney.api.web.XWebException;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +66,7 @@ class SeleniumDrivenBrowser implements IBrowser
 		this.browserName = this.driver.getCapabilities().getBrowserName();
 		this.browserVersion = this.driver.getCapabilities().getBrowserVersion();
 		
-		LOGGER.info(String.format("Using browser %s version %s", this.browserName, this.browserVersion));
+		LOGGER.info("Using browser {} version {}", this.browserName, this.browserVersion);
 	}
 
 	@Override
@@ -72,15 +78,82 @@ class SeleniumDrivenBrowser implements IBrowser
 	@Override
 	public IBrowserWindow switchToWindow(String windowName)
 	{
-		LOGGER.info(String.format("Switch to window [%s].", windowName));
+		LOGGER.info("Switch to window [{}].", windowName);
 		return this.windowManager.switchToWindow(windowName);
 	}
 
 	@Override
 	public IBrowserWindow openNewWindow()
 	{
-		LOGGER.info(String.format("Openning new window."));
+		LOGGER.info("Openning new window.");
 		return this.windowManager.openNewWindow();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return the visible cookies, never null; the returned list is unmodifiable
+	 */
+	@Override
+	@SuppressWarnings("IllegalCatch")
+	public List<SessionCookie> getCookies() throws XWebException
+	{
+		try
+		{
+			List<SessionCookie> cookies = this.driver.manage().getCookies().stream()
+				.map(SeleniumSessionCookieMapper::fromSelenium)
+				.collect(Collectors.toList());
+			if(LOGGER.isDebugEnabled())
+			{
+				LOGGER.debug("Read {} cookie(s): {}", cookies.size(),
+					cookies.stream().map(SessionCookie::getName).collect(Collectors.toList()));
+			}
+			return Collections.unmodifiableList(cookies);
+		}
+		catch(RuntimeException ex)
+		{
+			// Deliberately not chained: a Selenium exception message can contain cookie values.
+			throw new XWebException("Failed to read cookies (" + ex.getClass().getSimpleName() + ").");
+		}
+	}
+
+	@Override
+	@SuppressWarnings("IllegalCatch")
+	public void addCookie(SessionCookie cookie) throws XWebException
+	{
+		Objects.requireNonNull(cookie, "cookie");
+		try
+		{
+			this.driver.manage().addCookie(SeleniumSessionCookieMapper.toSelenium(cookie));
+			LOGGER.debug("Added cookie [{}] for domain [{}].", cookie.getName(), cookie.getDomain());
+		}
+		catch(RuntimeException ex)
+		{
+			// Deliberately not chained: Selenium's message can include the cookie's toString, which has its value.
+			throw new XWebException(String.format("Failed to add cookie [%s] for domain [%s] (%s).",
+				cookie.getName(), cookie.getDomain(), ex.getClass().getSimpleName()));
+		}
+	}
+
+	@Override
+	@SuppressWarnings("IllegalCatch")
+	public void deleteAllCookies() throws XWebException
+	{
+		try
+		{
+			this.driver.manage().deleteAllCookies();
+			LOGGER.debug("Deleted all cookies.");
+		}
+		catch(RuntimeException ex)
+		{
+			throw new XWebException("Failed to delete cookies (" + ex.getClass().getSimpleName() + ").");
+		}
+	}
+
+	@Override
+	public boolean supportsCookies()
+	{
+		return true;
 	}
 
 	@Override
