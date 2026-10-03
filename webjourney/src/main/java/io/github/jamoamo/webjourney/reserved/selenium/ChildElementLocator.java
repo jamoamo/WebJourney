@@ -95,6 +95,15 @@ class ChildElementLocator implements ISeleniumElementLocator
 		}
 	}
 
+	/**
+	 * Nothing is cached here, but the parent may have cached a list item that has gone stale (ARM-465).
+	 */
+	@Override
+	public void invalidate()
+	{
+		this.element.invalidate();
+	}
+
 	private WebElement findChildWaiting(WebElement parent) throws XElementDoesntExistException
 	{
 		try

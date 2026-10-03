@@ -29,6 +29,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
+ * Locates one item of a list of child elements. Like {@link ElementListItemLocator}, the item's element is cached and
+ * normally handed over when the list is resolved, so the list query is not re-run on every access (ARM-465).
  *
  * @author James Amoore
  */
@@ -38,17 +40,43 @@ class ChildElementListItemLocator implements ISeleniumElementLocator
 	private final By by;
 	private final int index;
 	private final boolean optional;
-	
+	private WebElement cached;
+
 	ChildElementListItemLocator(SeleniumElement element, By by, int index, boolean optional)
+	{
+		this(element, by, index, optional, null);
+	}
+
+	ChildElementListItemLocator(SeleniumElement element, By by, int index, boolean optional, WebElement resolved)
 	{
 		this.element = element;
 		this.by = by;
 		this.index = index;
 		this.optional = optional;
+		this.cached = resolved;
 	}
-	
+
 	@Override
 	public WebElement findElement() throws XElementDoesntExistException
+	{
+		if (this.cached == null)
+		{
+			this.cached = locate();
+		}
+		return this.cached;
+	}
+
+	/**
+	 * Discards the cached item and the parent's: a stale item usually means its parent has gone stale too.
+	 */
+	@Override
+	public void invalidate()
+	{
+		this.cached = null;
+		this.element.invalidate();
+	}
+
+	private WebElement locate() throws XElementDoesntExistException
 	{
 		try
 		{

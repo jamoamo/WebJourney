@@ -27,8 +27,9 @@ import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.IWebPage;
 import java.time.Duration;
 import java.util.List;
-import org.apache.commons.lang3.stream.IntStreams;
+import java.util.stream.IntStream;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
@@ -68,18 +69,26 @@ final class SeleniumPage implements IWebPage
 	@Override
 	public List<? extends AElement> getElements(String xPath)
 	{
-		return IntStreams.range(this.webDriver.findElements(By.xpath(xPath)).size())
-			.mapToObj(i -> new ElementListItemLocator(this.webDriver, By.xpath(xPath), i))
-			.map(locator -> new SeleniumElement(locator, new ScriptExecutor(this.webDriver)))
-			.toList();
+		return listItems(By.xpath(xPath));
 	}
 
 	@Override
 	public List<? extends AElement> getElementsByTag(String tag)
 	{
-		return IntStreams.range(this.webDriver.findElements(By.tagName(tag)).size())
-			.mapToObj(i -> new ElementListItemLocator(this.webDriver, By.tagName(tag), i))
-			.map(locator -> new SeleniumElement(locator, new ScriptExecutor(this.webDriver)))
+		return listItems(By.tagName(tag));
+	}
+
+	/**
+	 * Resolves the list once and hands each item its element, so reading the items does not re-run the list query for
+	 * every item (ARM-465).
+	 */
+	private List<? extends AElement> listItems(By by)
+	{
+		List<WebElement> found = this.webDriver.findElements(by);
+		ScriptExecutor executor = new ScriptExecutor(this.webDriver);
+		return IntStream.range(0, found.size())
+			.mapToObj(i -> new ElementListItemLocator(this.webDriver, by, i, found.get(i)))
+			.map(locator -> new SeleniumElement(locator, executor))
 			.toList();
 	}
 	

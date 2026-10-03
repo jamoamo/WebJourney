@@ -29,6 +29,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
+ * Locates one item of a list of elements on the page.
+ *
+ * <p>
+ * The item's element is cached once found, and the list is normally resolved once for all its items, so each item is
+ * handed its element up front. Re-running the list query on every access made extracting N items cost N list queries
+ * per field, and ChromeDriver keeps every element reference those queries return in the page (ARM-465). The query is
+ * only run again after {@link #invalidate()}, when the cached element has gone stale.
+ * </p>
  *
  * @author James Amoore
  */
@@ -37,19 +45,45 @@ class ElementListItemLocator implements ISeleniumElementLocator
 	private final WebDriver driver;
 	private final By by;
 	private final int index;
+	private WebElement cached;
 
 	ElementListItemLocator(
 		WebDriver driver,
 		By by,
 		int index)
 	{
+		this(driver, by, index, null);
+	}
+
+	ElementListItemLocator(
+		WebDriver driver,
+		By by,
+		int index,
+		WebElement resolved)
+	{
 		this.driver = driver;
 		this.by = by;
 		this.index = index;
+		this.cached = resolved;
 	}
 
 	@Override
 	public WebElement findElement() throws XElementDoesntExistException
+	{
+		if (this.cached == null)
+		{
+			this.cached = locate();
+		}
+		return this.cached;
+	}
+
+	@Override
+	public void invalidate()
+	{
+		this.cached = null;
+	}
+
+	private WebElement locate() throws XElementDoesntExistException
 	{
 		try
 		{
