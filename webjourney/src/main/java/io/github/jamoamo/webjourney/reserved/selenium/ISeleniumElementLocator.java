@@ -33,4 +33,12 @@ import org.openqa.selenium.WebElement;
 interface ISeleniumElementLocator
 {
 	WebElement findElement() throws XElementDoesntExistException;
+
+	/**
+	 * Discards any element this locator has cached, so the next {@link #findElement()} locates it again. Called when
+	 * the cached element has gone stale. Locators that do not cache have nothing to discard.
+	 */
+	default void invalidate()
+	{
+	}
 }

@@ -29,13 +29,21 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.stream.IntStreams;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 /**
+ * An element on a Selenium-driven page.
+ *
+ * <p>
+ * Elements that are items of a list cache the {@link WebElement} they were resolved to (ARM-465). If a cached element
+ * has gone stale, the operation discards it, locates the element again and is retried once.
+ * </p>
  *
  * @author James Amoore
  */
@@ -62,7 +70,7 @@ class SeleniumElement extends AElement
 	{
 		this(locator, null);
 	}
-	
+
 	SeleniumElement(ISeleniumElementLocator locator, ScriptExecutor executor)
 	{
 		this.locator = locator;
@@ -72,13 +80,7 @@ class SeleniumElement extends AElement
 	@Override
 	public String getElementText() throws XElementDoesntExistException
 	{
-		Optional<WebElement> elem = getElement();
-		if(elem.isEmpty())
-		{
-			return null;
-		}
-		
-		return elem.get().getText();
+		return withElement(WebElement::getText, null);
 	}
 
 	@Override
@@ -86,7 +88,7 @@ class SeleniumElement extends AElement
 	{
 		return new SeleniumElement(new ChildElementLocator(this, By.xpath(path), false), this.executor);
 	}
-	
+
 	@Override
 	public AElement findElement(String path, boolean optional)
 	{
@@ -102,28 +104,13 @@ class SeleniumElement extends AElement
 	@Override
 	public List<? extends AElement> findElements(String path) throws XElementDoesntExistException
 	{
-		Optional<WebElement> elem = getElement();
-		if(elem.isEmpty())
-		{
-			return new ArrayList<>();
-		}
-		
-		return IntStreams
-			.range(elem.get().findElements(By.xpath(path)).size())
-			.mapToObj(i -> new ChildElementListItemLocator(this, By.xpath(path), i, false))
-			.map(locator -> new SeleniumElement(locator, this.executor))
-			.toList();
+		return childListItems(By.xpath(path));
 	}
 
 	@Override
 	public String getAttribute(String attribute) throws XElementDoesntExistException
 	{
-		Optional<WebElement> elem = getElement();
-		if(elem.isEmpty())
-		{
-			return null;
-		}
-		return elem.get().getAttribute(attribute);
+		return withElement(e -> e.getAttribute(attribute), null);
 	}
 
 	@Override
@@ -131,7 +118,11 @@ class SeleniumElement extends AElement
 	{
 		try
 		{
-			getElement().ifPresent(e -> e.click());
+			withElement(e ->
+			{
+				e.click();
+				return null;
+			}, null);
 		}
 		catch(ElementClickInterceptedException ex)
 		{
@@ -149,32 +140,25 @@ class SeleniumElement extends AElement
 	@Override
 	public void enterText(String text) throws XElementDoesntExistException
 	{
-		getElement().ifPresent(e -> e.sendKeys(text));
+		withElement(e ->
+		{
+			e.sendKeys(text);
+			return null;
+		}, null);
 	}
 
 	@Override
 	public List<? extends AElement> getChildrenByTag(String childElementType) throws XElementDoesntExistException
 	{
-		Optional<WebElement> elem = getElement();
-		if(!elem.isPresent())
-		{
-			return new ArrayList<>();
-		}
-		
-		return IntStreams
-			.range(elem.get().findElements(By.tagName(childElementType)).size())
-			.mapToObj(i -> new ChildElementListItemLocator(this, By.tagName(childElementType), i, false))
-			.map(locator -> new SeleniumElement(locator, this.executor))
-			.toList();
+		return childListItems(By.tagName(childElementType));
 	}
 
 	@Override
 	public String getTag() throws XElementDoesntExistException
 	{
-		Optional<WebElement> elem = getElement();
-		return elem.isPresent() ? elem.get().getTagName() : null;
+		return withElement(WebElement::getTagName, null);
 	}
-	
+
 	private Optional<WebElement> getElement() throws XElementDoesntExistException
 	{
 		return Optional.ofNullable(this.locator.findElement());
@@ -183,6 +167,14 @@ class SeleniumElement extends AElement
 	WebElement getWebElement() throws XElementDoesntExistException
 	{
 		return getElement().orElse(null);
+	}
+
+	/**
+	 * Discards any element this element's locator has cached, so it is located again on next use.
+	 */
+	void invalidate()
+	{
+		this.locator.invalidate();
 	}
 
 	@Override
@@ -201,20 +193,18 @@ class SeleniumElement extends AElement
 	@Override
 	public List<String> getTextNodeValues(String xPath) throws XElementDoesntExistException
 	{
-		Optional<WebElement> elem = getElement();
-		if(elem.isEmpty())
-		{
-			return new ArrayList<>();
-		}
-		if(this.executor == null)
-		{
-			throw new IllegalStateException("No script executor available to evaluate xpath text nodes.");
-		}
-
 		Object result;
 		try
 		{
-			result = this.executor.executeScript(TEXT_NODE_XPATH_SCRIPT, elem.get(), xPath);
+			result = withElement(e ->
+			{
+				if(this.executor == null)
+				{
+					throw new IllegalStateException("No script executor available to evaluate xpath text nodes.");
+				}
+				return Optional.ofNullable(this.executor.executeScript(TEXT_NODE_XPATH_SCRIPT, e, xPath));
+			}, Optional.empty())
+				.orElse(null);
 		}
 		catch(WebDriverException ex)
 		{
@@ -229,5 +219,41 @@ class SeleniumElement extends AElement
 		return rawValues.stream()
 			.map(value -> value == null ? null : value.toString())
 			.toList();
+	}
+
+	/**
+	 * Resolves the child list once and hands each item its element, so reading the items does not re-run the list
+	 * query for every item (ARM-465).
+	 */
+	private List<? extends AElement> childListItems(By by) throws XElementDoesntExistException
+	{
+		List<WebElement> children = withElement(e -> e.findElements(by), List.of());
+		return IntStream.range(0, children.size())
+			.mapToObj(i -> new ChildElementListItemLocator(this, by, i, false, children.get(i)))
+			.map(childLocator -> new SeleniumElement(childLocator, this.executor))
+			.toList();
+	}
+
+	/**
+	 * Applies an action to this element, or returns {@code whenAbsent} if there is no element. If the element has
+	 * gone stale, it is discarded, located again and the action is retried once.
+	 */
+	private <T> T withElement(Function<WebElement, T> action, T whenAbsent) throws XElementDoesntExistException
+	{
+		try
+		{
+			return applyToElement(action, whenAbsent);
+		}
+		catch(StaleElementReferenceException ex)
+		{
+			this.locator.invalidate();
+			return applyToElement(action, whenAbsent);
+		}
+	}
+
+	private <T> T applyToElement(Function<WebElement, T> action, T whenAbsent) throws XElementDoesntExistException
+	{
+		Optional<WebElement> elem = getElement();
+		return elem.isEmpty() ? whenAbsent : action.apply(elem.get());
 	}
 }
