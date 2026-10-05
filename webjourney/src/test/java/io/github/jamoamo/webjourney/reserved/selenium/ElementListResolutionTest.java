@@ -25,6 +25,7 @@ package io.github.jamoamo.webjourney.reserved.selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 import io.github.jamoamo.webjourney.api.web.AElement;
 import io.github.jamoamo.webjourney.api.web.XElementDoesntExistException;
+import java.time.Duration;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -42,12 +44,14 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 /**
  * ARM-465: a list is resolved once, and its items reuse the elements they were resolved to instead of re-running the
- * list query on every access. A stale item is located again and the operation retried once.
+ * list query on every access. A stale item is located again and the operation retried once, including when
+ * checking whether a child of the item exists.
  */
 class ElementListResolutionTest
 {
 	private static final By ROWS = By.xpath("//tr");
 	private static final By FIRST_CELL = By.xpath("td[1]");
+	private static final By SECOND_CELL = By.xpath("td[2]");
 
 	private final RemoteWebDriver driver = mock(RemoteWebDriver.class);
 
@@ -135,6 +139,42 @@ class ElementListResolutionTest
 	}
 
 	@Test
+	void pageList_existsOnAChildOfAStaleItem_relocatesTheParentItem() throws XElementDoesntExistException
+	{
+		mockStaleThenFreshRowWithSecondCell();
+
+		AElement child = new SeleniumPage(this.driver).getElements("//tr").get(0).findElement("td[2]");
+
+		assertTrue(child.exists());
+		verify(this.driver, times(2)).findElements(ROWS);
+	}
+
+	@Test
+	void pageList_existsOnAWaitingChildOfAStaleItem_relocatesTheParentItem() throws XElementDoesntExistException
+	{
+		mockStaleThenFreshRowWithSecondCell();
+
+		AElement child = new SeleniumPage(this.driver).getElements("//tr").get(0)
+			.findElement("td[2]", false, Duration.ofSeconds(1));
+
+		assertTrue(child.exists());
+		verify(this.driver, times(2)).findElements(ROWS);
+	}
+
+	@Test
+	void pageList_existsOnAChildOfAnItemStillStaleAfterRetry_throws() throws XElementDoesntExistException
+	{
+		WebElement staleRow = mock(WebElement.class);
+		when(staleRow.findElement(SECOND_CELL)).thenThrow(new StaleElementReferenceException("stale"));
+		when(this.driver.findElements(ROWS)).thenReturn(List.of(staleRow));
+
+		AElement child = new SeleniumPage(this.driver).getElements("//tr").get(0).findElement("td[2]");
+
+		assertThrows(StaleElementReferenceException.class, child::exists);
+		verify(this.driver, times(2)).findElements(ROWS);
+	}
+
+	@Test
 	void childList_runsTheChildQueryOnce_howeverOftenItsItemsAreRead() throws XElementDoesntExistException
 	{
 		WebElement parent = mock(WebElement.class);
@@ -195,6 +235,15 @@ class ElementListResolutionTest
 		ElementListItemLocator locator = new ElementListItemLocator(this.driver, ROWS, 0);
 
 		assertThrows(XElementDoesntExistException.class, locator::findElement);
+	}
+
+	private void mockStaleThenFreshRowWithSecondCell()
+	{
+		WebElement staleRow = mock(WebElement.class);
+		when(staleRow.findElement(SECOND_CELL)).thenThrow(new StaleElementReferenceException("stale"));
+		WebElement freshRow = mock(WebElement.class);
+		when(freshRow.findElement(SECOND_CELL)).thenReturn(mock(WebElement.class));
+		when(this.driver.findElements(ROWS)).thenReturn(List.of(staleRow)).thenReturn(List.of(freshRow));
 	}
 
 	private static WebElement rowWithText(String text)

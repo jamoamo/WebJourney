@@ -166,7 +166,24 @@ class SeleniumElement extends AElement
 
 	WebElement getWebElement() throws XElementDoesntExistException
 	{
-		return getElement().orElse(null);
+		return locate().orElse(null);
+	}
+
+	/**
+	 * Locates this element, and if a cached element in its locator chain has gone stale, discards it and locates
+	 * once more. Child locators find their parent through here, so a stale parent list item is recovered too.
+	 */
+	private Optional<WebElement> locate() throws XElementDoesntExistException
+	{
+		try
+		{
+			return getElement();
+		}
+		catch(StaleElementReferenceException ex)
+		{
+			this.locator.invalidate();
+			return getElement();
+		}
 	}
 
 	/**
@@ -182,7 +199,7 @@ class SeleniumElement extends AElement
 	{
 		try
 		{
-			return getElement().isPresent();
+			return locate().isPresent();
 		}
 		catch(XElementDoesntExistException ex)
 		{
