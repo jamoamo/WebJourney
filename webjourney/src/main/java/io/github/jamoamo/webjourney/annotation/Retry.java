@@ -29,12 +29,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to define custom retry behavior for an entity's fields extraction mechanism.
- * 
+ * Annotation to define custom retry behavior.
+ *
+ * <p>On an entity field, it controls the retries of that field's extraction. On a
+ * {@link io.github.jamoamo.webjourney.annotation.form.Form} class, it retries the whole form completion (every text
+ * field and, if requested, the submit), reloading the current page before each retry so that a page that did not
+ * load properly is not reused.</p>
+ *
  * @author James Amoore
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Retry
 {
 	/**
