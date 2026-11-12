@@ -25,16 +25,21 @@ package io.github.jamoamo.webjourney;
 
 import io.github.jamoamo.webjourney.api.AWebAction;
 import io.github.jamoamo.webjourney.api.IJourneyContext;
+import io.github.jamoamo.webjourney.api.IRetryPolicy;
+import io.github.jamoamo.webjourney.api.RetryPolicyBuilder;
 import io.github.jamoamo.webjourney.api.event.FormCompletedEvent;
+import io.github.jamoamo.webjourney.annotation.Retry;
 import io.github.jamoamo.webjourney.annotation.form.Form;
 import io.github.jamoamo.webjourney.annotation.form.TextField;
 import io.github.jamoamo.webjourney.api.web.IBrowser;
 import io.github.jamoamo.webjourney.api.web.XWebException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
@@ -59,6 +64,63 @@ class CompleteFormAction extends AWebAction
 	@Override
 	protected ActionResult executeActionImpl(IJourneyContext context)
 	{
+		Retry retry = this.form.getClass().getAnnotation(Retry.class);
+		if(retry == null)
+		{
+			completeForm(context);
+		}
+		else
+		{
+			completeFormWithRetry(context, retry);
+		}
+
+		FormCompletedEvent event = new FormCompletedEvent(context, this.form);
+		context.getJourneyPassengers().forEach(p -> p.onEvent(event));
+
+		return ActionResult.SUCCESS;
+	}
+
+	void setSubmitAfterwards()
+	{
+		this.submit = true;
+	}
+
+	/**
+	 * Completes the form under the form's own retry policy. Every attempt after the first reloads the current page
+	 * first, since retrying against a page that did not load properly would only fail the same way again.
+	 */
+	@SuppressWarnings("IllegalCatch")
+	private void completeFormWithRetry(IJourneyContext context, Retry retry)
+	{
+		IRetryPolicy policy = RetryPolicyBuilder.builder()
+			.maxRetries(retry.maxRetries())
+			.delay(Duration.ofMillis(retry.delayMs()))
+			.build();
+		AtomicInteger attempts = new AtomicInteger();
+		try
+		{
+			policy.execute(() ->
+			{
+				if(attempts.getAndIncrement() > 0)
+				{
+					context.getBrowser().getActiveWindow().refreshCurrentPage();
+				}
+				completeForm(context);
+				return null;
+			});
+		}
+		catch(JourneyException ex)
+		{
+			throw ex;
+		}
+		catch(Exception ex)
+		{
+			throw new JourneyException(ex);
+		}
+	}
+
+	private void completeForm(IJourneyContext context)
+	{
 		List<Field> textFields =
 				  FieldUtils.getFieldsListWithAnnotation(this.form.getClass(), TextField.class);
 		for(Field field : textFields)
@@ -78,16 +140,6 @@ class CompleteFormAction extends AWebAction
 				throw new JourneyException(ex);
 			}
 		}
-
-		FormCompletedEvent event = new FormCompletedEvent(context, this.form);
-		context.getJourneyPassengers().forEach(p -> p.onEvent(event));
-
-		return ActionResult.SUCCESS;
-	}
-
-	void setSubmitAfterwards()
-	{
-		this.submit = true;
 	}
 
 	private void setTextField(IJourneyContext context, Field textField)
